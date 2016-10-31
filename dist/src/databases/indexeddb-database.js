@@ -1,59 +1,15 @@
-(function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/Observable'), require('rxjs/ReplaySubject'), require('rxjs/add/operator/map'), require('rxjs/add/operator/mergeMap'), require('rxjs/add/operator/pluck'), require('rxjs/add/operator/first'), require('rxjs/add/observable/fromEvent'), require('rxjs/add/observable/merge'), require('rxjs/add/observable/throw'), require('rxjs/add/observable/of')) :
-    typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'rxjs/Observable', 'rxjs/ReplaySubject', 'rxjs/add/operator/map', 'rxjs/add/operator/mergeMap', 'rxjs/add/operator/pluck', 'rxjs/add/operator/first', 'rxjs/add/observable/fromEvent', 'rxjs/add/observable/merge', 'rxjs/add/observable/throw', 'rxjs/add/observable/of'], factory) :
-    (factory((global.ng = global.ng || {}, global.ng.asyncLocalStorage = global.ng.asyncLocalStorage || {}),global.ng.core,global.Rx,global.Rx,global.Rx.Observable.prototype,global.Rx.Observable.prototype,global.Rx.Observable.prototype,global.Rx.Observable.prototype,global.Rx.Observable,global.Rx.Observable,global.Rx.Observable,global.Rx.Observable));
-}(this, (function (exports,_angular_core,rxjs_Observable,rxjs_ReplaySubject,rxjs_add_operator_map,rxjs_add_operator_mergeMap,rxjs_add_operator_pluck,rxjs_add_operator_first,rxjs_add_observable_fromEvent,rxjs_add_observable_merge,rxjs_add_observable_throw,rxjs_add_observable_of) { 'use strict';
-
-var AsyncLocalStorage = (function () {
-    /**
-     * Injects a local database
-     */
-    function AsyncLocalStorage(database) {
-        this.database = database;
-    }
-    /**
-     * Gets an item value in local storage
-     * @param key The item's key
-     * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
-     */
-    AsyncLocalStorage.prototype.getItem = function (key) {
-        return this.database.getItem(key);
-    };
-    /**
-     * Sets an item in local storage
-     * @param key The item's key
-     * @param data The item's value, must NOT be null or undefined
-     * @returns An RxJS Observable to wait the end of the operation
-     */
-    AsyncLocalStorage.prototype.setItem = function (key, data) {
-        return this.database.setItem(key, data);
-    };
-    /**
-     * Deletes an item in local storage
-     * @param key The item's key
-     * @returns An RxJS Observable to wait the end of the operation
-     */
-    AsyncLocalStorage.prototype.removeItem = function (key) {
-        return this.database.removeItem(key);
-    };
-    /**
-     * Deletes all items from local storage
-     * @returns An RxJS Observable to wait the end of the operation
-     */
-    AsyncLocalStorage.prototype.clear = function () {
-        return this.database.clear();
-    };
-    AsyncLocalStorage.decorators = [
-        { type: _angular_core.Injectable },
-    ];
-    /** @nocollapse */
-    AsyncLocalStorage.ctorParameters = [
-        null,
-    ];
-    return AsyncLocalStorage;
-}());
-
-var IndexedDBDatabase = (function () {
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/pluck';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/observable/of';
+export var IndexedDBDatabase = (function () {
     /**
      * Connects to IndexedDB
      */
@@ -75,7 +31,7 @@ var IndexedDBDatabase = (function () {
          */
         this.dataPath = 'value';
         /* Creating the RxJS ReplaySubject */
-        this.database = new rxjs_ReplaySubject.ReplaySubject();
+        this.database = new ReplaySubject();
         /* Connecting to IndexedDB */
         this.connect();
     }
@@ -89,11 +45,11 @@ var IndexedDBDatabase = (function () {
         /* Opening a trasaction and requesting the item in local storage */
         return this.transaction().map(function (transaction) { return transaction.get(key); }).mergeMap(function (request) {
             /* Listening to the success event, and passing the item value if found, null otherwise */
-            var success = rxjs_Observable.Observable.fromEvent(request, 'success')
+            var success = Observable.fromEvent(request, 'success')
                 .pluck('target', 'result')
                 .map(function (result) { return result ? result[_this.dataPath] : null; });
             /* Merging success and errors events and autoclosing the observable */
-            return rxjs_Observable.Observable.merge(success, _this.toErrorObservable(request, "getter")).first();
+            return Observable.merge(success, _this.toErrorObservable(request, "getter")).first();
         });
     };
     /**
@@ -111,7 +67,7 @@ var IndexedDBDatabase = (function () {
                 /* Adding or updating local storage, based on previous checking */
                 var request = transaction[method]((_a = {}, _a[_this.dataPath] = data, _a), key);
                 /* Merging success (passing true) and error events and autoclosing the observable */
-                return rxjs_Observable.Observable.merge(_this.toSuccessObservable(request), _this.toErrorObservable(request, "setter")).first();
+                return Observable.merge(_this.toSuccessObservable(request), _this.toErrorObservable(request, "setter")).first();
                 var _a;
             });
         });
@@ -132,11 +88,11 @@ var IndexedDBDatabase = (function () {
                     /* Deleting the item in local storage */
                     var request = transaction.delete(key);
                     /* Merging success (passing true) and error events and autoclosing the observable */
-                    return rxjs_Observable.Observable.merge(_this.toSuccessObservable(request), _this.toErrorObservable(request, "remover")).first();
+                    return Observable.merge(_this.toSuccessObservable(request), _this.toErrorObservable(request, "remover")).first();
                 });
             }
             /* Passing true if the item does not exist in local storage */
-            return rxjs_Observable.Observable.of(true).first();
+            return Observable.of(true).first();
         });
     };
     /**
@@ -150,7 +106,7 @@ var IndexedDBDatabase = (function () {
             /* Deleting all items from local storage */
             var request = transaction.clear();
             /* Merging success (passing true) and error events and autoclosing the observable */
-            return rxjs_Observable.Observable.merge(_this.toSuccessObservable(request), _this.toErrorObservable(request, "clearer")).first();
+            return Observable.merge(_this.toSuccessObservable(request), _this.toErrorObservable(request, "clearer")).first();
         });
     };
     /**
@@ -161,7 +117,7 @@ var IndexedDBDatabase = (function () {
         /* Connecting to IndexedDB */
         var request = indexedDB.open(this.dbName);
         /* Listening the event fired on first connection, creating the object store for local storage */
-        rxjs_Observable.Observable.fromEvent(request, 'upgradeneeded').first().subscribe(function (event) {
+        Observable.fromEvent(request, 'upgradeneeded').first().subscribe(function (event) {
             /* Getting the database connection */
             var database = event.target.result;
             /* Checking if the object store already exists, to avoid error */
@@ -171,9 +127,9 @@ var IndexedDBDatabase = (function () {
             }
         });
         /* Listening the success event and converting to an RxJS Observable */
-        var success = rxjs_Observable.Observable.fromEvent(request, 'success');
+        var success = Observable.fromEvent(request, 'success');
         /* Merging success and errors events */
-        rxjs_Observable.Observable.merge(success, this.toErrorObservable(request, "connection")).first().subscribe(function (event) {
+        Observable.merge(success, this.toErrorObservable(request, "connection")).first().subscribe(function (event) {
             /* Storing the database connection for further access */
             _this.database.next(event.target.result);
         });
@@ -196,7 +152,7 @@ var IndexedDBDatabase = (function () {
      */
     IndexedDBDatabase.prototype.toSuccessObservable = function (request) {
         /* Transforming a IndexedDB success event in an RxJS Observable with true value */
-        return rxjs_Observable.Observable.fromEvent(request, 'success').map(function () { return true; });
+        return Observable.fromEvent(request, 'success').map(function () { return true; });
     };
     /**
      * Transforms a IndexedDB error event in an RxJS ErrorObservable
@@ -207,48 +163,13 @@ var IndexedDBDatabase = (function () {
     IndexedDBDatabase.prototype.toErrorObservable = function (request, error) {
         if (error === void 0) { error = ""; }
         /* Transforming a IndexedDB error event in an RxJS ErrorObservable */
-        return rxjs_Observable.Observable.fromEvent(request, 'error').mergeMap(function () { return rxjs_Observable.Observable.throw(new Error("IndexedDB " + error + " issue.")); });
+        return Observable.fromEvent(request, 'error').mergeMap(function () { return Observable.throw(new Error("IndexedDB " + error + " issue.")); });
     };
     IndexedDBDatabase.decorators = [
-        { type: _angular_core.Injectable },
+        { type: Injectable },
     ];
     /** @nocollapse */
     IndexedDBDatabase.ctorParameters = [];
     return IndexedDBDatabase;
 }());
-
-function asyncLocalStorageFactory(database) {
-    return new AsyncLocalStorage(database);
-}
-var AsyncLocalStorageModule = (function () {
-    function AsyncLocalStorageModule() {
-    }
-    AsyncLocalStorageModule.decorators = [
-        { type: _angular_core.NgModule, args: [{
-                    providers: [
-                        {
-                            provide: AsyncLocalStorage,
-                            useFactory: asyncLocalStorageFactory,
-                            deps: [IndexedDBDatabase]
-                        },
-                        IndexedDBDatabase
-                    ]
-                },] },
-    ];
-    /** @nocollapse */
-    AsyncLocalStorageModule.ctorParameters = [];
-    return AsyncLocalStorageModule;
-}());
-
-/**
- * @module
- * @description
- * Entry point for all public APIs of the async local storage package.
- */
-
-exports.AsyncLocalStorageModule = AsyncLocalStorageModule;
-exports.AsyncLocalStorage = AsyncLocalStorage;
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-})));
+//# sourceMappingURL=indexeddb-database.js.map

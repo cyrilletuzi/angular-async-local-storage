@@ -1,11 +1,8 @@
 import { Observable } from 'rxjs/Observable';
-import { AsyncLocalDatabase } from './databases/async-local-database';
-export declare class AsyncLocalStorage {
-    protected database: AsyncLocalDatabase;
-    /**
-     * Injects a local database
-     */
-    constructor(database: AsyncLocalDatabase);
+import 'rxjs/add/observable/of';
+import { AsyncLocalDatabase } from './async-local-database';
+export declare class MockLocalDatabase implements AsyncLocalDatabase {
+    protected localStorage: Map<string, any>;
     /**
      * Gets an item value in local storage
      * @param key The item's key

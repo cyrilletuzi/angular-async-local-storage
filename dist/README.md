@@ -8,8 +8,8 @@ and wrapped in RxJS observables to be homogeneous with other Angular 2 asynchron
 
 For now, Angular 2 does not provide a local storage module, and almost every app needs some local storage. 
 There is 2 native JavaScript APIs available :
-- localStorage
-- IndexedDB
+- [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage)
+- [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
 
 The localStorage API is simple to use but synchronous, so if you use it too often, 
 your app will soon begin to freeze.
@@ -17,12 +17,14 @@ your app will soon begin to freeze.
 The IndexedDB API is asychronous and efficient, but it's a mess to use : 
 you'll soon be caught by the callbacks hell, as it does not support Promises yet.
 
-Mozilla has done a very great job with the localForage library : a simple API based on native localStorage API,
+Mozilla has done a very great job with the [localForage library](http://localforage.github.io/localForage/) : 
+a simple API based on native localStorage API,
 but internally stored via the asynchronous IndexedDB API for performance.
-But it is written in ES5 and then it's a mess to include into Angular 2.
+But it is written in ES5 and then it's a mess to include into Angular.
 
 This module is based on the same idea as localForage, but in ES6/ES2015 
-and additionnaly wrapped into RxJS Observables to be homogeneous with other Angular 2 asynchronous modules.
+and additionnaly wrapped into [RxJS Observables](http://reactivex.io/rxjs/) 
+to be homogeneous with other Angular asynchronous modules.
 
 ## Getting started
 
@@ -87,7 +89,7 @@ System.config({
 
 ## API
 
-The API follows the [native localStorage API](https://developer.mozilla.org/docs/Web/API/Storage/LocalStorage), 
+The API follows the [native localStorage API](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage), 
 except it's asynchronous via [RxJS Observables](http://reactivex.io/rxjs/).
 
 ### Writing data
@@ -106,7 +108,8 @@ this.storage.setItem('color', 'red').subscribe(() => {
 You can store any value (except null and undefined), without worrying about stringifying.
 
 ```
-this.storage.setItem('user', { firstName: 'Henri', lastName: 'Bergson' }).subscribe(() => {}, () => {});
+this.storage.setItem('user', { firstName: 'Henri', lastName: 'Bergson' })
+  .subscribe(() => {}, () => {});
 ```
 
 To delete one item :
