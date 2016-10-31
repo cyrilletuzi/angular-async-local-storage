@@ -24,7 +24,7 @@ But it is written in ES5 and then it's a mess to include into Angular.
 
 This module is based on the same idea as localForage, but in ES6/ES2015 
 and additionnaly wrapped into [RxJS Observables](http://reactivex.io/rxjs/) 
-to be homogeneous with other Angular asynchronous modules.
+to be homogeneous with other Angular modules.
 
 ## Getting started
 
@@ -95,6 +95,7 @@ except it's asynchronous via [RxJS Observables](http://reactivex.io/rxjs/).
 ### Writing data
 
 Errors are unlikely to happen, but in an app you should always catch all potential errors.
+
 You do NOT need to unsubscribe : the observable autocompletes (like in the Http service).
 
 ```
@@ -105,7 +106,7 @@ this.storage.setItem('color', 'red').subscribe(() => {
 });
 ```
 
-You can store any value (except null and undefined), without worrying about stringifying.
+You can store any value, without worrying about stringifying.
 
 ```
 this.storage.setItem('user', { firstName: 'Henri', lastName: 'Bergson' })
@@ -171,10 +172,6 @@ use the [IndexedDBshim polyfill](https://github.com/axemclion/IndexedDBShim).
 
 This module supports [AoT pre-compiling](https://angular.io/docs/ts/latest/cookbook/aot-compiler.html)
 and [Universal server-side rendering](https://github.com/angular/universal).
-
-## Known issues
-
-- For now, if you set an item value to null or undefined (why ?!), it will throw an error on next item update.
 
 ## Coming soon
 

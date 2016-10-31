@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0 (2016-10-31)
+
+### Bug fixes
+
+- Manage null values with IndexedDB
+
 ## 1.0.0-beta.2 (2016-10-31)
 
 ### Features

@@ -83,6 +83,13 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
      */
     public setItem(key: string, data: any): Observable<boolean> {
 
+        /* Storing null is not correctly supported by IndexedDB and unnecessary here */
+        if (data == null) {
+
+            return Observable.of(true);
+
+        }
+
         /* Opening a transaction and checking if the item already exists in local storage */
         return this.getItem(key).map((data) => (data == null) ? 'add' : 'put').mergeMap((method) => {
 

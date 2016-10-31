@@ -117,6 +117,10 @@ var IndexedDBDatabase = (function (_super) {
      */
     IndexedDBDatabase.prototype.setItem = function (key, data) {
         var _this = this;
+        /* Storing null is not correctly supported by IndexedDB and unnecessary here */
+        if (data == null) {
+            return rxjs_Observable.Observable.of(true);
+        }
         /* Opening a transaction and checking if the item already exists in local storage */
         return this.getItem(key).map(function (data) { return (data == null) ? 'add' : 'put'; }).mergeMap(function (method) {
             /* Opening a transaction */
