@@ -14,7 +14,7 @@ import 'rxjs/add/observable/of';
 import { AsyncLocalDatabase } from './async-local-database';
 
 @Injectable()
-export class IndexedDBDatabase implements AsyncLocalDatabase {
+export class IndexedDBDatabase extends AsyncLocalDatabase {
 
     /** 
      * IndexedDB database name for local storage 
@@ -42,6 +42,8 @@ export class IndexedDBDatabase implements AsyncLocalDatabase {
      * Connects to IndexedDB
      */
     public constructor() {
+
+        super();
 
         /* Creating the RxJS ReplaySubject */
         this.database = new ReplaySubject<IDBDatabase>();

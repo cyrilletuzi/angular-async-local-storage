@@ -1,8 +1,16 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-export var MockLocalDatabase = (function () {
+import { AsyncLocalDatabase } from './async-local-database';
+export var MockLocalDatabase = (function (_super) {
+    __extends(MockLocalDatabase, _super);
     function MockLocalDatabase() {
+        _super.apply(this, arguments);
         this.localStorage = new Map();
     }
     /**
@@ -46,5 +54,5 @@ export var MockLocalDatabase = (function () {
     /** @nocollapse */
     MockLocalDatabase.ctorParameters = [];
     return MockLocalDatabase;
-}());
+}(AsyncLocalDatabase));
 //# sourceMappingURL=mock-local-database.js.map

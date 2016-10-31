@@ -1,9 +1,17 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
-export var LocalStorageDatabase = (function () {
+import { AsyncLocalDatabase } from './async-local-database';
+export var LocalStorageDatabase = (function (_super) {
+    __extends(LocalStorageDatabase, _super);
     function LocalStorageDatabase() {
+        _super.apply(this, arguments);
         /* Initializing native localStorage right now to be able to check its support on class instanciation */
         this.localStorage = localStorage;
     }
@@ -55,5 +63,5 @@ export var LocalStorageDatabase = (function () {
     /** @nocollapse */
     LocalStorageDatabase.ctorParameters = [];
     return LocalStorageDatabase;
-}());
+}(AsyncLocalDatabase));
 //# sourceMappingURL=localstorage-database.js.map

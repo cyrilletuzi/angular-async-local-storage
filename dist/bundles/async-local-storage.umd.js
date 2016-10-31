@@ -4,6 +4,12 @@
     (factory((global.ng = global.ng || {}, global.ng.asyncLocalStorage = global.ng.asyncLocalStorage || {}),global.ng.core,global.Rx,global.Rx,global.Rx.Observable.prototype,global.Rx.Observable.prototype,global.Rx.Observable.prototype,global.Rx.Observable.prototype,global.Rx.Observable,global.Rx.Observable,global.Rx.Observable,global.Rx.Observable));
 }(this, (function (exports,_angular_core,rxjs_Observable,rxjs_ReplaySubject,rxjs_add_operator_map,rxjs_add_operator_mergeMap,rxjs_add_operator_pluck,rxjs_add_operator_first,rxjs_add_observable_fromEvent,rxjs_add_observable_merge,rxjs_add_observable_throw,rxjs_add_observable_of) { 'use strict';
 
+var AsyncLocalDatabase = (function () {
+    function AsyncLocalDatabase() {
+    }
+    return AsyncLocalDatabase;
+}());
+
 var AsyncLocalStorage = (function () {
     /**
      * Injects a local database
@@ -48,16 +54,23 @@ var AsyncLocalStorage = (function () {
     ];
     /** @nocollapse */
     AsyncLocalStorage.ctorParameters = [
-        null,
+        { type: AsyncLocalDatabase, },
     ];
     return AsyncLocalStorage;
 }());
 
-var IndexedDBDatabase = (function () {
+var __extends = (undefined && undefined.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var IndexedDBDatabase = (function (_super) {
+    __extends(IndexedDBDatabase, _super);
     /**
      * Connects to IndexedDB
      */
     function IndexedDBDatabase() {
+        _super.call(this);
         /**
          * IndexedDB database name for local storage
          */
@@ -215,10 +228,17 @@ var IndexedDBDatabase = (function () {
     /** @nocollapse */
     IndexedDBDatabase.ctorParameters = [];
     return IndexedDBDatabase;
-}());
+}(AsyncLocalDatabase));
 
-var LocalStorageDatabase = (function () {
+var __extends$1 = (undefined && undefined.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var LocalStorageDatabase = (function (_super) {
+    __extends$1(LocalStorageDatabase, _super);
     function LocalStorageDatabase() {
+        _super.apply(this, arguments);
         /* Initializing native localStorage right now to be able to check its support on class instanciation */
         this.localStorage = localStorage;
     }
@@ -270,10 +290,17 @@ var LocalStorageDatabase = (function () {
     /** @nocollapse */
     LocalStorageDatabase.ctorParameters = [];
     return LocalStorageDatabase;
-}());
+}(AsyncLocalDatabase));
 
-var MockLocalDatabase = (function () {
+var __extends$2 = (undefined && undefined.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var MockLocalDatabase = (function (_super) {
+    __extends$2(MockLocalDatabase, _super);
     function MockLocalDatabase() {
+        _super.apply(this, arguments);
         this.localStorage = new Map();
     }
     /**
@@ -317,7 +344,7 @@ var MockLocalDatabase = (function () {
     /** @nocollapse */
     MockLocalDatabase.ctorParameters = [];
     return MockLocalDatabase;
-}());
+}(AsyncLocalDatabase));
 
 function asyncLocalStorageFactory() {
     var database;

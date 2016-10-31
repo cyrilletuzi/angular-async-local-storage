@@ -2,7 +2,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import { AsyncLocalDatabase } from './async-local-database';
-export declare class LocalStorageDatabase implements AsyncLocalDatabase {
+export declare class LocalStorageDatabase extends AsyncLocalDatabase {
     protected localStorage: Storage;
     /**
      * Gets an item value in local storage

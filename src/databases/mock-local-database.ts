@@ -6,7 +6,7 @@ import 'rxjs/add/observable/of';
 import { AsyncLocalDatabase } from './async-local-database';
 
 @Injectable()
-export class MockLocalDatabase implements AsyncLocalDatabase {
+export class MockLocalDatabase extends AsyncLocalDatabase {
 
     protected localStorage = new Map<string, any>();
 

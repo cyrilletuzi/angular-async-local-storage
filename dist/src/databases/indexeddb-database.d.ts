@@ -9,7 +9,7 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/of';
 import { AsyncLocalDatabase } from './async-local-database';
-export declare class IndexedDBDatabase implements AsyncLocalDatabase {
+export declare class IndexedDBDatabase extends AsyncLocalDatabase {
     /**
      * IndexedDB database name for local storage
      */

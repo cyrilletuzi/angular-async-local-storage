@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AsyncLocalDatabase } from './databases/async-local-database';
 export var AsyncLocalStorage = (function () {
     /**
      * Injects a local database
@@ -43,7 +44,7 @@ export var AsyncLocalStorage = (function () {
     ];
     /** @nocollapse */
     AsyncLocalStorage.ctorParameters = [
-        null,
+        { type: AsyncLocalDatabase, },
     ];
     return AsyncLocalStorage;
 }());

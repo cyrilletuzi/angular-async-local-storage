@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -9,11 +14,14 @@ import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/of';
-export var IndexedDBDatabase = (function () {
+import { AsyncLocalDatabase } from './async-local-database';
+export var IndexedDBDatabase = (function (_super) {
+    __extends(IndexedDBDatabase, _super);
     /**
      * Connects to IndexedDB
      */
     function IndexedDBDatabase() {
+        _super.call(this);
         /**
          * IndexedDB database name for local storage
          */
@@ -171,5 +179,5 @@ export var IndexedDBDatabase = (function () {
     /** @nocollapse */
     IndexedDBDatabase.ctorParameters = [];
     return IndexedDBDatabase;
-}());
+}(AsyncLocalDatabase));
 //# sourceMappingURL=indexeddb-database.js.map
