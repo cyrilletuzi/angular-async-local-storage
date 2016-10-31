@@ -45,36 +45,7 @@ export class AsyncLocalStorage {
         this.database = new ReplaySubject<IDBDatabase>();
 
         /* Connecting to IndexedDB */
-        let request = indexedDB.open(this.dbName);
-
-        /* Listening the event fired on first connection, creating the object store for local storage */
-        Observable.fromEvent(request, 'upgradeneeded').first().subscribe((event: Event) => {
-
-            console.log('test');
-
-            /* Getting the database connection */
-            let database = (event.target as IDBRequest).result as IDBDatabase;
-
-            /* Checking if the object store already exists, to avoid error */
-            if (!database.objectStoreNames.contains(this.objectStoreName)) {
-
-                /* Creating the object store for local storage */
-                database.createObjectStore(this.objectStoreName);
-
-            }
-
-        });
-
-        /* Listening the success event and converting to an RxJS Observable */
-        let success = Observable.fromEvent(request, 'success');
-
-        /* Merging success and errors events */
-        Observable.merge(success, this.toErrorObservable(request, `connection`)).first().subscribe((event: Event) => {
-
-                /* Storing the database connection for further access */
-                this.database.next((event.target as IDBRequest).result as IDBDatabase);
-
-        });
+        this.connect();
 
     }
 
@@ -173,6 +144,43 @@ export class AsyncLocalStorage {
 
             /* Merging success (passing true) and error events and autoclosing the observable */
             return Observable.merge(this.toSuccessObservable(request), this.toErrorObservable(request, `clearer`)).first();
+
+        });
+
+    }
+
+    /**
+     * Connects to IndexedDB and creates the object store on first time
+     */
+    protected connect(): void {
+        
+        /* Connecting to IndexedDB */
+        let request = indexedDB.open(this.dbName);
+
+        /* Listening the event fired on first connection, creating the object store for local storage */
+        Observable.fromEvent(request, 'upgradeneeded').first().subscribe((event: Event) => {
+
+            /* Getting the database connection */
+            let database = (event.target as IDBRequest).result as IDBDatabase;
+
+            /* Checking if the object store already exists, to avoid error */
+            if (!database.objectStoreNames.contains(this.objectStoreName)) {
+
+                /* Creating the object store for local storage */
+                database.createObjectStore(this.objectStoreName);
+
+            }
+
+        });
+
+        /* Listening the success event and converting to an RxJS Observable */
+        let success = Observable.fromEvent(request, 'success');
+
+        /* Merging success and errors events */
+        Observable.merge(success, this.toErrorObservable(request, `connection`)).first().subscribe((event: Event) => {
+
+                /* Storing the database connection for further access */
+                this.database.next((event.target as IDBRequest).result as IDBDatabase);
 
         });
 
