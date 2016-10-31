@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../index.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AACH,cAAc,aAAa,CAAC","sourcesContent":["/**\n * @module\n * @description\n * Entry point for all public APIs of the async local storage package.\n */\nexport * from './src/index';\n\ninterface DecoratorInvocation {\n  type: Function;\n  args?: any[];\n}\n"]}
