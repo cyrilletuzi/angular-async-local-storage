@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.0-beta.2 (2016-10-31)
+
+### Features
+
+- Compatible with Universal server-side rendering
+- IE9 support via native localStorage (public API still asynchronous but synchronous internally)
+
+### Bug fixes
+
+- Remove an unwanted console.log() call
+
 ## 1.0.0-beta.1 (2016-10-31)
 
 ### Features

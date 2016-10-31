@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw';
 
 import { AsyncLocalDatabase } from './async-local-database';
 
 @Injectable()
-export class MockLocalDatabase implements AsyncLocalDatabase {
+export class LocalStorageDatabase implements AsyncLocalDatabase {
 
-    protected localStorage = new Map<string, any>();
+    /* Initializing native localStorage right now to be able to check its support on class instanciation */
+    protected localStorage = localStorage;
 
     /**
      * Gets an item value in local storage
@@ -17,7 +19,15 @@ export class MockLocalDatabase implements AsyncLocalDatabase {
      */
     public getItem(key: string): Observable<any> {
 
-        return Observable.of(this.localStorage.get(key));
+        let data: any;
+
+        try {
+            data = JSON.parse(this.localStorage.getItem(key));
+        } catch (error) {
+            return Observable.throw(new Error(`Invalid data in localStorage.`));
+        }
+
+        return Observable.of(data);
 
     }
 
@@ -29,7 +39,7 @@ export class MockLocalDatabase implements AsyncLocalDatabase {
      */
     public setItem(key: string, data: any): Observable<boolean> {
 
-        this.localStorage.set(key, data);
+        this.localStorage.setItem(key, JSON.stringify(data));
 
         return Observable.of(true);
 
@@ -42,7 +52,7 @@ export class MockLocalDatabase implements AsyncLocalDatabase {
      */
     public removeItem(key: string): Observable<boolean> {
 
-        this.localStorage.delete(key);
+        this.localStorage.removeItem(key);
 
         return Observable.of(true);
 

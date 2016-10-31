@@ -1,9 +1,25 @@
 import { NgModule } from '@angular/core';
 import { AsyncLocalStorage } from './async-local-storage';
-import { IndexedDBDatabase } from './databases/index';
-export function asyncLocalStorageFactory(database) {
+import { IndexedDBDatabase, LocalStorageDatabase, MockLocalDatabase } from './databases/index';
+export function asyncLocalStorageFactory() {
+    var database;
+    try {
+        /* Try with IndexedDB in modern browsers */
+        database = new IndexedDBDatabase();
+    }
+    catch (error) {
+        try {
+            /* Try with localStorage in old browsers (IE9) */
+            database = new LocalStorageDatabase();
+        }
+        catch (error) {
+            /* Fake database for server-side rendering (Universal) */
+            database = new MockLocalDatabase();
+        }
+    }
     return new AsyncLocalStorage(database);
 }
+;
 export var AsyncLocalStorageModule = (function () {
     function AsyncLocalStorageModule() {
     }
@@ -12,10 +28,8 @@ export var AsyncLocalStorageModule = (function () {
                     providers: [
                         {
                             provide: AsyncLocalStorage,
-                            useFactory: asyncLocalStorageFactory,
-                            deps: [IndexedDBDatabase]
-                        },
-                        IndexedDBDatabase
+                            useFactory: asyncLocalStorageFactory
+                        }
                     ]
                 },] },
     ];

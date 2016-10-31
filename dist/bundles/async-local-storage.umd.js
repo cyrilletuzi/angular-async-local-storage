@@ -217,9 +217,127 @@ var IndexedDBDatabase = (function () {
     return IndexedDBDatabase;
 }());
 
-function asyncLocalStorageFactory(database) {
+var LocalStorageDatabase = (function () {
+    function LocalStorageDatabase() {
+        /* Initializing native localStorage right now to be able to check its support on class instanciation */
+        this.localStorage = localStorage;
+    }
+    /**
+     * Gets an item value in local storage
+     * @param key The item's key
+     * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
+     */
+    LocalStorageDatabase.prototype.getItem = function (key) {
+        var data;
+        try {
+            data = JSON.parse(this.localStorage.getItem(key));
+        }
+        catch (error) {
+            return rxjs_Observable.Observable.throw(new Error("Invalid data in localStorage."));
+        }
+        return rxjs_Observable.Observable.of(data);
+    };
+    /**
+     * Sets an item in local storage
+     * @param key The item's key
+     * @param data The item's value, must NOT be null or undefined
+     * @returns An RxJS Observable to wait the end of the operation
+     */
+    LocalStorageDatabase.prototype.setItem = function (key, data) {
+        this.localStorage.setItem(key, JSON.stringify(data));
+        return rxjs_Observable.Observable.of(true);
+    };
+    /**
+     * Deletes an item in local storage
+     * @param key The item's key
+     * @returns An RxJS Observable to wait the end of the operation
+     */
+    LocalStorageDatabase.prototype.removeItem = function (key) {
+        this.localStorage.removeItem(key);
+        return rxjs_Observable.Observable.of(true);
+    };
+    /**
+     * Deletes all items from local storage
+     * @returns An RxJS Observable to wait the end of the operation
+     */
+    LocalStorageDatabase.prototype.clear = function () {
+        this.localStorage.clear();
+        return rxjs_Observable.Observable.of(true);
+    };
+    LocalStorageDatabase.decorators = [
+        { type: _angular_core.Injectable },
+    ];
+    /** @nocollapse */
+    LocalStorageDatabase.ctorParameters = [];
+    return LocalStorageDatabase;
+}());
+
+var MockLocalDatabase = (function () {
+    function MockLocalDatabase() {
+        this.localStorage = new Map();
+    }
+    /**
+     * Gets an item value in local storage
+     * @param key The item's key
+     * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
+     */
+    MockLocalDatabase.prototype.getItem = function (key) {
+        return rxjs_Observable.Observable.of(this.localStorage.get(key));
+    };
+    /**
+     * Sets an item in local storage
+     * @param key The item's key
+     * @param data The item's value, must NOT be null or undefined
+     * @returns An RxJS Observable to wait the end of the operation
+     */
+    MockLocalDatabase.prototype.setItem = function (key, data) {
+        this.localStorage.set(key, data);
+        return rxjs_Observable.Observable.of(true);
+    };
+    /**
+     * Deletes an item in local storage
+     * @param key The item's key
+     * @returns An RxJS Observable to wait the end of the operation
+     */
+    MockLocalDatabase.prototype.removeItem = function (key) {
+        this.localStorage.delete(key);
+        return rxjs_Observable.Observable.of(true);
+    };
+    /**
+     * Deletes all items from local storage
+     * @returns An RxJS Observable to wait the end of the operation
+     */
+    MockLocalDatabase.prototype.clear = function () {
+        this.localStorage.clear();
+        return rxjs_Observable.Observable.of(true);
+    };
+    MockLocalDatabase.decorators = [
+        { type: _angular_core.Injectable },
+    ];
+    /** @nocollapse */
+    MockLocalDatabase.ctorParameters = [];
+    return MockLocalDatabase;
+}());
+
+function asyncLocalStorageFactory() {
+    var database;
+    try {
+        /* Try with IndexedDB in modern browsers */
+        database = new IndexedDBDatabase();
+    }
+    catch (error) {
+        try {
+            /* Try with localStorage in old browsers (IE9) */
+            database = new LocalStorageDatabase();
+        }
+        catch (error) {
+            /* Fake database for server-side rendering (Universal) */
+            database = new MockLocalDatabase();
+        }
+    }
     return new AsyncLocalStorage(database);
 }
+
 var AsyncLocalStorageModule = (function () {
     function AsyncLocalStorageModule() {
     }
@@ -228,10 +346,8 @@ var AsyncLocalStorageModule = (function () {
                     providers: [
                         {
                             provide: AsyncLocalStorage,
-                            useFactory: asyncLocalStorageFactory,
-                            deps: [IndexedDBDatabase]
-                        },
-                        IndexedDBDatabase
+                            useFactory: asyncLocalStorageFactory
+                        }
                     ]
                 },] },
     ];

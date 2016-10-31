@@ -1,63 +1,31 @@
-import { Injectable } from '@angular/core';
-
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-
+import 'rxjs/add/observable/throw';
 import { AsyncLocalDatabase } from './async-local-database';
-
-@Injectable()
-export class MockLocalDatabase implements AsyncLocalDatabase {
-
-    protected localStorage = new Map<string, any>();
-
+export declare class LocalStorageDatabase implements AsyncLocalDatabase {
+    protected localStorage: Storage;
     /**
      * Gets an item value in local storage
      * @param key The item's key
      * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
      */
-    public getItem(key: string): Observable<any> {
-
-        return Observable.of(this.localStorage.get(key));
-
-    }
-
+    getItem(key: string): Observable<any>;
     /**
      * Sets an item in local storage
      * @param key The item's key
      * @param data The item's value, must NOT be null or undefined
      * @returns An RxJS Observable to wait the end of the operation
      */
-    public setItem(key: string, data: any): Observable<boolean> {
-
-        this.localStorage.set(key, data);
-
-        return Observable.of(true);
-
-    }
-
+    setItem(key: string, data: any): Observable<boolean>;
     /**
      * Deletes an item in local storage
      * @param key The item's key
      * @returns An RxJS Observable to wait the end of the operation
      */
-    public removeItem(key: string): Observable<boolean> {
-
-        this.localStorage.delete(key);
-
-        return Observable.of(true);
-
-    }
-
+    removeItem(key: string): Observable<boolean>;
     /**
      * Deletes all items from local storage
      * @returns An RxJS Observable to wait the end of the operation
      */
-    public clear(): Observable<boolean> {
-
-        this.localStorage.clear();
-
-        return Observable.of(true);
-
-    }
-
+    clear(): Observable<boolean>;
 }

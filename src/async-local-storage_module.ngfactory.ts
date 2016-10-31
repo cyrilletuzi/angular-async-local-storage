@@ -6,23 +6,17 @@
 
 import * as import0 from '@angular/core/src/linker/ng_module_factory';
 import * as import1 from './async-local-storage_module';
-import * as import2 from './databases/indexeddb-database';
-import * as import3 from '@angular/core/src/di/injector';
-import * as import4 from './async-local-storage';
+import * as import2 from '@angular/core/src/di/injector';
+import * as import3 from './async-local-storage';
 class AsyncLocalStorageModuleInjector extends import0.NgModuleInjector<import1.AsyncLocalStorageModule> {
   _AsyncLocalStorageModule_0:import1.AsyncLocalStorageModule;
-  __IndexedDBDatabase_1:import2.IndexedDBDatabase;
-  __AsyncLocalStorage_2:any;
-  constructor(parent:import3.Injector) {
+  __AsyncLocalStorage_1:any;
+  constructor(parent:import2.Injector) {
     super(parent,([] as any[]),([] as any[]));
   }
-  get _IndexedDBDatabase_1():import2.IndexedDBDatabase {
-    if ((this.__IndexedDBDatabase_1 == (null as any))) { (this.__IndexedDBDatabase_1 = new import2.IndexedDBDatabase()); }
-    return this.__IndexedDBDatabase_1;
-  }
-  get _AsyncLocalStorage_2():any {
-    if ((this.__AsyncLocalStorage_2 == (null as any))) { (this.__AsyncLocalStorage_2 = import1.asyncLocalStorageFactory(this._IndexedDBDatabase_1)); }
-    return this.__AsyncLocalStorage_2;
+  get _AsyncLocalStorage_1():any {
+    if ((this.__AsyncLocalStorage_1 == (null as any))) { (this.__AsyncLocalStorage_1 = import1.asyncLocalStorageFactory()); }
+    return this.__AsyncLocalStorage_1;
   }
   createInternal():import1.AsyncLocalStorageModule {
     this._AsyncLocalStorageModule_0 = new import1.AsyncLocalStorageModule();
@@ -30,8 +24,7 @@ class AsyncLocalStorageModuleInjector extends import0.NgModuleInjector<import1.A
   }
   getInternal(token:any,notFoundResult:any):any {
     if ((token === import1.AsyncLocalStorageModule)) { return this._AsyncLocalStorageModule_0; }
-    if ((token === import2.IndexedDBDatabase)) { return this._IndexedDBDatabase_1; }
-    if ((token === import4.AsyncLocalStorage)) { return this._AsyncLocalStorage_2; }
+    if ((token === import3.AsyncLocalStorage)) { return this._AsyncLocalStorage_1; }
     return notFoundResult;
   }
   destroyInternal():void {

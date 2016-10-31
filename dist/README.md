@@ -158,16 +158,23 @@ this.storage.getItem('color').subscribe((color: string) => {
 [All browsers supporting IndexedDB](http://caniuse.com/#feat=indexeddb), ie. all current browsers :
 Firefox, Chrome, Opera, Safari, Edge and IE10+.
 
+IE9 is supported but it uses native localStorage as a fallback, 
+so internal operations are synchronous (the public API remains asynchronous).
+
 This module is not impacted by IE/Edge missing IndexedDB features.
 
 This module has not been tested against Safari 8/9 buggy IndexedDB implementation,
 but it uses very basic features of IndexedDB so it may be fine. Otherwise,
 use the [IndexedDBshim polyfill](https://github.com/axemclion/IndexedDBShim).
 
+## AoT and Universal support
+
+This module supports [AoT pre-compiling](https://angular.io/docs/ts/latest/cookbook/aot-compiler.html)
+and [Universal server-side rendering](https://github.com/angular/universal).
+
 ## Known issues
 
 - For now, if you set an item value to null or undefined (why ?!), it will throw an error on next item update.
-- As this module uses a browser-only API (IndexedDB), it may causes issues with [Universal](https://github.com/angular/universal). Support for Universal is coming soon.
 
 ## Coming soon
 
