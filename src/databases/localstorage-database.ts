@@ -19,12 +19,16 @@ export class LocalStorageDatabase extends AsyncLocalDatabase {
      */
     public getItem(key: string): Observable<any> {
 
-        let data: any;
+        let data: any = this.localStorage.getItem(key);
 
-        try {
-            data = JSON.parse(this.localStorage.getItem(key));
-        } catch (error) {
-            return Observable.throw(new Error(`Invalid data in localStorage.`));
+        if (data != null) {
+
+            try {
+                data = JSON.parse(data);
+            } catch (error) {
+                return Observable.throw(new Error(`Invalid data in localStorage.`));
+            }
+
         }
 
         return Observable.of(data);

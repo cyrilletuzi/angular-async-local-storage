@@ -252,12 +252,14 @@ var LocalStorageDatabase = (function (_super) {
      * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
      */
     LocalStorageDatabase.prototype.getItem = function (key) {
-        var data;
-        try {
-            data = JSON.parse(this.localStorage.getItem(key));
-        }
-        catch (error) {
-            return rxjs_Observable.Observable.throw(new Error("Invalid data in localStorage."));
+        var data = this.localStorage.getItem(key);
+        if (data != null) {
+            try {
+                data = JSON.parse(data);
+            }
+            catch (error) {
+                return rxjs_Observable.Observable.throw(new Error("Invalid data in localStorage."));
+            }
         }
         return rxjs_Observable.Observable.of(data);
     };
