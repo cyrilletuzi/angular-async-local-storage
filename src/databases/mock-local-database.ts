@@ -17,7 +17,7 @@ export class MockLocalDatabase extends AsyncLocalDatabase {
      */
     public getItem(key: string): Observable<any> {
 
-        return Observable.of(this.localStorage.get(key));
+        return Observable.of(this.localStorage.get(key) || null);
 
     }
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 (2016-11-01)
+
+### Bug fixes
+
+- null instead of undefined for unexisting item in mock database
+
 ## 1.0.0 (2016-10-31)
 
 ### Bug fixes

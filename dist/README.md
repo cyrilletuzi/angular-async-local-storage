@@ -173,10 +173,14 @@ use the [IndexedDBshim polyfill](https://github.com/axemclion/IndexedDBShim).
 This module supports [AoT pre-compiling](https://angular.io/docs/ts/latest/cookbook/aot-compiler.html)
 and [Universal server-side rendering](https://github.com/angular/universal).
 
-## Coming soon
+## Changelog
+
+[Changelog available here](https://github.com/cyrilletuzi/angular2-async-local-storage/blob/master/CHANGELOG.md).
+
+## Roadmap
 
 - Unit tests.
-- Cache ?
+- Cache / preload ?
 
 ## License
 
