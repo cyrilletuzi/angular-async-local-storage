@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 (2016-11-01)
+
+### Bug fixes
+
+- allow falsy values in mock database
+
 ## 1.0.1 (2016-11-01)
 
 ### Bug fixes

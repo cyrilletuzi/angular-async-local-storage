@@ -313,7 +313,8 @@ var MockLocalDatabase = (function (_super) {
      * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
      */
     MockLocalDatabase.prototype.getItem = function (key) {
-        return rxjs_Observable.Observable.of(this.localStorage.get(key) || null);
+        var data = this.localStorage.get(key);
+        return rxjs_Observable.Observable.of((data != undefined) ? data : null);
     };
     /**
      * Sets an item in local storage

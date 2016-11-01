@@ -159,8 +159,11 @@ this.storage.getItem('color').subscribe((color: string) => {
 [All browsers supporting IndexedDB](http://caniuse.com/#feat=indexeddb), ie. all current browsers :
 Firefox, Chrome, Opera, Safari, Edge and IE10+.
 
-IE9 is supported but it uses native localStorage as a fallback, 
+IE8/9 are supported but use native localStorage as a fallback, 
 so internal operations are synchronous (the public API remains asynchronous).
+
+Older or special browsers (like Opera Mini) not supporting IndexedDB and localStorage 
+use a fake storage, so the data won't be persistent but the module won't crash.
 
 This module is not impacted by IE/Edge missing IndexedDB features.
 
