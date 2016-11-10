@@ -66,7 +66,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
             /* Listening to the success event, and passing the item value if found, null otherwise */
             let success = Observable.fromEvent(request, 'success')
                 .pluck('target', 'result')
-                .map((result) => result ? result[this.dataPath] : null);
+                .map((result: any) => result ? result[this.dataPath] : null);
 
             /* Merging success and errors events and autoclosing the observable */
             return Observable.merge(success, this.toErrorObservable(request, `getter`)).first();
@@ -96,8 +96,18 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
             /* Opening a transaction */
             return this.transaction('readwrite').mergeMap((transaction) => {
 
+                let request: IDBRequest;
+
                 /* Adding or updating local storage, based on previous checking */
-                let request = transaction[method]({ [this.dataPath]: data }, key);
+                switch (method) {
+                    case 'add':
+                        request = transaction.add({ [this.dataPath]: data }, key);
+                        break;
+                    case 'put':
+                    default:
+                        request = transaction.put({ [this.dataPath]: data }, key);
+                        break;
+                }
 
                 /* Merging success (passing true) and error events and autoclosing the observable */
                 return Observable.merge(this.toSuccessObservable(request), this.toErrorObservable(request, `setter`)).first();
