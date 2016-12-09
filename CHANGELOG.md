@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0 (2016-12-09)
+
+### Features
+
+- Up to date with Angular 2.3
+- Update peerDependencies :
+  - reflect-metadata 0.1.8
+  - rxjs 5.0.0-rc.4
+  - zone.js 0.7.2
+
 ## 1.0.2 (2016-11-01)
 
 ### Bug fixes

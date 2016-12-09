@@ -125,11 +125,20 @@ var IndexedDBDatabase = (function (_super) {
         return this.getItem(key).map(function (data) { return (data == null) ? 'add' : 'put'; }).mergeMap(function (method) {
             /* Opening a transaction */
             return _this.transaction('readwrite').mergeMap(function (transaction) {
+                var request;
                 /* Adding or updating local storage, based on previous checking */
-                var request = transaction[method]((_a = {}, _a[_this.dataPath] = data, _a), key);
+                switch (method) {
+                    case 'add':
+                        request = transaction.add((_a = {}, _a[_this.dataPath] = data, _a), key);
+                        break;
+                    case 'put':
+                    default:
+                        request = transaction.put((_b = {}, _b[_this.dataPath] = data, _b), key);
+                        break;
+                }
                 /* Merging success (passing true) and error events and autoclosing the observable */
                 return rxjs_Observable.Observable.merge(_this.toSuccessObservable(request), _this.toErrorObservable(request, "setter")).first();
-                var _a;
+                var _a, _b;
             });
         });
     };
