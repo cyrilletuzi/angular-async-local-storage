@@ -43,9 +43,9 @@ export var AsyncLocalStorage = (function () {
         { type: Injectable },
     ];
     /** @nocollapse */
-    AsyncLocalStorage.ctorParameters = [
+    AsyncLocalStorage.ctorParameters = function () { return [
         { type: AsyncLocalDatabase, },
-    ];
+    ]; };
     return AsyncLocalStorage;
 }());
 //# sourceMappingURL=async-local-storage.js.map

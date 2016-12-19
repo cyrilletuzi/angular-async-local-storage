@@ -34,7 +34,7 @@ export var AsyncLocalStorageModule = (function () {
                 },] },
     ];
     /** @nocollapse */
-    AsyncLocalStorageModule.ctorParameters = [];
+    AsyncLocalStorageModule.ctorParameters = function () { return []; };
     return AsyncLocalStorageModule;
 }());
 //# sourceMappingURL=async-local-storage_module.js.map

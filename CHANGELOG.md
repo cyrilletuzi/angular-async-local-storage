@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 (2016-12-19)
+
+### Bug fixes
+
+- Recompiled with Angular 2.3.1, following [Angular changelog advice](https://github.com/angular/angular/blob/master/CHANGELOG.md#231-2016-12-15)
+
 ## 1.1.0 (2016-12-09)
 
 ### Features

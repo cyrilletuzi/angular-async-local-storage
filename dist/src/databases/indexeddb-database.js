@@ -190,7 +190,7 @@ export var IndexedDBDatabase = (function (_super) {
         { type: Injectable },
     ];
     /** @nocollapse */
-    IndexedDBDatabase.ctorParameters = [];
+    IndexedDBDatabase.ctorParameters = function () { return []; };
     return IndexedDBDatabase;
 }(AsyncLocalDatabase));
 //# sourceMappingURL=indexeddb-database.js.map

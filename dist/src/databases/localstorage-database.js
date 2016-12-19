@@ -63,7 +63,7 @@ export var LocalStorageDatabase = (function (_super) {
         { type: Injectable },
     ];
     /** @nocollapse */
-    LocalStorageDatabase.ctorParameters = [];
+    LocalStorageDatabase.ctorParameters = function () { return []; };
     return LocalStorageDatabase;
 }(AsyncLocalDatabase));
 //# sourceMappingURL=localstorage-database.js.map

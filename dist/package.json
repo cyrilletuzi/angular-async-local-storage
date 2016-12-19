@@ -1,6 +1,6 @@
 {
   "name": "angular2-async-local-storage",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Efficient local storage module for Angular 2 : simple API based on native localStorage API, but internally stored via the asynchronous IndexedDB API for performance, and wrapped in RxJS observables to be homogeneous with other Angular modules.",
   "main": "bundles/async-local-storage.umd.js",
   "module": "index.js",
@@ -24,7 +24,7 @@
     "url": "https://github.com/cyrilletuzi/angular2-async-local-storage/issues"
   },
   "peerDependencies": {
-    "@angular/core": "^2.3.0",
+    "@angular/core": "^2.3.1",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.0-rc.4",
     "zone.js": "^0.7.2"

@@ -53,9 +53,9 @@ var AsyncLocalStorage = (function () {
         { type: _angular_core.Injectable },
     ];
     /** @nocollapse */
-    AsyncLocalStorage.ctorParameters = [
+    AsyncLocalStorage.ctorParameters = function () { return [
         { type: AsyncLocalDatabase, },
-    ];
+    ]; };
     return AsyncLocalStorage;
 }());
 
@@ -239,7 +239,7 @@ var IndexedDBDatabase = (function (_super) {
         { type: _angular_core.Injectable },
     ];
     /** @nocollapse */
-    IndexedDBDatabase.ctorParameters = [];
+    IndexedDBDatabase.ctorParameters = function () { return []; };
     return IndexedDBDatabase;
 }(AsyncLocalDatabase));
 
@@ -303,7 +303,7 @@ var LocalStorageDatabase = (function (_super) {
         { type: _angular_core.Injectable },
     ];
     /** @nocollapse */
-    LocalStorageDatabase.ctorParameters = [];
+    LocalStorageDatabase.ctorParameters = function () { return []; };
     return LocalStorageDatabase;
 }(AsyncLocalDatabase));
 
@@ -358,7 +358,7 @@ var MockLocalDatabase = (function (_super) {
         { type: _angular_core.Injectable },
     ];
     /** @nocollapse */
-    MockLocalDatabase.ctorParameters = [];
+    MockLocalDatabase.ctorParameters = function () { return []; };
     return MockLocalDatabase;
 }(AsyncLocalDatabase));
 
@@ -395,7 +395,7 @@ var AsyncLocalStorageModule = (function () {
                 },] },
     ];
     /** @nocollapse */
-    AsyncLocalStorageModule.ctorParameters = [];
+    AsyncLocalStorageModule.ctorParameters = function () { return []; };
     return AsyncLocalStorageModule;
 }());
 

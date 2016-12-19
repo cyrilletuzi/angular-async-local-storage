@@ -53,7 +53,7 @@ export var MockLocalDatabase = (function (_super) {
         { type: Injectable },
     ];
     /** @nocollapse */
-    MockLocalDatabase.ctorParameters = [];
+    MockLocalDatabase.ctorParameters = function () { return []; };
     return MockLocalDatabase;
 }(AsyncLocalDatabase));
 //# sourceMappingURL=mock-local-database.js.map
