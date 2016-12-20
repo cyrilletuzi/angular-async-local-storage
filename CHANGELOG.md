@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0 (2016-12-20)
+
+### Features
+
+- Up to date with Angular 2.4 and RxJS final
+
 ## 1.1.1 (2016-12-19)
 
 ### Bug fixes
