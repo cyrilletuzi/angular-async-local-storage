@@ -83,7 +83,7 @@ System.config({
     map: {
       '@angular/core': 'node_modules/@angular/core/bundles/core.umd.js',
       ...
-      'angular2-async-local-storage': 'node_modules/angular-async-local-storage/bundles/async-local-storage.umd.js'
+      'angular-async-local-storage': 'node_modules/angular-async-local-storage/bundles/async-local-storage.umd.js'
     }
     ...
 });
@@ -180,7 +180,7 @@ and [Universal server-side rendering](https://github.com/angular/universal).
 
 ## Changelog
 
-[Changelog available here](https://github.com/cyrilletuzi/angular2-async-local-storage/blob/master/CHANGELOG.md).
+[Changelog available here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/CHANGELOG.md).
 
 ## Roadmap
 
