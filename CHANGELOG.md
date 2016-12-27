@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0 (2016-12-27)
+
+### Features
+
+- Rename package to angular-async-local-storage
+
 ## 1.2.0 (2016-12-20)
 
 ### Features
@@ -55,6 +61,6 @@
 
 ### Features
 
-- Initial release : asynchronous local storage module for Angular 2
+- Initial release : asynchronous local storage module for Angular
 - Up to date with Angular 2.1
 - Compatible with AoT pre-compiling

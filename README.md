@@ -1,12 +1,14 @@
-# Async local storage for Angular 2
+# Async local storage for Angular
 
-Efficient local storage module for Angular 2 : simple API based on native localStorage API, 
+Efficient local storage module for Angular : simple API based on native localStorage API, 
 but internally stored via the asynchronous IndexedDB API for performance, 
-and wrapped in RxJS observables to be homogeneous with other Angular 2 asynchronous modules.
+and wrapped in RxJS observables to be homogeneous with other Angular asynchronous modules.
+
+*Previously named angular2-async-local-storage.*
 
 ## Why this module ?
 
-For now, Angular 2 does not provide a local storage module, and almost every app needs some local storage. 
+For now, Angular does not provide a local storage module, and almost every app needs some local storage. 
 There is 2 native JavaScript APIs available :
 - [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage)
 - [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
@@ -31,14 +33,14 @@ to be homogeneous with other Angular modules.
 Install via [npm](http://npmjs.com) :
 
 ```
-npm install angular2-async-local-storage --save
+npm install angular-async-local-storage --save
 ```
 
 Then include the AsyncLocalStorage module in your app root module. It works like the HttpModule,
 providing a global service to the whole app, so do NOT re-import it in your own sub modules.
 
 ```
-import { AsyncLocalStorageModule } from 'angular2-async-local-storage';
+import { AsyncLocalStorageModule } from 'angular-async-local-storage';
 
 @NgModule({
   imports: [
@@ -54,7 +56,7 @@ export class AppModule {}
 Now you just have to inject the service where you need it :
 
 ```
-import { AsyncLocalStorage } from 'angular2-async-local-storage';
+import { AsyncLocalStorage } from 'angular-async-local-storage';
 
 @Injectable()
 export class YourService {
@@ -81,7 +83,7 @@ System.config({
     map: {
       '@angular/core': 'node_modules/@angular/core/bundles/core.umd.js',
       ...
-      'angular2-async-local-storage': 'node_modules/angular2-async-local-storage/bundles/async-local-storage.umd.js'
+      'angular2-async-local-storage': 'node_modules/angular-async-local-storage/bundles/async-local-storage.umd.js'
     }
     ...
 });
@@ -160,7 +162,7 @@ this.storage.getItem('color').subscribe((color: string) => {
 Firefox, Chrome, Opera, Safari, Edge and IE10+.
 
 IE8/9 are supported but use native localStorage as a fallback, 
-so internal operations are synchronous (the public API remains asynchronous).
+so internal operations are synchronous (the public API remains asynchronous-like).
 
 Older or special browsers (like Opera Mini) not supporting IndexedDB and localStorage 
 use a fake storage, so the data won't be persistent but the module won't crash.
