@@ -5,7 +5,7 @@
   "main": "dist/bundles/async-local-storage.umd.js",
   "module": "dist/index.js",
   "scripts": {
-    "cleanup": "rimraf dist/bundles dist/src dist/index.d.ts dist/index.js dist/index.js.map dist/LICENCE dist/README.md",
+    "cleanup": "rimraf dist/bundles dist/src dist/index.d.ts dist/index.metadata.json dist/index.js dist/index.js.map dist/LICENSE dist/README.md",
     "bundling": "rollup -c",
     "minify": "uglifyjs dist/bundles/async-local-storage.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/async-local-storage.umd.min.js",
     "copy": "copyfiles LICENSE README.md dist",
