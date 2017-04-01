@@ -1,19 +1,25 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import { AsyncLocalDatabase } from './async-local-database';
-export var LocalStorageDatabase = (function (_super) {
+var LocalStorageDatabase = (function (_super) {
     __extends(LocalStorageDatabase, _super);
     function LocalStorageDatabase() {
-        _super.apply(this, arguments);
+        var _this = _super !== null && _super.apply(this, arguments) || this;
         /* Initializing native localStorage right now to be able to check its support on class instanciation */
-        this.localStorage = localStorage;
+        _this.localStorage = localStorage;
+        return _this;
     }
     /**
      * Gets an item value in local storage
@@ -59,11 +65,12 @@ export var LocalStorageDatabase = (function (_super) {
         this.localStorage.clear();
         return Observable.of(true);
     };
-    LocalStorageDatabase.decorators = [
-        { type: Injectable },
-    ];
-    /** @nocollapse */
-    LocalStorageDatabase.ctorParameters = function () { return []; };
     return LocalStorageDatabase;
 }(AsyncLocalDatabase));
+export { LocalStorageDatabase };
+LocalStorageDatabase.decorators = [
+    { type: Injectable },
+];
+/** @nocollapse */
+LocalStorageDatabase.ctorParameters = function () { return []; };
 //# sourceMappingURL=localstorage-database.js.map

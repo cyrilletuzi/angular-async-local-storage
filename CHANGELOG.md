@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 (2017-04-01)
+
+### Features
+
+- Up to date with Angular 4.0
+
 ## 1.3.0 (2016-12-27)
 
 ### Features

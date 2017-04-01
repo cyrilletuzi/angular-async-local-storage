@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -15,33 +20,34 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/of';
 import { AsyncLocalDatabase } from './async-local-database';
-export var IndexedDBDatabase = (function (_super) {
+var IndexedDBDatabase = (function (_super) {
     __extends(IndexedDBDatabase, _super);
     /**
      * Connects to IndexedDB
      */
     function IndexedDBDatabase() {
-        _super.call(this);
+        var _this = _super.call(this) || this;
         /**
          * IndexedDB database name for local storage
          */
-        this.dbName = 'ngStorage';
+        _this.dbName = 'ngStorage';
         /**
          * IndexedDB object store name for local storage
          */
-        this.objectStoreName = 'localStorage';
+        _this.objectStoreName = 'localStorage';
         /**
          * IndexedDB key path name for local storage (where an item's key will be stored)
          */
-        this.keyPath = 'key';
+        _this.keyPath = 'key';
         /**
          * IndexedDB data path name for local storage (where items' value will be stored)
          */
-        this.dataPath = 'value';
+        _this.dataPath = 'value';
         /* Creating the RxJS ReplaySubject */
-        this.database = new ReplaySubject();
+        _this.database = new ReplaySubject();
         /* Connecting to IndexedDB */
-        this.connect();
+        _this.connect();
+        return _this;
     }
     /**
      * Gets an item value in local storage
@@ -186,11 +192,12 @@ export var IndexedDBDatabase = (function (_super) {
         /* Transforming a IndexedDB error event in an RxJS ErrorObservable */
         return Observable.fromEvent(request, 'error').mergeMap(function () { return Observable.throw(new Error("IndexedDB " + error + " issue.")); });
     };
-    IndexedDBDatabase.decorators = [
-        { type: Injectable },
-    ];
-    /** @nocollapse */
-    IndexedDBDatabase.ctorParameters = function () { return []; };
     return IndexedDBDatabase;
 }(AsyncLocalDatabase));
+export { IndexedDBDatabase };
+IndexedDBDatabase.decorators = [
+    { type: Injectable },
+];
+/** @nocollapse */
+IndexedDBDatabase.ctorParameters = function () { return []; };
 //# sourceMappingURL=indexeddb-database.js.map

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AsyncLocalDatabase } from './databases/async-local-database';
-export var AsyncLocalStorage = (function () {
+var AsyncLocalStorage = (function () {
     /**
      * Injects a local database
      */
@@ -39,13 +39,14 @@ export var AsyncLocalStorage = (function () {
     AsyncLocalStorage.prototype.clear = function () {
         return this.database.clear();
     };
-    AsyncLocalStorage.decorators = [
-        { type: Injectable },
-    ];
-    /** @nocollapse */
-    AsyncLocalStorage.ctorParameters = function () { return [
-        { type: AsyncLocalDatabase, },
-    ]; };
     return AsyncLocalStorage;
 }());
+export { AsyncLocalStorage };
+AsyncLocalStorage.decorators = [
+    { type: Injectable },
+];
+/** @nocollapse */
+AsyncLocalStorage.ctorParameters = function () { return [
+    { type: AsyncLocalDatabase, },
+]; };
 //# sourceMappingURL=async-local-storage.js.map

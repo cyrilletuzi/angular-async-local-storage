@@ -20,21 +20,22 @@ export function asyncLocalStorageFactory() {
     return new AsyncLocalStorage(database);
 }
 ;
-export var AsyncLocalStorageModule = (function () {
+var AsyncLocalStorageModule = (function () {
     function AsyncLocalStorageModule() {
     }
-    AsyncLocalStorageModule.decorators = [
-        { type: NgModule, args: [{
-                    providers: [
-                        {
-                            provide: AsyncLocalStorage,
-                            useFactory: asyncLocalStorageFactory
-                        }
-                    ]
-                },] },
-    ];
-    /** @nocollapse */
-    AsyncLocalStorageModule.ctorParameters = function () { return []; };
     return AsyncLocalStorageModule;
 }());
+export { AsyncLocalStorageModule };
+AsyncLocalStorageModule.decorators = [
+    { type: NgModule, args: [{
+                providers: [
+                    {
+                        provide: AsyncLocalStorage,
+                        useFactory: asyncLocalStorageFactory
+                    }
+                ]
+            },] },
+];
+/** @nocollapse */
+AsyncLocalStorageModule.ctorParameters = function () { return []; };
 //# sourceMappingURL=async-local-storage_module.js.map

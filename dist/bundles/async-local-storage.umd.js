@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/Observable'), require('rxjs/ReplaySubject'), require('rxjs/add/operator/map'), require('rxjs/add/operator/mergeMap'), require('rxjs/add/operator/pluck'), require('rxjs/add/operator/first'), require('rxjs/add/observable/fromEvent'), require('rxjs/add/observable/merge'), require('rxjs/add/observable/throw'), require('rxjs/add/observable/of')) :
-    typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'rxjs/Observable', 'rxjs/ReplaySubject', 'rxjs/add/operator/map', 'rxjs/add/operator/mergeMap', 'rxjs/add/operator/pluck', 'rxjs/add/operator/first', 'rxjs/add/observable/fromEvent', 'rxjs/add/observable/merge', 'rxjs/add/observable/throw', 'rxjs/add/observable/of'], factory) :
-    (factory((global.ng = global.ng || {}, global.ng.asyncLocalStorage = global.ng.asyncLocalStorage || {}),global.ng.core,global.Rx,global.Rx,global.Rx.Observable.prototype,global.Rx.Observable.prototype,global.Rx.Observable.prototype,global.Rx.Observable.prototype,global.Rx.Observable,global.Rx.Observable,global.Rx.Observable,global.Rx.Observable));
-}(this, (function (exports,_angular_core,rxjs_Observable,rxjs_ReplaySubject,rxjs_add_operator_map,rxjs_add_operator_mergeMap,rxjs_add_operator_pluck,rxjs_add_operator_first,rxjs_add_observable_fromEvent,rxjs_add_observable_merge,rxjs_add_observable_throw,rxjs_add_observable_of) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/Observable'), require('rxjs/ReplaySubject'), require('rxjs/add/operator/map'), require('rxjs/add/operator/mergeMap'), require('rxjs/add/operator/pluck'), require('rxjs/add/operator/first'), require('rxjs/add/observable/fromEvent'), require('rxjs/add/observable/merge'), require('rxjs/add/observable/throw'), require('rxjs/add/observable/of')) :
+	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'rxjs/Observable', 'rxjs/ReplaySubject', 'rxjs/add/operator/map', 'rxjs/add/operator/mergeMap', 'rxjs/add/operator/pluck', 'rxjs/add/operator/first', 'rxjs/add/observable/fromEvent', 'rxjs/add/observable/merge', 'rxjs/add/observable/throw', 'rxjs/add/observable/of'], factory) :
+	(factory((global.ng = global.ng || {}, global.ng.asyncLocalStorage = global.ng.asyncLocalStorage || {}),global.ng.core,global.Rx,global.Rx));
+}(this, (function (exports,_angular_core,rxjs_Observable,rxjs_ReplaySubject) { 'use strict';
 
 var AsyncLocalDatabase = (function () {
     function AsyncLocalDatabase() {
@@ -49,48 +49,54 @@ var AsyncLocalStorage = (function () {
     AsyncLocalStorage.prototype.clear = function () {
         return this.database.clear();
     };
-    AsyncLocalStorage.decorators = [
-        { type: _angular_core.Injectable },
-    ];
-    /** @nocollapse */
-    AsyncLocalStorage.ctorParameters = function () { return [
-        { type: AsyncLocalDatabase, },
-    ]; };
     return AsyncLocalStorage;
 }());
+AsyncLocalStorage.decorators = [
+    { type: _angular_core.Injectable },
+];
+/** @nocollapse */
+AsyncLocalStorage.ctorParameters = function () { return [
+    { type: AsyncLocalDatabase, },
+]; };
 
-var __extends = (undefined && undefined.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var IndexedDBDatabase = (function (_super) {
     __extends(IndexedDBDatabase, _super);
     /**
      * Connects to IndexedDB
      */
     function IndexedDBDatabase() {
-        _super.call(this);
+        var _this = _super.call(this) || this;
         /**
          * IndexedDB database name for local storage
          */
-        this.dbName = 'ngStorage';
+        _this.dbName = 'ngStorage';
         /**
          * IndexedDB object store name for local storage
          */
-        this.objectStoreName = 'localStorage';
+        _this.objectStoreName = 'localStorage';
         /**
          * IndexedDB key path name for local storage (where an item's key will be stored)
          */
-        this.keyPath = 'key';
+        _this.keyPath = 'key';
         /**
          * IndexedDB data path name for local storage (where items' value will be stored)
          */
-        this.dataPath = 'value';
+        _this.dataPath = 'value';
         /* Creating the RxJS ReplaySubject */
-        this.database = new rxjs_ReplaySubject.ReplaySubject();
+        _this.database = new rxjs_ReplaySubject.ReplaySubject();
         /* Connecting to IndexedDB */
-        this.connect();
+        _this.connect();
+        return _this;
     }
     /**
      * Gets an item value in local storage
@@ -235,25 +241,31 @@ var IndexedDBDatabase = (function (_super) {
         /* Transforming a IndexedDB error event in an RxJS ErrorObservable */
         return rxjs_Observable.Observable.fromEvent(request, 'error').mergeMap(function () { return rxjs_Observable.Observable.throw(new Error("IndexedDB " + error + " issue.")); });
     };
-    IndexedDBDatabase.decorators = [
-        { type: _angular_core.Injectable },
-    ];
-    /** @nocollapse */
-    IndexedDBDatabase.ctorParameters = function () { return []; };
     return IndexedDBDatabase;
 }(AsyncLocalDatabase));
+IndexedDBDatabase.decorators = [
+    { type: _angular_core.Injectable },
+];
+/** @nocollapse */
+IndexedDBDatabase.ctorParameters = function () { return []; };
 
-var __extends$1 = (undefined && undefined.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends$1 = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var LocalStorageDatabase = (function (_super) {
     __extends$1(LocalStorageDatabase, _super);
     function LocalStorageDatabase() {
-        _super.apply(this, arguments);
+        var _this = _super !== null && _super.apply(this, arguments) || this;
         /* Initializing native localStorage right now to be able to check its support on class instanciation */
-        this.localStorage = localStorage;
+        _this.localStorage = localStorage;
+        return _this;
     }
     /**
      * Gets an item value in local storage
@@ -299,24 +311,30 @@ var LocalStorageDatabase = (function (_super) {
         this.localStorage.clear();
         return rxjs_Observable.Observable.of(true);
     };
-    LocalStorageDatabase.decorators = [
-        { type: _angular_core.Injectable },
-    ];
-    /** @nocollapse */
-    LocalStorageDatabase.ctorParameters = function () { return []; };
     return LocalStorageDatabase;
 }(AsyncLocalDatabase));
+LocalStorageDatabase.decorators = [
+    { type: _angular_core.Injectable },
+];
+/** @nocollapse */
+LocalStorageDatabase.ctorParameters = function () { return []; };
 
-var __extends$2 = (undefined && undefined.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends$2 = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var MockLocalDatabase = (function (_super) {
     __extends$2(MockLocalDatabase, _super);
     function MockLocalDatabase() {
-        _super.apply(this, arguments);
-        this.localStorage = new Map();
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.localStorage = new Map();
+        return _this;
     }
     /**
      * Gets an item value in local storage
@@ -354,13 +372,13 @@ var MockLocalDatabase = (function (_super) {
         this.localStorage.clear();
         return rxjs_Observable.Observable.of(true);
     };
-    MockLocalDatabase.decorators = [
-        { type: _angular_core.Injectable },
-    ];
-    /** @nocollapse */
-    MockLocalDatabase.ctorParameters = function () { return []; };
     return MockLocalDatabase;
 }(AsyncLocalDatabase));
+MockLocalDatabase.decorators = [
+    { type: _angular_core.Injectable },
+];
+/** @nocollapse */
+MockLocalDatabase.ctorParameters = function () { return []; };
 
 function asyncLocalStorageFactory() {
     var database;
@@ -384,20 +402,20 @@ function asyncLocalStorageFactory() {
 var AsyncLocalStorageModule = (function () {
     function AsyncLocalStorageModule() {
     }
-    AsyncLocalStorageModule.decorators = [
-        { type: _angular_core.NgModule, args: [{
-                    providers: [
-                        {
-                            provide: AsyncLocalStorage,
-                            useFactory: asyncLocalStorageFactory
-                        }
-                    ]
-                },] },
-    ];
-    /** @nocollapse */
-    AsyncLocalStorageModule.ctorParameters = function () { return []; };
     return AsyncLocalStorageModule;
 }());
+AsyncLocalStorageModule.decorators = [
+    { type: _angular_core.NgModule, args: [{
+                providers: [
+                    {
+                        provide: AsyncLocalStorage,
+                        useFactory: asyncLocalStorageFactory
+                    }
+                ]
+            },] },
+];
+/** @nocollapse */
+AsyncLocalStorageModule.ctorParameters = function () { return []; };
 
 /**
  * @module
