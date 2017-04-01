@@ -98,6 +98,8 @@ except it's asynchronous via [RxJS Observables](http://reactivex.io/rxjs/).
 
 Errors are unlikely to happen, but in an app you should always catch all potential errors.
 
+You DO need to subscribe, even if you don't have something specific to do after writing in local storage (because RxJS observables are cold by default).
+
 You do NOT need to unsubscribe : the observable autocompletes (like in the Http service).
 
 ```
@@ -139,7 +141,7 @@ this.storage.getItem('notexisting').subscribe((data) => {
 });
 ```
 
-So always check the data as it may have been removed from local storage.
+So always check the data as it may have been removed from local storage (done the old way here, but feel free to use RxJS filter function or else).
 
 ```
 this.storage.getItem('user').subscribe((user) => {
@@ -161,6 +163,10 @@ this.storage.getItem('color').subscribe((color: string) => {
 [All browsers supporting IndexedDB](http://caniuse.com/#feat=indexeddb), ie. all current browsers :
 Firefox, Chrome, Opera, Safari, Edge and IE10+.
 
+Local storage is required only for apps, and given that you won't do an app in older browsers,
+current browsers support is far enough and you can jump to the next section. 
+But you'll find other details below if needed.
+
 IE8/9 are supported but use native localStorage as a fallback, 
 so internal operations are synchronous (the public API remains asynchronous-like).
 
@@ -169,7 +175,7 @@ use a fake storage, so the data won't be persistent but the module won't crash.
 
 This module is not impacted by IE/Edge missing IndexedDB features.
 
-This module has not been tested against Safari 8/9 buggy IndexedDB implementation,
+This module has not been tested against Safari 9 buggy IndexedDB implementation,
 but it uses very basic features of IndexedDB so it may be fine. Otherwise,
 use the [IndexedDBshim polyfill](https://github.com/axemclion/IndexedDBShim).
 
