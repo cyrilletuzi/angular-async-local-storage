@@ -32,14 +32,14 @@ to be homogeneous with other Angular modules.
 
 Install via [npm](http://npmjs.com) :
 
-```
+```bash
 npm install angular-async-local-storage --save
 ```
 
 Then include the AsyncLocalStorage module in your app root module. It works like the HttpModule,
 providing a global service to the whole app, so do NOT re-import it in your own sub modules.
 
-```
+```typescript
 import { AsyncLocalStorageModule } from 'angular-async-local-storage';
 
 @NgModule({
@@ -55,7 +55,7 @@ export class AppModule {}
 
 Now you just have to inject the service where you need it :
 
-```
+```typescript
 import { AsyncLocalStorage } from 'angular-async-local-storage';
 
 @Injectable()
@@ -77,7 +77,7 @@ export class YourService {
 If you use [System.js](https://github.com/systemjs/systemjs) loading in developpement, 
 configure the module path like for other Angular modules :
 
-```
+```typescript
 System.config({
     ...
     map: {
@@ -102,7 +102,7 @@ You DO need to subscribe, even if you don't have something specific to do after 
 
 You do NOT need to unsubscribe : the observable autocompletes (like in the Http service).
 
-```
+```typescript
 this.storage.setItem('color', 'red').subscribe(() => {
   // Done
 }, () => {
@@ -112,20 +112,20 @@ this.storage.setItem('color', 'red').subscribe(() => {
 
 You can store any value, without worrying about stringifying.
 
-```
+```typescript
 this.storage.setItem('user', { firstName: 'Henri', lastName: 'Bergson' })
   .subscribe(() => {}, () => {});
 ```
 
 To delete one item :
 
-```
+```typescript
 this.storage.removeItem('user').subscribe(() => {}, () => {});
 ```
 
 To delete all items :
 
-```
+```typescript
 this.storage.clear().subscribe(() => {}, () => {});
 ```
 
@@ -133,7 +133,7 @@ this.storage.clear().subscribe(() => {}, () => {});
 
 Not finding an item is not an error, it succeeds but returns null.
 
-```
+```typescript
 this.storage.getItem('notexisting').subscribe((data) => {
   data; // null
 }, () => {
@@ -143,7 +143,7 @@ this.storage.getItem('notexisting').subscribe((data) => {
 
 So always check the data as it may have been removed from local storage (done the old way here, but feel free to use RxJS filter function or else).
 
-```
+```typescript
 this.storage.getItem('user').subscribe((user) => {
   if (user != null) {
     user.firstName; // 'Henri'
@@ -152,7 +152,7 @@ this.storage.getItem('user').subscribe((user) => {
 ```
 
 As any data can be stored, you need to type your data manually :
-```
+```typescript
 this.storage.getItem('color').subscribe((color: string) => {
   color; // 'red'
 }, () => {});
