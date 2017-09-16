@@ -1,46 +1,78 @@
 {
-  "name": "angular-async-local-storage",
-  "version": "1.4.0",
-  "description": "Efficient local storage module for Angular : simple API based on native localStorage API, but internally stored via the asynchronous IndexedDB API for performance, and wrapped in RxJS observables to be homogeneous with other Angular modules.",
-  "main": "dist/bundles/async-local-storage.umd.js",
-  "module": "dist/index.js",
-  "scripts": {
-    "cleanup": "rimraf dist/bundles dist/src dist/index.d.ts dist/index.metadata.json dist/index.js dist/index.js.map dist/LICENSE dist/README.md",
-    "bundling": "rollup -c",
-    "minify": "uglifyjs dist/bundles/async-local-storage.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/async-local-storage.umd.min.js",
-    "copy": "copyfiles LICENSE README.md dist",
-    "build": "npm run cleanup && ngc && npm run bundling && npm run minify && npm run copy"
-  },
-  "keywords": [
-    "angular",
-    "angular2",
-    "angular 2",
-    "localstorage",
-    "local storage"
-  ],
-  "author": "Cyrille Tuzi",
+  "name": "quickstart-lib",
+  "version": "1.0.0",
+  "description": "Library QuickStart package.json from the documentation, supplemented with testing support",
+  "main": "./bundles/quickstart-lib.umd.js",
+  "module": "./quickstart-lib.es5.js",
+  "es2015": "./quickstart-lib.js",
+  "typings": "./quickstart-lib.d.ts",
+  "author": "",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cyrilletuzi/angular-async-local-storage.git"
+  "repository": {},
+  "engines": {
+    "node": ">= 6.9.0",
+    "npm": ">= 3.0.0"
   },
-  "homepage": "https://github.com/cyrilletuzi/angular-async-local-storage",
-  "bugs": {
-    "url": "https://github.com/cyrilletuzi/angular-async-local-storage/issues"
+  "scripts": {
+    "clean": "rimraf out-tsc dist/*",
+    "prebuild": "npm run clean",
+    "build": "node build.js",
+    "build-demo": "tsc -p src/demo/",
+    "build-demo:watch": "tsc -p src/demo/ -w",
+    "serve": "lite-server -c=bs-config.json",
+    "prestart": "npm run build-demo",
+    "start": "concurrently \"npm run build-demo:watch\" \"npm run serve\"",
+    "build-test": "tsc -p src/lib/tsconfig.spec.json",
+    "build-test:watch": "tsc -p src/lib/tsconfig.spec.json -w",
+    "pretest": "npm run build-test",
+    "test": "concurrently \"npm run build-test:watch\" \"karma start karma.conf.js\"",
+    "coverage": "karma start karma-coverage.conf.js --single-run",
+    "pretest:once": "npm run build-test",
+    "test:once": "karma start karma.conf.js --single-run",
+    "preintegration": "npm run build && cd integration && npm run clean && npm install",
+    "integration": "npm run integration:aot && npm run integration:jit",
+    "integration:jit": "cd integration && npm run e2e",
+    "integration:aot": "cd integration && npm run e2e:aot",
+    "lint": "tslint ./src/**/*.ts -t verbose",
+    "release": "standard-version"
   },
-  "dependencies": {
-    "@angular/core": "^4.0.1",
-    "reflect-metadata": "~0.1.10",
-    "rxjs": "^5.2.0",
-    "zone.js": "~0.8.5"
+  "peerDependencies": {
+    "@angular/core": ">=4.0.0 <5.0.0 || >=4.0.0-beta <5.0.0"
   },
   "devDependencies": {
-    "@angular/compiler": "^4.0.1",
-    "@angular/compiler-cli": "^4.0.1",
-    "copyfiles": "^1.2.0",
+    "@angular/common": "~4.1.3",
+    "@angular/compiler": "~4.1.3",
+    "@angular/compiler-cli": "~4.1.3",
+    "@angular/core": "~4.1.3",
+    "@angular/platform-browser": "~4.1.3",
+    "@angular/platform-browser-dynamic": "~4.1.3",
+    "@types/jasmine": "2.5.36",
+    "@types/node": "^6.0.46",
+    "camelcase": "^4.0.0",
+    "concurrently": "3.4.0",
+    "core-js": "^2.4.1",
+    "glob": "^7.1.1",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.5.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-cli": "^1.0.1",
+    "karma-coverage": "^1.1.1",
+    "karma-html-reporter": "^0.2.7",
+    "karma-jasmine": "^1.1.0",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "karma-remap-coverage": "^0.1.4",
+    "lite-server": "^2.2.2",
     "rimraf": "^2.6.1",
-    "rollup": "~0.41.6",
-    "typescript": "^2.2.2",
-    "uglify-js": "^2.8.20"
+    "rollup": "^0.42.0",
+    "rollup-plugin-sourcemaps": "^0.4.1",
+    "rollup-plugin-uglify": "^2.0.1",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rxjs": "^5.0.1",
+    "standard-version": "^4.0.0",
+    "systemjs": "^0.19.40",
+    "tslint": "^4.4.2",
+    "typescript": "~2.3.0",
+    "zone.js": "^0.8.4"
   }
 }

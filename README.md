@@ -1,198 +1,416 @@
-# Async local storage for Angular
+# Warning
 
-Efficient local storage module for Angular : simple API based on native localStorage API, 
-but internally stored via the asynchronous IndexedDB API for performance, 
-and wrapped in RxJS observables to be homogeneous with other Angular asynchronous modules.
+This quickstart is under active development and hasn't yet reached its final form.
 
-*Previously named angular2-async-local-storage.*
+It may not be fully compatible with current versions of Angular.
 
-## Why this module ?
+# Angular QuickStart Lib
+[![Build Status][travis-badge]][travis-badge-url]
 
-For now, Angular does not provide a local storage module, and almost every app needs some local storage. 
-There is 2 native JavaScript APIs available :
-- [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage)
-- [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
+This is a simple library quickstart for Angular libraries, implementing the
+[Angular Package Format v4.0](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit#heading=h.k0mh3o8u5hx).
 
-The localStorage API is simple to use but synchronous, so if you use it too often, 
-your app will soon begin to freeze.
+Currently only unscoped, primary entry-point libraries are supported.
 
-The IndexedDB API is asychronous and efficient, but it's a mess to use : 
-you'll soon be caught by the callbacks hell, as it does not support Promises yet.
+Features:
+- a simple example library
+- unit tests for the library
+- a demo application that consumes the library in JIT mode and runs in watch mode
+- an integration app that consumes the library in JIT and AOT mode and runs e2e tests
 
-Mozilla has done a very great job with the [localForage library](http://localforage.github.io/localForage/) : 
-a simple API based on native localStorage API,
-but internally stored via the asynchronous IndexedDB API for performance.
-But it is written in ES5 and then it's a mess to include into Angular.
+Common tasks are present as npm scripts:
 
-This module is based on the same idea as localForage, but in ES6/ES2015 
-and additionnaly wrapped into [RxJS Observables](http://reactivex.io/rxjs/) 
-to be homogeneous with other Angular modules.
+- `npm start` to run a live-reload server with the demo app
+- `npm run test` to test in watch mode, or `npm run test:once` to only run once
+- `npm run build` to build the library
+- `npm run lint` to lint 
+- `npm run clean` to clean
+- `npm run integration` to run the integration e2e tests
+- `npm install ./relative/path/to/lib` after `npm run build` to test locally in another app
 
-## Getting started
+If you need to debug the integration app, please check `./integration/README.md`.
 
-Install via [npm](http://npmjs.com) :
+[travis-badge]: https://travis-ci.org/filipesilva/angular-quickstart-lib.svg?branch=master
+[travis-badge-url]: https://travis-ci.org/filipesilva/angular-quickstart-lib
 
-```bash
-npm install angular-async-local-storage --save
+## The QuickStart Library seed
+
+This example repository has an implemention of the described package format but is by no means
+the only way you should publish a library.
+
+Any setup that builds the necessary package format works just as well for a consumer.
+You are encouraged to customize this process as you see fit.
+
+When developing your own setup, keep in mind that even though [AOT](#appendix-supporting-aot)
+is preferred, [Just-in-time](#appendix-supporting-jit) compilation should be supported.
+
+Make sure you have at least Node 6.9 and NPM 3.0 installed.
+Then ...
+
+1. Create a project folder (you can call it `quickstart-lib` and rename it later).
+1. [Clone](#clone "Clone it from github") or [download](#download "download it from github") the **QuickStart Library seed** into your project folder.
+1. Install npm packages.
+1. Run `npm start` to launch the sample application.
+
+
+### Clone
+
+Perform the _clone-to-launch_ steps with these terminal commands.
+
+```
+git clone https://github.com/filipesilva/angular-quickstart-lib.git
+cd angular-quickstart-lib
+npm install
+npm start
 ```
 
-Then include the AsyncLocalStorage module in your app root module. It works like the HttpModule,
-providing a global service to the whole app, so do NOT re-import it in your own sub modules.
 
-```typescript
-import { AsyncLocalStorageModule } from 'angular-async-local-storage';
+### Download
+[Download the QuickStart Library seed](https://github.com/filipesilva/angular-quickstart-lib/archive/master.zip)
+and unzip it into your project folder. Then perform the remaining steps with these terminal commands.
 
-@NgModule({
-  imports: [
-    BrowserModule,
-    AsyncLocalStorageModule,
-    ...
-  ]
-  ...
-})
-export class AppModule {}
+```
+cd angular-quickstart-lib
+npm install
+npm start
 ```
 
-Now you just have to inject the service where you need it :
 
-```typescript
-import { AsyncLocalStorage } from 'angular-async-local-storage';
+## Initialize your repository
 
-@Injectable()
-export class YourService {
+If you cloned the package from github, it has a `.git` folder where the official repository's history lives.
 
-  public constructor(protected storage: AsyncLocalStorage) {}
+You don't want that git history though - you'll want to make your own. 
 
-  public ngOnInit() {
+Delete this folder and initialize this one as a new repository:
 
-    this.storage.setItem('lang', 'fr').subscribe(() => {
-      // Done
-    });
-
-  }
-
-}
+```
+rm -rf .git # Linux or OS/X (bash)
+rd .git /S/Q # Windows
+git init
 ```
 
-If you use [System.js](https://github.com/systemjs/systemjs) loading in developpement, 
-configure the module path like for other Angular modules :
+**Warning**: Do this only in the beginning to avoid accidentally deleting your own git setup!
 
-```typescript
-System.config({
-    ...
-    map: {
-      '@angular/core': 'node_modules/@angular/core/bundles/core.umd.js',
-      ...
-      'angular-async-local-storage': 'node_modules/angular-async-local-storage/bundles/async-local-storage.umd.js'
-    }
-    ...
-});
+
+
+## What's in the QuickStart Library seed?
+
+The **QuickStart Library seed** contains a similar structure to the [Quickstart seed](https://github.com/angular/quickstart).
+It's modified to build and test a library instead of an application.
+
+Consequently, there are _many different files_ in the project.
+Focus on the following TypeScript (`.ts`) files in the **`/src`** folder.
+
+```
+src/
+├── demo/
+|  └── app/
+|     ├── app.component.ts
+|     └── app.module.ts
+└── lib/
+   ├── index.ts
+   └── src/
+      ├── component/
+      |  └── lib.component.ts
+      ├── service/
+      |  └── lib.service.ts
+      └── module.ts
+
 ```
 
-## API
+Each file has a distinct purpose and evolves independently as the application grows.
 
-The API follows the [native localStorage API](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage), 
-except it's asynchronous via [RxJS Observables](http://reactivex.io/rxjs/).
+Files outside `src/` concern building, deploying, and testing your app.
+They include configuration files and external dependencies.
 
-### Writing data
+Files inside `src/lib/` "belong" to your library, while `src/demo/` contains a demo application
+that loads your library.
 
-Errors are unlikely to happen, but in an app you should always catch all potential errors.
+Libraries do not run by themselves, so it's very useful to have this "demo" app while developing 
+to see how your library would look like to consumers.
 
-You DO need to subscribe, even if you don't have something specific to do after writing in local storage (because RxJS observables are cold by default).
+When you run `npm start`, the demo application is served.
 
-You do NOT need to unsubscribe : the observable autocompletes (like in the Http service).
+The following are all in `src/`
 
-```typescript
-this.storage.setItem('color', 'red').subscribe(() => {
-  // Done
-}, () => {
-  // Error
-});
-```
+<table width="100%">
+  <col width="20%">
+  </col>
+  <col width="80%">
+  </col>
+  <tr>
+    <th>
+      File
+    </th>
+    <th>
+      Purpose
+    </th>
+  </tr>
+  <tr>
+    <td>
+      <code>demo/app/app.component.ts</code>
+    </td>
+    <td>
+      A demo component that renders the library component and a value from the library service.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>demo/app/app.module.ts</code>
+    </td>
+    <td>
+      A demo <code>NgModule</code> that imports the Library <code>LibModule</code>.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>lib/src/component/app.component.ts</code>
+    </td>
+    <td>
+      A sample library component that renders an <code>h2</code> tag.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>lib/src/service/lib.service.ts</code>
+    </td>
+    <td>
+      A sample library service that exports a value.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>lib/src/module.ts</code>
+    </td>
+    <td>
+      The library's main <code>NgModule</code>, <code>LibModule</code>.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>lib/index.ts</code>
+    </td>
+    <td>
+      The public API of your library, where you choose what to export to consumers.
+    </td>
+  </tr>
+</table>
 
-You can store any value, without worrying about stringifying.
 
-```typescript
-this.storage.setItem('user', { firstName: 'Henri', lastName: 'Bergson' })
-  .subscribe(() => {}, () => {});
-```
+## The build step
 
-To delete one item :
+You can build the library by running `npm run build`. 
+This will generate a `dist/` directory with all the entry points described above.
 
-```typescript
-this.storage.removeItem('user').subscribe(() => {}, () => {});
-```
+All the logic for creating the build can be found in `./build.js`. It consists of roughly 5 steps:
 
-To delete all items :
+- Compile with the AOT Compiler (AOT compiler or `ngc`) for ES5 and ES2015.
+- Inline html and css inside the generated JavaScript files.
+- Copy typings, metatada, html and css.
+- Create each bundle using Rollup.
+- Copy `LICENSE`, `package.json` and `README.md` files
 
-```typescript
-this.storage.clear().subscribe(() => {}, () => {});
-```
 
-### Reading data
+## Testing libraries
 
-Not finding an item is not an error, it succeeds but returns null.
+While testing is always important, it's **especially** important in libraries because consumer
+applications might break due to bugs in libraries.
 
-```typescript
-this.storage.getItem('notexisting').subscribe((data) => {
-  data; // null
-}, () => {
-  // Not called
-});
-```
+But the fact that a library is consumed by another application is also what makes it hard to test.
 
-So always check the data as it may have been removed from local storage (done the old way here, but feel free to use RxJS filter function or else).
+To properly test a library, you need to have an integration tests.
+An integration test is to libraries what an end-to-end test is to applications.
+It tests how an app would install and use your library.
 
-```typescript
-this.storage.getItem('user').subscribe((user) => {
-  if (user != null) {
-    user.firstName; // 'Henri'
-  }
-}, () => {});
-```
+The **QuickStart Library seed** includes a directory called `integration` containing a standalone
+app that consumes your built library in both AOT and JIT modes, with end-to-end tests to verify
+it works.
 
-As any data can be stored, you need to type your data manually :
-```typescript
-this.storage.getItem('color').subscribe((color: string) => {
-  color; // 'red'
-}, () => {});
-```
+To run the integration tests, do `npm run integration` which does the following:
+- Build your library.
+- Enter the integration app's directory.
+- Install dependencies.
+- Build the app in AOT mode.
+- Test the app in AOT mode.
+- Test the app in JIT mode.
 
-## Browser support
+Running integration tests gives you greater confidence that your library is properly built.
 
-[All browsers supporting IndexedDB](http://caniuse.com/#feat=indexeddb), ie. all current browsers :
-Firefox, Chrome, Opera, Safari, Edge and IE10+.
+In addition to integration tests, you can also run unit tests in watch mode via `npm run test`,
+or single-run via `npm run test:once`.
 
-Local storage is required only for apps, and given that you won't do an app in older browsers,
-current browsers support is far enough and you can jump to the next section. 
-But you'll find other details below if needed.
+You can also test your library by installing it in another local repository you have. 
+To do so, first build your lib via `npm run build`.
+Then install it from your other repo using a relative path to the dist folder: 
+`npm install relative/path/to/library/dist`.
 
-IE8/9 are supported but use native localStorage as a fallback, 
-so internal operations are synchronous (the public API remains asynchronous-like).
 
-Older or special browsers (like Opera Mini) not supporting IndexedDB and localStorage 
-use a fake storage, so the data won't be persistent but the module won't crash.
+## Publishing your library
 
-This module is not impacted by IE/Edge missing IndexedDB features.
+Every package on NPM has a unique name, and so should yours. 
+If you haven't already, now is the time to change the name of your library.
 
-This module has not been tested against Safari 9 buggy IndexedDB implementation,
-but it uses very basic features of IndexedDB so it may be fine. Otherwise,
-use the [IndexedDBshim polyfill](https://github.com/axemclion/IndexedDBShim).
+Use your editor to search the project for all instances of `quickstart-lib` and change it
+to your intended name (also in `dash-case` format).
+The library name is mentioned on at least these files: 
 
-## AoT and Universal support
+- `integration/src/app/app.component.ts`
+- `integration/src/app/app.module.ts`
+- `integration/src/systemjs.config.js`
+- `integrations/package.json`
+- `src/demo/app/app.component.ts`
+- `src/demo/app/app.module.ts`
+- `src/demo/systemjs.config.js`
+- `src/demo/tsconfig.json`
+- `src/lib/tsconfig.es5.json`
+- `src/lib/tsconfig.lib.json`
+- `bs-config.json`
+- `package.json`
+- `README.md`
 
-This module supports [AoT pre-compiling](https://angular.io/docs/ts/latest/cookbook/aot-compiler.html)
-and [Universal server-side rendering](https://github.com/angular/universal).
+You'll also need to rename the folder your project is in.
 
-## Changelog
+After you have changed the package name, you can publish it to NPM (read 
+[this link](https://docs.npmjs.com/getting-started/publishing-npm-packages) for details).
 
-[Changelog available here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/CHANGELOG.md).
+Instead of following the `Updating the package` on that previous doc, here we use
+[standard-version](https://github.com/conventional-changelog/standard-version).
+Read their docs to see how to use it.
 
-## Roadmap
+First you'll need to create a NPM account and login on your local machine.
+Then you can publish your package by running `npm publish dist/`.  
+Since your package is built on the `dist/` folder this is the one you should publish.
 
-- Unit tests.
-- Cache / preload ?
 
-## License
+<div class="l-sub-section">
 
-MIT
+### Be a good library maintainer
+
+Now that you've published a library, you need to maintain it as well. 
+Below are some of the most important points:
+
+- Document your library.
+- Keep an eye on the issue tracker.
+- [Manage your dependencies properly](#appendix-dependency-management)
+- Follow [Semantic Versioning](http://semver.org/)
+- Setup a Continuous Integration solution to test your library (included is a `.travis.yml` 
+file for [Travis CI](https://docs.travis-ci.com/user/getting-started/))!
+- Choose an [appropriate license](https://choosealicense.com/).
+
+</div>
+
+
+## Appendix: Supporting AOT
+
+AOT plays an important role in optimizing Angular applications. 
+It's therefore important that third party libraries be published in a format compatible with AOT
+compilation.
+Otherwise it will not be possible to include the library in an AOT compiled application.
+
+Only code written in TypeScript can be AOT compiled.
+ 
+Before publishing the library must first be compiled using the AOT compiler (`ngc`). 
+`ngc` extends the `tsc` compiler by adding extensions to support AOT compilation in addition to
+regular TypeScript compilation.   
+
+AOT compilation outputs three files that must be included in order to be compatible with AOT.
+
+*Transpiled JavaScript*
+
+As usual the original TypeScript is transpiled to regular JavaScript.
+
+*Typings files*
+
+JavaScript has no way of representing typings. 
+In order to preserve the original typings, `ngc` will generate `.d.ts` typings files.
+
+*Meta Data JSON files*
+
+`ngc` outputs a metadata.json file for every `Component` and `NgModule`.
+These meta data files represent the information in the original `NgModule` and `Component`
+decorators.   
+
+The meta data may reference external templates or css files.
+These external files must be included with the library.
+
+### NgFactories
+
+`ngc` generates a series of files with an `.ngfactory` suffix as well.
+These files represent the AOT compiled source, but should not be included with the published library.
+
+Instead the `ngc` compiler in the consuming application will generate `.ngfactory` files based
+on the JavaScript, Typings and meta data shipped with the library. 
+
+### Why not publish TypeScript?
+
+Why not ship TypeScript source instead? 
+After all the library will be part of another TypeScript compilation step when the library is
+imported by the consuming application.
+
+Generally it's discouraged to ship TypeScript with third party libraries. 
+It would require the consumer to replicate the complete build environment of the library. 
+Not only typings, but potentially a specific version of `ngc` as well.
+
+Publishing plain JavaScript with typings and meta data allows the consuming application to 
+remain agnostic of the library's build environment.
+
+
+## Appendix: Supporting JIT
+
+AOT compiled code is the preferred format for production builds, but due to the long compilation
+time it may not be practical to use AOT during development.
+
+To create a more flexible developer experience a JIT compatible build of the library should be
+published as well. 
+The format of the JIT bundle is `umd`, which stands for Universal Module Definition.
+Shipping the bundle as `umd` ensures compatibility with most common module loading formats.
+
+The `umd` bundle will ship as a single file containing ES5 JavaScript and inlined versions of 
+any external templates or css. 
+
+
+## Appendix: Dependency Management
+
+As a library maintainer, it's important to properly manage your dependencies in `package.json`.
+
+There are [three kinds of dependencies](https://docs.npmjs.com/files/package.json#dependencies):
+ `dependencies`, `devDependencies` and `peerDependencies`.
+
+- `dependencies`: here go all the other libraries yours depends on when being used.
+A good way to figure out these is to go through your library source code (in `src/lib` **only**)
+and list all the libraries there.
+- `devDependencies`: libraries that you need while developing, testing and building your library
+go here.
+When a user installs your library, these won't be installed. 
+Users don't need to develop, build or test your library, they just need to run it.
+- `peerDependencies`: these are similar to `dependencies` since your library expects them to be
+there at runtime.
+The difference is that you don't want to install a new version of these, but instead use
+the one already available. 
+
+A good example of a peer dependency is `@angular/core` and all other main Angular libraries.
+If you listed these in `dependencies`, a new one - with a different version! - could be installed
+for your library to use.
+This isn't what you wanted though. You want your library to use *the exact same* `@angular/core`
+that the app is using.
+
+You'll usually used `@angular/*` libraries listed in both `devDependencies` and 
+`peerDependencies`.
+This is normal and expected, because when you're developing your library also need a copy of
+them installed.
+
+Another thing to remember is to keep your dependencies from changing too much unexpectedly.
+Different versions of libraries can have different features, and if you inadvertently are too
+lenient with allowed versions your library might stop working because a dependency changed.
+
+You can choose what versions you allow by using [ranges](https://docs.npmjs.com/misc/semver).
+
+A good rule of thumb is to have all `dependencies` specified with a tilde `~`(`~1.2.3`),
+while your `peerDependencies` have a range (`"@angular/core": ">=4.0.0 <5.0.0 || >=4.0.0-beta <5.0.0"`).
+
+Any extra dependency or peer dependency that you add to `package.json` should also be added
+to the `globals` and `external` array in the `rollupBaseConfig` variable in `./build.js`.
+
+This ensures your library doesn't package extra libraries inside of it and instead uses the ones
+available in the consuming app.

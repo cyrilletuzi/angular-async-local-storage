@@ -1,1 +1,0 @@
-{"version":3,"sources":["../index.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AACH,cAAc,aAAa,CAAC","file":"index.js","sourceRoot":"","sourcesContent":["/**\n * @module\n * @description\n * Entry point for all public APIs of the async local storage package.\n */\nexport * from './src/index';\n"]}
