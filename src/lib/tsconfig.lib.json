@@ -15,8 +15,8 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
-    "flatModuleOutFile": "quickstart-lib.js",
-    "flatModuleId": "quickstart-lib",
+    "flatModuleOutFile": "angular-async-local-storage.js",
+    "flatModuleId": "angular-async-local-storage",
     "genDir": "../../out-tsc/lib-gen-dir/"
   }
 }

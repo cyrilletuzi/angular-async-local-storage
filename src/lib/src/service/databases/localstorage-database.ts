@@ -1,21 +1,16 @@
-import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Injectable } from '@angular/core';
 
-import { AsyncLocalDatabase } from './databases/async-local-database';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw';
+
+import { AsyncLocalDatabase } from './async-local-database';
 
 @Injectable()
-export class AsyncLocalStorage {
+export class LocalStorageDatabase extends AsyncLocalDatabase {
 
-    protected database: AsyncLocalDatabase;
-
-    /**
-     * Injects a local database
-     */
-    public constructor(database: AsyncLocalDatabase) {
-
-        this.database = database;
-
-    }
+    /* Initializing native localStorage right now to be able to check its support on class instanciation */
+    protected localStorage = localStorage;
 
     /**
      * Gets an item value in local storage
@@ -24,7 +19,19 @@ export class AsyncLocalStorage {
      */
     public getItem(key: string): Observable<any> {
 
-        return this.database.getItem(key);
+        let data: any = this.localStorage.getItem(key);
+
+        if (data != null) {
+
+            try {
+                data = JSON.parse(data);
+            } catch (error) {
+                return Observable.throw(new Error(`Invalid data in localStorage.`));
+            }
+
+        }
+
+        return Observable.of(data);
 
     }
 
@@ -36,7 +43,9 @@ export class AsyncLocalStorage {
      */
     public setItem(key: string, data: any): Observable<boolean> {
 
-        return this.database.setItem(key, data);
+        this.localStorage.setItem(key, JSON.stringify(data));
+
+        return Observable.of(true);
 
     }
 
@@ -47,7 +56,9 @@ export class AsyncLocalStorage {
      */
     public removeItem(key: string): Observable<boolean> {
 
-        return this.database.removeItem(key);
+        this.localStorage.removeItem(key);
+
+        return Observable.of(true);
 
     }
 
@@ -57,7 +68,9 @@ export class AsyncLocalStorage {
      */
     public clear(): Observable<boolean> {
 
-        return this.database.clear();
+        this.localStorage.clear();
+
+        return Observable.of(true);
 
     }
 

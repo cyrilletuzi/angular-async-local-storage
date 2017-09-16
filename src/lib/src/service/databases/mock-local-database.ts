@@ -1,21 +1,14 @@
-import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Injectable } from '@angular/core';
 
-import { AsyncLocalDatabase } from './databases/async-local-database';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+
+import { AsyncLocalDatabase } from './async-local-database';
 
 @Injectable()
-export class AsyncLocalStorage {
+export class MockLocalDatabase extends AsyncLocalDatabase {
 
-    protected database: AsyncLocalDatabase;
-
-    /**
-     * Injects a local database
-     */
-    public constructor(database: AsyncLocalDatabase) {
-
-        this.database = database;
-
-    }
+    protected localStorage = new Map<string, any>();
 
     /**
      * Gets an item value in local storage
@@ -24,7 +17,9 @@ export class AsyncLocalStorage {
      */
     public getItem(key: string): Observable<any> {
 
-        return this.database.getItem(key);
+        let data = this.localStorage.get(key);
+
+        return Observable.of((data != undefined) ? data : null);
 
     }
 
@@ -36,7 +31,9 @@ export class AsyncLocalStorage {
      */
     public setItem(key: string, data: any): Observable<boolean> {
 
-        return this.database.setItem(key, data);
+        this.localStorage.set(key, data);
+
+        return Observable.of(true);
 
     }
 
@@ -47,7 +44,9 @@ export class AsyncLocalStorage {
      */
     public removeItem(key: string): Observable<boolean> {
 
-        return this.database.removeItem(key);
+        this.localStorage.delete(key);
+
+        return Observable.of(true);
 
     }
 
@@ -57,7 +56,9 @@ export class AsyncLocalStorage {
      */
     public clear(): Observable<boolean> {
 
-        return this.database.clear();
+        this.localStorage.clear();
+
+        return Observable.of(true);
 
     }
 

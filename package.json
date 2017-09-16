@@ -1,14 +1,28 @@
 {
-  "name": "quickstart-lib",
-  "version": "1.0.0",
-  "description": "Library QuickStart package.json from the documentation, supplemented with testing support",
-  "main": "./bundles/quickstart-lib.umd.js",
-  "module": "./quickstart-lib.es5.js",
-  "es2015": "./quickstart-lib.js",
-  "typings": "./quickstart-lib.d.ts",
-  "author": "",
+  "name": "angular-async-local-storage",
+  "version": "2.0.0",
+  "description": "Efficient local storage module for Angular : simple API based on native localStorage API, but internally stored via the asynchronous IndexedDB API for performance, and wrapped in RxJS observables to be homogeneous with other Angular modules.",
+  "main": "./bundles/angular-async-local-storage.umd.js",
+  "module": "./angular-async-local-storage.es5.js",
+  "es2015": "./angular-async-local-storage.js",
+  "typings": "./angular-async-local-storage.d.ts",
+  "author": "Cyrille Tuzi",
   "license": "MIT",
-  "repository": {},
+  "keywords": [
+    "angular",
+    "angular4",
+    "angular 4",
+    "localstorage",
+    "local storage"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyrilletuzi/angular-async-local-storage.git"
+  },
+  "homepage": "https://github.com/cyrilletuzi/angular-async-local-storage",
+  "bugs": {
+    "url": "https://github.com/cyrilletuzi/angular-async-local-storage/issues"
+  },
   "engines": {
     "node": ">= 6.9.0",
     "npm": ">= 3.0.0"
@@ -37,7 +51,7 @@
     "release": "standard-version"
   },
   "peerDependencies": {
-    "@angular/core": ">=4.0.0 <5.0.0 || >=4.0.0-beta <5.0.0"
+    "@angular/core": ">=4.0.0 <5.0.0"
   },
   "devDependencies": {
     "@angular/common": "~4.1.3",

@@ -39,7 +39,7 @@
       rxjs: {
         defaultExtension: 'js'
       },
-      'quickstart-lib': {
+      'angular-async-local-storage': {
         main: 'index.js',
         defaultExtension: 'js',
         meta: {
