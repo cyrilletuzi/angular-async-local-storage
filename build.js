@@ -60,6 +60,7 @@ return Promise.resolve()
         // the window object.
         // See https://github.com/rollup/rollup/wiki/JavaScript-API#globals for more.
         '@angular/core': 'ng.core',
+        '@angular/common': 'ng.common',
         'rxjs/Observable': 'Rx',
         'rxjs/ReplaySubject': 'Rx',
         'rxjs/add/operator/map': 'Rx.Observable.prototype',
@@ -75,6 +76,7 @@ return Promise.resolve()
         // List of dependencies
         // See https://github.com/rollup/rollup/wiki/JavaScript-API#external for more.
         '@angular/core',
+        '@angular/common',
         'rxjs'
       ],
       plugins: [

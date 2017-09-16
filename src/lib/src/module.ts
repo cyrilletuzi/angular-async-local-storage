@@ -1,30 +1,27 @@
-import { NgModule } from '@angular/core';
+import { NgModule, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 import { AsyncLocalStorage } from './service/lib.service';
 import { AsyncLocalDatabase, IndexedDBDatabase, LocalStorageDatabase, MockLocalDatabase } from './service/databases/index';
 
-export function asyncLocalStorageFactory() {
+export function asyncLocalStorageFactory(platformId: Object) {
 
     let database: AsyncLocalDatabase;
 
-    try {
+    if (isPlatformBrowser(platformId) && ('indexedDB' in window)) {
 
-        /* Try with IndexedDB in modern browsers */
-        database = new IndexedDBDatabase();
+      /* Try with IndexedDB in modern browsers */
+      database = new IndexedDBDatabase();
 
-    } catch (error) {
+    } else if (isPlatformBrowser(platformId) && ('localStorage' in window)) {
 
-        try {
+      /* Try with localStorage in old browsers (IE9) */
+      database = new LocalStorageDatabase();
 
-            /* Try with localStorage in old browsers (IE9) */
-            database = new LocalStorageDatabase();
+    } else {
 
-        } catch (error) {
-
-            /* Fake database for server-side rendering (Universal) */
-            database = new MockLocalDatabase();
-
-        }
+      /* Fake database for server-side rendering (Universal) */
+      database = new MockLocalDatabase();
 
     }
 
@@ -36,7 +33,8 @@ export function asyncLocalStorageFactory() {
     providers: [
         {
             provide: AsyncLocalStorage,
-            useFactory: asyncLocalStorageFactory
+            useFactory: asyncLocalStorageFactory,
+            deps: [PLATFORM_ID]
         }
     ]
 })
