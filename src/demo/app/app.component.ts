@@ -19,12 +19,15 @@ export class AppComponent implements OnInit {
 
     const user: User = { name: `Homer Simpsons` };
 
-    this.localStorage.setItem('user', user)
-    .subscribe(() => {
+    this.localStorage.removeItem('user').subscribe(() => {
 
-      this.localStorage.getItem('user').subscribe((user: User) => {
+      this.localStorage.setItem('user', user).subscribe(() => {
 
-        this.name = user.name;
+        this.localStorage.getItem<User>('user').subscribe((data) => {
+
+          this.name = data ? data.name : '';
+
+        });
 
       });
 

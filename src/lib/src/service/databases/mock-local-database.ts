@@ -15,11 +15,11 @@ export class MockLocalDatabase extends AsyncLocalDatabase {
      * @param key The item's key
      * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
      */
-    public getItem(key: string): Observable<any> {
+    public getItem<T = any>(key: string): Observable<T | null> {
 
         let data = this.localStorage.get(key);
 
-        return Observable.of((data != undefined) ? data : null);
+        return Observable.of((data !== undefined) ? data : null);
 
     }
 

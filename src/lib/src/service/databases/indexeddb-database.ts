@@ -16,29 +16,29 @@ import { AsyncLocalDatabase } from './async-local-database';
 @Injectable()
 export class IndexedDBDatabase extends AsyncLocalDatabase {
 
-    /** 
-     * IndexedDB database name for local storage 
+    /**
+     * IndexedDB database name for local storage
      */
-    protected readonly dbName: string = 'ngStorage';
-    /** 
+    protected readonly dbName = 'ngStorage';
+    /**
      * IndexedDB object store name for local storage
      */
-    protected readonly objectStoreName: string = 'localStorage';
-    /** 
-     * IndexedDB key path name for local storage (where an item's key will be stored) 
+    protected readonly objectStoreName = 'localStorage';
+    /**
+     * IndexedDB key path name for local storage (where an item's key will be stored)
      */
-    protected readonly keyPath: string = 'key';
-    /** 
+    protected readonly keyPath = 'key';
+    /**
      * IndexedDB data path name for local storage (where items' value will be stored)
      */
-    protected readonly dataPath: string = 'value';
-    /** 
+    protected readonly dataPath = 'value';
+    /**
      * IndexedDB database connection, wrapped in a RxJS ReplaySubject to be able to access the connection
-     * even after the connection success event happened 
+     * even after the connection success event happened
      */
     protected database: ReplaySubject<IDBDatabase>;
 
-    /** 
+    /**
      * Connects to IndexedDB
      */
     public constructor() {
@@ -58,7 +58,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
      * @param key The item's key
      * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
      */
-    public getItem(key: string): Observable<any> {
+    public getItem<T = any>(key: string): Observable<T | null> {
 
         /* Opening a trasaction and requesting the item in local storage */
         return this.transaction().map((transaction) => transaction.get(key)).mergeMap((request) => {
@@ -174,7 +174,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
      * Connects to IndexedDB and creates the object store on first time
      */
     protected connect(): void {
-        
+
         /* Connecting to IndexedDB */
         let request = indexedDB.open(this.dbName);
 

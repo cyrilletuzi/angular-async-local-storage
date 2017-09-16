@@ -22,7 +22,7 @@ export class AsyncLocalStorage {
      * @param key The item's key
      * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
      */
-    public getItem(key: string): Observable<any> {
+    public getItem<T = any>(key: string): Observable<T | null> {
 
         return this.database.getItem(key);
 

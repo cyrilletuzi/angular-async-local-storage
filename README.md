@@ -153,7 +153,7 @@ this.storage.getItem('user').subscribe((user) => {
 
 As any data can be stored, you need to type your data manually :
 ```
-this.storage.getItem('color').subscribe((color: string) => {
+this.storage.getItem<string>('color').subscribe((color) => {
   color; // 'red'
 }, () => {});
 ```
@@ -187,11 +187,6 @@ and [Universal server-side rendering](https://github.com/angular/universal).
 ## Changelog
 
 [Changelog available here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/CHANGELOG.md).
-
-## Roadmap
-
-- Unit tests.
-- Cache / preload ?
 
 ## License
 
