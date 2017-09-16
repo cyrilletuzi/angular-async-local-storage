@@ -6,7 +6,7 @@
 
 - Implements [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/)
   - Compatible with Universal builds from Angular CLI >= 1.3 (#9)
-  - Compatible with ES2015+ target builds
+  - Compatible with ES2015+ target builds (= smaller builds)
 - Better type checking with generics : `this.storage.getItem<string>('color')`
 
 ### Breaking changes

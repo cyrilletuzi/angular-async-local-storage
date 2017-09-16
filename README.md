@@ -33,7 +33,7 @@ to be homogeneous with other Angular modules.
 Install via [npm](http://npmjs.com) :
 
 ```
-npm install angular-async-local-storage --save
+npm install angular-async-local-storage
 ```
 
 Then include the AsyncLocalStorage module in your app root module. It works like the HttpModule,
@@ -158,6 +158,18 @@ this.storage.getItem<string>('color').subscribe((color) => {
 }, () => {});
 ```
 
+## Angular support
+
+The last version of this library requires Angular 4+ and TypeScript 2.3+.
+
+If you need Angular 2 support, stay on version 1 :
+```
+npm install angular-async-local-storage@1
+```
+
+This module supports [AoT pre-compiling](https://angular.io/docs/ts/latest/cookbook/aot-compiler.html)
+and [Universal server-side rendering](https://github.com/angular/universal).
+
 ## Browser support
 
 [All browsers supporting IndexedDB](http://caniuse.com/#feat=indexeddb), ie. all current browsers :
@@ -178,11 +190,6 @@ This module is not impacted by IE/Edge missing IndexedDB features.
 This module has not been tested against Safari 9 buggy IndexedDB implementation,
 but it uses very basic features of IndexedDB so it may be fine. Otherwise,
 use the [IndexedDBshim polyfill](https://github.com/axemclion/IndexedDBShim).
-
-## AoT and Universal support
-
-This module supports [AoT pre-compiling](https://angular.io/docs/ts/latest/cookbook/aot-compiler.html)
-and [Universal server-side rendering](https://github.com/angular/universal).
 
 ## Changelog
 
