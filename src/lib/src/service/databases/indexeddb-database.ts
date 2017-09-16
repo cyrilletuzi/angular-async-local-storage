@@ -91,7 +91,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
         }
 
         /* Opening a transaction and checking if the item already exists in local storage */
-        return this.getItem(key).map((data) => (data == null) ? 'add' : 'put').mergeMap((method) => {
+        return this.getItem(key).map((existingData) => (existingData == null) ? 'add' : 'put').mergeMap((method) => {
 
             /* Opening a transaction */
             return this.transaction('readwrite').mergeMap((transaction) => {
