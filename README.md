@@ -16,8 +16,8 @@ There is 2 native JavaScript APIs available :
 The localStorage API is simple to use but synchronous, so if you use it too often, 
 your app will soon begin to freeze.
 
-The IndexedDB API is asychronous and efficient, but it's a mess to use : 
-you'll soon be caught by the callbacks hell, as it does not support Promises yet.
+The IndexedDB API is asynchronous and efficient, but it's a mess to use : 
+you'll soon be caught by the callback hell, as it does not support Promises yet.
 
 Mozilla has done a very great job with the [localForage library](http://localforage.github.io/localForage/) : 
 a simple API based on native localStorage API,
@@ -36,8 +36,7 @@ Install via [npm](http://npmjs.com) :
 npm install angular-async-local-storage
 ```
 
-Then include the AsyncLocalStorage module in your app root module. It works like the HttpModule,
-providing a global service to the whole app, so do NOT re-import it in your own sub modules.
+Then include the AsyncLocalStorage module in your app root module (just once, do NOT re-import it in your sub modules).
 
 ```typescript
 import { AsyncLocalStorageModule } from 'angular-async-local-storage';
@@ -72,21 +71,6 @@ export class YourService {
   }
 
 }
-```
-
-If you use [System.js](https://github.com/systemjs/systemjs) loading in developpement, 
-configure the module path like for other Angular modules :
-
-```javascript
-System.config({
-    ...
-    map: {
-      '@angular/core': 'node_modules/@angular/core/bundles/core.umd.js',
-      ...
-      'angular-async-local-storage': 'node_modules/angular-async-local-storage/bundles/async-local-storage.umd.js'
-    }
-    ...
-});
 ```
 
 ## API
@@ -167,8 +151,10 @@ If you need Angular 2 support, stay on version 1 :
 npm install angular-async-local-storage@1
 ```
 
-This module supports [AoT pre-compiling](https://angular.io/docs/ts/latest/cookbook/aot-compiler.html)
-and [Universal server-side rendering](https://github.com/angular/universal).
+This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler).
+
+This module supports [Universal server-side rendering](https://github.com/angular/universal)
+via a mock storage.
 
 ## Browser support
 
@@ -176,20 +162,12 @@ and [Universal server-side rendering](https://github.com/angular/universal).
 Firefox, Chrome, Opera, Safari, Edge and IE10+.
 
 Local storage is required only for apps, and given that you won't do an app in older browsers,
-current browsers support is far enough and you can jump to the next section. 
-But you'll find other details below if needed.
+current browsers support is far enough.
 
-IE8/9 are supported but use native localStorage as a fallback, 
+Even so, IE9 is supported but use native localStorage as a fallback, 
 so internal operations are synchronous (the public API remains asynchronous-like).
 
-Older or special browsers (like Opera Mini) not supporting IndexedDB and localStorage 
-use a fake storage, so the data won't be persistent but the module won't crash.
-
 This module is not impacted by IE/Edge missing IndexedDB features.
-
-This module has not been tested against Safari 9 buggy IndexedDB implementation,
-but it uses very basic features of IndexedDB so it may be fine. Otherwise,
-use the [IndexedDBshim polyfill](https://github.com/axemclion/IndexedDBShim).
 
 ## Changelog
 
