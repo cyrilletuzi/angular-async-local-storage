@@ -4,8 +4,6 @@ Efficient local storage module for Angular : simple API based on native localSto
 but internally stored via the asynchronous IndexedDB API for performance, 
 and wrapped in RxJS observables to be homogeneous with other Angular asynchronous modules.
 
-*Previously named angular2-async-local-storage.*
-
 ## Why this module ?
 
 For now, Angular does not provide a local storage module, and almost every app needs some local storage. 
