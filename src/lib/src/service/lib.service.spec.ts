@@ -61,6 +61,12 @@ function tests(localStorage: AsyncLocalStorage) {
 
   });
 
+  it('should store and return an empty string', (done: DoneFn) => {
+
+    testGetItemPrimitive<string>(localStorage, '', done);
+
+  });
+
   it('should store and return a number', (done: DoneFn) => {
 
     testGetItemPrimitive<number>(localStorage, 10, done);
