@@ -1,8 +1,9 @@
 # Async local storage for Angular
 
-Efficient local storage module for Angular : simple API based on native localStorage API, 
-but internally stored via the asynchronous IndexedDB API for performance, 
-and wrapped in RxJS observables to be homogeneous with other Angular asynchronous modules.
+Efficient local storage module for Angular :
+- **simple** : based on native `localStorage` API,
+- **perfomance** : internally stored via the asynchronous `IndexedDB` API,
+- **Angular-like** : wrapped in RxJS `Observables`.
 
 ## Why this module ?
 
@@ -11,15 +12,15 @@ There is 2 native JavaScript APIs available :
 - [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage)
 - [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
 
-The localStorage API is simple to use but synchronous, so if you use it too often, 
+The `localStorage` API is simple to use but synchronous, so if you use it too often, 
 your app will soon begin to freeze.
 
-The IndexedDB API is asynchronous and efficient, but it's a mess to use : 
+The `IndexedDB` API is asynchronous and efficient, but it's a mess to use : 
 you'll soon be caught by the callback hell, as it does not support Promises yet.
 
 Mozilla has done a very great job with the [localForage library](http://localforage.github.io/localForage/) : 
-a simple API based on native localStorage API,
-but internally stored via the asynchronous IndexedDB API for performance.
+a simple API based on native `localStorage`,
+but internally stored via the asynchronous `IndexedDB` for performance.
 But it is written in ES5 and then it's a mess to include into Angular.
 
 This module is based on the same idea as localForage, but in ES6/ES2015 
@@ -34,7 +35,7 @@ Install via [npm](http://npmjs.com) :
 npm install angular-async-local-storage
 ```
 
-Then include the AsyncLocalStorage module in your app root module (just once, do NOT re-import it in your sub modules).
+Then include the `AsyncLocalStorage` module in your app root module (just once, do NOT re-import it in your sub modules).
 
 ```typescript
 import { AsyncLocalStorageModule } from 'angular-async-local-storage';
@@ -58,15 +59,7 @@ import { AsyncLocalStorage } from 'angular-async-local-storage';
 @Injectable()
 export class YourService {
 
-  public constructor(protected storage: AsyncLocalStorage) {}
-
-  public ngOnInit() {
-
-    this.storage.setItem('lang', 'fr').subscribe(() => {
-      // Done
-    });
-
-  }
+  constructor(protected localStorage: AsyncLocalStorage) {}
 
 }
 ```
@@ -78,71 +71,66 @@ except it's asynchronous via [RxJS Observables](http://reactivex.io/rxjs/).
 
 ### Writing data
 
-Errors are unlikely to happen, but in an app you should always catch all potential errors.
+```typescript
+let user: User = { firstName: 'Henri', lastName: 'Bergson' };
 
-You DO need to subscribe, even if you don't have something specific to do after writing in local storage (because RxJS observables are cold by default).
+this.localStorage.setItem('user', user).subscribe(() => {});
+```
 
-You do NOT need to unsubscribe : the observable autocompletes (like in the Http service).
+You can store any value, without worrying about stringifying.
+
+### Deleting data
+
+To delete one item :
 
 ```typescript
-this.storage.setItem('color', 'red').subscribe(() => {
+this.localStorage.removeItem('user').subscribe(() => {});
+```
+
+To delete all items :
+
+```typescript
+this.localStorage.clear().subscribe(() => {});
+```
+
+### Reading data
+
+```typescript
+this.localStorage.getItem<User>('user').subscribe((user) => {
+  user.firstName; // should be 'Henri'
+});
+```
+
+As any data can be stored, you can type your data.
+But don't forget it's client-side storage : **always check the data**, as it could have been forged or deleted.
+
+### Notes
+
+Not finding an item is not an error, it succeeds but returns `null`.
+
+```typescript
+this.localStorage.getItem('notexisting').subscribe((data) => {
+  data; // null
+});
+```
+
+Errors are unlikely to happen, but in an app it's better to catch any potential error.
+
+```typescript
+this.localStorage.setItem('color', 'red').subscribe(() => {
   // Done
 }, () => {
   // Error
 });
 ```
 
-You can store any value, without worrying about stringifying.
+You *DO* need to subscribe, even if you don't have something specific to do after writing in local storage (because it's how RxJS Observables work).
 
-```typescript
-this.storage.setItem('user', { firstName: 'Henri', lastName: 'Bergson' })
-  .subscribe(() => {}, () => {});
-```
-
-To delete one item :
-
-```typescript
-this.storage.removeItem('user').subscribe(() => {}, () => {});
-```
-
-To delete all items :
-
-```typescript
-this.storage.clear().subscribe(() => {}, () => {});
-```
-
-### Reading data
-
-Not finding an item is not an error, it succeeds but returns null.
-
-```typescript
-this.storage.getItem('notexisting').subscribe((data) => {
-  data; // null
-}, () => {
-  // Not called
-});
-```
-
-So always check the data as it may have been removed from local storage (done the old way here, but feel free to use RxJS filter function or else).
-
-```typescript
-this.storage.getItem('user').subscribe((user) => {
-  if (user != null) {
-    user.firstName; // 'Henri'
-  }
-}, () => {});
-```
-
-As any data can be stored, you need to type your data manually :
-```typescript
-this.storage.getItem<string>('color').subscribe((color) => {
-  color; // 'red'
-}, () => {});
-```
+You do *NOT* need to unsubscribe : the observable autocompletes (like in the `HttpClient` service).
 
 ## Angular support
 
-The last version of this library requires Angular 4+ and TypeScript 2.3+.
+The last version of this library requires **Angular 4+** and **TypeScript 2.3+**.
 
 If you need Angular 2 support, stay on version 1 :
 ```bash
@@ -156,7 +144,7 @@ via a mock storage.
 
 ## Browser support
 
-[All browsers supporting IndexedDB](http://caniuse.com/#feat=indexeddb), ie. all current browsers :
+[All browsers supporting IndexedDB](http://caniuse.com/#feat=indexeddb), ie. **all current browsers** :
 Firefox, Chrome, Opera, Safari, Edge and IE10+.
 
 Local storage is required only for apps, and given that you won't do an app in older browsers,
