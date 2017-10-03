@@ -1,11 +1,17 @@
 # Changelog
 
+## 2.0.1 (2017-10-03)
+
+### Bug fix
+
+- RxJS operators can now be used again on returned observables (fixes [#10](https://github.com/cyrilletuzi/angular-async-local-storage/issues/10)
+
 ## 2.0.0 (2017-09-16)
 
 ### Features
 
 - Implements [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/)
-  - Compatible with Universal builds from Angular CLI >= 1.3 (#9)
+  - Compatible with Universal builds from Angular CLI >= 1.3 (fixes [#9](https://github.com/cyrilletuzi/angular-async-local-storage/issues/9))
   - Compatible with ES2015+ target builds (= smaller builds)
 - Better type checking with generics : `this.storage.getItem<string>('color')`
 

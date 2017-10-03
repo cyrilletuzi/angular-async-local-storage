@@ -61,6 +61,7 @@ return Promise.resolve()
         // See https://github.com/rollup/rollup/wiki/JavaScript-API#globals for more.
         '@angular/core': 'ng.core',
         '@angular/common': 'ng.common',
+        'rxjs': 'Rx',
         'rxjs/Observable': 'Rx',
         'rxjs/ReplaySubject': 'Rx',
         'rxjs/add/operator/map': 'Rx.Observable.prototype',
@@ -77,7 +78,17 @@ return Promise.resolve()
         // See https://github.com/rollup/rollup/wiki/JavaScript-API#external for more.
         '@angular/core',
         '@angular/common',
-        'rxjs'
+        'rxjs',
+        'rxjs/Observable',
+        'rxjs/ReplaySubject',
+        'rxjs/add/operator/map',
+        'rxjs/add/operator/mergeMap',
+        'rxjs/add/operator/pluck',
+        'rxjs/add/operator/first',
+        'rxjs/add/observable/fromEvent',
+        'rxjs/add/observable/merge',
+        'rxjs/add/observable/throw',
+        'rxjs/add/observable/of'
       ],
       plugins: [
         commonjs({
