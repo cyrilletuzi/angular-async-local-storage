@@ -1,0 +1,7 @@
+{
+  "name": "angular-async-local-storage",
+  "peerDependencies": {
+    "@angular/core": ">=4.0.0 <5.0.0",
+    "@angular/common": ">=4.0.0 <5.0.0"
+  }
+}

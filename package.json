@@ -26,7 +26,8 @@
   "scripts": {
     "clean": "rimraf out-tsc dist/*",
     "prebuild": "npm run clean",
-    "build": "ng-packagr",
+    "build": "ng-packagr -p src/lib/ng-package.json",
+    "postbuild": "node scripts/merge-package.js",
     "build-demo": "tsc -p src/demo/",
     "build-demo:watch": "tsc -p src/demo/ -w",
     "serve": "lite-server -c=bs-config.json",
@@ -45,10 +46,6 @@
     "integration:aot": "cd integration && npm run e2e:aot",
     "lint": "tslint ./src/**/*.ts -t verbose",
     "release": "standard-version"
-  },
-  "peerDependencies": {
-    "@angular/core": ">=4.0.0 <5.0.0",
-    "@angular/common": ">=4.0.0 <5.0.0"
   },
   "devDependencies": {
     "@angular/common": "~4.1.3",
