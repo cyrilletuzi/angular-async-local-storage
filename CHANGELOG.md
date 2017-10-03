@@ -4,7 +4,7 @@
 
 ### Bug fix
 
-- RxJS operators can now be used again on returned observables (fixes [#10](https://github.com/cyrilletuzi/angular-async-local-storage/issues/10)
+- RxJS operators can now be used again on returned observables (fixes [#10](https://github.com/cyrilletuzi/angular-async-local-storage/issues/10))
 
 ## 2.0.0 (2017-09-16)
 
