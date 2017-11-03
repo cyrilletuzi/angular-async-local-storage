@@ -37,9 +37,6 @@ npm install angular-async-local-storage
 
 # For Angular 4 and TypeScript >= 2.3 :
 npm install angular-async-local-storage@2
-
-# For Angular 2 :
-npm install angular-async-local-storage@1
 ```
 
 Then include the `AsyncLocalStorage` module in your app root module (just once, do NOT re-import it in your sub modules).
