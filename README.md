@@ -32,7 +32,14 @@ to be homogeneous with other Angular modules.
 Install via [npm](http://npmjs.com) :
 
 ```bash
+# For Angular 5 :
 npm install angular-async-local-storage
+
+# For Angular 4 and TypeScript >= 2.3 :
+npm install angular-async-local-storage@2
+
+# For Angular 2 :
+npm install angular-async-local-storage@1
 ```
 
 Then include the `AsyncLocalStorage` module in your app root module (just once, do NOT re-import it in your sub modules).
@@ -130,12 +137,9 @@ You do *NOT* need to unsubscribe : the observable autocompletes (like in the `Ht
 
 ## Angular support
 
-The last version of this library requires **Angular 4+** and **TypeScript 2.3+**.
+The last version of this library requires **Angular 5**.
 
-If you need Angular 2 support, stay on version 1 :
-```bash
-npm install angular-async-local-storage@1
-```
+If you need support for previous versions of Angular, stay on older versions, like mentionned in Getting started.
 
 This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler).
 

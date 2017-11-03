@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.0 (2017-11-03)
+
+### Breaking changes
+
+- Angular 5 is now supported and required
+- RxJS >= 5.5.2 is now supported and required : [lettable operators](https://github.com/ReactiveX/rxjs/blob/master/doc/lettable-operators.md)
+
 ## 2.0.1 (2017-10-03)
 
 ### Bug fix

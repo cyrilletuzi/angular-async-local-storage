@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw';
+import { of as observableOf } from 'rxjs/observable/of';
+import { _throw as observableThrow } from 'rxjs/observable/throw';
 
 import { AsyncLocalDatabase } from './async-local-database';
 
@@ -26,12 +26,12 @@ export class LocalStorageDatabase extends AsyncLocalDatabase {
             try {
                 data = JSON.parse(data);
             } catch (error) {
-                return Observable.throw(new Error(`Invalid data in localStorage.`));
+                return observableThrow(new Error(`Invalid data in localStorage.`));
             }
 
         }
 
-        return Observable.of(data);
+        return observableOf(data);
 
     }
 
@@ -45,7 +45,7 @@ export class LocalStorageDatabase extends AsyncLocalDatabase {
 
         this.localStorage.setItem(key, JSON.stringify(data));
 
-        return Observable.of(true);
+        return observableOf(true);
 
     }
 
@@ -58,7 +58,7 @@ export class LocalStorageDatabase extends AsyncLocalDatabase {
 
         this.localStorage.removeItem(key);
 
-        return Observable.of(true);
+        return observableOf(true);
 
     }
 
@@ -70,7 +70,7 @@ export class LocalStorageDatabase extends AsyncLocalDatabase {
 
         this.localStorage.clear();
 
-        return Observable.of(true);
+        return observableOf(true);
 
     }
 

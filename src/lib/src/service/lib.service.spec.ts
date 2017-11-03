@@ -1,4 +1,5 @@
 import { TestBed, inject, async } from '@angular/core/testing';
+import { map } from 'rxjs/operators';
 
 import { AsyncLocalStorage } from './lib.service';
 import { IndexedDBDatabase, LocalStorageDatabase, MockLocalDatabase } from './databases/index';
@@ -117,13 +118,32 @@ function tests(localStorage: AsyncLocalStorage) {
 
       localStorage.removeItem(index).subscribe(() => {
 
-        localStorage.getItem(index).subscribe((data) => {
+        localStorage.getItem<string>(index).subscribe((data) => {
 
           expect(data).toBeNull();
 
           done();
 
         });
+
+      });
+
+    });
+
+  });
+
+  it('should allow to use operators', (done: DoneFn) => {
+
+    const index = 'index';
+    const value = 'value';
+
+    localStorage.setItem(index, value).subscribe(() => {
+
+      localStorage.getItem<string>(index).pipe(map((data) => data)).subscribe((data) => {
+
+        expect(data).toBe(value);
+
+        done();
 
       });
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { of as observableOf } from 'rxjs/observable/of';
 
 import { AsyncLocalDatabase } from './async-local-database';
 
@@ -19,7 +19,7 @@ export class MockLocalDatabase extends AsyncLocalDatabase {
 
         let data = this.localStorage.get(key);
 
-        return Observable.of((data !== undefined) ? data : null);
+        return observableOf((data !== undefined) ? data : null);
 
     }
 
@@ -33,7 +33,7 @@ export class MockLocalDatabase extends AsyncLocalDatabase {
 
         this.localStorage.set(key, data);
 
-        return Observable.of(true);
+        return observableOf(true);
 
     }
 
@@ -46,7 +46,7 @@ export class MockLocalDatabase extends AsyncLocalDatabase {
 
         this.localStorage.delete(key);
 
-        return Observable.of(true);
+        return observableOf(true);
 
     }
 
@@ -58,7 +58,7 @@ export class MockLocalDatabase extends AsyncLocalDatabase {
 
         this.localStorage.clear();
 
-        return Observable.of(true);
+        return observableOf(true);
 
     }
 

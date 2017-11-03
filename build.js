@@ -29,15 +29,13 @@ return Promise.resolve()
     .then(() => console.log('Inlining succeeded.'))
   )
   // Compile to ES2015.
-  .then(() => ngc({ project: `${tempLibFolder}/tsconfig.lib.json` })
-    .then(exitCode => exitCode === 0 ? Promise.resolve() : Promise.reject())
-    .then(() => console.log('ES2015 compilation succeeded.'))
-  )
+  .then(() => ngc([ '--project', `${tempLibFolder}/tsconfig.lib.json` ]))
+  .then(exitCode => exitCode === 0 ? Promise.resolve() : Promise.reject())
+  .then(() => console.log('ES2015 compilation succeeded.'))
   // Compile to ES5.
-  .then(() => ngc({ project: `${tempLibFolder}/tsconfig.es5.json` })
-    .then(exitCode => exitCode === 0 ? Promise.resolve() : Promise.reject())
-    .then(() => console.log('ES5 compilation succeeded.'))
-  )
+  .then(() => ngc([ '--project', `${tempLibFolder}/tsconfig.es5.json` ]))
+  .then(exitCode => exitCode === 0 ? Promise.resolve() : Promise.reject())
+  .then(() => console.log('ES5 compilation succeeded.'))
   // Copy typings and metadata to `dist/` folder.
   .then(() => Promise.resolve()
     .then(() => _relativeCopy('**/*.d.ts', es2015OutputFolder, distFolder))
@@ -62,16 +60,13 @@ return Promise.resolve()
         '@angular/core': 'ng.core',
         '@angular/common': 'ng.common',
         'rxjs': 'Rx',
+        'rxjs/operators': 'Rx.operators',
         'rxjs/Observable': 'Rx',
         'rxjs/ReplaySubject': 'Rx',
-        'rxjs/add/operator/map': 'Rx.Observable.prototype',
-        'rxjs/add/operator/mergeMap': 'Rx.Observable.prototype',
-        'rxjs/add/operator/pluck': 'Rx.Observable.prototype',
-        'rxjs/add/operator/first': 'Rx.Observable.prototype',
-        'rxjs/add/observable/fromEvent': 'Rx.Observable',
-        'rxjs/add/observable/merge': 'Rx.Observable',
-        'rxjs/add/observable/throw': 'Rx.Observable',
-        'rxjs/add/observable/of': 'Rx.Observable'
+        'rxjs/observable/fromEvent': 'Rx.Observable',
+        'rxjs/observable/race': 'Rx.Observable',
+        'rxjs/observable/of': 'Rx.Observable',
+        'rxjs/observable/throw': 'Rx.Observable'
       },
       external: [
         // List of dependencies
@@ -79,16 +74,13 @@ return Promise.resolve()
         '@angular/core',
         '@angular/common',
         'rxjs',
+        'rxjs/operators',
         'rxjs/Observable',
         'rxjs/ReplaySubject',
-        'rxjs/add/operator/map',
-        'rxjs/add/operator/mergeMap',
-        'rxjs/add/operator/pluck',
-        'rxjs/add/operator/first',
-        'rxjs/add/observable/fromEvent',
-        'rxjs/add/observable/merge',
-        'rxjs/add/observable/throw',
-        'rxjs/add/observable/of'
+        'rxjs/observable/fromEvent',
+        'rxjs/observable/race',
+        'rxjs/observable/of',
+        'rxjs/observable/throw'
       ],
       plugins: [
         commonjs({
