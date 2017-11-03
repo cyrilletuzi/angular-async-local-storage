@@ -163,3 +163,7 @@ This module is not impacted by IE/Edge missing IndexedDB features.
 ## License
 
 MIT
+
+## Angular onsite training
+
+The author of this library organizes Angular courses, mostly in Paris (France). You can find [details here](https://formationjavascript.com/formation-angular/) (in French).
