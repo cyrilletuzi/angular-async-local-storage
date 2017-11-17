@@ -5,6 +5,10 @@ Efficient local storage module for Angular :
 - **perfomance** : internally stored via the asynchronous `IndexedDB` API,
 - **Angular-like** : wrapped in RxJS `Observables`.
 
+## Angular onsite training
+
+The author of this library organizes Angular courses (based in Paris (France), but open to travel). You can find [details here](https://formationjavascript.com/formation-angular/) (in French).
+
 ## Why this module ?
 
 For now, Angular does not provide a local storage module, and almost every app needs some local storage. 
@@ -163,7 +167,3 @@ This module is not impacted by IE/Edge missing IndexedDB features.
 ## License
 
 MIT
-
-## Angular onsite training
-
-The author of this library organizes Angular courses, mostly in Paris (France). You can find [details here](https://formationjavascript.com/formation-angular/) (in French).
