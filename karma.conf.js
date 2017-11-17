@@ -11,6 +11,8 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
       require('karma-safari-launcher'),
+      require('karma-edge-launcher'),
+      require('karma-ie-launcher'),
       require('karma-jasmine-html-reporter')
     ],
 
@@ -31,6 +33,7 @@ module.exports = function (config) {
     files: [
       // System.js for module loading
       'node_modules/systemjs/dist/system.src.js',
+      'node_modules/systemjs/dist/system-polyfills.js',
 
       // Polyfills
       'node_modules/core-js/client/shim.js',
@@ -85,7 +88,10 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
+    /* Tests on Mac */
     browsers: ['Chrome', 'FirefoxDeveloper', 'Safari'],
+    /* Tests on Windows */
+    // browsers: ['Chrome', 'FirefoxDeveloper', 'Edge', 'IE'],
     singleRun: false
   })
 }
