@@ -39,6 +39,10 @@
       rxjs: {
         defaultExtension: 'js'
       },
+      'rxjs/operators': {
+        defaultExtension: 'js',
+        main: 'index'
+      },
       'angular-async-local-storage': {
         main: 'index.js',
         defaultExtension: 'js',
