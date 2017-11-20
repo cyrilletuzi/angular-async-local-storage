@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { AsyncLocalDatabase } from './databases/async-local-database';
+import { AsyncLocalDatabase, GetItemOptions } from './databases/index';
 
 @Injectable()
 export class AsyncLocalStorage {
@@ -11,7 +11,7 @@ export class AsyncLocalStorage {
   /**
    * Injects a local database
    */
-  public constructor(database: AsyncLocalDatabase) {
+  constructor(database: AsyncLocalDatabase) {
 
     this.database = database;
 
@@ -22,9 +22,9 @@ export class AsyncLocalStorage {
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  public getItem<T = any>(key: string) {
+  getItem<T = any>(key: string, options?: GetItemOptions) {
 
-    return this.database.getItem<T>(key);
+    return this.database.getItem<T>(key, options);
 
   }
 
@@ -34,7 +34,7 @@ export class AsyncLocalStorage {
    * @param data The item's value, must NOT be null or undefined
    * @returns An RxJS Observable to wait the end of the operation
    */
-  public setItem(key: string, data: any) {
+   setItem(key: string, data: any) {
 
     return this.database.setItem(key, data);
 
@@ -45,7 +45,7 @@ export class AsyncLocalStorage {
    * @param key The item's key
    * @returns An RxJS Observable to wait the end of the operation
    */
-  public removeItem(key: string) {
+   removeItem(key: string) {
 
     return this.database.removeItem(key);
 
@@ -55,7 +55,7 @@ export class AsyncLocalStorage {
    * Deletes all items from local storage
    * @returns An RxJS Observable to wait the end of the operation
    */
-  public clear() {
+   clear() {
 
     return this.database.clear();
 

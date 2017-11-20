@@ -8,7 +8,8 @@ import { of as observableOf }  from 'rxjs/observable/of';
 import { _throw as observableThrow } from 'rxjs/observable/throw';
 import { race as observableRace }  from 'rxjs/observable/race';
 
-import { AsyncLocalDatabase } from './async-local-database';
+import { AsyncLocalDatabase, GetItemOptions } from './async-local-database';
+import { JSONValidator } from '../validation/index';
 
 @Injectable()
 export class IndexedDBDatabase extends AsyncLocalDatabase {
@@ -38,7 +39,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
   /**
    * Connects to IndexedDB
    */
-  public constructor() {
+  constructor(protected jsonValidator: JSONValidator) {
 
     super();
 
@@ -55,7 +56,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  public getItem<T = any>(key: string) {
+  getItem<T = any>(key: string, options: GetItemOptions = this.getItemOptionsDefault) {
 
     /* Opening a trasaction and requesting the item in local storage */
     return this.transaction().pipe(
@@ -63,9 +64,11 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
       mergeMap((request) => {
 
         /* Listening to the success event, and passing the item value if found, null otherwise */
-        let success = (observableFromEvent(request, 'success') as Observable<Event>).pipe(
+        const success = (observableFromEvent(request, 'success') as Observable<Event>).pipe(
           map((event) => (event.target as IDBRequest).result),
-          map((result) => result && (this.dataPath in result) ? (result[this.dataPath] as T) : null)
+          map((result) => result && (this.dataPath in result) ? (result[this.dataPath] as T) : null),
+          /* Validate data upon a json schema if requested */
+          map((data) => !options.schema || this.jsonValidator.validate(data, options.schema) ? data : null)
         );
 
         /* Merging success and errors events and autoclosing the observable */
@@ -83,7 +86,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
    * @param data The item's value, must NOT be null or undefined
    * @returns An RxJS Observable to wait the end of the operation
    */
-  public setItem(key: string, data: any) {
+  setItem(key: string, data: any) {
 
     /* Storing null is not correctly supported by IndexedDB and unnecessary here */
     if (data == null) {
@@ -129,7 +132,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
    * @param key The item's key
    * @returns An RxJS Observable to wait the end of the operation
    */
-  public removeItem(key: string) {
+  removeItem(key: string) {
 
     /* Opening a transaction and checking if the item exists in local storage */
     return this.getItem(key).pipe(mergeMap((data) => {
@@ -141,7 +144,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
         return this.transaction('readwrite').pipe(mergeMap((transaction) => {
 
           /* Deleting the item in local storage */
-          let request = transaction.delete(key);
+          const request = transaction.delete(key);
 
           /* Merging success (passing true) and error events and autoclosing the observable */
           return (observableRace(this.toSuccessObservable(request), this.toErrorObservable(request, `remover`)) as Observable<boolean>)
@@ -162,13 +165,13 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
    * Deletes all items from local storage
    * @returns An RxJS Observable to wait the end of the operation
    */
-  public clear() {
+  clear() {
 
     /* Opening a transaction */
     return this.transaction('readwrite').pipe(mergeMap((transaction) => {
 
       /* Deleting all items from local storage */
-      let request = transaction.clear();
+      const request = transaction.clear();
 
       /* Merging success (passing true) and error events and autoclosing the observable */
       return (observableRace(this.toSuccessObservable(request), this.toErrorObservable(request, `clearer`)) as Observable<boolean>)
@@ -184,7 +187,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
   protected connect() {
 
     /* Connecting to IndexedDB */
-    let request = indexedDB.open(this.dbName);
+    const request = indexedDB.open(this.dbName);
 
     /* Listening the event fired on first connection, creating the object store for local storage */
     (observableFromEvent(request, 'upgradeneeded') as Observable<Event>)
@@ -192,7 +195,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
       .subscribe((event) => {
 
         /* Getting the database connection */
-        let database = (event.target as IDBRequest).result as IDBDatabase;
+        const database = (event.target as IDBRequest).result as IDBDatabase;
 
         /* Checking if the object store already exists, to avoid error */
         if (!database.objectStoreNames.contains(this.objectStoreName)) {
@@ -205,7 +208,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
       });
 
     /* Listening the success event and converting to an RxJS Observable */
-    let success = observableFromEvent(request, 'success') as Observable<Event>;
+    const success = observableFromEvent(request, 'success') as Observable<Event>;
 
     /* Merging success and errors events */
     (observableRace(success, this.toErrorObservable(request, `connection`)) as Observable<Event>)
