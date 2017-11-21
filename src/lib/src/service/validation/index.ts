@@ -1,2 +1,2 @@
-export { JSONSchema } from './json-schema';
+export { JSONSchema, JSONSchemaType } from './json-schema';
 export { JSONValidator } from './json-validator';
