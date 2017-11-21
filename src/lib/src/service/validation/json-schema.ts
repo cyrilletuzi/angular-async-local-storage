@@ -1,30 +1,26 @@
 /**
+ * Types allowed in a JSON Schema
+ */
+export type JSONSchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object' | 'null';
+
+/**
  * Subset of the JSON Schema draft 6.
- * Not all features are supported : just follow the interface and it will be OK.
- * Unlike the spec, a value MUST have either 'type' or 'properties' (to enforce strict types).
+ * Types are enforced to validate everything : each value MUST have either 'type' or 'properties' or 'items'.
+ * Therefore, unlike the spec, booleans are not allowed as schemas.
+ * @todo Not all validation features are supported yet : just follow the interface.
  */
 export interface JSONSchema {
 
   /**
-   * Type for a value.
-   * Not required for objects, just set 'properties' and/or 'required'.
+   * Type for a primitive value.
+   * Not required for objects, just set 'properties'.
    * Not required for arrays, just set 'items'.
-   * Unlike spec, an array of types is not supported yet.
    * @see http://json-schema.org/latest/json-schema-validation.html#rfc.section.6.25
    */
-  type?: 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object' | 'null';
+  type?: JSONSchemaType | JSONSchemaType[];
 
   /**
-   * Array of the names of the required properties for an object.
-   * Properties set as required should be present in 'properties' too (to enforce strict types).
-   * Note that in the last spec, booleans are not supported anymore.
-   * @see http://json-schema.org/latest/json-schema-validation.html#rfc.section.6.17
-   */
-  required?: string[];
-
-  /**
-   * List of properties for an object.
-   * Unlike the spec, booleans are not supported (to enforce strict types).
+   * List of properties schemas for an object.
    * @see http://json-schema.org/latest/json-schema-validation.html#rfc.section.6.18
    */
   properties?: {
@@ -32,10 +28,19 @@ export interface JSONSchema {
   };
 
   /**
-   * Schema to describe the values of the array.
-   * Unlike the spec, only one type is authorized (to enforce strict types).
+   * Array of names of the required properties for an object.
+   * Properties set as required should be present in 'properties' too.
+   * Note that in the last spec, booleans are not supported anymore.
+   * @see http://json-schema.org/latest/json-schema-validation.html#rfc.section.6.17
    */
-  items?: JSONSchema;
+  required?: string[];
+
+  /**
+   * Schema for the values of an array.
+   * 'type' of values should be a string (not an array of type).
+   * @see http://json-schema.org/latest/json-schema-validation.html#rfc.section.6.4.1
+   */
+  items?: JSONSchema | JSONSchema[];
 
   /**
    * Allow other properties, to not fail with existing JSON schemas.

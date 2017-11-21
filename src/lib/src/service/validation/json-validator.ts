@@ -1,7 +1,7 @@
-import { JSONSchema } from './json-schema';
+import { JSONSchema, JSONSchemaType } from './json-schema';
 
 /**
- * @todo Delete console.log on prod environment ?
+ * @todo Delete console.log in prod environment ?
  * @todo Add other JSON Schema validation features
  */
 export class JSONValidator {
@@ -154,6 +154,12 @@ export class JSONValidator {
 
   protected validateType(data: any, schema: JSONSchema) {
 
+    if (Array.isArray(schema.type)) {
+
+      return this.validateTypeList(data, schema);
+
+    }
+
     if (typeof schema.type !== 'string') {
 
       throw new Error(`'type' must be a string (arrays of types are not supported yet).`);
@@ -182,7 +188,36 @@ export class JSONValidator {
 
   }
 
+
+  protected validateTypeList(data: any, schema: JSONSchema) {
+
+    const types = schema.type as JSONSchemaType[];
+
+    const typesTests: boolean[] = [];
+
+    for (let type of types) {
+
+      typesTests.push(this.validateType(data, { type }));
+
+    }
+
+    return (typesTests.indexOf(true) !== -1);
+
+  }
+
   protected validateItems(data: any[], schema: JSONSchema) {
+
+    if (!Array.isArray(data)) {
+
+      return this.valueInvalid(`One of the value should be an array.`);
+
+    }
+
+    if (Array.isArray(schema.items)) {
+
+      return this.validateItemsList(data, schema);
+
+    }
 
     if (!schema.items || !this.isObjectNotNull(schema.items)) {
 
@@ -190,13 +225,31 @@ export class JSONValidator {
 
     }
 
-    if (!Array.isArray(data)) {
-      return false;
-    }
-
     for (let value of data) {
 
       if (!this.validate(value, schema.items)) {
+        return false;
+      }
+
+    }
+
+    return true;
+
+  }
+
+  protected validateItemsList(data: any, schema: JSONSchema) {
+
+    const items = schema.items as JSONSchema[];
+
+    if (data.length !== items.length) {
+
+      return this.valueInvalid(`An array does not match the number of items.`);
+
+    }
+
+    for (let i = 0; i < items.length; i += 1) {
+
+      if (!this.validate(data[i], items[i])) {
         return false;
       }
 

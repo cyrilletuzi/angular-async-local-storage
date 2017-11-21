@@ -130,6 +130,26 @@ describe(`JSONValidator`, () => {
 
   });
 
+  describe(`validateTypeList`, () => {
+
+    it(`should return true on a valid primitive value with an array type`, () => {
+
+      const test = jsonValidator.validate('test', { type: ['number', 'string'] });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false on an invalid primitive value with an array type`, () => {
+
+      const test = jsonValidator.validate('test', { type: ['number', 'boolean'] });
+
+      expect(test).toBe(false);
+
+    });
+
+  });
+
   describe(`validateRequired`, () => {
 
     it(`should return false if data is not an object`, () => {
@@ -393,6 +413,34 @@ describe(`JSONValidator`, () => {
       const test = jsonValidator.validate([{ test: 'test' }, [{ test: 'test' }]], { items: { properties: { test: { type: 'string' } } } });
 
       expect(test).toBe(true);
+
+    });
+
+  });
+
+  describe(`validateItemsList`, () => {
+
+    it(`should return false if array length is not equel to schemas length`, () => {
+
+      const test = jsonValidator.validate(['', 10], { items: [{ type: 'string' }] });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return true if array values match schemas`, () => {
+
+      const test = jsonValidator.validate(['', 10], { items: [{ type: 'string' }, { type: 'number' }] });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false if array values mismatch schemas`, () => {
+
+      const test = jsonValidator.validate(['', 10], { items: [{ type: 'string' }, { type: 'boolean' }] });
+
+      expect(test).toBe(false);
 
     });
 
