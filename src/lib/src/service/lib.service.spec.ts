@@ -2,8 +2,11 @@ import { TestBed, inject, async } from '@angular/core/testing';
 import { map } from 'rxjs/operators';
 
 import { AsyncLocalStorage } from './lib.service';
-import { IndexedDBDatabase, LocalStorageDatabase, MockLocalDatabase } from './databases/index';
-import { JSONSchema, JSONValidator } from './validation/index';
+import { IndexedDBDatabase } from './databases/indexeddb-database';
+import { LocalStorageDatabase } from './databases/localstorage-database';
+import { MockLocalDatabase } from './databases/mock-local-database';
+import { JSONSchema } from './validation/json-schema';
+import { JSONValidator } from './validation/json-validator';
 
 function testGetItem<T>(type: 'primitive' | 'object', localStorage: AsyncLocalStorage, value: T, done: DoneFn) {
 

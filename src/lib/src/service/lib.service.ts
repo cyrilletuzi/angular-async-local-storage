@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
-import { AsyncLocalDatabase } from './databases/index';
+import { AsyncLocalDatabase } from './databases/async-local-database';
 import { JSONSchema } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
 
