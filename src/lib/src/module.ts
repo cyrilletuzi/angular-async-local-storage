@@ -1,7 +1,7 @@
 import { NgModule, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
-import { JSONValidator } from './service/validation/index';
+import { JSONValidator } from './service/validation/json-validator';
 import { AsyncLocalStorage } from './service/lib.service';
 import { AsyncLocalDatabase, IndexedDBDatabase, LocalStorageDatabase, MockLocalDatabase } from './service/databases/index';
 
@@ -12,21 +12,21 @@ export function asyncLocalStorageFactory(platformId: Object, jsonValidator: JSON
   if (isPlatformBrowser(platformId) && ('indexedDB' in window)) {
 
     /* Try with IndexedDB in modern browsers */
-    database = new IndexedDBDatabase(jsonValidator);
+    database = new IndexedDBDatabase();
 
   } else if (isPlatformBrowser(platformId) && ('localStorage' in window)) {
 
     /* Try with localStorage in old browsers (IE9) */
-    database = new LocalStorageDatabase(jsonValidator);
+    database = new LocalStorageDatabase();
 
   } else {
 
     /* Fake database for server-side rendering (Universal) */
-    database = new MockLocalDatabase(jsonValidator);
+    database = new MockLocalDatabase();
 
   }
 
-  return new AsyncLocalStorage(database);
+  return new AsyncLocalStorage(database, jsonValidator);
 
 };
 

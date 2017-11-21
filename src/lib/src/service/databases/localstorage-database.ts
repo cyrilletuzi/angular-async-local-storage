@@ -5,8 +5,6 @@ import { of as observableOf } from 'rxjs/observable/of';
 import { _throw as observableThrow } from 'rxjs/observable/throw';
 
 import { AsyncLocalDatabase } from './async-local-database';
-import { ALSGetItemOptions } from '../lib.service';
-import { JSONValidator } from '../validation/json-validator';
 
 @Injectable()
 export class LocalStorageDatabase extends AsyncLocalDatabase {
@@ -14,18 +12,12 @@ export class LocalStorageDatabase extends AsyncLocalDatabase {
   /* Initializing native localStorage right now to be able to check its support on class instanciation */
   protected localStorage = localStorage;
 
-  constructor(protected jsonValidator: JSONValidator) {
-
-    super();
-
-  }
-
   /**
    * Gets an item value in local storage
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  getItem<T = any>(key: string, options: ALSGetItemOptions = this.getItemOptionsDefault): Observable<T | null> {
+  getItem<T = any>(key: string): Observable<T | null> {
 
     const unparsedData = this.localStorage.getItem(key);
     let parsedData: T | null = null;
@@ -40,12 +32,7 @@ export class LocalStorageDatabase extends AsyncLocalDatabase {
 
     }
 
-    const observableData = observableOf(parsedData).pipe(
-      /* Validate data upon a json schema if requested */
-      map((data) => !options.schema || this.jsonValidator.validate(data, options.schema) ? data : null)
-    );
-
-    return observableData;
+    return observableOf(parsedData);
 
   }
 

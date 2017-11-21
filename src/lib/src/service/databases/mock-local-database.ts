@@ -4,35 +4,22 @@ import { map } from 'rxjs/operators';
 import { of as observableOf } from 'rxjs/observable/of';
 
 import { AsyncLocalDatabase } from './async-local-database';
-import { ALSGetItemOptions } from '../lib.service';
-import { JSONValidator } from '../validation/json-validator';
 
 @Injectable()
 export class MockLocalDatabase extends AsyncLocalDatabase {
 
   protected localStorage = new Map<string, any>();
 
-  constructor(protected jsonValidator: JSONValidator) {
-
-    super();
-
-  }
-
   /**
    * Gets an item value in local storage
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-   getItem<T = any>(key: string, options: ALSGetItemOptions = this.getItemOptionsDefault) {
+   getItem<T = any>(key: string) {
 
     const rawData: T | null = this.localStorage.get(key);
 
-    const observableData = observableOf((rawData !== undefined) ? rawData : null).pipe(
-      /* Validate data upon a json schema if requested */
-      map((data) => !options.schema || this.jsonValidator.validate(data, options.schema) ? data : null)
-    );
-
-    return observableData;
+    return observableOf((rawData !== undefined) ? rawData : null);
 
   }
 

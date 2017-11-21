@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
 
 import { AsyncLocalDatabase } from './databases/index';
 import { JSONSchema } from './validation/json-schema';
+import { JSONValidator } from './validation/json-validator';
 
 export interface ALSGetItemOptions {
   schema?: JSONSchema | null;
@@ -11,25 +13,23 @@ export interface ALSGetItemOptions {
 @Injectable()
 export class AsyncLocalStorage {
 
-  protected database: AsyncLocalDatabase;
+  protected readonly getItemOptionsDefault = {
+    schema: null
+  };
 
-  /**
-   * Injects a local database
-   */
-  constructor(database: AsyncLocalDatabase) {
-
-    this.database = database;
-
-  }
+  constructor(protected database: AsyncLocalDatabase, protected jsonValidator: JSONValidator) {}
 
   /**
    * Gets an item value in local storage
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  getItem<T = any>(key: string, options?: ALSGetItemOptions) {
+  getItem<T = any>(key: string, options: ALSGetItemOptions = this.getItemOptionsDefault) {
 
-    return this.database.getItem<T>(key, options);
+    return this.database.getItem<T>(key).pipe(
+      /* Validate data upon a json schema if requested */
+      map((data) => !options.schema || this.jsonValidator.validate(data, options.schema) ? data : null)
+    );
 
   }
 

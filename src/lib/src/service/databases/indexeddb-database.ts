@@ -9,8 +9,6 @@ import { _throw as observableThrow } from 'rxjs/observable/throw';
 import { race as observableRace }  from 'rxjs/observable/race';
 
 import { AsyncLocalDatabase } from './async-local-database';
-import { ALSGetItemOptions } from '../lib.service';
-import { JSONValidator } from '../validation/json-validator';
 
 @Injectable()
 export class IndexedDBDatabase extends AsyncLocalDatabase {
@@ -40,7 +38,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
   /**
    * Connects to IndexedDB
    */
-  constructor(protected jsonValidator: JSONValidator) {
+  constructor() {
 
     super();
 
@@ -57,7 +55,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  getItem<T = any>(key: string, options: ALSGetItemOptions = this.getItemOptionsDefault) {
+  getItem<T = any>(key: string) {
 
     /* Opening a trasaction and requesting the item in local storage */
     return this.transaction().pipe(
@@ -67,9 +65,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
         /* Listening to the success event, and passing the item value if found, null otherwise */
         const success = (observableFromEvent(request, 'success') as Observable<Event>).pipe(
           map((event) => (event.target as IDBRequest).result),
-          map((result) => result && (this.dataPath in result) ? (result[this.dataPath] as T) : null),
-          /* Validate data upon a json schema if requested */
-          map((data) => !options.schema || this.jsonValidator.validate(data, options.schema) ? data : null)
+          map((result) => result && (this.dataPath in result) ? (result[this.dataPath] as T) : null)
         );
 
         /* Merging success and errors events and autoclosing the observable */

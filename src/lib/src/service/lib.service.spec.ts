@@ -214,7 +214,7 @@ function tests(localStorage: AsyncLocalStorage) {
 
 describe('AsyncLocalStorage with mock storage', () => {
 
-  let localStorage = new AsyncLocalStorage(new MockLocalDatabase(new JSONValidator()));
+  let localStorage = new AsyncLocalStorage(new MockLocalDatabase(), new JSONValidator());
 
   tests(localStorage);
 
@@ -222,7 +222,7 @@ describe('AsyncLocalStorage with mock storage', () => {
 
 describe('AsyncLocalStorage with localStorage', () => {
 
-  let localStorage = new AsyncLocalStorage(new LocalStorageDatabase(new JSONValidator()));
+  let localStorage = new AsyncLocalStorage(new LocalStorageDatabase(), new JSONValidator());
 
   tests(localStorage);
 
@@ -230,7 +230,7 @@ describe('AsyncLocalStorage with localStorage', () => {
 
 describe('AsyncLocalStorage with IndexedDB', () => {
 
-  let localStorage = new AsyncLocalStorage(new IndexedDBDatabase(new JSONValidator()));
+  let localStorage = new AsyncLocalStorage(new IndexedDBDatabase, new JSONValidator());
 
   tests(localStorage);
 
