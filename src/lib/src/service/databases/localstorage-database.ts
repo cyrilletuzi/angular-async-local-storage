@@ -4,8 +4,9 @@ import { map } from 'rxjs/operators';
 import { of as observableOf } from 'rxjs/observable/of';
 import { _throw as observableThrow } from 'rxjs/observable/throw';
 
-import { AsyncLocalDatabase, GetItemOptions } from './async-local-database';
-import { JSONValidator } from '../validation/index';
+import { AsyncLocalDatabase } from './async-local-database';
+import { ALSGetItemOptions } from '../lib.service';
+import { JSONValidator } from '../validation/json-validator';
 
 @Injectable()
 export class LocalStorageDatabase extends AsyncLocalDatabase {
@@ -24,7 +25,7 @@ export class LocalStorageDatabase extends AsyncLocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  getItem<T = any>(key: string, options: GetItemOptions = this.getItemOptionsDefault): Observable<T | null> {
+  getItem<T = any>(key: string, options: ALSGetItemOptions = this.getItemOptionsDefault): Observable<T | null> {
 
     const unparsedData = this.localStorage.getItem(key);
     let parsedData: T | null = null;

@@ -8,8 +8,9 @@ import { of as observableOf }  from 'rxjs/observable/of';
 import { _throw as observableThrow } from 'rxjs/observable/throw';
 import { race as observableRace }  from 'rxjs/observable/race';
 
-import { AsyncLocalDatabase, GetItemOptions } from './async-local-database';
-import { JSONValidator } from '../validation/index';
+import { AsyncLocalDatabase } from './async-local-database';
+import { ALSGetItemOptions } from '../lib.service';
+import { JSONValidator } from '../validation/json-validator';
 
 @Injectable()
 export class IndexedDBDatabase extends AsyncLocalDatabase {
@@ -56,7 +57,7 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  getItem<T = any>(key: string, options: GetItemOptions = this.getItemOptionsDefault) {
+  getItem<T = any>(key: string, options: ALSGetItemOptions = this.getItemOptionsDefault) {
 
     /* Opening a trasaction and requesting the item in local storage */
     return this.transaction().pipe(

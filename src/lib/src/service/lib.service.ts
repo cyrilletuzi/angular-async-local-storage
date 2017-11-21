@@ -1,7 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { AsyncLocalDatabase, GetItemOptions } from './databases/index';
+import { AsyncLocalDatabase } from './databases/index';
+import { JSONSchema } from './validation/json-schema';
+
+export interface ALSGetItemOptions {
+  schema?: JSONSchema | null;
+}
 
 @Injectable()
 export class AsyncLocalStorage {
@@ -22,7 +27,7 @@ export class AsyncLocalStorage {
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  getItem<T = any>(key: string, options?: GetItemOptions) {
+  getItem<T = any>(key: string, options?: ALSGetItemOptions) {
 
     return this.database.getItem<T>(key, options);
 
