@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.0-beta.2 (2017-11-21)
+
+### Features
+
+- JSON Schema validation : community opinion wanted, see PR[#14](https://github.com/cyrilletuzi/angular-async-local-storage/pull/14)
+
+Note that 3.1.0-beta.0 and 3.1.0-beta.1 were broken tests, do not use them.
+
 ## 3.0.0 (2017-11-03)
 
 ### Breaking changes
