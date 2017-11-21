@@ -7,11 +7,15 @@ interface User {
 
 @Component({
   selector: 'demo-app',
-  template: `<p>Should display 'Homer Simpsons' : {{name}}</p>`
+  template: `
+    <p>Should display 'Homer Simpsons' : {{name}}</p>
+    <p>Should display 'Schema invalid' : {{validation}}</p>
+  `
 })
 export class AppComponent implements OnInit {
 
   name: string;
+  validation: string;
 
   constructor(protected localStorage: AsyncLocalStorage) {}
 
@@ -26,6 +30,12 @@ export class AppComponent implements OnInit {
         this.localStorage.getItem<User>('user').subscribe((data) => {
 
           this.name = data ? data.name : '';
+
+        });
+
+        this.localStorage.getItem<User>('user', { schema: { type: 'string' } }).subscribe((data) => {
+
+          this.validation = data ? data.name : 'Schema invalid';
 
         });
 
