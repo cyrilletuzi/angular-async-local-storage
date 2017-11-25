@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
+import { _throw as observableThrow } from 'rxjs/observable/throw';
+import { of as observableOf } from 'rxjs/observable/of';
 
 import { AsyncLocalDatabase } from './databases/async-local-database';
 import { JSONSchema } from './validation/json-schema';
@@ -27,9 +29,29 @@ export class AsyncLocalStorage {
   getItem<T = any>(key: string, options: ALSGetItemOptions = this.getItemOptionsDefault) {
 
     return this.database.getItem<T>(key).pipe(
+
       /* Validate data upon a json schema if requested */
-      map((data) => !options.schema || this.jsonValidator.validate(data, options.schema) ? data : null)
-    );
+      mergeMap((data) => {
+
+        if (options.schema && data !== null) {
+
+          let validation = true;
+
+          try {
+            validation = this.jsonValidator.validate(data, options.schema);
+          } catch (error) {
+            return observableThrow(error);
+          }
+
+          if (!validation) {
+            return observableThrow(new Error(`JSON invalid`));
+          }
+
+        }
+
+        return observableOf(data);
+
+      }));
 
   }
 

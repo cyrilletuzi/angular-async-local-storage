@@ -1,7 +1,6 @@
 import { JSONSchema, JSONSchemaType } from './json-schema';
 
 /**
- * @todo Delete console.log in prod environment ?
  * @todo Add other JSON Schema validation features
  */
 export class JSONValidator {
@@ -11,14 +10,6 @@ export class JSONValidator {
   protected isObjectNotNull(value: any) {
 
     return (value !== null) && (typeof value === 'object');
-
-  }
-
-  protected valueInvalid(error: string) {
-
-    console.log(error);
-
-    return false;
 
   }
 
@@ -71,7 +62,7 @@ export class JSONValidator {
 
     if (!this.isObjectNotNull(data)) {
 
-      return this.valueInvalid(`A value with 'properties' must be an object.`);
+      return false;
 
     }
 
@@ -87,7 +78,7 @@ export class JSONValidator {
      */
     if (Object.keys(schema.properties).length !== Object.keys(data).length) {
 
-      return this.valueInvalid(`Properties set as required should be present in 'properties' too (to enforce strict types).`);
+      return false;
 
     }
 
@@ -114,7 +105,7 @@ export class JSONValidator {
 
     if (!this.isObjectNotNull(data)) {
 
-      return this.valueInvalid(`A value with 'required' must be an object.`);
+      return false;
 
     }
 
@@ -142,7 +133,7 @@ export class JSONValidator {
       /* Checks if the property is present in the data */
       if (!data.hasOwnProperty(requiredProp)) {
 
-        return this.valueInvalid(`Required ${requiredProp} property is missing.`);
+        return false;
 
       }
 
@@ -168,19 +159,19 @@ export class JSONValidator {
 
     if ((schema.type === 'null') && (data !== null)) {
 
-      return this.valueInvalid(`Value invalid, should be null`);
+      return false;
 
     }
 
     if ((this.simpleTypes.indexOf(schema.type) !== -1) && (typeof data !== schema.type)) {
 
-      return this.valueInvalid(`Value invalid, should be of type ${schema.type}`);
+      return false;
 
     }
 
     if ((schema.type === 'integer') && ((typeof data !== 'number') || !Number.isInteger(data))) {
 
-      return this.valueInvalid(`Value invalid, should be an integer`);
+      return false;
 
     }
 
@@ -209,7 +200,7 @@ export class JSONValidator {
 
     if (!Array.isArray(data)) {
 
-      return this.valueInvalid(`One of the value should be an array.`);
+      return false;
 
     }
 
@@ -243,7 +234,7 @@ export class JSONValidator {
 
     if (data.length !== items.length) {
 
-      return this.valueInvalid(`An array does not match the number of items.`);
+      return false;
 
     }
 

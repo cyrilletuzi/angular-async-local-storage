@@ -155,7 +155,7 @@ function tests(localStorage: AsyncLocalStorage) {
 
   });
 
-  it('should return null if JSON schema is invalid', (done: DoneFn) => {
+  it('should call error callback if data is invalid against JSON schema', (done: DoneFn) => {
 
     const index = 'index';
     const value = {
@@ -174,7 +174,41 @@ function tests(localStorage: AsyncLocalStorage) {
 
       localStorage.getItem<{ expected: string }>(index, { schema }).subscribe((data) => {
 
-        expect(data).toBeNull();
+        fail();
+
+        done();
+
+      }, (error) => {
+
+        expect(error.message).toBe(`JSON invalid`);
+
+        done();
+
+      });
+
+    });
+
+  });
+
+  it('should call error callback if the JSON schema itself is invalid', (done: DoneFn) => {
+
+    const index = 'doesnotmatter';
+    const value = 'doesnotmatter';
+    const schema: JSONSchema = {
+      required: ['expected']
+    };
+
+    localStorage.setItem(index, value).subscribe(() => {
+
+      localStorage.getItem(index, { schema }).subscribe((data) => {
+
+        fail();
+
+        done();
+
+      }, (error) => {
+
+        expect(error).toBeTruthy();
 
         done();
 
@@ -207,7 +241,40 @@ function tests(localStorage: AsyncLocalStorage) {
 
         done();
 
+      }, () => {
+
+        fail();
+
+        done();
+
       });
+
+    });
+
+  });
+
+  it('should return the data if the data is null (no validation)', (done: DoneFn) => {
+
+    const schema: JSONSchema = {
+      properties: {
+        expected: {
+          type: 'string'
+        }
+      },
+      required: ['expected']
+    };
+
+    localStorage.getItem<{ expected: string }>('notexisting', { schema }).subscribe((data) => {
+
+      expect((data)).toBeNull();
+
+      done();
+
+    }, () => {
+
+      fail();
+
+      done();
 
     });
 
