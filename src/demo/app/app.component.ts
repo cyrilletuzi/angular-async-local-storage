@@ -33,9 +33,9 @@ export class AppComponent implements OnInit {
 
         });
 
-        this.localStorage.getItem<User>('user', { schema: { type: 'string' } }).subscribe((data) => {
+        this.localStorage.getItem<User>('user', { schema: { type: 'string' } }).subscribe(() => {}, () => {
 
-          this.validation = data ? data.name : 'Schema invalid';
+          this.validation = 'Schema invalid';
 
         });
 
