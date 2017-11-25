@@ -1,8 +1,9 @@
+import { AsyncLocalDatabase, IndexedDBDatabase, LocalStorageDatabase, MockLocalDatabase } from './service/databases/index';
 import { NgModule, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 
 import { AsyncLocalStorage } from './service/lib.service';
-import { AsyncLocalDatabase, IndexedDBDatabase, LocalStorageDatabase, MockLocalDatabase } from './service/databases/index';
+import { RepositoryService } from './service/repository/repository.service';
+import { isPlatformBrowser } from '@angular/common';
 
 export function asyncLocalStorageFactory(platformId: Object) {
 
@@ -35,7 +36,8 @@ export function asyncLocalStorageFactory(platformId: Object) {
       provide: AsyncLocalStorage,
       useFactory: asyncLocalStorageFactory,
       deps: [PLATFORM_ID]
-    }
+    },
+    RepositoryService
   ]
 })
 export class AsyncLocalStorageModule { }
