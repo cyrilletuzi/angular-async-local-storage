@@ -2,7 +2,11 @@ import { TestBed, inject, async } from '@angular/core/testing';
 import { map } from 'rxjs/operators';
 
 import { AsyncLocalStorage } from './lib.service';
-import { IndexedDBDatabase, LocalStorageDatabase, MockLocalDatabase } from './databases/index';
+import { IndexedDBDatabase } from './databases/indexeddb-database';
+import { LocalStorageDatabase } from './databases/localstorage-database';
+import { MockLocalDatabase } from './databases/mock-local-database';
+import { JSONSchema } from './validation/json-schema';
+import { JSONValidator } from './validation/json-validator';
 
 function testGetItem<T>(type: 'primitive' | 'object', localStorage: AsyncLocalStorage, value: T, done: DoneFn) {
 
@@ -151,19 +155,144 @@ function tests(localStorage: AsyncLocalStorage) {
 
   });
 
+  it('should call error callback if data is invalid against JSON schema', (done: DoneFn) => {
+
+    const index = 'index';
+    const value = {
+      unexpected: 'value'
+    };
+    const schema: JSONSchema = {
+      properties: {
+        expected: {
+          type: 'string'
+        }
+      },
+      required: ['expected']
+    };
+
+    localStorage.setItem(index, value).subscribe(() => {
+
+      localStorage.getItem<{ expected: string }>(index, { schema }).subscribe((data) => {
+
+        fail();
+
+        done();
+
+      }, (error) => {
+
+        expect(error.message).toBe(`JSON invalid`);
+
+        done();
+
+      });
+
+    });
+
+  });
+
+  it('should call error callback if the JSON schema itself is invalid', (done: DoneFn) => {
+
+    const index = 'doesnotmatter';
+    const value = 'doesnotmatter';
+    const schema: JSONSchema = {
+      required: ['expected']
+    };
+
+    localStorage.setItem(index, value).subscribe(() => {
+
+      localStorage.getItem(index, { schema }).subscribe((data) => {
+
+        fail();
+
+        done();
+
+      }, (error) => {
+
+        expect(error).toBeTruthy();
+
+        done();
+
+      });
+
+    });
+
+  });
+
+  it('should return the data if JSON schema is valid', (done: DoneFn) => {
+
+    const index = 'index';
+    const value = {
+      expected: 'value'
+    };
+    const schema: JSONSchema = {
+      properties: {
+        expected: {
+          type: 'string'
+        }
+      },
+      required: ['expected']
+    };
+
+    localStorage.setItem(index, value).subscribe(() => {
+
+      localStorage.getItem<{ expected: string }>(index, { schema }).subscribe((data) => {
+
+        expect(data).toEqual(value);
+
+        done();
+
+      }, () => {
+
+        fail();
+
+        done();
+
+      });
+
+    });
+
+  });
+
+  it('should return the data if the data is null (no validation)', (done: DoneFn) => {
+
+    const schema: JSONSchema = {
+      properties: {
+        expected: {
+          type: 'string'
+        }
+      },
+      required: ['expected']
+    };
+
+    localStorage.getItem<{ expected: string }>('notexisting', { schema }).subscribe((data) => {
+
+      expect((data)).toBeNull();
+
+      done();
+
+    }, () => {
+
+      fail();
+
+      done();
+
+    });
+
+  });
+
 }
 
 describe('AsyncLocalStorage with mock storage', () => {
 
-  let localStorage = new AsyncLocalStorage(new MockLocalDatabase());
+  let localStorage = new AsyncLocalStorage(new MockLocalDatabase(), new JSONValidator());
 
-    tests(localStorage);
+  tests(localStorage);
 
 });
 
 describe('AsyncLocalStorage with localStorage', () => {
 
-  let localStorage = new AsyncLocalStorage(new LocalStorageDatabase());
+  let localStorage = new AsyncLocalStorage(new LocalStorageDatabase(), new JSONValidator());
 
   tests(localStorage);
 
@@ -171,7 +300,7 @@ describe('AsyncLocalStorage with localStorage', () => {
 
 describe('AsyncLocalStorage with IndexedDB', () => {
 
-  let localStorage = new AsyncLocalStorage(new IndexedDBDatabase());
+  let localStorage = new AsyncLocalStorage(new IndexedDBDatabase, new JSONValidator());
 
   tests(localStorage);
 

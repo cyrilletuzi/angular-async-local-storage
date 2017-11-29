@@ -1,30 +1,57 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { mergeMap } from 'rxjs/operators';
+import { _throw as observableThrow } from 'rxjs/observable/throw';
+import { of as observableOf } from 'rxjs/observable/of';
 
 import { AsyncLocalDatabase } from './databases/async-local-database';
+import { JSONSchema } from './validation/json-schema';
+import { JSONValidator } from './validation/json-validator';
+
+export interface ALSGetItemOptions {
+  schema?: JSONSchema | null;
+}
 
 @Injectable()
 export class AsyncLocalStorage {
 
-  protected database: AsyncLocalDatabase;
+  protected readonly getItemOptionsDefault = {
+    schema: null
+  };
 
-  /**
-   * Injects a local database
-   */
-  public constructor(database: AsyncLocalDatabase) {
-
-    this.database = database;
-
-  }
+  constructor(protected database: AsyncLocalDatabase, protected jsonValidator: JSONValidator) {}
 
   /**
    * Gets an item value in local storage
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  public getItem<T = any>(key: string) {
+  getItem<T = any>(key: string, options: ALSGetItemOptions = this.getItemOptionsDefault) {
 
-    return this.database.getItem<T>(key);
+    return this.database.getItem<T>(key).pipe(
+
+      /* Validate data upon a json schema if requested */
+      mergeMap((data) => {
+
+        if (options.schema && data !== null) {
+
+          let validation = true;
+
+          try {
+            validation = this.jsonValidator.validate(data, options.schema);
+          } catch (error) {
+            return observableThrow(error);
+          }
+
+          if (!validation) {
+            return observableThrow(new Error(`JSON invalid`));
+          }
+
+        }
+
+        return observableOf(data);
+
+      }));
 
   }
 
@@ -34,7 +61,7 @@ export class AsyncLocalStorage {
    * @param data The item's value, must NOT be null or undefined
    * @returns An RxJS Observable to wait the end of the operation
    */
-  public setItem(key: string, data: any) {
+   setItem(key: string, data: any) {
 
     return this.database.setItem(key, data);
 
@@ -45,7 +72,7 @@ export class AsyncLocalStorage {
    * @param key The item's key
    * @returns An RxJS Observable to wait the end of the operation
    */
-  public removeItem(key: string) {
+   removeItem(key: string) {
 
     return this.database.removeItem(key);
 
@@ -55,7 +82,7 @@ export class AsyncLocalStorage {
    * Deletes all items from local storage
    * @returns An RxJS Observable to wait the end of the operation
    */
-  public clear() {
+   clear() {
 
     return this.database.clear();
 
