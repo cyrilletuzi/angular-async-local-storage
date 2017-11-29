@@ -16,7 +16,7 @@ export class JSONValidator {
   /**
    * Validate a JSON data against a JSON Schema
    * @param data JSON data to validate
-   * @param schema Subset of JSON Schema draft 6
+   * @param schema Subset of JSON Schema
    * @returns If data is valid : true, if it is invalid : false, and throws if the schema is invalid
    */
   validate(data: any, schema: JSONSchema) {
