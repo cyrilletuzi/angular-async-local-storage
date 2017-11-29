@@ -89,9 +89,9 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     /* Tests on Mac */
-    browsers: ['Chrome', 'FirefoxDeveloper', 'Safari'],
+    browsers: ['Chrome', 'Firefox', 'Safari'],
     /* Tests on Windows */
-    // browsers: ['Chrome', 'FirefoxDeveloper', 'Edge', 'IE'],
+    // browsers: ['Chrome', 'Firefox', 'Edge', 'IE'],
     singleRun: false
   })
 }
