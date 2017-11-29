@@ -1,9 +1,11 @@
 # Async local storage for Angular
 
 Efficient local storage module for Angular :
-- **simple** : based on native `localStorage` API,
+- **simplicity** : based on native `localStorage` API,
 - **perfomance** : internally stored via the asynchronous `IndexedDB` API,
-- **Angular-like** : wrapped in RxJS `Observables`.
+- **Angular-like** : wrapped in RxJS `Observables`,
+- **security** : validate data with a JSON Schema,
+- **extensibility** : add your own storage.
 
 ## Angular onsite training
 
@@ -110,7 +112,35 @@ this.localStorage.getItem<User>('user').subscribe((user) => {
 ```
 
 As any data can be stored, you can type your data.
-But don't forget it's client-side storage : **always check the data**, as it could have been forged or deleted.
+
+### Checking data
+
+Don't forget it's client-side storage : **always check the data**, as it could have been forged or deleted.
+Starting with *version 3.1*, you can use a [JSON Schema](http://json-schema.org/) to validate the data.
+
+```typescript
+import { JSONSchema } from 'angular-async-local-storage';
+
+const schema: JSONSchema = {
+  properties: {
+    firstName: { type: 'string' },
+    lastName: { type: 'string' }
+  },
+  required: ['firstName', 'lastName']
+};
+
+this.localStorage.getItem<User>('user', { schema }).subscribe((user) => {
+  // Called if data is valid or null
+}, (error) => {
+  // Called if data is invalid
+});
+```
+
+Note : last draft of JSON Schema is used (draft 7 at this time),
+but we don't support all validation features yet. Just follow the interface.
+Contributions are welcome to add more features.
+
+Note : as the goal is validation, types are enforced : each value MUST have either `type` or `properties` or `items`.
 
 ### Notes
 
@@ -159,6 +189,36 @@ Even so, IE9 is supported but use native localStorage as a fallback,
 so internal operations are synchronous (the public API remains asynchronous-like).
 
 This module is not impacted by IE/Edge missing IndexedDB features.
+
+## Extensibility
+
+### Add your own storage
+
+Starting with *version 3.1*, you can easily add your own storage :
+
+```typescript
+import { AsyncLocalStorageModule, AsyncLocalDatabase } from 'angular-async-local-storage';
+
+export class MyDatabase extends AsyncLocalDatabase {
+
+  /* Implement the methods required by the parent class */
+
+}
+
+@NgModule({
+  provide: [
+    AsyncLocalStorageModule,
+    { provide: AsyncLocalDatabase, useClass: MyDatabase }
+  ]
+})
+export class AppModule {}
+```
+
+Be sure to be compatible with Universal by checking the current platform before using any browser specific API.
+
+### Extend JSON Validator
+
+You can also extend the JSON validator, but if you do so, please contribute so everyone can enjoy.
 
 ## Changelog
 

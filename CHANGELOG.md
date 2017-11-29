@@ -1,12 +1,13 @@
 # Changelog
 
-## 3.1.0-beta.2 (2017-11-21)
+## 3.1.0 (2017-11-29)
 
 ### Features
 
-- JSON Schema validation : community opinion wanted, see PR[#14](https://github.com/cyrilletuzi/angular-async-local-storage/pull/14)
+- JSON Schema validation
+- Extensibility : add your own storage
 
-Note that 3.1.0-beta.0 and 3.1.0-beta.1 were broken tests, do not use them.
+See README for instructions.
 
 ## 3.0.0 (2017-11-03)
 
@@ -88,25 +89,10 @@ Note that 3.1.0-beta.0 and 3.1.0-beta.1 were broken tests, do not use them.
 
 ## 1.0.0 (2016-10-31)
 
-### Bug fixes
-
-- Manage null values with IndexedDB
-
-## 1.0.0-beta.2 (2016-10-31)
-
-### Features
-
-- Compatible with Universal server-side rendering
-- IE9 support via native localStorage (public API still asynchronous but synchronous internally)
-
-### Bug fixes
-
-- Remove an unwanted console.log() call
-
-## 1.0.0-beta.1 (2016-10-31)
-
 ### Features
 
 - Initial release : asynchronous local storage module for Angular
 - Up to date with Angular 2.1
 - Compatible with AoT pre-compiling
+- Compatible with Universal server-side rendering
+- IE9 support via native localStorage (public API still asynchronous but synchronous internally)
