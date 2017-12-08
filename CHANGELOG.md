@@ -1,5 +1,23 @@
 # Changelog
 
+## 4.0.0 (2017-12-09)
+
+### Breaking changes
+
+Before 4.0, a fallback to native `localStorage` was included for IE9 compatibility.
+It led to some unfriendly comments about this library.
+
+Given that :
+
+- IE9 support was dropped by Microsoft some time ago
+- it's unlikely you'll do an app for IE9
+- extensibility introduced in 3.1 allows to manually add back the `localStorage` fallback if needed
+
+I decided to **remove IE9 support**. So `LocalStorageDatabase` class is removed.
+
+Bump to 4.0 is to respect semver. If you're not supporting IE9, there is no other change,
+you can upgrade without worry.
+
 ## 3.1.0 (2017-11-29)
 
 ### Features

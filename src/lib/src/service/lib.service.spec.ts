@@ -1,9 +1,8 @@
-import { TestBed, inject, async } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
 import { map } from 'rxjs/operators';
 
 import { AsyncLocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
-import { LocalStorageDatabase } from './databases/localstorage-database';
 import { MockLocalDatabase } from './databases/mock-local-database';
 import { JSONSchema } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
@@ -285,14 +284,6 @@ function tests(localStorage: AsyncLocalStorage) {
 describe('AsyncLocalStorage with mock storage', () => {
 
   let localStorage = new AsyncLocalStorage(new MockLocalDatabase(), new JSONValidator());
-
-  tests(localStorage);
-
-});
-
-describe('AsyncLocalStorage with localStorage', () => {
-
-  let localStorage = new AsyncLocalStorage(new LocalStorageDatabase(), new JSONValidator());
 
   tests(localStorage);
 

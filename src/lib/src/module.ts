@@ -5,7 +5,6 @@ import { JSONValidator } from './service/validation/json-validator';
 import { AsyncLocalStorage } from './service/lib.service';
 import { AsyncLocalDatabase } from './service/databases/async-local-database';
 import { IndexedDBDatabase } from './service/databases/indexeddb-database';
-import { LocalStorageDatabase } from './service/databases/localstorage-database';
 import { MockLocalDatabase } from './service/databases/mock-local-database';
 
 export function databaseFactory(platformId: Object) {
@@ -14,11 +13,6 @@ export function databaseFactory(platformId: Object) {
 
     /* Try with IndexedDB in modern browsers */
     return new IndexedDBDatabase();
-
-  } else if (isPlatformBrowser(platformId) && ('localStorage' in window)) {
-
-    /* Try with localStorage in old browsers (IE9) */
-    return new LocalStorageDatabase();
 
   } else {
 
