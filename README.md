@@ -166,6 +166,12 @@ You *DO* need to subscribe, even if you don't have something specific to do afte
 
 You do *NOT* need to unsubscribe : the observable autocompletes (like in the `HttpClient` service).
 
+When reading data, you'll only get one value : the observable is here for asynchronicity but is not meant to
+emit again when the stored data will changed. And it's normal : if app data change, it's the role of your app
+to keep track of it, not of this lib. See [#16](https://github.com/cyrilletuzi/angular-async-local-storage/issues/16) 
+for more context and [#4](https://github.com/cyrilletuzi/angular-async-local-storage/issues/4)
+for an example. 
+
 ## Angular support
 
 The last version of this library requires **Angular 5**.
