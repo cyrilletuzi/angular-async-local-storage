@@ -144,7 +144,7 @@ Note : as the goal is validation, types are enforced : each value MUST have eith
 
 ### Notes
 
-Not finding an item is not an error, it succeeds but returns `null`.
+- Not finding an item is not an error, it succeeds but returns `null`.
 
 ```typescript
 this.localStorage.getItem('notexisting').subscribe((data) => {
@@ -152,7 +152,7 @@ this.localStorage.getItem('notexisting').subscribe((data) => {
 });
 ```
 
-Errors are unlikely to happen, but in an app it's better to catch any potential error.
+- Errors are unlikely to happen, but in an app it's better to catch any potential error.
 
 ```typescript
 this.localStorage.setItem('color', 'red').subscribe(() => {
@@ -162,11 +162,11 @@ this.localStorage.setItem('color', 'red').subscribe(() => {
 });
 ```
 
-You *DO* need to subscribe, even if you don't have something specific to do after writing in local storage (because it's how RxJS Observables work).
+- You *DO* need to subscribe, even if you don't have something specific to do after writing in local storage (because it's how RxJS Observables work).
 
-You do *NOT* need to unsubscribe : the observable autocompletes (like in the `HttpClient` service).
+- You do *NOT* need to unsubscribe : the observable autocompletes (like in the `HttpClient` service).
 
-When reading data, you'll only get one value : the observable is here for asynchronicity but is not meant to
+- When reading data, you'll only get one value : the observable is here for asynchronicity but is not meant to
 emit again when the stored data will changed. And it's normal : if app data change, it's the role of your app
 to keep track of it, not of this lib. See [#16](https://github.com/cyrilletuzi/angular-async-local-storage/issues/16) 
 for more context and [#4](https://github.com/cyrilletuzi/angular-async-local-storage/issues/4)
