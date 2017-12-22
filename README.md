@@ -1,7 +1,7 @@
 # Async local storage for Angular
 
 Efficient local storage module for Angular :
-- **simplicity** : based on native `localStorage` API,
+- **simplicity** : based on native `localStorage` API and automatic JSON stringify/parse,
 - **perfomance** : internally stored via the asynchronous `IndexedDB` API,
 - **Angular-like** : wrapped in RxJS `Observables`,
 - **security** : validate data with a JSON Schema,
