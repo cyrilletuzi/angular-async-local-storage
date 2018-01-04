@@ -191,9 +191,6 @@ Firefox, Chrome, Opera, Safari, Edge and IE10+.
 Local storage is required only for apps, and given that you won't do an app in older browsers,
 current browsers support is far enough.
 
-Even so, IE9 is supported but use native localStorage as a fallback, 
-so internal operations are synchronous (the public API remains asynchronous-like).
-
 This module is not impacted by IE/Edge missing IndexedDB features.
 
 It also works in tools based on browser engines (like Electron) but not in non-browser tools (like NativeScript, see
