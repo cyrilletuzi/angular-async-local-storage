@@ -215,6 +215,10 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
         /* Storing the database connection for further access */
         this.database.next((event.target as IDBRequest).result as IDBDatabase);
 
+      }, (error) => {
+
+        this.database.error(error as Error);
+
       });
 
   }
@@ -251,11 +255,11 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
    * @param error Optionnal details about the error's origin
    * @returns A RxJS ErrorObservable
    */
-  protected toErrorObservable(request: IDBRequest, error: string = ``) {
+  protected toErrorObservable(request: IDBRequest, error = ``) {
 
     /* Transforming a IndexedDB error event in an RxJS ErrorObservable */
     return (observableFromEvent(request, 'error') as Observable<Event>)
-      .pipe(mergeMap(() => observableThrow(new Error(`IndexedDB ${error} issue.`))));
+      .pipe(mergeMap((event) => observableThrow(new Error(`IndexedDB ${error} issue : ${request.error.message}.`))));
 
   }
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.1 (2018-01-04)
+
+### Bug fixes
+
+- Some IndexedDB connection errors were not caught
+- Browser info has been added for IndexedDB errors
+
 ## 3.1.0 (2017-11-29)
 
 ### Features
