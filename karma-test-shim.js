@@ -43,7 +43,6 @@ System.config({
   // Extend usual application package list with test folder
   packages: {
     rxjs: { defaultExtension: 'js' },
-    'rxjs/operators': { defaultExtension: 'js', main: 'index' },
     '': { defaultExtension: 'js' },
     src: {
         defaultExtension: 'js',
