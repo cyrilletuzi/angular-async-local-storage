@@ -9,7 +9,7 @@ Efficient local storage module for Angular :
 
 ## Angular onsite training
 
-The author of this library organizes Angular courses (based in Paris (France), but open to travel). You can find [details here](https://formationjavascript.com/formation-angular/) (in French).
+The author of this library organizes Angular courses (based in Paris, France, but open to travel). You can find [details here](https://formationjavascript.com/formation-angular/) (in French).
 
 ## Why this module ?
 
