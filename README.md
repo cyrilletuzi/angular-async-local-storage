@@ -11,10 +11,10 @@ Efficient local storage module for Angular :
 
 The author of this library organizes Angular courses (based in Paris (France), but open to travel). You can find [details here](https://formationjavascript.com/formation-angular/) (in French).
 
-## Why this module ?
+## Why this module?
 
 For now, Angular does not provide a local storage module, and almost every app needs some local storage. 
-There is 2 native JavaScript APIs available :
+There are 2 native JavaScript APIs available :
 - [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage)
 - [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
 
@@ -30,7 +30,7 @@ but internally stored via the asynchronous `IndexedDB` for performance.
 But it is written in ES5 and then it's a mess to include into Angular.
 
 This module is based on the same idea as localForage, but in ES6/ES2015 
-and additionnaly wrapped into [RxJS Observables](http://reactivex.io/rxjs/) 
+and additionally wrapped into [RxJS Observables](http://reactivex.io/rxjs/) 
 to be homogeneous with other Angular modules.
 
 ## Getting started
@@ -45,7 +45,7 @@ npm install angular-async-local-storage
 npm install angular-async-local-storage@2
 ```
 
-Then include the `AsyncLocalStorage` module in your app root module (just once, do NOT re-import it in your sub modules).
+Then include the `AsyncLocalStorage` module in your app root module (just once, do NOT re-import it in your submodules).
 
 ```typescript
 import { AsyncLocalStorageModule } from 'angular-async-local-storage';
@@ -115,7 +115,7 @@ As any data can be stored, you can type your data.
 
 ### Checking data
 
-Don't forget it's client-side storage : **always check the data**, as it could have been forged or deleted.
+Don't forget it's client-side storage: **always check the data**, as it could have been forged or deleted.
 Starting with *version 3.1*, you can use a [JSON Schema](http://json-schema.org/) to validate the data.
 
 ```typescript
@@ -136,11 +136,11 @@ this.localStorage.getItem<User>('user', { schema }).subscribe((user) => {
 });
 ```
 
-Note : last draft of JSON Schema is used (draft 7 at this time),
+Note: last draft of JSON Schema is used (draft 7 at this time),
 but we don't support all validation features yet. Just follow the interface.
 Contributions are welcome to add more features.
 
-Note : as the goal is validation, types are enforced : each value MUST have either `type` or `properties` or `items`.
+Note: as the goal is validation, types are enforced: each value MUST have either `type` or `properties` or `items`.
 
 ### Notes
 
@@ -152,7 +152,7 @@ this.localStorage.getItem('notexisting').subscribe((data) => {
 });
 ```
 
-- Errors are unlikely to happen, but in an app it's better to catch any potential error.
+- Errors are unlikely to happen, but in an app, it's better to catch any potential error.
 
 ```typescript
 this.localStorage.setItem('color', 'red').subscribe(() => {
@@ -164,10 +164,10 @@ this.localStorage.setItem('color', 'red').subscribe(() => {
 
 - You *DO* need to subscribe, even if you don't have something specific to do after writing in local storage (because it's how RxJS Observables work).
 
-- You do *NOT* need to unsubscribe : the observable autocompletes (like in the `HttpClient` service).
+- You do *NOT* need to unsubscribe: the observable autocompletes (like in the `HttpClient` service).
 
-- When reading data, you'll only get one value : the observable is here for asynchronicity but is not meant to
-emit again when the stored data will changed. And it's normal : if app data change, it's the role of your app
+- When reading data, you'll only get one value: the observable is here for asynchronicity but is not meant to
+emit again when the stored data is changed. And it's normal: if app data change, it's the role of your app
 to keep track of it, not of this lib. See [#16](https://github.com/cyrilletuzi/angular-async-local-storage/issues/16) 
 for more context and [#4](https://github.com/cyrilletuzi/angular-async-local-storage/issues/4)
 for an example. 
@@ -176,7 +176,7 @@ for an example.
 
 The last version of this library requires **Angular 5**.
 
-If you need support for previous versions of Angular, stay on older versions, like mentionned in Getting started.
+If you need support for previous versions of Angular, stay on older versions, like mentioned in Getting started.
 
 This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler).
 
@@ -186,7 +186,7 @@ via a mock storage.
 ## Browser support
 
 [All browsers supporting IndexedDB](http://caniuse.com/#feat=indexeddb), ie. **all current browsers** :
-Firefox, Chrome, Opera, Safari, Edge and IE10+.
+Firefox, Chrome, Opera, Safari, Edge, and IE10+.
 
 Local storage is required only for apps, and given that you won't do an app in older browsers,
 current browsers support is far enough.
@@ -223,7 +223,7 @@ export class MyDatabase extends AsyncLocalDatabase {
 export class AppModule {}
 ```
 
-Be sure to be compatible with Universal by checking the current platform before using any browser specific API.
+Be sure to be compatible with Universal by checking the current platform before using any browser-specific API.
 
 ### Extend JSON Validator
 
