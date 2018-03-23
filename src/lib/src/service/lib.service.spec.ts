@@ -340,6 +340,22 @@ function tests(localStorage: AsyncLocalStorage) {
 
   });
 
+  it('should be able to update an existing index', (done: DoneFn) => {
+
+    const index = 'index';
+
+    localStorage.setItem(index, 'value').subscribe(() => {
+
+      localStorage.setItem(index, 'updated').subscribe(() => {
+        done();
+      }, () => {
+        fail();
+      });
+
+    });
+
+  });
+
 }
 
 describe('AsyncLocalStorage with mock storage', () => {
