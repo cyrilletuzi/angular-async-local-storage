@@ -1,4 +1,4 @@
-import { map } from 'rxjs/operators';
+import { map, first, take } from 'rxjs/operators';
 
 import { AsyncLocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
@@ -276,6 +276,67 @@ function tests(localStorage: AsyncLocalStorage) {
       done();
 
     });
+
+  });
+
+  it('should call complete on setItem', (done: DoneFn) => {
+
+    localStorage.setItem('index', 'value').subscribe({ complete: () => { done(); } });
+
+  });
+
+  it('should call complete on existing getItem', (done: DoneFn) => {
+
+    const index = 'index';
+    const value = 'value';
+
+    localStorage.setItem(index, value).subscribe(() => {
+
+      localStorage.getItem<string>(index).subscribe({ complete: () => { done(); } });
+
+    });
+
+  });
+
+  it('should call complete on unexisting getItem', (done: DoneFn) => {
+
+    localStorage.getItem<string>('notexisting').subscribe({ complete: () => { done(); } });
+
+  });
+
+  it('should call complete on existing removeItem', (done: DoneFn) => {
+
+    const index = 'index';
+
+    localStorage.setItem(index, 'value').subscribe(() => {
+
+      localStorage.removeItem(index).subscribe({ complete: () => { done(); } });
+
+    });
+
+  });
+
+  it('should call complete on unexisting removeItem', (done: DoneFn) => {
+
+    localStorage.removeItem('notexisting').subscribe({ complete: () => { done(); } });
+
+  });
+
+  it('should call complete on clear', (done: DoneFn) => {
+
+    localStorage.clear().subscribe({ complete: () => { done(); } });
+
+  });
+
+  it('should be OK if user manually used first() to complete', (done: DoneFn) => {
+
+    localStorage.clear().pipe(first()).subscribe({ complete: () => { done(); } });
+
+  });
+
+  it('should be OK if user manually used take(1) to complete', (done: DoneFn) => {
+
+    localStorage.clear().pipe(take(1)).subscribe({ complete: () => { done(); } });
 
   });
 

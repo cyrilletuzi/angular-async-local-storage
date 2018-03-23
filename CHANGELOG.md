@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.2 (2018-03-23)
+
+### Bug fixes
+
+- Correctly complete observables (fixes [#25](https://github.com/cyrilletuzi/angular-async-local-storage/issues/25))
+
 ## 3.1.1 (2018-01-04)
 
 ### Bug fixes

@@ -72,7 +72,8 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
         return (observableRace(success, this.toErrorObservable(request, `getter`)) as Observable<T | null>)
           .pipe(first());
 
-      })
+      }),
+      first()
     );
 
   }
@@ -119,7 +120,8 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
 
         }));
 
-      })
+      }),
+      first()
     );
 
   }
@@ -132,29 +134,32 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
   removeItem(key: string) {
 
     /* Opening a transaction and checking if the item exists in local storage */
-    return this.getItem(key).pipe(mergeMap((data) => {
+    return this.getItem(key).pipe(
+      mergeMap((data) => {
 
-      /* If the item exists in local storage */
-      if (data != null) {
+        /* If the item exists in local storage */
+        if (data != null) {
 
-        /* Opening a transaction */
-        return this.transaction('readwrite').pipe(mergeMap((transaction) => {
+          /* Opening a transaction */
+          return this.transaction('readwrite').pipe(mergeMap((transaction) => {
 
-          /* Deleting the item in local storage */
-          const request = transaction.delete(key);
+            /* Deleting the item in local storage */
+            const request = transaction.delete(key);
 
-          /* Merging success (passing true) and error events and autoclosing the observable */
-          return (observableRace(this.toSuccessObservable(request), this.toErrorObservable(request, `remover`)) as Observable<boolean>)
-            .pipe(first());
+            /* Merging success (passing true) and error events and autoclosing the observable */
+            return (observableRace(this.toSuccessObservable(request), this.toErrorObservable(request, `remover`)) as Observable<boolean>)
+              .pipe(first());
 
-        }));
+          }));
 
-      }
+        }
 
-      /* Passing true if the item does not exist in local storage */
-      return observableOf(true).pipe(first());
+        /* Passing true if the item does not exist in local storage */
+        return observableOf(true);
 
-    }));
+      }),
+      first()
+    );
 
   }
 
@@ -165,16 +170,19 @@ export class IndexedDBDatabase extends AsyncLocalDatabase {
   clear() {
 
     /* Opening a transaction */
-    return this.transaction('readwrite').pipe(mergeMap((transaction) => {
+    return this.transaction('readwrite').pipe(
+      mergeMap((transaction) => {
 
-      /* Deleting all items from local storage */
-      const request = transaction.clear();
+        /* Deleting all items from local storage */
+        const request = transaction.clear();
 
-      /* Merging success (passing true) and error events and autoclosing the observable */
-      return (observableRace(this.toSuccessObservable(request), this.toErrorObservable(request, `clearer`)) as Observable<boolean>)
-        .pipe(first());
+        /* Merging success (passing true) and error events and autoclosing the observable */
+        return (observableRace(this.toSuccessObservable(request), this.toErrorObservable(request, `clearer`)) as Observable<boolean>)
+          .pipe(first());
 
-    }));
+      }),
+      first()
+    );
 
   }
 
