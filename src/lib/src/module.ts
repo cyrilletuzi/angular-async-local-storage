@@ -10,12 +10,12 @@ import { MockLocalDatabase } from './service/databases/mock-local-database';
 
 export function databaseFactory(platformId: Object) {
 
-  if (isPlatformBrowser(platformId) && ('indexedDB' in window)) {
+  if (isPlatformBrowser(platformId) && ('indexedDB' in window) && (indexedDB !== undefined)) {
 
     /* Try with IndexedDB in modern browsers */
     return new IndexedDBDatabase();
 
-  } else if (isPlatformBrowser(platformId) && ('localStorage' in window)) {
+  } else if (isPlatformBrowser(platformId) && ('localStorage' in window) && (localStorage !== undefined)) {
 
     /* Try with localStorage in old browsers (IE9) */
     return new LocalStorageDatabase();
