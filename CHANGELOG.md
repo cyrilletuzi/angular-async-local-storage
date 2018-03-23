@@ -2,14 +2,13 @@
 
 ## 3.1.3 (2018-03-23)
 
-### Bug fixes
+### Bug fix
 
 - Detect if storages are undefined (partially fixes [#26](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26))
 
-
 ## 3.1.2 (2018-03-23)
 
-### Bug fixes
+### Bug fix
 
 - Correctly complete observables (fixes [#25](https://github.com/cyrilletuzi/angular-async-local-storage/issues/25))
 
