@@ -27,6 +27,22 @@ module.exports = function (config) {
       Chrome_travis_ci: {
         base: 'Chrome',
         flags: ['--no-sandbox']
+      },
+      Chrome_private: {
+        base: 'Chrome',
+        flags: ['--incognito']
+      },
+      Firefox_private: {
+        base: 'Firefox',
+        flags: ['-private']
+      },
+      Edge_private: {
+        base: 'Edge',
+        flags: ['-private']
+      },
+      IE_private: {
+        base: 'IE',
+        flags: ['-private']
       }
     },
 
@@ -89,9 +105,15 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     /* Tests on Mac */
-    browsers: ['Chrome', 'Firefox', 'Safari'],
+    browsers: ['Chrome', 'Firefox', 'Safari', 'Chrome_private'],
+    /* Tests on Mac in private modes
+     * IMPORTANT : Safari does not have a command line option for private mode (if you know one, please tell me),
+     * so you have to manually configure it to open a new private tab on launch, before launching the tests */
+    // browsers: ['Chrome_private', 'Firefox_private', 'Safari'],
     /* Tests on Windows */
     // browsers: ['Chrome', 'Firefox', 'Edge', 'IE'],
+    /* Tests on Windows in private mode */
+    // browsers: ['Chrome_private', 'Firefox_private', 'Edge_private', 'IE_private'],
     singleRun: false
   })
 }
