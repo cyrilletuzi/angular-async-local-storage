@@ -112,7 +112,8 @@ module.exports = function (config) {
     // browsers: ['Chrome_private', 'Firefox_private', 'Safari'],
     /* Tests on Windows */
     // browsers: ['Chrome', 'Firefox', 'Edge', 'IE'],
-    /* Tests on Windows in private mode */
+    /* Tests on Windows in private mode
+     * Not sure the private option for Edge is working... */
     // browsers: ['Chrome_private', 'Firefox_private', 'Edge_private', 'IE_private'],
     singleRun: false
   })

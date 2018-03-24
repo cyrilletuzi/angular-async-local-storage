@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.4 (2018-03-24)
+
+### Bug fix
+
+- Detect if storages are null (partially fixes [#26](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26))
+
 ## 3.1.3 (2018-03-23)
 
 ### Bug fix
