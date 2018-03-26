@@ -1,33 +1,33 @@
 # Async local storage for Angular
 
-Efficient local storage module for Angular :
-- **simplicity** : based on native `localStorage` API and automatic JSON stringify/parse,
-- **perfomance** : internally stored via the asynchronous `IndexedDB` API,
-- **Angular-like** : wrapped in RxJS `Observables`,
-- **security** : validate data with a JSON Schema,
-- **extensibility** : add your own storage.
+Efficient local storage module for Angular:
+- **simplicity**: based on native `localStorage` API and automatic JSON stringify/parse,
+- **perfomance**: internally stored via the asynchronous `IndexedDB` API,
+- **Angular-like**: wrapped in RxJS `Observables`,
+- **security**: validate data with a JSON Schema,
+- **extensibility**: add your own storage.
 
 ## Angular onsite training
 
-The author of this library organizes Angular courses (based in Paris (France), but open to travel). You can find [details here](https://formationjavascript.com/formation-angular/) (in French).
+The author of this library organizes Angular courses (based in Paris, France, but open to travel). You can find [details here](https://formationjavascript.com/formation-angular/) (in French).
 
 ## Why this module?
 
 For now, Angular does not provide a local storage module, and almost every app needs some local storage. 
-There are 2 native JavaScript APIs available :
+There are 2 native JavaScript APIs available:
 - [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage)
 - [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
 
 The `localStorage` API is simple to use but synchronous, so if you use it too often, 
 your app will soon begin to freeze.
 
-The `IndexedDB` API is asynchronous and efficient, but it's a mess to use : 
+The `IndexedDB` API is asynchronous and efficient, but it's a mess to use: 
 you'll soon be caught by the callback hell, as it does not support Promises yet.
 
 Mozilla has done a very great job with the [localForage library](http://localforage.github.io/localForage/) : 
 a simple API based on native `localStorage`,
 but internally stored via the asynchronous `IndexedDB` for performance.
-But it is written in ES5 and then it's a mess to include into Angular.
+But it's built in ES5 old school way and then it's a mess to include into Angular.
 
 This module is based on the same idea as localForage, but in ES6/ES2015 
 and additionally wrapped into [RxJS Observables](http://reactivex.io/rxjs/) 
@@ -35,13 +35,13 @@ to be homogeneous with other Angular modules.
 
 ## Getting started
 
-Install via [npm](http://npmjs.com) :
+Install via [npm](http://npmjs.com):
 
 ```bash
-# For Angular 5 :
+# For Angular 5:
 npm install angular-async-local-storage
 
-# For Angular 4 and TypeScript >= 2.3 :
+# For Angular 4 and TypeScript >= 2.3:
 npm install angular-async-local-storage@2
 ```
 
@@ -61,7 +61,7 @@ import { AsyncLocalStorageModule } from 'angular-async-local-storage';
 export class AppModule {}
 ```
 
-Now you just have to inject the service where you need it :
+Now you just have to inject the service where you need it:
 
 ```typescript
 import { AsyncLocalStorage } from 'angular-async-local-storage';
@@ -91,13 +91,13 @@ You can store any value, without worrying about stringifying.
 
 ### Deleting data
 
-To delete one item :
+To delete one item:
 
 ```typescript
 this.localStorage.removeItem('user').subscribe(() => {});
 ```
 
-To delete all items :
+To delete all items:
 
 ```typescript
 this.localStorage.clear().subscribe(() => {});
@@ -213,7 +213,7 @@ In Firefox, `indexedDB` API is available in code but throwing error on usage. It
 
 ### Add your own storage
 
-Starting with *version 3.1*, you can easily add your own storage :
+Starting with *version 3.1*, you can easily add your own storage:
 
 ```typescript
 import { AsyncLocalStorageModule, AsyncLocalDatabase } from 'angular-async-local-storage';
