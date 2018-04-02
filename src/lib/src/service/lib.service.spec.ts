@@ -356,6 +356,22 @@ function tests(localStorage: AsyncLocalStorage) {
 
   });
 
+  it('should work in a Promise-way', (done: DoneFn) => {
+
+    const index = 'index';
+    const value = 'test';
+
+    localStorage.setItem(index, value).toPromise()
+    .then(() => localStorage.getItem(index).toPromise())
+    .then((result) => {
+      expect(result).toBe(value);
+      done();
+    }, () => {
+      fail();
+    });
+
+  });
+
 }
 
 describe('AsyncLocalStorage with mock storage', () => {
