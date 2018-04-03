@@ -116,7 +116,7 @@ As any data can be stored, you can type your data.
 ### Checking data
 
 Don't forget it's client-side storage: **always check the data**, as it could have been forged or deleted.
-Starting with *version 3.1*, you can use a [JSON Schema](http://json-schema.org/) to validate the data.
+Starting with *version 5*, you can use a [JSON Schema](http://json-schema.org/) to validate the data.
 
 ```typescript
 import { JSONSchema } from 'angular-async-local-storage';
