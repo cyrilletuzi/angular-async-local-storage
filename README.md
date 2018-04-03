@@ -38,6 +38,9 @@ to be homogeneous with other Angular modules.
 Install the same version as your Angular one via [npm](http://npmjs.com):
 
 ```bash
+# For Angular 6 (next):
+npm install angular-async-local-storage@next
+
 # For Angular 5 (latest):
 npm install angular-async-local-storage
 
@@ -175,7 +178,7 @@ for an example.
 ## Angular support
 
 This lib major version is aligned to the major version of Angular. Meaning for Angular 4 you need version 4,
-for Angular 5 you need version 5, and so on.
+for Angular 5 you need version 5, for Angular 6 you need version 6, and so on.
 
 We follow [Angular LTS support](https://github.com/angular/angular/blob/master/docs/RELEASE_SCHEDULE.md),
 meaning we support Angular 4 minimum, until October 2018.

@@ -1,5 +1,18 @@
 # Changelog
 
+## 6.0.0-rc.0 (2018-04-03)
+
+### Features
+
+- Beta support of Angular 6, test it with: `npm install angular-async-local-storage@next`
+
+### Breaking changes
+
+- Angular 6 is required
+- TypeScript >= 2.7 is required
+- RxJS 6 is required (if you have other libs or your own code not yet ready for RxJS 6, you can use
+[rxjs-compat](https://www.npmjs.com/package/rxjs-compat) as a temporary migration step)
+
 ## 5.0.0 (2018-04-03)
 
 This lib major version is now aligned to the major version of Angular. Meaning this v5 is for Angular 5.
