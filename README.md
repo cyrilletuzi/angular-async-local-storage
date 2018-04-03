@@ -35,14 +35,14 @@ to be homogeneous with other Angular modules.
 
 ## Getting started
 
-Install via [npm](http://npmjs.com):
+Install the same version as your Angular one via [npm](http://npmjs.com):
 
 ```bash
-# For Angular 5:
+# For Angular 5 (latest):
 npm install angular-async-local-storage
 
-# For Angular 4 and TypeScript >= 2.3:
-npm install angular-async-local-storage@2
+# For Angular 4 (and TypeScript >= 2.3):
+npm install angular-async-local-storage@4
 ```
 
 Then include the `AsyncLocalStorage` module in your app root module (just once, do NOT re-import it in your submodules).
@@ -174,9 +174,13 @@ for an example.
 
 ## Angular support
 
-The last version of this library requires **Angular 5**.
+This lib major version is aligned to the major version of Angular. Meaning for Angular 4 you need version 4,
+for Angular 5 you need version 5, and so on.
 
-If you need support for previous versions of Angular, stay on older versions, like mentioned in Getting started.
+We follow [Angular LTS support](https://github.com/angular/angular/blob/master/docs/RELEASE_SCHEDULE.md),
+meaning we support Angular 4 minimum, until October 2018.
+
+You can still have Angular 2 support by installing version 1 of this lib, but bug fixes has not been backported.
 
 This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler).
 

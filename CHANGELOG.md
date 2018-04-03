@@ -1,5 +1,22 @@
 # Changelog
 
+## 5.0.0 (2018-04-03)
+
+This lib major version is now aligned to the major version of Angular. Meaning this v5 is for Angular 5.
+
+Same as v3.1.4.
+
+## 4.0.0 (lts) (2018-04-03)
+
+This lib major version is now aligned to the major version of Angular. Meaning this v4 is for Angular 4.
+
+We follow [Angular LTS support](https://github.com/angular/angular/blob/master/docs/RELEASE_SCHEDULE.md),
+meaning we support Angular 4 until October 2018. So we backported some bug fixes:
+
+- Detect if storages are null or undefined (partially fixes (partially fixes [#26](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26))
+- Correctly complete observables (fixes [#25](https://github.com/cyrilletuzi/angular-async-local-storage/issues/25) & [#5](https://github.com/cyrilletuzi/angular-async-local-storage/issues/5))
+- Some IndexedDB connection errors were not caught
+
 ## 3.1.4 (2018-03-24)
 
 ### Bug fix
@@ -16,7 +33,7 @@
 
 ### Bug fix
 
-- Correctly complete observables (fixes [#25](https://github.com/cyrilletuzi/angular-async-local-storage/issues/25))
+- Correctly complete observables (fixes [#25](https://github.com/cyrilletuzi/angular-async-local-storage/issues/25) & [#5](https://github.com/cyrilletuzi/angular-async-local-storage/issues/5))
 
 ## 3.1.1 (2018-01-04)
 
