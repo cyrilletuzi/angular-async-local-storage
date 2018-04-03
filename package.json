@@ -1,6 +1,6 @@
 {
   "name": "angular-async-local-storage",
-  "version": "3.1.4",
+  "version": "5.0.0",
   "description": "Efficient local storage module for Angular : simple API based on native localStorage API, but internally stored via the asynchronous IndexedDB API for performance, and wrapped in RxJS observables to be homogeneous with other Angular modules.",
   "main": "./bundles/angular-async-local-storage.umd.js",
   "module": "./angular-async-local-storage.es5.js",
@@ -52,7 +52,9 @@
     "integration:jit": "cd integration && npm run e2e",
     "integration:aot": "cd integration && npm run e2e:aot",
     "lint": "tslint ./src/**/*.ts -t verbose",
-    "release": "standard-version"
+    "release": "standard-version",
+    "reinstall": "rimraf node_modules && npm install",
+    "publish": "npm publish dist"
   },
   "dependencies": {},
   "peerDependencies": {
@@ -61,12 +63,12 @@
     "rxjs": "^5.5.2"
   },
   "devDependencies": {
-    "@angular/common": "^5.0.3",
-    "@angular/compiler": "^5.0.3",
-    "@angular/compiler-cli": "^5.0.3",
-    "@angular/core": "^5.0.3",
-    "@angular/platform-browser": "^5.0.3",
-    "@angular/platform-browser-dynamic": "^5.0.3",
+    "@angular/common": "^5.2.9",
+    "@angular/compiler": "^5.2.9",
+    "@angular/compiler-cli": "^5.2.9",
+    "@angular/core": "^5.2.9",
+    "@angular/platform-browser": "^5.2.9",
+    "@angular/platform-browser-dynamic": "^5.2.9",
     "@types/jasmine": "2.5.36",
     "@types/node": "^6.0.46",
     "camelcase": "^4.0.0",
