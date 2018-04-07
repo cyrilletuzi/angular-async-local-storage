@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AsyncLocalStorage } from 'angular-async-local-storage';
+import { LocalStorage } from '@ngx-pwa/local-storage';
 
 interface User {
   name: string;
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   name: string;
   validation: string;
 
-  constructor(protected localStorage: AsyncLocalStorage) {}
+  constructor(protected localStorage: LocalStorage) {}
 
   ngOnInit() {
 

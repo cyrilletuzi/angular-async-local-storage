@@ -15,8 +15,8 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
-    "flatModuleOutFile": "angular-async-local-storage.js",
-    "flatModuleId": "angular-async-local-storage",
+    "flatModuleOutFile": "local-storage.js",
+    "flatModuleId": "@ngx-pwa/local-storage",
     "genDir": "../../out-tsc/lib-gen-dir/"
   }
 }

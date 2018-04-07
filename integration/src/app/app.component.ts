@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LibService } from 'angular-async-local-storage';
+import { LibService } from '@ngx-pwa/local-storage';
 
 @Component({
   selector: 'integration-app',

@@ -1,13 +1,14 @@
 import { map, first, take } from 'rxjs/operators';
 
-import { AsyncLocalStorage } from './lib.service';
+import { LocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
 import { LocalStorageDatabase } from './databases/localstorage-database';
 import { MockLocalDatabase } from './databases/mock-local-database';
 import { JSONSchema } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
+import { AsyncLocalStorage } from '../../index';
 
-function testGetItem<T>(type: 'primitive' | 'object', localStorage: AsyncLocalStorage, value: T, done: DoneFn) {
+function testGetItem<T>(type: 'primitive' | 'object', localStorage: LocalStorage, value: T, done: DoneFn) {
 
   localStorage.setItem('test', value).subscribe(() => {
 
@@ -27,19 +28,19 @@ function testGetItem<T>(type: 'primitive' | 'object', localStorage: AsyncLocalSt
 
 }
 
-function testGetItemPrimitive<T>(localStorage: AsyncLocalStorage, value: T, done: DoneFn) {
+function testGetItemPrimitive<T>(localStorage: LocalStorage, value: T, done: DoneFn) {
 
   testGetItem<T>('primitive', localStorage, value, done);
 
 }
 
-function testGetItemObject<T>(localStorage: AsyncLocalStorage, value: T, done: DoneFn) {
+function testGetItemObject<T>(localStorage: LocalStorage, value: T, done: DoneFn) {
 
   testGetItem<T>('object', localStorage, value, done);
 
 }
 
-function tests(localStorage: AsyncLocalStorage) {
+function tests(localStorage: LocalStorage) {
 
   beforeEach((done: DoneFn) => {
     localStorage.clear().subscribe(() => {
@@ -374,17 +375,25 @@ function tests(localStorage: AsyncLocalStorage) {
 
 }
 
-describe('AsyncLocalStorage with mock storage', () => {
+describe('LocalStorage with mock storage', () => {
 
-  let localStorage = new AsyncLocalStorage(new MockLocalDatabase(), new JSONValidator());
+  let localStorage = new LocalStorage(new MockLocalDatabase(), new JSONValidator());
 
   tests(localStorage);
 
 });
 
-describe('AsyncLocalStorage with localStorage', () => {
+describe('LocalStorage with localStorage', () => {
 
-  let localStorage = new AsyncLocalStorage(new LocalStorageDatabase(), new JSONValidator());
+  let localStorage = new LocalStorage(new LocalStorageDatabase(), new JSONValidator());
+
+  tests(localStorage);
+
+});
+
+describe('LocalStorage with IndexedDB', () => {
+
+  let localStorage = new LocalStorage(new IndexedDBDatabase, new JSONValidator());
 
   tests(localStorage);
 

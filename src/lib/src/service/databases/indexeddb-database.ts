@@ -8,10 +8,10 @@ import { of as observableOf }  from 'rxjs/observable/of';
 import { _throw as observableThrow } from 'rxjs/observable/throw';
 import { race as observableRace }  from 'rxjs/observable/race';
 
-import { AsyncLocalDatabase } from './async-local-database';
+import { LocalDatabase } from './local-database';
 
 @Injectable()
-export class IndexedDBDatabase extends AsyncLocalDatabase {
+export class IndexedDBDatabase extends LocalDatabase {
 
   /**
    * IndexedDB database name for local storage

@@ -26,7 +26,7 @@
       // other libraries
       'rxjs':                      'npm:rxjs',
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
-      'angular-async-local-storage': 'npm:angular-async-local-storage/bundles/angular-async-local-storage.umd.js'
+      '@ngx-pwa/local-storage': 'npm:@ngx-pwa/local-storage/bundles/@ngx-pwa/local-storage.umd.js'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {

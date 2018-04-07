@@ -1,14 +1,35 @@
 # Changelog
 
+## 5.1.0 and 4.1.0 (2018-04-07)
+
+### Refactoring
+
+- `AsyncLocalStorageModule` deprecated (but still working). Renamed to `LocalStorageModule`
+- `AsyncLocalStorage` deprecated (but still working). Renamed to `LocalStorage`
+- `AsyncLocalDatabase` deprecated (but still working). Renamed to `LocalDatabase`
+- `ALSGetItemOptions` deprecated (but still working). Renamed to `LSGetItemOptions`
+
+See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/MIGRATION.md).
+
 ## 5.0.0 (2018-04-03)
 
-This lib major version is now aligned to the major version of Angular. Meaning this v5 is for Angular 5.
+### New package name
 
-Same as v3.1.4.
+This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/MIGRATION.md).
+
+### Version alignement
+
+This lib major version is now aligned to the major version of Angular. Meaning this v5 is for Angular 5. Same as v3.1.4.
 
 ## 4.0.0 (lts) (2018-04-03)
 
-This lib major version is now aligned to the major version of Angular. Meaning this v4 is for Angular 4.
+### New package name
+
+This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/MIGRATION.md).
+
+### Version alignement
+
+This lib major version is now aligned to the major version of Angular. Meaning this v4 is for Angular 4. Same as v2.
 
 We follow [Angular LTS support](https://github.com/angular/angular/blob/master/docs/RELEASE_SCHEDULE.md),
 meaning we support Angular 4 until October 2018. So we backported some bug fixes:
@@ -16,6 +37,12 @@ meaning we support Angular 4 until October 2018. So we backported some bug fixes
 - Detect if storages are null or undefined (partially fixes (partially fixes [#26](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26))
 - Correctly complete observables (fixes [#25](https://github.com/cyrilletuzi/angular-async-local-storage/issues/25) & [#5](https://github.com/cyrilletuzi/angular-async-local-storage/issues/5))
 - Some IndexedDB connection errors were not caught
+
+***
+
+Previous versions were only released under `angular-async-local-storage`.
+
+***
 
 ## 3.1.4 (2018-03-24)
 
@@ -94,6 +121,12 @@ See README for instructions.
 ### Features
 
 - Rename package to angular-async-local-storage
+
+***
+
+Previous versions were only released under `angular2-async-local-storage`.
+
+***
 
 ## 1.2.0 (2016-12-20)
 

@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 
-export abstract class AsyncLocalDatabase {
+export abstract class LocalDatabase {
 
   abstract getItem<T = any>(key: string): Observable<T | null>;
   abstract setItem(key: string, data: any): Observable<boolean>;

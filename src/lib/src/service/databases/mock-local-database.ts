@@ -3,10 +3,10 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { of as observableOf } from 'rxjs/observable/of';
 
-import { AsyncLocalDatabase } from './async-local-database';
+import { LocalDatabase } from './local-database';
 
 @Injectable()
-export class MockLocalDatabase extends AsyncLocalDatabase {
+export class MockLocalDatabase extends LocalDatabase {
 
   protected localStorage = new Map<string, any>();
 

@@ -2,8 +2,8 @@ import { NgModule, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 import { JSONValidator } from './service/validation/json-validator';
-import { AsyncLocalStorage } from './service/lib.service';
-import { AsyncLocalDatabase } from './service/databases/async-local-database';
+import { LocalStorage } from './service/lib.service';
+import { LocalDatabase } from './service/databases/local-database';
 import { IndexedDBDatabase } from './service/databases/indexeddb-database';
 import { LocalStorageDatabase } from './service/databases/localstorage-database';
 import { MockLocalDatabase } from './service/databases/mock-local-database';
@@ -33,11 +33,11 @@ export function databaseFactory(platformId: Object) {
   providers: [
     JSONValidator,
     {
-      provide: AsyncLocalDatabase,
+      provide: LocalDatabase,
       useFactory: databaseFactory,
       deps: [PLATFORM_ID]
     },
-    AsyncLocalStorage,
+    LocalStorage,
   ]
 })
-export class AsyncLocalStorageModule {}
+export class LocalStorageModule {}
