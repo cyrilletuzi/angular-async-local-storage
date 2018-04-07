@@ -86,4 +86,32 @@ export class LocalStorage {
 
   }
 
+  /**
+   * Sets an item in local storage, and auto-subscribes
+   * @param key The item's key
+   * @param data The item's value, must NOT be null or undefined
+   */
+  setItemAndSubscribe(key: string, data: any): void {
+
+    this.setItem(key, data).subscribe(() => {}, () => {});
+
+  }
+
+  /**
+   * Deletes an item in local storage, and auto-subscribes
+   * @param key The item's key
+   */
+   removeItemAndSubscribe(key: string): void {
+
+    this.removeItem(key).subscribe(() => {}, () => {});
+
+  }
+
+  /** Deletes all items from local storage, and auto-subscribes */
+  clearAndSubscribe(): void {
+
+    this.clear().subscribe(() => {}, () => {});
+
+  }
+
 }

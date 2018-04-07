@@ -122,6 +122,14 @@ this.localStorage.getItem<User>('user').subscribe((user) => {
 
 As any data can be stored, you can type your data.
 
+Not finding an item is not an error, it succeeds but returns `null`.
+
+```typescript
+this.localStorage.getItem('notexisting').subscribe((data) => {
+  data; // null
+});
+```
+
 ### Checking data
 
 Don't forget it's client-side storage: **always check the data**, as it could have been forged or deleted.
@@ -151,17 +159,27 @@ Contributions are welcome to add more features.
 
 Note: as the goal is validation, types are enforced: each value MUST have either `type` or `properties` or `items`.
 
-### Notes
+### Subscription
 
-- Not finding an item is not an error, it succeeds but returns `null`.
+You *DO NOT* need to unsubscribe: the observable autocompletes (like in the `HttpClient` service).
+
+But you *DO* need to subscribe, even if you don't have something specific to do after writing in local storage (because it's how RxJS Observables work).
+
+Since *version 6*, you can use these methods to auto-subscribe:
 
 ```typescript
-this.localStorage.getItem('notexisting').subscribe((data) => {
-  data; // null
-});
+this.localStorage.setItemAndSubscribe('user', user);
+this.localStorage.removeItemAndSubscribe('user');
+this.localStorage.clearAndSubscribe();
 ```
 
-- Errors are unlikely to happen, but in an app, it's better to catch any potential error.
+*Do this **only** if these conditions are fulfilled:*
+- you don't need to manage the error callback (with these methods, errors will silently fail),
+- you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
+
+### Other notes
+
+- Errors are unlikely to happen, but in an app, it's better to catch any potential error (there is currently an [issue in Firefox private browsing mode](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26)).
 
 ```typescript
 this.localStorage.setItem('color', 'red').subscribe(() => {
@@ -170,10 +188,6 @@ this.localStorage.setItem('color', 'red').subscribe(() => {
   // Error
 });
 ```
-
-- You *DO* need to subscribe, even if you don't have something specific to do after writing in local storage (because it's how RxJS Observables work).
-
-- You do *NOT* need to unsubscribe: the observable autocompletes (like in the `HttpClient` service).
 
 - When reading data, you'll only get one value: the observable is here for asynchronicity but is not meant to
 emit again when the stored data is changed. And it's normal: if app data change, it's the role of your app
