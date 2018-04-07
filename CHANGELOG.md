@@ -2,7 +2,7 @@
 
 ## 5.1.1 (2018-04-07)
 
-### Bug fixes
+### Bug fix
 
 - Correct too wide type inference for `getItem()`
 
