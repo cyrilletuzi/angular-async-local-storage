@@ -1,16 +1,11 @@
 # Changelog
 
-## 5.1.1 (2018-04-07)
-
-### Bug fix
-
-- Correct too wide type inference for `getItem()`
-
-## 6.0.0-beta.1 (2018-04-07)
+## 6.0.0-beta.2 (2018-04-07)
 
 ### Features
 
 - Beta support of Angular 6 RC, test it with: `npm install @ngx-pwa/local-storage@next`
+- `setItemAndSubscribe()`, `removeItemAndSubscribe()`, `clearAndSubscribe()` methods for auto-subscription
 
 ### Breaking changes
 
@@ -27,6 +22,12 @@
 - RxJS 6 is required (if you have other libs or your own code not yet ready for RxJS 6, you can use
 [rxjs-compat](https://www.npmjs.com/package/rxjs-compat) as a temporary migration step)
 - Node >= 8.9 and npm >= 5.5 are required
+
+## 5.1.1 (2018-04-07)
+
+### Bug fixes
+
+- Correct too wide type inference for `getItem()`
 
 ## 5.1.0 and 4.1.0 (2018-04-07)
 
