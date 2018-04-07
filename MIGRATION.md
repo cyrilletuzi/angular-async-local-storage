@@ -11,6 +11,9 @@ This lib major version is now aligned to the major version of Angular. Meaning y
 
 This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`.
 
+But do not worry: the previous package is still here and will be as long as npm exists.
+You can migrate now to be ready for v6, or you can wait Angular 6 to do all the migrations at the same time.
+
 Code did not changed, so the migration is very easy. First, uninstall the previous package:
 ```bash
 npm uninstall angular-async-local-storage
