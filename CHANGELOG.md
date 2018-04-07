@@ -9,13 +9,13 @@
 - `AsyncLocalDatabase` deprecated (but still working). Renamed to `LocalDatabase`
 - `ALSGetItemOptions` deprecated (but still working). Renamed to `LSGetItemOptions`
 
-See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/MIGRATION.md).
+See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
 
 ## 5.0.0 (2018-04-03)
 
 ### New package name
 
-This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/MIGRATION.md).
+This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
 
 ### Version alignement
 
@@ -25,7 +25,7 @@ This lib major version is now aligned to the major version of Angular. Meaning t
 
 ### New package name
 
-This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/MIGRATION.md).
+This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
 
 ### Version alignement
 

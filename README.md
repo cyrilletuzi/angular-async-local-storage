@@ -37,7 +37,7 @@ to be homogeneous with other Angular modules.
 
 ## Migration from angular-async-local-storage
 
-If you already use the previous `angular-async-local-storage` package, see the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/MIGRATION.md).
+If you already use the previous `angular-async-local-storage` package, see the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
 
 ## Getting started
 
