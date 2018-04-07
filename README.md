@@ -49,6 +49,9 @@ npm install @ngx-pwa/local-storage
 
 # For Angular 4 (and TypeScript >= 2.3):
 npm install @ngx-pwa/local-storage@4
+
+# For Angular 6 (next):
+npm install @ngx-pwa/local-storage@next
 ```
 
 Then include the `LocalStorage` module in your app root module (just once, do NOT re-import it in your submodules).
@@ -181,7 +184,7 @@ for an example.
 ## Angular support
 
 This lib major version is aligned to the major version of Angular. Meaning for Angular 4 you need version 4,
-for Angular 5 you need version 5, and so on.
+for Angular 5 you need version 5, for Angular 6 you need version 6, and so on.
 
 We follow [Angular LTS support](https://github.com/angular/angular/blob/master/docs/RELEASE_SCHEDULE.md),
 meaning we support Angular 4 minimum, until October 2018.

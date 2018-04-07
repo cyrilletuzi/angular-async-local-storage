@@ -1,5 +1,27 @@
 # Changelog
 
+## 6.0.0-beta.1 (2018-04-07)
+
+### Features
+
+- Beta support of Angular 6 RC, test it with: `npm install @ngx-pwa/local-storage@next`
+
+### Breaking changes
+
+- This lib has been renamed to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
+
+- Classes renamed. Action required, see the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
+  - `AsyncLocalStorageModule` removed, renamed to `LocalStorageModule`.
+  - `AsyncLocalStorage` removed, renamed to `LocalStorage`.
+  - `AsyncLocalDatabase` removed, renamed to `LocalDatabase`.
+  - `ALSGetItemOptions` removed, renamed to `LSGetItemOptions`.
+
+- Angular 6 is required
+- TypeScript >= 2.7 is required
+- RxJS 6 is required (if you have other libs or your own code not yet ready for RxJS 6, you can use
+[rxjs-compat](https://www.npmjs.com/package/rxjs-compat) as a temporary migration step)
+- Node >= 8.9 and npm >= 5.5 are required
+
 ## 5.1.0 and 4.1.0 (2018-04-07)
 
 ### Refactoring
