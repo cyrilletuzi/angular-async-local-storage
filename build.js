@@ -13,7 +13,7 @@ const commonjs = require('rollup-plugin-commonjs');
 
 const inlineResources = require('./inline-resources');
 
-const libName = require('./package.json').name;
+const libName = 'local-storage';
 const rootFolder = path.join(__dirname);
 const compilationFolder = path.join(rootFolder, 'out-tsc');
 const srcFolder = path.join(rootFolder, 'src/lib');
@@ -48,7 +48,7 @@ return Promise.resolve()
     const es5Entry = path.join(es5OutputFolder, `${libName}.js`);
     const es2015Entry = path.join(es2015OutputFolder, `${libName}.js`);
     const rollupBaseConfig = {
-      moduleName: camelCase(libName),
+      moduleName: 'ngxPWA.localStorage',
       sourceMap: true,
       // ATTENTION:
       // Add any dependency or peer dependency your library to `globals` and `external`.
@@ -61,12 +61,6 @@ return Promise.resolve()
         '@angular/common': 'ng.common',
         'rxjs': 'Rx',
         'rxjs/operators': 'Rx.operators',
-        'rxjs/Observable': 'Rx',
-        'rxjs/ReplaySubject': 'Rx',
-        'rxjs/observable/fromEvent': 'Rx.Observable',
-        'rxjs/observable/race': 'Rx.Observable',
-        'rxjs/observable/of': 'Rx.Observable',
-        'rxjs/observable/throw': 'Rx.Observable'
       },
       external: [
         // List of dependencies
@@ -75,12 +69,6 @@ return Promise.resolve()
         '@angular/common',
         'rxjs',
         'rxjs/operators',
-        'rxjs/Observable',
-        'rxjs/ReplaySubject',
-        'rxjs/observable/fromEvent',
-        'rxjs/observable/race',
-        'rxjs/observable/of',
-        'rxjs/observable/throw'
       ],
       plugins: [
         commonjs({

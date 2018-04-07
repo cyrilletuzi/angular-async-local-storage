@@ -1,15 +1,17 @@
 # Async local storage for Angular
 
-Efficient local storage module for Angular:
+Efficient local storage module for Angular apps and Progressive Wep apps (PWA):
 - **simplicity**: based on native `localStorage` API and automatic JSON stringify/parse,
 - **perfomance**: internally stored via the asynchronous `IndexedDB` API,
 - **Angular-like**: wrapped in RxJS `Observables`,
 - **security**: validate data with a JSON Schema,
 - **extensibility**: add your own storage.
 
+You could also be interested by [@ngx-pwa/offline](https://github.com/cyrilletuzi/ngx-pwa-offline).
+
 ## Angular onsite training
 
-The author of this library organizes Angular courses (based in Paris, France, but open to travel). You can find [details here](https://formationjavascript.com/formation-angular/) (in French).
+The author of this library organizes Angular courses (based in Paris, France, but open to travel). You can find [my bio here](https://www.cyrilletuzi.com/en/web/) (in English) and [course details here](https://formationjavascript.com/formation-angular/) (in French).
 
 ## Why this module?
 
@@ -33,30 +35,34 @@ This module is based on the same idea as localForage, but in ES6/ES2015
 and additionally wrapped into [RxJS Observables](http://reactivex.io/rxjs/) 
 to be homogeneous with other Angular modules.
 
+## Migration from angular-async-local-storage
+
+If you already use the previous `angular-async-local-storage` package, see the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
+
 ## Getting started
 
 Install the same version as your Angular one via [npm](http://npmjs.com):
 
 ```bash
 # For Angular 6 (next):
-npm install angular-async-local-storage@next
+npm install @ngx-pwa/local-storage@next
 
 # For Angular 5 (latest):
-npm install angular-async-local-storage
+npm install @ngx-pwa/local-storage
 
 # For Angular 4 (and TypeScript >= 2.3):
-npm install angular-async-local-storage@4
+npm install @ngx-pwa/local-storage@4
 ```
 
-Then include the `AsyncLocalStorage` module in your app root module (just once, do NOT re-import it in your submodules).
+Then include the `LocalStorage` module in your app root module (just once, do NOT re-import it in your submodules).
 
 ```typescript
-import { AsyncLocalStorageModule } from 'angular-async-local-storage';
+import { LocalStorageModule } from '@ngx-pwa/local-storage';
 
 @NgModule({
   imports: [
     BrowserModule,
-    AsyncLocalStorageModule,
+    LocalStorageModule,
     ...
   ]
   ...
@@ -67,12 +73,12 @@ export class AppModule {}
 Now you just have to inject the service where you need it:
 
 ```typescript
-import { AsyncLocalStorage } from 'angular-async-local-storage';
+import { LocalStorage } from '@ngx-pwa/local-storage';
 
 @Injectable()
 export class YourService {
 
-  constructor(protected localStorage: AsyncLocalStorage) {}
+  constructor(protected localStorage: LocalStorage) {}
 
 }
 ```
@@ -122,7 +128,7 @@ Don't forget it's client-side storage: **always check the data**, as it could ha
 Starting with *version 5*, you can use a [JSON Schema](http://json-schema.org/) to validate the data.
 
 ```typescript
-import { JSONSchema } from 'angular-async-local-storage';
+import { JSONSchema } from '@ngx-pwa/local-storage';
 
 const schema: JSONSchema = {
   properties: {
@@ -183,8 +189,6 @@ for Angular 5 you need version 5, for Angular 6 you need version 6, and so on.
 We follow [Angular LTS support](https://github.com/angular/angular/blob/master/docs/RELEASE_SCHEDULE.md),
 meaning we support Angular 4 minimum, until October 2018.
 
-You can still have Angular 2 support by installing version 1 of this lib, but bug fixes has not been backported.
-
 This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler).
 
 This module supports [Universal server-side rendering](https://github.com/angular/universal)
@@ -220,12 +224,12 @@ In Firefox, `indexedDB` API is available in code but throwing error on usage. It
 
 ### Add your own storage
 
-Starting with *version 3.1*, you can easily add your own storage:
+Starting with *version 5*, you can easily add your own storage:
 
 ```typescript
-import { AsyncLocalStorageModule, AsyncLocalDatabase } from 'angular-async-local-storage';
+import { LocalStorageModule, LocalDatabase } from '@ngx-pwa/local-storage';
 
-export class MyDatabase extends AsyncLocalDatabase {
+export class MyDatabase extends LocalDatabase {
 
   /* Implement the methods required by the parent class */
 
@@ -233,8 +237,8 @@ export class MyDatabase extends AsyncLocalDatabase {
 
 @NgModule({
   provide: [
-    AsyncLocalStorageModule,
-    { provide: AsyncLocalDatabase, useClass: MyDatabase }
+    LocalStorageModule,
+    { provide: LocalDatabase, useClass: MyDatabase }
   ]
 })
 export class AppModule {}

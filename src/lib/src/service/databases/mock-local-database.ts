@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { AsyncLocalDatabase } from './async-local-database';
+import { LocalDatabase } from './local-database';
 
 @Injectable()
-export class MockLocalDatabase extends AsyncLocalDatabase {
+export class MockLocalDatabase extends LocalDatabase {
 
   protected localStorage = new Map<string, any>();
 

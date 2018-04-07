@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent as fromEvent, of as of, throwError, race } from 'rxjs';
 import { map, mergeMap, first } from 'rxjs/operators';
 
-import { AsyncLocalDatabase } from './async-local-database';
+import { LocalDatabase } from './local-database';
 
 @Injectable()
-export class IndexedDBDatabase extends AsyncLocalDatabase {
+export class IndexedDBDatabase extends LocalDatabase {
 
   /**
    * IndexedDB database name for local storage

@@ -1,6 +1,6 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { LibModule } from 'angular-async-local-storage';
+import { LibModule } from '@ngx-pwa/local-storage';
 
 import { AppComponent }  from './app.component';
 

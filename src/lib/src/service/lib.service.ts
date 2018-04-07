@@ -2,29 +2,29 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-import { AsyncLocalDatabase } from './databases/async-local-database';
+import { LocalDatabase } from './databases/local-database';
 import { JSONSchema } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
 
-export interface ALSGetItemOptions {
+export interface LSGetItemOptions {
   schema?: JSONSchema | null;
 }
 
 @Injectable()
-export class AsyncLocalStorage {
+export class LocalStorage {
 
   protected readonly getItemOptionsDefault = {
     schema: null
   };
 
-  constructor(protected database: AsyncLocalDatabase, protected jsonValidator: JSONValidator) {}
+  constructor(protected database: LocalDatabase, protected jsonValidator: JSONValidator) {}
 
   /**
    * Gets an item value in local storage
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  getItem<T = any>(key: string, options: ALSGetItemOptions = this.getItemOptionsDefault) {
+  getItem<T = any>(key: string, options: LSGetItemOptions = this.getItemOptionsDefault) {
 
     return this.database.getItem<T>(key).pipe(
 

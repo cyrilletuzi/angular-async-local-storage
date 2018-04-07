@@ -43,7 +43,7 @@
         defaultExtension: 'js',
         main: 'index'
       },
-      'angular-async-local-storage': {
+      '@ngx-pwa/local-storage': {
         main: 'index.js',
         defaultExtension: 'js',
         meta: {

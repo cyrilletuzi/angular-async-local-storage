@@ -3,7 +3,7 @@
     "baseDir": "src/demo",
     "routes": {
       "/node_modules": "node_modules",
-      "/angular-async-local-storage": "src/lib"
+      "/@ngx-pwa/local-storage": "src/lib"
     }
   }
 }

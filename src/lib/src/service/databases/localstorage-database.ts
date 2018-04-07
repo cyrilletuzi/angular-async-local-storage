@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { AsyncLocalDatabase } from './async-local-database';
+import { LocalDatabase } from './local-database';
 
 @Injectable()
-export class LocalStorageDatabase extends AsyncLocalDatabase {
+export class LocalStorageDatabase extends LocalDatabase {
 
   /* Initializing native localStorage right now to be able to check its support on class instanciation */
   protected localStorage = localStorage;

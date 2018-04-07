@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AsyncLocalStorage } from 'angular-async-local-storage';
+import { AsyncLocalStorage } from '@ngx-pwa/local-storage';
 
 interface User {
   name: string;
