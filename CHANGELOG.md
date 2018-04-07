@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.1 (2018-04-07)
+
+### Bug fixes
+
+- Correct too wide type inference for `getItem()`
+
 ## 6.0.0-beta.1 (2018-04-07)
 
 ### Features
