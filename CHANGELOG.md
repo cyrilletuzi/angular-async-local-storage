@@ -1,11 +1,11 @@
 # Changelog
 
-## 6.0.0-beta.2 (2018-04-07)
+## 6.0.0-beta.3 (2018-04-08)
 
 ### Features
 
 - Beta support of Angular 6 RC, test it with: `npm install @ngx-pwa/local-storage@next`
-- `setItemAndSubscribe()`, `removeItemAndSubscribe()`, `clearAndSubscribe()` methods for auto-subscription
+- `setItemSubscribe()`, `removeItemSubscribe()`, `clearSubscribe()` methods for auto-subscription
 
 ### Breaking changes
 
@@ -23,9 +23,15 @@
 [rxjs-compat](https://www.npmjs.com/package/rxjs-compat) as a temporary migration step)
 - Node >= 8.9 and npm >= 5.5 are required
 
+## 5.2.0 (2018-04-08)
+
+### Feature
+
+- `setItemSubscribe()`, `removeItemSubscribe()`, `clearSubscribe()` methods for auto-subscription
+
 ## 5.1.1 (2018-04-07)
 
-### Bug fixes
+### Bug fix
 
 - Correct too wide type inference for `getItem()`
 

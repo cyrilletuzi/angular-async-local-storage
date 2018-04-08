@@ -165,15 +165,15 @@ You *DO NOT* need to unsubscribe: the observable autocompletes (like in the `Htt
 
 But you *DO* need to subscribe, even if you don't have something specific to do after writing in local storage (because it's how RxJS Observables work).
 
-Since *version 6*, you can use these methods to auto-subscribe:
+Since *version 5.2*, you can use these methods to auto-subscribe:
 
 ```typescript
-this.localStorage.setItemAndSubscribe('user', user);
-this.localStorage.removeItemAndSubscribe('user');
-this.localStorage.clearAndSubscribe();
+this.localStorage.setItemSubscribe('user', user);
+this.localStorage.removeItemSubscribe('user');
+this.localStorage.clearSubscribe();
 ```
 
-*Do this **only** if these conditions are fulfilled:*
+*Use these methods **only** if these conditions are fulfilled:*
 - you don't need to manage the error callback (with these methods, errors will silently fail),
 - you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
 

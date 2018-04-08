@@ -373,6 +373,75 @@ function tests(localStorage: LocalStorage) {
 
   });
 
+  it('should set item and auto-subscribe', (done: DoneFn) => {
+
+    const index = 'index';
+    const value = 'test';
+
+
+    localStorage.setItemSubscribe(index, value);
+
+    window.setTimeout(() => {
+
+      localStorage.getItem<string>(index).subscribe((data) => {
+        expect(data).toBe(value);
+        done();
+      }, () => {
+        fail();
+      });
+
+    }, 50);
+
+  });
+
+  it('should remove item and auto-subscribe', (done: DoneFn) => {
+
+    const index = 'index';
+    const value = 'test';
+
+    localStorage.setItem(index, value).subscribe(() => {
+
+      localStorage.removeItemSubscribe(index);
+
+      window.setTimeout(() => {
+
+        localStorage.getItem<string>(index).subscribe((data) => {
+          expect(data).toBe(null);
+          done();
+        }, () => {
+          fail();
+        });
+
+      }, 50);
+
+    });
+
+  });
+
+  it('should clear storage and auto-subscribe', (done: DoneFn) => {
+
+    const index = 'index';
+    const value = 'test';
+
+    localStorage.setItem(index, value).subscribe(() => {
+
+      localStorage.clearSubscribe();
+
+      window.setTimeout(() => {
+
+        localStorage.getItem<string>(index).subscribe((data) => {
+          expect(data).toBe(null);
+          done();
+        }, () => {
+          fail();
+        });
+
+      }, 50);
+
+    });
+
+  });
+
 }
 
 describe('LocalStorage with mock storage', () => {
