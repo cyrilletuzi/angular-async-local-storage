@@ -10,7 +10,9 @@ export interface LSGetItemOptions {
   schema?: JSONSchema | null;
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LocalStorage {
 
   protected readonly getItemOptionsDefault = {

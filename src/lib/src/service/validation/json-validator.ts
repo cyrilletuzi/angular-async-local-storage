@@ -1,8 +1,12 @@
+import { Injectable } from '@angular/core';
 import { JSONSchema, JSONSchemaType } from './json-schema';
 
 /**
  * @todo Add other JSON Schema validation features
  */
+@Injectable({
+  providedIn: 'root'
+})
 export class JSONValidator {
 
   protected readonly simpleTypes = ['string', 'number', 'boolean', 'object'];

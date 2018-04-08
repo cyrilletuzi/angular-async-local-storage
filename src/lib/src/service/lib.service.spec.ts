@@ -1,3 +1,4 @@
+import { inject, async } from '@angular/core/testing';
 import { map, first, take } from 'rxjs/operators';
 
 import { LocalStorage } from './lib.service';
@@ -461,8 +462,27 @@ describe('LocalStorage with localStorage', () => {
 
 describe('LocalStorage with IndexedDB', () => {
 
-  let localStorage = new LocalStorage(new IndexedDBDatabase, new JSONValidator());
+  let localStorage = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
 
   tests(localStorage);
+
+});
+
+describe('LocalStorage with automatic storage injection', () => {
+
+  it('should store and get the same value', async(inject([LocalStorage], (localStorage: LocalStorage) => {
+
+    const index = 'index';
+    const value = 'value';
+
+    localStorage.setItem(index, value).subscribe(() => {
+
+      localStorage.getItem<string>(index).subscribe((data) => {
+        expect(data).toBe(value);
+      });
+
+    });
+
+  })));
 
 });

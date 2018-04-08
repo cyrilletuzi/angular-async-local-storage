@@ -4,8 +4,10 @@ import { map, mergeMap, first } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 
-@Injectable()
-export class IndexedDBDatabase extends LocalDatabase {
+@Injectable({
+  providedIn: 'root'
+})
+export class IndexedDBDatabase implements LocalDatabase {
 
   /**
    * IndexedDB database name for local storage
@@ -33,8 +35,6 @@ export class IndexedDBDatabase extends LocalDatabase {
    * Connects to IndexedDB
    */
   constructor() {
-
-    super();
 
     /* Creating the RxJS ReplaySubject */
     this.database = new ReplaySubject<IDBDatabase>();

@@ -4,8 +4,10 @@ import { map } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 
-@Injectable()
-export class MockLocalDatabase extends LocalDatabase {
+@Injectable({
+  providedIn: 'root'
+})
+export class MockLocalDatabase implements LocalDatabase {
 
   protected localStorage = new Map<string, any>();
 
