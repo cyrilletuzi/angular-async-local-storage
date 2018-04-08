@@ -1,10 +1,11 @@
 # Changelog
 
-## 6.0.0-beta.3 (2018-04-08)
+## 6.0.0-beta.4 (2018-04-08)
 
 ### Features
 
 - Beta support of Angular 6 RC, test it with: `npm install @ngx-pwa/local-storage@next`
+- Tree-shakable providers: you do not need to import `LocalStorageModule` anymore. Just inject the `LocalStorage` service where you need it.
 - `setItemSubscribe()`, `removeItemSubscribe()`, `clearSubscribe()` methods for auto-subscription
 
 ### Breaking changes
