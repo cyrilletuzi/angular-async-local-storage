@@ -241,19 +241,16 @@ In Firefox, `indexedDB` API is available in code but throwing error on usage. It
 Starting with *version 5*, you can easily add your own storage:
 
 ```typescript
-import { LocalStorageModule, LocalDatabase } from '@ngx-pwa/local-storage';
+import { LocalDatabase } from '@ngx-pwa/local-storage';
 
-export class MyDatabase extends LocalDatabase {
+export class MyDatabase implements LocalDatabase {
 
-  /* Implement the methods required by the parent class */
+  /* Implement the methods required by the LocalDatabase class */
 
 }
 
 @NgModule({
-  provide: [
-    LocalStorageModule,
-    { provide: LocalDatabase, useClass: MyDatabase }
-  ]
+  providers: [{ provide: LocalDatabase, useClass: MyDatabase }]
 })
 export class AppModule {}
 ```
