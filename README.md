@@ -54,7 +54,7 @@ npm install @ngx-pwa/local-storage@4
 npm install @ngx-pwa/local-storage@next
 ```
 
-For *versions 4 & 5*, you need to include the `LocalStorageModule` in your app root module (just once, do NOT re-import it in your submodules). Since *version 6*, this step is no longer required.
+Then, **for *versions 4 & 5 only*, include the `LocalStorageModule`** in your app root module (just once, do NOT re-import it in your submodules). Since *version 6*, this step is no longer required and `LocalStorageModule` is removed.
 
 ```typescript
 import { LocalStorageModule } from '@ngx-pwa/local-storage';

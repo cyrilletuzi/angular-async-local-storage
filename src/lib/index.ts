@@ -5,4 +5,3 @@ export { LocalStorageDatabase } from './src/service/databases/localstorage-datab
 export { MockLocalDatabase } from './src/service/databases/mock-local-database';
 export { JSONValidator } from './src/service/validation/json-validator';
 export { LSGetItemOptions, LocalStorage } from './src/service/lib.service';
-export { LocalStorageModule } from './src/module';
