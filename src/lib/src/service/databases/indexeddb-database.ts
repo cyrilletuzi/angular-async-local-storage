@@ -16,7 +16,7 @@ export class IndexedDBDatabase extends LocalDatabase {
   /**
    * IndexedDB database name for local storage
    */
-  protected readonly dbName = 'ngStorage';
+  protected dbName = 'ngStorage';
   /**
    * IndexedDB object store name for local storage
    */
@@ -37,10 +37,17 @@ export class IndexedDBDatabase extends LocalDatabase {
 
   /**
    * Connects to IndexedDB
+   * @param prefix Optional prefix to avoid collision in multiple apps on same subdomain
    */
-  constructor() {
+  constructor(prefix = '') {
 
     super();
+
+    if (prefix) {
+
+      this.dbName = `${prefix}_${this.dbName}`;
+
+    }
 
     /* Creating the RxJS ReplaySubject */
     this.database = new ReplaySubject<IDBDatabase>();

@@ -6,6 +6,7 @@ export { MockLocalDatabase } from './src/service/databases/mock-local-database';
 export { JSONValidator } from './src/service/validation/json-validator';
 export { LSGetItemOptions, LocalStorage } from './src/service/lib.service';
 export { LocalStorageModule } from './src/module';
+export { localStorageProviders, LocalStorageProvidersConfig, LOCAL_STORAGE_PREFIX } from './src/tokens';
 /** @deprecated Use LocalStorage instead */
 export { LocalStorage as AsyncLocalStorage } from './src/service/lib.service';
 /** @deprecated Use LSGetItemOptions instead */
