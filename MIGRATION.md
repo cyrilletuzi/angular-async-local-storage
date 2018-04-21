@@ -41,7 +41,12 @@ Previous classes names are still here in v4 and v5, but deprecated. They are rem
 So you if you are currently Angular 4 or 5, you can update the lib without worrying, everything will still work.
 But if you are updating to Angular 6, changes are required.
 So when you have some time, you can easily and quickly migrate to be ready for v6 by doing a global search/replace of:
-- `AsyncLocalStorageModule` => `LocalStorageModule`
+- `AsyncLocalStorageModule` => `LocalStorageModule` (removed in v6, see below)
 - `AsyncLocalStorage` => `LocalStorage`
 - `AsyncLocalDatabase` => `LocalDatabase`
 - `ALSGetItemOptions` => `LSGetItemOptions`
+
+## Version >= 6: no more NgModule
+
+Since *version 6*, `LocalStorageModule` is no longer needed and so removed. Just delete the import in your `AppModule`.
+Services will be provided directly when injected.
