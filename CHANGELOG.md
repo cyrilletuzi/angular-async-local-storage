@@ -1,6 +1,6 @@
 # Changelog
 
-## 6.0.0-beta.5 (2018-04-16)
+## 6.0.0-beta.6 (2018-04-21)
 
 ### Features
 
@@ -15,11 +15,12 @@
 
 - This lib has been renamed to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
 
-- Classes renamed. Action required, see the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
-  - `AsyncLocalStorageModule` removed, renamed to `LocalStorageModule`.
+- Classes renamed. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
   - `AsyncLocalStorage` removed, renamed to `LocalStorage`.
   - `AsyncLocalDatabase` removed, renamed to `LocalDatabase`.
   - `ALSGetItemOptions` removed, renamed to `LSGetItemOptions`.
+
+- `LocalStorageModule` no longer needed and so removed. Just delete the import in your `AppModule`.
 
 - Distribution files and directories of non-UMD packages have been changed to match
 official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit).
