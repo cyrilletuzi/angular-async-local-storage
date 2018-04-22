@@ -9,8 +9,6 @@ import { JSONSchema, JSONSchemaType } from './json-schema';
 })
 export class JSONValidator {
 
-  protected readonly simpleTypes = ['number', 'boolean', 'object'];
-
   /**
    * Validate a JSON data against a JSON Schema
    * @param data JSON data to validate
@@ -173,13 +171,19 @@ export class JSONValidator {
 
     }
 
-    if ((this.simpleTypes.indexOf(schema.type) !== -1) && (typeof data !== schema.type)) {
+    if ((schema.type === 'number') || (schema.type === 'integer')) {
+
+      return this.validateNumber(data, schema);
+
+    }
+
+    if ((schema.type === 'boolean') && (typeof data !== 'boolean')) {
 
       return false;
 
     }
 
-    if ((schema.type === 'integer') && ((typeof data !== 'number') || !Number.isInteger(data))) {
+    if ((schema.type === 'object') && (typeof data !== 'object')) {
 
       return false;
 
@@ -305,6 +309,90 @@ export class JSONValidator {
       const regularExpression = new RegExp(schema.pattern);
 
       if (!regularExpression.test(data)) {
+        return false;
+      }
+
+    }
+
+    return true;
+
+  }
+
+  protected validateNumber(data: any, schema: JSONSchema): boolean {
+
+    if (typeof data !== 'number') {
+      return false;
+    }
+
+    if ((schema.type === 'integer') && !Number.isInteger(data)) {
+      return false;
+    }
+
+    if ('multipleOf' in schema) {
+
+      if ((typeof schema.multipleOf !== 'number') || schema.multipleOf <= 0) {
+
+        throw new Error(`'multipleOf' must be a number strictly greater than 0.`);
+
+      }
+
+      if (!Number.isInteger(data / schema.multipleOf)) {
+        return false;
+      }
+
+    }
+
+    if ('maximum' in schema) {
+
+      if (typeof schema.maximum !== 'number') {
+
+        throw new Error(`'maximum' must be a number.`);
+
+      }
+
+      if (data > schema.maximum) {
+        return false;
+      }
+
+    }
+
+    if ('exclusiveMaximum' in schema) {
+
+      if (typeof schema.exclusiveMaximum !== 'number') {
+
+        throw new Error(`'exclusiveMaximum' must be a number.`);
+
+      }
+
+      if (data >= schema.exclusiveMaximum) {
+        return false;
+      }
+
+    }
+
+    if ('minimum' in schema) {
+
+      if (typeof schema.minimum !== 'number') {
+
+        throw new Error(`'minimum' must be a number.`);
+
+      }
+
+      if (data < schema.minimum) {
+        return false;
+      }
+
+    }
+
+    if ('exclusiveMinimum' in schema) {
+
+      if (typeof schema.exclusiveMinimum !== 'number') {
+
+        throw new Error(`'exclusiveMinimum' must be a number.`);
+
+      }
+
+      if (data <= schema.exclusiveMinimum) {
         return false;
       }
 

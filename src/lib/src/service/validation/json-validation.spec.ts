@@ -40,38 +40,6 @@ describe(`JSONValidator`, () => {
 
     });
 
-    it(`should return true on an integer value with a number type`, () => {
-
-      const test = jsonValidator.validate(10, { type: 'number' });
-
-      expect(test).toBe(true);
-
-    });
-
-    it(`should return true on a decimal value with a number type`, () => {
-
-      const test = jsonValidator.validate(10.1, { type: 'number' });
-
-      expect(test).toBe(true);
-
-    });
-
-    it(`should return true on an integer value with an integer type`, () => {
-
-      const test = jsonValidator.validate(10, { type: 'integer' });
-
-      expect(test).toBe(true);
-
-    });
-
-    it(`should return false on a decimal value with an integer type`, () => {
-
-      const test = jsonValidator.validate(10.1, { type: 'integer' });
-
-      expect(test).toBe(false);
-
-    });
-
     it(`should return true on a true value with a boolean type`, () => {
 
       const test = jsonValidator.validate(true, { type: 'boolean' });
@@ -122,7 +90,7 @@ describe(`JSONValidator`, () => {
 
   });
 
-  describe(`validateType`, () => {
+  describe(`validateString`, () => {
 
     it(`should return true on a string value with string type`, () => {
 
@@ -239,6 +207,314 @@ describe(`JSONValidator`, () => {
     it(`should return false with a string not respecting a pattern`, () => {
 
       const test = jsonValidator.validate('t', { type: 'string', pattern: '^test$' });
+
+      expect(test).toBe(false);
+
+    });
+
+  });
+
+  describe(`validateNumber`, () => {
+
+    it(`should return true on an integer value with a number type`, () => {
+
+      const test = jsonValidator.validate(10, { type: 'number' });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return true on a decimal value with a number type`, () => {
+
+      const test = jsonValidator.validate(10.1, { type: 'number' });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return true on an integer value with an integer type`, () => {
+
+      const test = jsonValidator.validate(10, { type: 'integer' });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false on a decimal value with an integer type`, () => {
+
+      const test = jsonValidator.validate(10.1, { type: 'integer' });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should throw if multipleOf is not a number`, () => {
+
+      expect(() => {
+        jsonValidator.validate(10, { type: 'number', multipleOf: '10' as any });
+      }).toThrowError();
+
+    });
+
+    it(`should throw if multipleOf is not strictly greater than 0`, () => {
+
+      expect(() => {
+        jsonValidator.validate(10, { type: 'number', multipleOf: 0 });
+      }).toThrowError();
+
+    });
+
+    it(`should return true with a number is a multiple of x`, () => {
+
+      const test = jsonValidator.validate(5.2, { type: 'number', multipleOf: 2.6 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return true with an integer is a multiple of x`, () => {
+
+      const test = jsonValidator.validate(10, { type: 'integer', multipleOf: 2 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with a number not a multiple of x`, () => {
+
+      const test = jsonValidator.validate(5.3, { type: 'number', multipleOf: 2.6 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return false with an integer not a multiple of x`, () => {
+
+      const test = jsonValidator.validate(11, { type: 'integer', multipleOf: 2 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should throw if maximum is not a number`, () => {
+
+      expect(() => {
+        jsonValidator.validate(10, { type: 'number', maximum: '10' as any });
+      }).toThrowError();
+
+    });
+
+    it(`should return true with a number less than a maximum`, () => {
+
+      const test = jsonValidator.validate(5.2, { type: 'number', maximum: 5.7 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return true with a number equal to maximum`, () => {
+
+      const test = jsonValidator.validate(5.2, { type: 'number', maximum: 5.2 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with a number greater than a maximum`, () => {
+
+      const test = jsonValidator.validate(5.3, { type: 'number', maximum: 5.2 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return true with an integer less than a maximum`, () => {
+
+      const test = jsonValidator.validate(5, { type: 'integer', maximum: 6 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return true with an integer equal to maximum`, () => {
+
+      const test = jsonValidator.validate(5, { type: 'integer', maximum: 5 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with an integer greater than a maximum`, () => {
+
+      const test = jsonValidator.validate(6, { type: 'integer', maximum: 5 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should throw if exclusiveMaximum is not a number`, () => {
+
+      expect(() => {
+        jsonValidator.validate(10, { type: 'number', exclusiveMaximum: '10' as any });
+      }).toThrowError();
+
+    });
+
+    it(`should return true with a number less than an exclusiveMaximum`, () => {
+
+      const test = jsonValidator.validate(5.2, { type: 'number', exclusiveMaximum: 5.7 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with a number equal to exclusiveMaximum`, () => {
+
+      const test = jsonValidator.validate(5.2, { type: 'number', exclusiveMaximum: 5.2 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return false with a number greater than an exclusiveMaximum`, () => {
+
+      const test = jsonValidator.validate(5.3, { type: 'number', exclusiveMaximum: 5.2 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return true with an integer less than an exclusiveMaximum`, () => {
+
+      const test = jsonValidator.validate(5, { type: 'integer', exclusiveMaximum: 6 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with an integer equal to exclusiveMaximum`, () => {
+
+      const test = jsonValidator.validate(5, { type: 'integer', exclusiveMaximum: 5 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return false with an integer greater than an exclusiveMaximum`, () => {
+
+      const test = jsonValidator.validate(6, { type: 'integer', exclusiveMaximum: 5 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should throw if minimum is not a number`, () => {
+
+      expect(() => {
+        jsonValidator.validate(10, { type: 'number', minimum: '10' as any });
+      }).toThrowError();
+
+    });
+
+    it(`should return true with a number greater than a minimum`, () => {
+
+      const test = jsonValidator.validate(5.8, { type: 'number', minimum: 5.7 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return true with a number equal to minimum`, () => {
+
+      const test = jsonValidator.validate(5.2, { type: 'number', minimum: 5.2 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with a number less than an minimum`, () => {
+
+      const test = jsonValidator.validate(5.1, { type: 'number', minimum: 5.2 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return true with an integer greater than a minimum`, () => {
+
+      const test = jsonValidator.validate(7, { type: 'integer', minimum: 6 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return true with an integer equal to minimum`, () => {
+
+      const test = jsonValidator.validate(5, { type: 'integer', minimum: 5 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with an integer less than an minimum`, () => {
+
+      const test = jsonValidator.validate(4, { type: 'integer', minimum: 5 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should throw if exclusiveMinimum is not a number`, () => {
+
+      expect(() => {
+        jsonValidator.validate(10, { type: 'number', exclusiveMinimum: '10' as any });
+      }).toThrowError();
+
+    });
+
+    it(`should return true with a number greater than an exclusiveMinimum`, () => {
+
+      const test = jsonValidator.validate(5.8, { type: 'number', exclusiveMinimum: 5.7 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with a number equal to exclusiveMinimum`, () => {
+
+      const test = jsonValidator.validate(5.2, { type: 'number', exclusiveMinimum: 5.2 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return false with a number less than an exclusiveMinimum`, () => {
+
+      const test = jsonValidator.validate(5.1, { type: 'number', exclusiveMinimum: 5.2 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return true with an integer greater than an exclusiveMinimum`, () => {
+
+      const test = jsonValidator.validate(7, { type: 'integer', exclusiveMinimum: 6 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with an integer equal to exclusiveMinimum`, () => {
+
+      const test = jsonValidator.validate(5, { type: 'integer', exclusiveMinimum: 5 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return false with an integer less than an exclusiveMinimum`, () => {
+
+      const test = jsonValidator.validate(4, { type: 'integer', exclusiveMinimum: 5 });
 
       expect(test).toBe(false);
 

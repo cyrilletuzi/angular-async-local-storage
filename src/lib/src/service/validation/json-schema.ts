@@ -58,6 +58,32 @@ export interface JSONSchema {
   pattern?: string;
 
   /**
+   * Check if a number is a multiple of x.
+   * Must be strictly greater than 0.
+   */
+  multipleOf?: number;
+
+  /**
+   * Check if a number is less or equal than this maximum.
+   */
+  maximum?: number;
+
+  /**
+   * Check if a number is strictly less than this maximum.
+   */
+  exclusiveMaximum?: number;
+
+  /**
+   * Check if a number is greater or equal than this minimum.
+   */
+  minimum?: number;
+
+  /**
+   * Check if a number is strictly greater than this minimum.
+   */
+  exclusiveMinimum?: number;
+
+  /**
    * Allow other properties, to not fail with existing JSON schemas.
    */
   [k: string]: any;

@@ -1,12 +1,12 @@
 # Changelog
 
-## 6.0.0-beta.7 (2018-04-21)
+## 6.0.0-beta.7 (2018-04-22)
 
 ### Features
 
 - Beta support of Angular 6 RC, test it with: `npm install @ngx-pwa/local-storage@next`
 
-- New JSON Schema validation options supported: `maxLength`, `minLength`, `pattern` (see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for current state).
+- New JSON Schema validation options supported for strings and numbers (see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list).
 
 - `setItemSubscribe()`, `removeItemSubscribe()`, `clearSubscribe()` methods for auto-subscription
 
