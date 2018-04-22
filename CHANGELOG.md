@@ -1,12 +1,17 @@
 # Changelog
 
-## 6.0.0-beta.6 (2018-04-21)
+## 6.0.0-beta.7 (2018-04-21)
 
 ### Features
 
 - Beta support of Angular 6 RC, test it with: `npm install @ngx-pwa/local-storage@next`
-- Tree-shakable providers: you do not need to import `LocalStorageModule` anymore. Just inject the `LocalStorage` service where you need it.
+
+- New JSON Schema validation options supported: `maxLength`, `minLength`, `pattern` (see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for current state).
+
 - `setItemSubscribe()`, `removeItemSubscribe()`, `clearSubscribe()` methods for auto-subscription
+
+- Tree-shakable providers.
+
 - `sideEffects: false` for webpack optimization
 - Partial support of official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit)
 (non-flatenned packages are not yet available, waiting for more info on this)

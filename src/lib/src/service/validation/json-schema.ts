@@ -40,6 +40,24 @@ export interface JSONSchema {
   items?: JSONSchema | JSONSchema[];
 
   /**
+   * Minumum lenght for a string.
+   * Must be a non-negative integer.
+   */
+  maxLength?: number;
+
+  /**
+   * Minumum lenght for a string.
+   * Must be a non-negative integer.
+   */
+  minLength?: number;
+
+  /**
+   * Pattern to match for a string.
+   * Must be a valid regular expression, WITHOUT the / delimiters.
+   */
+  pattern?: string;
+
+  /**
    * Allow other properties, to not fail with existing JSON schemas.
    */
   [k: string]: any;

@@ -9,13 +9,7 @@ import { JSONSchema, JSONSchemaType } from './json-schema';
 })
 export class JSONValidator {
 
-  protected readonly simpleTypes = ['string', 'number', 'boolean', 'object'];
-
-  protected isObjectNotNull(value: any) {
-
-    return (value !== null) && (typeof value === 'object');
-
-  }
+  protected readonly simpleTypes = ['number', 'boolean', 'object'];
 
   /**
    * Validate a JSON data against a JSON Schema
@@ -23,7 +17,7 @@ export class JSONValidator {
    * @param schema Subset of JSON Schema
    * @returns If data is valid : true, if it is invalid : false, and throws if the schema is invalid
    */
-  validate(data: any, schema: JSONSchema) {
+  validate(data: any, schema: JSONSchema): boolean {
 
     if (!this.isObjectNotNull(schema)) {
 
@@ -62,7 +56,13 @@ export class JSONValidator {
 
   }
 
-  protected validateProperties(data: {}, schema: JSONSchema) {
+  protected isObjectNotNull(value: any): boolean {
+
+    return (value !== null) && (typeof value === 'object');
+
+  }
+
+  protected validateProperties(data: {}, schema: JSONSchema): boolean {
 
     if (!this.isObjectNotNull(data)) {
 
@@ -105,7 +105,7 @@ export class JSONValidator {
 
   }
 
-  protected validateRequired(data: {}, schema: JSONSchema) {
+  protected validateRequired(data: {}, schema: JSONSchema): boolean {
 
     if (!this.isObjectNotNull(data)) {
 
@@ -147,7 +147,7 @@ export class JSONValidator {
 
   }
 
-  protected validateType(data: any, schema: JSONSchema) {
+  protected validateType(data: any, schema: JSONSchema): boolean {
 
     if (Array.isArray(schema.type)) {
 
@@ -164,6 +164,12 @@ export class JSONValidator {
     if ((schema.type === 'null') && (data !== null)) {
 
       return false;
+
+    }
+
+    if (schema.type === 'string') {
+
+      return this.validateString(data, schema);
 
     }
 
@@ -184,7 +190,7 @@ export class JSONValidator {
   }
 
 
-  protected validateTypeList(data: any, schema: JSONSchema) {
+  protected validateTypeList(data: any, schema: JSONSchema): boolean {
 
     const types = schema.type as JSONSchemaType[];
 
@@ -200,7 +206,7 @@ export class JSONValidator {
 
   }
 
-  protected validateItems(data: any[], schema: JSONSchema) {
+  protected validateItems(data: any[], schema: JSONSchema): boolean {
 
     if (!Array.isArray(data)) {
 
@@ -232,7 +238,7 @@ export class JSONValidator {
 
   }
 
-  protected validateItemsList(data: any, schema: JSONSchema) {
+  protected validateItemsList(data: any, schema: JSONSchema): boolean {
 
     const items = schema.items as JSONSchema[];
 
@@ -245,6 +251,60 @@ export class JSONValidator {
     for (let i = 0; i < items.length; i += 1) {
 
       if (!this.validate(data[i], items[i])) {
+        return false;
+      }
+
+    }
+
+    return true;
+
+  }
+
+  protected validateString(data: any, schema: JSONSchema): boolean {
+
+    if (typeof data !== 'string') {
+      return false;
+    }
+
+    if ('maxLength' in schema) {
+
+      if ((typeof schema.maxLength !== 'number') || !Number.isInteger(schema.maxLength) || schema.maxLength < 0) {
+
+        throw new Error(`'maxLength' must be a non-negative integer.`);
+
+      }
+
+      if (data.length > schema.maxLength) {
+        return false;
+      }
+
+    }
+
+    if ('minLength' in schema) {
+
+      if ((typeof schema.minLength !== 'number') || !Number.isInteger(schema.minLength) || schema.minLength < 0) {
+
+        throw new Error(`'minLength' must be a non-negative integer.`);
+
+      }
+
+      if (data.length < schema.minLength) {
+        return false;
+      }
+
+    }
+
+    if ('pattern' in schema) {
+
+      if (typeof schema.pattern !== 'string') {
+
+        throw new Error(`'pattern' must be a string with a valid RegExp.`);
+
+      }
+
+      const regularExpression = new RegExp(schema.pattern);
+
+      if (!regularExpression.test(data)) {
         return false;
       }
 

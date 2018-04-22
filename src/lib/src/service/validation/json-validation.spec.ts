@@ -40,14 +40,6 @@ describe(`JSONValidator`, () => {
 
     });
 
-    it(`should return true on a string value with string type`, () => {
-
-      const test = jsonValidator.validate('test', { type: 'string' });
-
-      expect(test).toBe(true);
-
-    });
-
     it(`should return true on an integer value with a number type`, () => {
 
       const test = jsonValidator.validate(10, { type: 'number' });
@@ -123,6 +115,130 @@ describe(`JSONValidator`, () => {
     it(`should return false on a primitive value with a mismatched type`, () => {
 
       const test = jsonValidator.validate('test', { type: 'number' });
+
+      expect(test).toBe(false);
+
+    });
+
+  });
+
+  describe(`validateType`, () => {
+
+    it(`should return true on a string value with string type`, () => {
+
+      const test = jsonValidator.validate('test', { type: 'string' });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should throw if maxLength is not a number`, () => {
+
+      expect(() => {
+        jsonValidator.validate('test', { type: 'string', maxLength: '10' as any });
+      }).toThrowError();
+
+    });
+
+    it(`should throw if maxLength is not an integer`, () => {
+
+      expect(() => {
+        jsonValidator.validate('test', { type: 'string', maxLength: 10.5 });
+      }).toThrowError();
+
+    });
+
+    it(`should throw if maxLength is negative`, () => {
+
+      expect(() => {
+        jsonValidator.validate('test', { type: 'string', maxLength: -1 });
+      }).toThrowError();
+
+    });
+
+    it(`should return true with a string respecting maxLength`, () => {
+
+      const test = jsonValidator.validate('test', { type: 'string', maxLength: 10 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with a string not respecting maxLength`, () => {
+
+      const test = jsonValidator.validate('test', { type: 'string', maxLength: 2 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should throw if minLength is not a number`, () => {
+
+      expect(() => {
+        jsonValidator.validate('test', { type: 'string', minLength: '10' as any });
+      }).toThrowError();
+
+    });
+
+    it(`should throw if minLength is not an integer`, () => {
+
+      expect(() => {
+        jsonValidator.validate('test', { type: 'string', minLength: 10.5 });
+      }).toThrowError();
+
+    });
+
+    it(`should throw if minLength is negative`, () => {
+
+      expect(() => {
+        jsonValidator.validate('test', { type: 'string', minLength: -1 });
+      }).toThrowError();
+
+    });
+
+    it(`should return true with a string respecting minLength`, () => {
+
+      const test = jsonValidator.validate('test', { type: 'string', minLength: 2 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with a string not respecting minLength`, () => {
+
+      const test = jsonValidator.validate('t', { type: 'string', minLength: 2 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should throw if pattern is not a string`, () => {
+
+      expect(() => {
+        jsonValidator.validate('test', { type: 'string', pattern: 1 as any });
+      }).toThrowError();
+
+    });
+
+    it(`should throw if pattern is not valid`, () => {
+
+      expect(() => {
+        jsonValidator.validate('test', { type: 'string', pattern: '+++' });
+      }).toThrowError();
+
+    });
+
+    it(`should return true with a string respecting a pattern`, () => {
+
+      const test = jsonValidator.validate('test', { type: 'string', pattern: '^test$' });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with a string not respecting a pattern`, () => {
+
+      const test = jsonValidator.validate('t', { type: 'string', pattern: '^test$' });
 
       expect(test).toBe(false);
 
