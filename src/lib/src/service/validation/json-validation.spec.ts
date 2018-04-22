@@ -146,6 +146,50 @@ describe(`JSONValidator`, () => {
 
   });
 
+  describe(`validateEnum`, () => {
+
+    it(`should throw if enum is not an array`, () => {
+
+      expect(() => {
+        jsonValidator.validate('test', { enum: 'test' as any });
+      }).toThrowError();
+
+    });
+
+    it(`should return true on a value included in an enum`, () => {
+
+      const test = jsonValidator.validate('test', { enum: ['test', 'hello'] });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false on a value not included in an enum`, () => {
+
+      const test = jsonValidator.validate('test2', { enum: ['test', 'hello'] });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return true on an empty string included in an enum`, () => {
+
+      const test = jsonValidator.validate('', { enum: ['', 'hello'] });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return true on 0 included in an enum`, () => {
+
+      const test = jsonValidator.validate(0, { enum: [0, 1] });
+
+      expect(test).toBe(true);
+
+    });
+
+  });
+
   describe(`validateType`, () => {
 
     it(`should throw if type is not a string`, () => {

@@ -5,7 +5,7 @@ export type JSONSchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'arra
 
 /**
  * Subset of the JSON Schema.
- * Types are enforced to validate everything : each value MUST have either 'type' or 'properties' or 'items'.
+ * Types are enforced to validate everything : each value MUST have either 'type' or 'properties' or 'items' or 'const' or 'enum'.
  * Therefore, unlike the spec, booleans are not allowed as schemas.
  * @see http://json-schema.org/latest/json-schema-validation.html
  * @todo Not all validation features are supported yet : just follow the interface.
@@ -43,6 +43,11 @@ export interface JSONSchema {
    * Checks if a value is strictly equal to this.
    */
   const?: any;
+
+  /**
+   * Checks if a value is strictly equal to one of the value of enum.
+   */
+  enum?: any[];
 
   /**
    * Minumum lenght for a string.

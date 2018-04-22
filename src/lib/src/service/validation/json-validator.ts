@@ -23,14 +23,19 @@ export class JSONValidator {
 
     }
 
-    if (((!schema.hasOwnProperty('const') && !schema.hasOwnProperty('type')) || schema.type === 'array' || schema.type === 'object')
+    if (((!schema.hasOwnProperty('const') && !schema.hasOwnProperty('enum') && !schema.hasOwnProperty('type'))
+    || schema.type === 'array' || schema.type === 'object')
     && !schema.hasOwnProperty('properties') && !schema.hasOwnProperty('items')) {
 
-      throw new Error(`Each value must have a 'type' or 'properties' or 'items', to enforce strict types.`);
+      throw new Error(`Each value must have a 'type' or 'properties' or 'items' or 'const' or 'enum', to enforce strict types.`);
 
     }
 
     if (schema.hasOwnProperty('const') && (data !== schema.const)) {
+      return false;
+    }
+
+    if (schema.hasOwnProperty('enum') && !this.validateEnum(data, schema)) {
       return false;
     }
 
@@ -146,6 +151,19 @@ export class JSONValidator {
     }
 
     return true;
+
+  }
+
+  protected validateEnum(data: any, schema: JSONSchema): boolean {
+
+    if (!Array.isArray(schema.enum)) {
+
+      throw new Error(`'enum' must be an array.`);
+
+    }
+
+    /** @todo Move to ES2016 .includes() ? */
+    return (schema.enum.indexOf(data) !== -1);
 
   }
 
