@@ -6,7 +6,7 @@
 
 - Beta support of Angular 6 RC, test it with: `npm install @ngx-pwa/local-storage@next`
 
-- New JSON Schema validation options supported for strings, numbers, const and enum (see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list).
+- New JSON Schema validation options supported for strings, numbers, arrays, const and enum (see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list).
 
 - `setItemSubscribe()`, `removeItemSubscribe()`, `clearSubscribe()` methods for auto-subscription
 

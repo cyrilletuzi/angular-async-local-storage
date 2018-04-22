@@ -94,6 +94,23 @@ export interface JSONSchema {
   exclusiveMinimum?: number;
 
   /**
+   * Check if an array length is less or equal to this value.
+   * Must be a non negative integer.
+   */
+  maxItems?: number;
+
+  /**
+   * Check if an array length is greater or equal to this value.
+   * Must be a non negative integer.
+   */
+  minItems?: number;
+
+  /**
+   * Check if an array only have unique values.
+   */
+  uniqueItems?: boolean;
+
+  /**
    * Allow other properties, to not fail with existing JSON schemas.
    */
   [k: string]: any;

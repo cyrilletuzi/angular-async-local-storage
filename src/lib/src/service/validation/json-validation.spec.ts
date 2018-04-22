@@ -968,6 +968,126 @@ describe(`JSONValidator`, () => {
 
     });
 
+    it(`should throw if maxItems is not a number`, () => {
+
+      expect(() => {
+        jsonValidator.validate([], { items: { type: 'string' }, maxItems: '10' as any });
+      }).toThrowError();
+
+    });
+
+    it(`should throw if maxItems is not an integer`, () => {
+
+      expect(() => {
+        jsonValidator.validate([], { items: { type: 'string' }, maxItems: 10.5 });
+      }).toThrowError();
+
+    });
+
+    it(`should throw if maxItems is not positive`, () => {
+
+      expect(() => {
+        jsonValidator.validate([], { items: { type: 'string' }, maxItems: -1 });
+      }).toThrowError();
+
+    });
+
+    it(`should return true with an array with less items than maxItems`, () => {
+
+      const test = jsonValidator.validate([1, 2], { items: { type: 'number' }, maxItems: 3 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return true with an array length equal to maxItems`, () => {
+
+      const test = jsonValidator.validate([1, 2], { items: { type: 'number' }, maxItems: 2 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with an array with more items than maxItems`, () => {
+
+      const test = jsonValidator.validate([1, 2, 4, 4], { items: { type: 'number' }, maxItems: 3 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should throw if minItems is not a number`, () => {
+
+      expect(() => {
+        jsonValidator.validate([], { items: { type: 'string' }, minItems: '10' as any });
+      }).toThrowError();
+
+    });
+
+    it(`should throw if minItems is not an integer`, () => {
+
+      expect(() => {
+        jsonValidator.validate([], { items: { type: 'string' }, minItems: 10.5 });
+      }).toThrowError();
+
+    });
+
+    it(`should throw if minItems is not positive`, () => {
+
+      expect(() => {
+        jsonValidator.validate([], { items: { type: 'string' }, minItems: -1 });
+      }).toThrowError();
+
+    });
+
+    it(`should return true with an array with more items than minItems`, () => {
+
+      const test = jsonValidator.validate([1, 2, 3, 4], { items: { type: 'number' }, minItems: 3 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return true with an array length equal to minItems`, () => {
+
+      const test = jsonValidator.validate([1, 2], { items: { type: 'number' }, minItems: 2 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with an array with less items than maxItems`, () => {
+
+      const test = jsonValidator.validate([1, 2], { items: { type: 'number' }, minItems: 3 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should throw if uniqueItems is not a boolean`, () => {
+
+      expect(() => {
+        jsonValidator.validate([], { items: { type: 'string' }, uniqueItems: 'test' as any });
+      }).toThrowError();
+
+    });
+
+    it(`should return true with an array with uniqueItems`, () => {
+
+      const test = jsonValidator.validate([1, 2], { items: { type: 'number' }, uniqueItems: true });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false with an array with non uniqueItems`, () => {
+
+      const test = jsonValidator.validate([1, 1], { items: { type: 'number' }, uniqueItems: true });
+
+      expect(test).toBe(false);
+
+    });
+
   });
 
   describe(`validateItemsList`, () => {

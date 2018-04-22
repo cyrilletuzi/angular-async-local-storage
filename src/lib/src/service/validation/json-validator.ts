@@ -240,6 +240,54 @@ export class JSONValidator {
 
     }
 
+    if (schema.hasOwnProperty('maxItems')) {
+
+      if ((typeof schema.maxItems !== 'number') || !Number.isInteger(schema.maxItems) || schema.maxItems < 0) {
+
+        throw new Error(`'maxItems' must be a non-negative integer.`);
+
+      }
+
+      if (data.length > schema.maxItems) {
+        return false;
+      }
+
+    }
+
+    if (schema.hasOwnProperty('minItems')) {
+
+      if ((typeof schema.minItems !== 'number') || !Number.isInteger(schema.minItems) || schema.minItems < 0) {
+
+        throw new Error(`'minItems' must be a non-negative integer.`);
+
+      }
+
+      if (data.length < schema.minItems) {
+        return false;
+      }
+
+    }
+
+    if (schema.hasOwnProperty('uniqueItems')) {
+
+      if (typeof schema.uniqueItems !== 'boolean') {
+
+        throw new Error(`'minItems' must be a boolean.`);
+
+      }
+
+      if (schema.uniqueItems) {
+
+        const dataSet = new Set(data);
+
+        if (data.length !== dataSet.size) {
+          return false;
+        }
+
+      }
+
+    }
+
     if (Array.isArray(schema.items)) {
 
       return this.validateItemsList(data, schema);
