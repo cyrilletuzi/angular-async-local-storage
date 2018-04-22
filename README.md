@@ -154,10 +154,9 @@ this.localStorage.getItem<User>('user', { schema }).subscribe((user) => {
 ```
 
 Note: last draft of JSON Schema is used (draft 7 at this time),
-but we don't support all validation features yet. Just follow the interface or see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list.
-Contributions are welcome to add more features.
+but we don't support all validation features. Just follow the interface or see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list.
 
-Note: as the goal is validation, types are enforced: each value MUST have either `type` or `properties` or `items`.
+Note: as the goal is validation, types are enforced: each value MUST have either `type` or `properties` or `items` or `const` or `enum`.
 
 ### Subscription
 
