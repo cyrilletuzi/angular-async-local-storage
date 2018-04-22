@@ -40,6 +40,11 @@ export interface JSONSchema {
   items?: JSONSchema | JSONSchema[];
 
   /**
+   * Checks if a value is strictly equal to this.
+   */
+  const?: any;
+
+  /**
    * Minumum lenght for a string.
    * Must be a non-negative integer.
    */

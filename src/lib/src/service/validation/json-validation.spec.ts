@@ -30,6 +30,122 @@ describe(`JSONValidator`, () => {
 
   });
 
+  describe(`validate a const`, () => {
+
+    it(`should return true on a string equal to a string const`, () => {
+
+      const test = jsonValidator.validate('test', { const: 'test' });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false on a string not equal to a string const`, () => {
+
+      const test = jsonValidator.validate('test2', { const: 'test' });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return true on a number equal to a number const`, () => {
+
+      const test = jsonValidator.validate(1.5, { const: 1.5 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false on a number not equal to a number const`, () => {
+
+      const test = jsonValidator.validate(2.5, { const: 1.5 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return true on an integer equal to an integer const`, () => {
+
+      const test = jsonValidator.validate(1, { const: 1 });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false on an integer not equal to an integer const`, () => {
+
+      const test = jsonValidator.validate(2, { const: 1 });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return true on a boolean equal to a boolean const`, () => {
+
+      const test = jsonValidator.validate(true, { const: true });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false on a boolean not equal to a boolean const`, () => {
+
+      const test = jsonValidator.validate(false, { const: true });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return true on null equal to a null const`, () => {
+
+      const test = jsonValidator.validate(null, { const: null });
+
+      expect(test).toBe(true);
+
+    });
+
+    it(`should return false on a value not equal to a null const`, () => {
+
+      const test = jsonValidator.validate('test', { const: null });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return false on an empty string with a false const`, () => {
+
+      const test = jsonValidator.validate('', { const: false });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return false on 0 with a false const`, () => {
+
+      const test = jsonValidator.validate(0, { const: false });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return false on an empty string with a null const`, () => {
+
+      const test = jsonValidator.validate('', { const: null });
+
+      expect(test).toBe(false);
+
+    });
+
+    it(`should return false on 0 with a null const`, () => {
+
+      const test = jsonValidator.validate(0, { const: null });
+
+      expect(test).toBe(false);
+
+    });
+
+  });
+
   describe(`validateType`, () => {
 
     it(`should throw if type is not a string`, () => {

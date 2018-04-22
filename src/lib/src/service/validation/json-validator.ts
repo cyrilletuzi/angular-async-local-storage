@@ -23,11 +23,15 @@ export class JSONValidator {
 
     }
 
-    if ((!schema.hasOwnProperty('type') || schema.type === 'array' || schema.type === 'object')
+    if (((!schema.hasOwnProperty('const') && !schema.hasOwnProperty('type')) || schema.type === 'array' || schema.type === 'object')
     && !schema.hasOwnProperty('properties') && !schema.hasOwnProperty('items')) {
 
       throw new Error(`Each value must have a 'type' or 'properties' or 'items', to enforce strict types.`);
 
+    }
+
+    if (schema.hasOwnProperty('const') && (data !== schema.const)) {
+      return false;
     }
 
     if (schema.hasOwnProperty('type') && !this.validateType(data, schema)) {
@@ -270,7 +274,7 @@ export class JSONValidator {
       return false;
     }
 
-    if ('maxLength' in schema) {
+    if (schema.hasOwnProperty('maxLength')) {
 
       if ((typeof schema.maxLength !== 'number') || !Number.isInteger(schema.maxLength) || schema.maxLength < 0) {
 
@@ -284,7 +288,7 @@ export class JSONValidator {
 
     }
 
-    if ('minLength' in schema) {
+    if (schema.hasOwnProperty('minLength')) {
 
       if ((typeof schema.minLength !== 'number') || !Number.isInteger(schema.minLength) || schema.minLength < 0) {
 
@@ -298,7 +302,7 @@ export class JSONValidator {
 
     }
 
-    if ('pattern' in schema) {
+    if (schema.hasOwnProperty('pattern')) {
 
       if (typeof schema.pattern !== 'string') {
 
@@ -328,7 +332,7 @@ export class JSONValidator {
       return false;
     }
 
-    if ('multipleOf' in schema) {
+    if (schema.hasOwnProperty('multipleOf')) {
 
       if ((typeof schema.multipleOf !== 'number') || schema.multipleOf <= 0) {
 
@@ -342,7 +346,7 @@ export class JSONValidator {
 
     }
 
-    if ('maximum' in schema) {
+    if (schema.hasOwnProperty('maximum')) {
 
       if (typeof schema.maximum !== 'number') {
 
@@ -356,7 +360,7 @@ export class JSONValidator {
 
     }
 
-    if ('exclusiveMaximum' in schema) {
+    if (schema.hasOwnProperty('exclusiveMaximum')) {
 
       if (typeof schema.exclusiveMaximum !== 'number') {
 
@@ -370,7 +374,7 @@ export class JSONValidator {
 
     }
 
-    if ('minimum' in schema) {
+    if (schema.hasOwnProperty('minimum')) {
 
       if (typeof schema.minimum !== 'number') {
 
@@ -384,7 +388,7 @@ export class JSONValidator {
 
     }
 
-    if ('exclusiveMinimum' in schema) {
+    if (schema.hasOwnProperty('exclusiveMinimum')) {
 
       if (typeof schema.exclusiveMinimum !== 'number') {
 
