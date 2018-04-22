@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { of as observableOf } from 'rxjs/observable/of';
 import { _throw as observableThrow } from 'rxjs/observable/throw';
 
 import { LocalDatabase } from './local-database';
+import { LOCAL_STORAGE_PREFIX } from '../../tokens';
 
 @Injectable()
 export class LocalStorageDatabase extends LocalDatabase {
@@ -14,12 +15,12 @@ export class LocalStorageDatabase extends LocalDatabase {
   /**
    * @param prefix Optional prefix to avoid collision in multiple apps on same subdomain
    */
-  constructor(prefix = '') {
+  constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected userPrefix: string | null) {
 
     super();
 
-    if (prefix) {
-      this.prefix = `${prefix}_`;
+    if (userPrefix) {
+      this.prefix = `${userPrefix}_`;
     }
 
   }

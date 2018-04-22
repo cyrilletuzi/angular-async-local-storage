@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, Optional } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -9,6 +9,7 @@ import { _throw as observableThrow } from 'rxjs/observable/throw';
 import { race as observableRace }  from 'rxjs/observable/race';
 
 import { LocalDatabase } from './local-database';
+import { LOCAL_STORAGE_PREFIX } from '../../tokens';
 
 @Injectable()
 export class IndexedDBDatabase extends LocalDatabase {
@@ -37,9 +38,8 @@ export class IndexedDBDatabase extends LocalDatabase {
 
   /**
    * Connects to IndexedDB
-   * @param prefix Optional prefix to avoid collision in multiple apps on same subdomain
    */
-  constructor(prefix = '') {
+  constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected prefix: string | null) {
 
     super();
 

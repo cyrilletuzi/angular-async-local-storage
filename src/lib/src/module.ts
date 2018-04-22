@@ -1,4 +1,4 @@
-import { NgModule, PLATFORM_ID } from '@angular/core';
+import { NgModule, PLATFORM_ID, Optional } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 import { JSONValidator } from './service/validation/json-validator';
@@ -9,7 +9,7 @@ import { LocalStorageDatabase } from './service/databases/localstorage-database'
 import { MockLocalDatabase } from './service/databases/mock-local-database';
 import { LOCAL_STORAGE_PREFIX } from './tokens';
 
-export function databaseFactory(platformId: string, prefix: string) {
+export function databaseFactory(platformId: string, prefix: string | null) {
 
   if (isPlatformBrowser(platformId) && ('indexedDB' in window) && (indexedDB !== undefined) && (indexedDB !== null)) {
 
@@ -32,12 +32,11 @@ export function databaseFactory(platformId: string, prefix: string) {
 
 @NgModule({
   providers: [
-    { provide: LOCAL_STORAGE_PREFIX, useValue: '' },
     JSONValidator,
     {
       provide: LocalDatabase,
       useFactory: databaseFactory,
-      deps: [PLATFORM_ID, LOCAL_STORAGE_PREFIX]
+      deps: [PLATFORM_ID, [new Optional(), LOCAL_STORAGE_PREFIX]]
     },
     LocalStorage,
   ]

@@ -454,7 +454,7 @@ describe('LocalStorage with mock storage', () => {
 
 describe('LocalStorage with localStorage', () => {
 
-  let localStorage = new LocalStorage(new LocalStorageDatabase(), new JSONValidator());
+  let localStorage = new LocalStorage(new LocalStorageDatabase(null), new JSONValidator());
 
   tests(localStorage);
 
@@ -470,7 +470,7 @@ describe('LocalStorage with localStorage with prefix', () => {
 
 describe('LocalStorage with IndexedDB', () => {
 
-  let localStorage = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
+  let localStorage = new LocalStorage(new IndexedDBDatabase(null), new JSONValidator());
 
   tests(localStorage);
 
@@ -486,7 +486,7 @@ describe('LocalStorage with IndexedDB with prefix', () => {
 
 describe('AsyncLocalStorage with IndexedDB', () => {
 
-  let localStorage = new AsyncLocalStorage(new IndexedDBDatabase(), new JSONValidator());
+  let localStorage = new AsyncLocalStorage(new IndexedDBDatabase(null), new JSONValidator());
 
   tests(localStorage);
 
