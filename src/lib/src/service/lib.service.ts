@@ -15,7 +15,7 @@ export interface LSGetItemOptions {
 })
 export class LocalStorage {
 
-  protected readonly getItemOptionsDefault = {
+  protected readonly getItemOptionsDefault: LSGetItemOptions = {
     schema: null
   };
 

@@ -5,10 +5,11 @@ export type JSONSchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'arra
 
 /**
  * Subset of the JSON Schema.
- * Types are enforced to validate everything : each value MUST have either 'type' or 'properties' or 'items' or 'const' or 'enum'.
+ * Types are enforced to validate everything: each value MUST have either 'type' or 'properties' or 'items' or 'const' or 'enum'.
  * Therefore, unlike the spec, booleans are not allowed as schemas.
  * @see http://json-schema.org/latest/json-schema-validation.html
- * @todo Not all validation features are supported yet : just follow the interface.
+ * Not all validation features are supported: just follow the interface.
+ * @todo When TS 2.8, explore if this schemas can be split for object and arrays with conditional types.
  */
 export interface JSONSchema {
 
