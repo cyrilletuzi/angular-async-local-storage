@@ -1,14 +1,20 @@
 # Changelog
 
-## 6.0.0-beta.7 (2018-04-22)
+## 6.0.0-rc.0 (2018-05-03)
+
+Note: we are confident with this release to be used with Angular 6 final.
+But as we may switch to the new official CLI library generation,
+we're staying in Release Candidate until then to avoid any unexpected breaking change.
 
 ### Features
 
-- Beta support of Angular 6 RC, test it with: `npm install @ngx-pwa/local-storage@next`
+- Support of Angular 6, install with: `npm install @ngx-pwa/local-storage@rc`
 
-- New JSON Schema validation options supported for strings, numbers, arrays, const and enum (see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list).
+- New JSON Schema validation options supported (see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list).
 
 - `setItemSubscribe()`, `removeItemSubscribe()`, `clearSubscribe()` methods for auto-subscription
+
+- `localStorageProviders({ prefix: 'myapp' })` to avoid collision in multiple apps on same subdomain 
 
 - Tree-shakable providers.
 
@@ -18,6 +24,13 @@
 
 ### Breaking changes
 
+#### New requirements
+  - Angular 6
+  - TypeScript 2.7
+  - RxJS 6
+
+#### New names
+
 - This lib has been renamed to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
 
 - Classes renamed. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
@@ -25,18 +38,25 @@
   - `AsyncLocalDatabase` removed, renamed to `LocalDatabase`.
   - `ALSGetItemOptions` removed, renamed to `LSGetItemOptions`.
 
+#### Validation
+
+- To be consistent with the strict validation, and to prepare future enhancement of JSON Schema typings,
+it is no longer possible to specify an array for `type`.
+- `JSONSchemaType` has been removed. It should very unlikely concern you, it was an internal type.
+
+#### Others
+
 - `LocalStorageModule` no longer needed and so removed. Just delete the import in your `AppModule`.
 
 - Distribution files and directories of non-UMD packages have been changed to match
 official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit).
 It should not affect your code, as building tools like webpack know where to find the new packages.
 
-- New requirements:
-  - Angular 6
-  - TypeScript 2.7
-  - Node >= 8.9 and npm >= 5.5
-  - RxJS 6 (if you have other libs or your own code not yet ready for RxJS 6, you can use
-[rxjs-compat](https://www.npmjs.com/package/rxjs-compat) as a temporary migration step)
+## 5.3.0 (2018-05-03)
+
+### Feature
+
+- `localStorageProviders({ prefix: 'myapp' })` to avoid collision in multiple apps on same subdomain
 
 ## 5.2.0 (2018-04-08)
 

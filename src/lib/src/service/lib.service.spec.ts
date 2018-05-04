@@ -468,6 +468,22 @@ describe('LocalStorage with IndexedDB', () => {
 
 });
 
+describe('LocalStorage with localStorage and a prefix', () => {
+
+  let localStorage = new LocalStorage(new LocalStorageDatabase('myapp'), new JSONValidator());
+
+  tests(localStorage);
+
+});
+
+describe('LocalStorage with IndexedDB and a prefix', () => {
+
+  let localStorage = new LocalStorage(new IndexedDBDatabase('myapp'), new JSONValidator());
+
+  tests(localStorage);
+
+});
+
 describe('LocalStorage with automatic storage injection', () => {
 
   it('should store and get the same value', async(inject([LocalStorage], (localStorage: LocalStorage) => {

@@ -1,9 +1,4 @@
 /**
- * Types allowed in a JSON Schema
- */
-export type JSONSchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object' | 'null';
-
-/**
  * Subset of the JSON Schema.
  * Types are enforced to validate everything: each value MUST have either 'type' or 'properties' or 'items' or 'const' or 'enum'.
  * Therefore, unlike the spec, booleans are not allowed as schemas.
@@ -17,8 +12,9 @@ export interface JSONSchema {
    * Type for a primitive value.
    * Not required for objects, just set 'properties'.
    * Not required for arrays, just set 'items'.
+   * Not required for const and enum.
    */
-  type?: JSONSchemaType | JSONSchemaType[];
+  type?: 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object' | 'null';
 
   /**
    * List of properties schemas for an object.

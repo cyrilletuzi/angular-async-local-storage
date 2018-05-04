@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional, Inject } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent as fromEvent, of as of, throwError, race } from 'rxjs';
 import { map, mergeMap, first } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
+import { LOCAL_STORAGE_PREFIX } from '../../tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * IndexedDB database name for local storage
    */
-  protected readonly dbName = 'ngStorage';
+  protected dbName = 'ngStorage';
   /**
    * IndexedDB object store name for local storage
    */
@@ -34,7 +35,13 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * Connects to IndexedDB
    */
-  constructor() {
+  constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected prefix: string | null = null) {
+
+    if (prefix) {
+
+      this.dbName = `${prefix}_${this.dbName}`;
+
+    }
 
     /* Creating the RxJS ReplaySubject */
     this.database = new ReplaySubject<IDBDatabase>();

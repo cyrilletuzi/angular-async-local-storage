@@ -594,26 +594,6 @@ describe(`JSONValidator`, () => {
 
   });
 
-  describe(`validateTypeList`, () => {
-
-    it(`should return true on a valid primitive value with an array type`, () => {
-
-      const test = jsonValidator.validate('test', { type: ['number', 'string'] });
-
-      expect(test).toBe(true);
-
-    });
-
-    it(`should return false on an invalid primitive value with an array type`, () => {
-
-      const test = jsonValidator.validate('test', { type: ['number', 'boolean'] });
-
-      expect(test).toBe(false);
-
-    });
-
-  });
-
   describe(`validateRequired`, () => {
 
     it(`should return false if data is not an object`, () => {

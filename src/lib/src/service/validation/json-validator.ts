@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { JSONSchema, JSONSchemaType } from './json-schema';
+import { JSONSchema } from './json-schema';
 
 /**
  * @todo Add other JSON Schema validation features
@@ -157,60 +157,23 @@ export class JSONValidator {
       return true;
     }
 
-    if (Array.isArray(schema.type)) {
+    switch (schema.type) {
 
-      return this.validateTypeList(data, schema);
-
-    }
-
-    if ((schema.type === 'null') && (data !== null)) {
-
-      return false;
-
-    }
-
-    if (schema.type === 'string') {
-
-      return this.validateString(data, schema);
-
-    }
-
-    if ((schema.type === 'number') || (schema.type === 'integer')) {
-
-      return this.validateNumber(data, schema);
+      case 'null':
+        return data === null;
+      case 'string':
+        return this.validateString(data, schema);
+      case 'number':
+      case 'integer':
+        return this.validateNumber(data, schema);
+      case 'boolean':
+        return typeof data === 'boolean';
+      case 'object':
+        return typeof data === 'object';
+      case 'array':
+        return Array.isArray(data);
 
     }
-
-    if ((schema.type === 'boolean') && (typeof data !== 'boolean')) {
-
-      return false;
-
-    }
-
-    if ((schema.type === 'object') && (typeof data !== 'object')) {
-
-      return false;
-
-    }
-
-    return true;
-
-  }
-
-
-  protected validateTypeList(data: any, schema: JSONSchema): boolean {
-
-    const types = schema.type as JSONSchemaType[];
-
-    const typesTests: boolean[] = [];
-
-    for (let type of types) {
-
-      typesTests.push(this.validateType(data, { type }));
-
-    }
-
-    return (typesTests.indexOf(true) !== -1);
 
   }
 
