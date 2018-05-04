@@ -1,11 +1,14 @@
 {
   "name": "@ngx-pwa/local-storage",
-  "version": "5.3.0",
+  "version": "6.0.0-rc.0",
   "description": "Efficient local storage module for Angular apps and PWA: simple API based on native localStorage API, but internally stored via the asynchronous IndexedDB API for performance, and wrapped in RxJS observables to be homogeneous with other Angular modules.",
   "main": "./bundles/local-storage.umd.js",
-  "module": "./local-storage.es5.js",
-  "es2015": "./local-storage.js",
+  "module": "./fesm5/local-storage.js",
+  "es2015": "./fesm2015/local-storage.js",
+  "fesm5": "./fesm5/local-storage.js",
+  "fesm2015": "./fesm2015/local-storage.js",
   "typings": "./local-storage.d.ts",
+  "sideEffects": false,
   "author": "Cyrille Tuzi",
   "license": "MIT",
   "keywords": [
@@ -16,6 +19,8 @@
     "angular 4",
     "angular5",
     "angular 5",
+    "angular6",
+    "angular 6",
     "localstorage",
     "local storage",
     "indexeddb",
@@ -31,8 +36,8 @@
     "url": "https://github.com/cyrilletuzi/angular-async-local-storage/issues"
   },
   "engines": {
-    "node": ">= 6.9.0",
-    "npm": ">= 3.0.0"
+    "node": ">= 8.9.0",
+    "npm": ">= 5.5.1"
   },
   "scripts": {
     "clean": "rimraf out-tsc dist/*",
@@ -57,26 +62,26 @@
     "lint": "tslint ./src/**/*.ts -t verbose",
     "release": "standard-version",
     "reinstall": "rimraf node_modules && npm install",
-    "publish": "npm publish dist --tag lts5 --access public"
+    "publish": "npm publish dist --tag rc --access public"
   },
   "dependencies": {},
   "peerDependencies": {
-    "@angular/core": ">=5.0.0 <6.0.0",
-    "@angular/common": ">=5.0.0 <6.0.0",
-    "rxjs": "^5.5.2"
+    "@angular/core": ">=6.0.0 <7.0.0",
+    "@angular/common": ">=6.0.0 <7.0.0",
+    "rxjs": ">=6.0.0 <7.0.0"
   },
   "devDependencies": {
-    "@angular/common": "^5.2.9",
-    "@angular/compiler": "^5.2.9",
-    "@angular/compiler-cli": "^5.2.9",
-    "@angular/core": "^5.2.9",
-    "@angular/platform-browser": "^5.2.9",
-    "@angular/platform-browser-dynamic": "^5.2.9",
+    "@angular/common": "^6.0.0",
+    "@angular/compiler": "^6.0.0",
+    "@angular/compiler-cli": "^6.0.0",
+    "@angular/core": "^6.0.0",
+    "@angular/platform-browser": "^6.0.0",
+    "@angular/platform-browser-dynamic": "^6.0.0",
     "@types/jasmine": "2.5.36",
-    "@types/node": "^6.0.46",
+    "@types/node": "^8.10.12",
     "camelcase": "^4.0.0",
     "concurrently": "3.4.0",
-    "core-js": "^2.4.1",
+    "core-js": "^2.5.5",
     "glob": "^7.1.1",
     "jasmine-core": "^2.5.2",
     "karma": "^1.5.0",
@@ -98,11 +103,11 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-sourcemaps": "^0.4.1",
     "rollup-plugin-uglify": "^2.0.1",
-    "rxjs": "^5.5.2",
+    "rxjs": "^6.1.0",
     "standard-version": "^4.0.0",
     "systemjs": "^0.19.40",
     "tslint": "^4.4.2",
-    "typescript": "~2.4.2",
-    "zone.js": "^0.8.4"
+    "typescript": "~2.7.2",
+    "zone.js": "^0.8.26"
   }
 }

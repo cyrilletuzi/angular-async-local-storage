@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, throwError, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { _throw as observableThrow } from 'rxjs/observable/throw';
-import { of as observableOf } from 'rxjs/observable/of';
 
 import { LocalDatabase } from './databases/local-database';
 import { JSONSchema } from './validation/json-schema';
@@ -12,10 +10,12 @@ export interface LSGetItemOptions {
   schema?: JSONSchema | null;
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LocalStorage {
 
-  protected readonly getItemOptionsDefault = {
+  protected readonly getItemOptionsDefault: LSGetItemOptions = {
     schema: null
   };
 
@@ -40,16 +40,16 @@ export class LocalStorage {
           try {
             validation = this.jsonValidator.validate(data, options.schema);
           } catch (error) {
-            return observableThrow(error);
+            return throwError(error);
           }
 
           if (!validation) {
-            return observableThrow(new Error(`JSON invalid`));
+            return throwError(new Error(`JSON invalid`));
           }
 
         }
 
-        return observableOf(data);
+        return of(data);
 
       }));
 

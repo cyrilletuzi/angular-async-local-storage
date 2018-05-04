@@ -1,23 +1,19 @@
 import { Injectable, Optional, Inject } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { of as observableOf } from 'rxjs/observable/of';
-import { _throw as observableThrow } from 'rxjs/observable/throw';
 
 import { LocalDatabase } from './local-database';
 import { LOCAL_STORAGE_PREFIX } from '../../tokens';
 
-@Injectable()
-export class LocalStorageDatabase extends LocalDatabase {
+@Injectable({
+  providedIn: 'root'
+})
+export class LocalStorageDatabase implements LocalDatabase {
 
+  /* Initializing native localStorage right now to be able to check its support on class instanciation */
   protected prefix = '';
 
-  /**
-   * @param prefix Optional prefix to avoid collision in multiple apps on same subdomain
-   */
   constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected userPrefix: string | null = null) {
-
-    super();
 
     if (userPrefix) {
       this.prefix = `${userPrefix}_`;
@@ -40,12 +36,12 @@ export class LocalStorageDatabase extends LocalDatabase {
       try {
         parsedData = JSON.parse(unparsedData);
       } catch (error) {
-        return observableThrow(new Error(`Invalid data in localStorage.`));
+        return throwError(new Error(`Invalid data in localStorage.`));
       }
 
     }
 
-    return observableOf(parsedData);
+    return of(parsedData);
 
   }
 
@@ -59,7 +55,7 @@ export class LocalStorageDatabase extends LocalDatabase {
 
     localStorage.setItem(`${this.prefix}${key}`, JSON.stringify(data));
 
-    return observableOf(true);
+    return of(true);
 
   }
 
@@ -72,7 +68,7 @@ export class LocalStorageDatabase extends LocalDatabase {
 
     localStorage.removeItem(`${this.prefix}${key}`);
 
-    return observableOf(true);
+    return of(true);
 
   }
 
@@ -84,7 +80,7 @@ export class LocalStorageDatabase extends LocalDatabase {
 
     localStorage.clear();
 
-    return observableOf(true);
+    return of(true);
 
   }
 

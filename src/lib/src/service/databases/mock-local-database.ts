@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { of as observableOf } from 'rxjs/observable/of';
 
 import { LocalDatabase } from './local-database';
 
-@Injectable()
-export class MockLocalDatabase extends LocalDatabase {
+@Injectable({
+  providedIn: 'root'
+})
+export class MockLocalDatabase implements LocalDatabase {
 
   protected localStorage = new Map<string, any>();
 
@@ -19,7 +20,7 @@ export class MockLocalDatabase extends LocalDatabase {
 
     const rawData: T | null = this.localStorage.get(key);
 
-    return observableOf((rawData !== undefined) ? rawData : null);
+    return of((rawData !== undefined) ? rawData : null);
 
   }
 
@@ -33,7 +34,7 @@ export class MockLocalDatabase extends LocalDatabase {
 
     this.localStorage.set(key, data);
 
-    return observableOf(true);
+    return of(true);
 
   }
 
@@ -46,7 +47,7 @@ export class MockLocalDatabase extends LocalDatabase {
 
     this.localStorage.delete(key);
 
-    return observableOf(true);
+    return of(true);
 
   }
 
@@ -58,7 +59,7 @@ export class MockLocalDatabase extends LocalDatabase {
 
     this.localStorage.clear();
 
-    return observableOf(true);
+    return of(true);
 
   }
 

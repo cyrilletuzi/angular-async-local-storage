@@ -1,3 +1,4 @@
+import { inject, async } from '@angular/core/testing';
 import { map, first, take } from 'rxjs/operators';
 
 import { LocalStorage } from './lib.service';
@@ -454,15 +455,7 @@ describe('LocalStorage with mock storage', () => {
 
 describe('LocalStorage with localStorage', () => {
 
-  let localStorage = new LocalStorage(new LocalStorageDatabase(null), new JSONValidator());
-
-  tests(localStorage);
-
-});
-
-describe('LocalStorage with localStorage with prefix', () => {
-
-  let localStorage = new LocalStorage(new LocalStorageDatabase('myapp'), new JSONValidator());
+  let localStorage = new LocalStorage(new LocalStorageDatabase(), new JSONValidator());
 
   tests(localStorage);
 
@@ -476,7 +469,15 @@ describe('LocalStorage with IndexedDB', () => {
 
 });
 
-describe('LocalStorage with IndexedDB with prefix', () => {
+describe('LocalStorage with localStorage and a prefix', () => {
+
+  let localStorage = new LocalStorage(new LocalStorageDatabase('myapp'), new JSONValidator());
+
+  tests(localStorage);
+
+});
+
+describe('LocalStorage with IndexedDB and a prefix', () => {
 
   let localStorage = new LocalStorage(new IndexedDBDatabase('myapp'), new JSONValidator());
 
@@ -484,10 +485,21 @@ describe('LocalStorage with IndexedDB with prefix', () => {
 
 });
 
-describe('AsyncLocalStorage with IndexedDB', () => {
+describe('LocalStorage with automatic storage injection', () => {
 
-  let localStorage = new AsyncLocalStorage(new IndexedDBDatabase(), new JSONValidator());
+  it('should store and get the same value', async(inject([LocalStorage], (localStorage: LocalStorage) => {
 
-  tests(localStorage);
+    const index = 'index';
+    const value = 'value';
+
+    localStorage.setItem(index, value).subscribe(() => {
+
+      localStorage.getItem<string>(index).subscribe((data) => {
+        expect(data).toBe(value);
+      });
+
+    });
+
+  })));
 
 });

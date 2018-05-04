@@ -44,14 +44,14 @@ If you already use the previous `angular-async-local-storage` package, see the [
 Install the same version as your Angular one via [npm](http://npmjs.com):
 
 ```bash
-# For Angular 5 (latest):
-npm install @ngx-pwa/local-storage
+# For Angular 6:
+npm install @ngx-pwa/local-storage@6
+
+# For Angular 5:
+npm install @ngx-pwa/local-storage@5
 
 # For Angular 4 (and TypeScript >= 2.3):
 npm install @ngx-pwa/local-storage@4
-
-# For Angular 6 (next):
-npm install @ngx-pwa/local-storage@next
 ```
 
 Then, **for *versions 4 & 5 only*, include the `LocalStorageModule`** in your app root module (just once, do NOT re-import it in your submodules). Since *version 6*, this step is no longer required and `LocalStorageModule` is removed.
@@ -175,6 +175,22 @@ this.localStorage.clearSubscribe();
 *Use these methods **only** if these conditions are fulfilled:*
 - you don't need to manage the error callback (with these methods, errors will silently fail),
 - you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
+
+### Prefix
+
+`localStorage` and `IndexedDB` are restricted to the same subdomain, so no risk of collision in most cases.
+*Only* if you have multiple apps on the same *sub*domain *and* you don't want to share data between them, add a prefix:
+
+```typescript
+import { localStorageProviders } from '@ngx-pwa/local-storage';
+
+@NgModule({
+  providers: [
+    localStorageProviders({ prefix: 'myapp' })
+  ]
+})
+export class AppModule {}
+```
 
 ### Other notes
 

@@ -1,8 +1,10 @@
 import { InjectionToken, Provider } from '@angular/core';
 
-export const LOCAL_STORAGE_PREFIX = new InjectionToken<string>('localStoragePrefix');
+export const LOCAL_STORAGE_PREFIX = new InjectionToken<string>('localStoragePrefix', { providedIn: 'root', factory: () => '' });
 
 export interface LocalStorageProvidersConfig {
+
+  /** Optional prefix to avoid collision in multiple apps on same subdomain */
   prefix?: string;
 }
 

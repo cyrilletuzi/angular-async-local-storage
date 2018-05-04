@@ -61,12 +61,6 @@ return Promise.resolve()
         '@angular/common': 'ng.common',
         'rxjs': 'Rx',
         'rxjs/operators': 'Rx.operators',
-        'rxjs/Observable': 'Rx',
-        'rxjs/ReplaySubject': 'Rx',
-        'rxjs/observable/fromEvent': 'Rx.Observable',
-        'rxjs/observable/race': 'Rx.Observable',
-        'rxjs/observable/of': 'Rx.Observable',
-        'rxjs/observable/throw': 'Rx.Observable'
       },
       external: [
         // List of dependencies
@@ -75,12 +69,6 @@ return Promise.resolve()
         '@angular/common',
         'rxjs',
         'rxjs/operators',
-        'rxjs/Observable',
-        'rxjs/ReplaySubject',
-        'rxjs/observable/fromEvent',
-        'rxjs/observable/race',
-        'rxjs/observable/of',
-        'rxjs/observable/throw'
       ],
       plugins: [
         commonjs({
@@ -109,14 +97,14 @@ return Promise.resolve()
     // ESM+ES5 flat module bundle.
     const fesm5config = Object.assign({}, rollupBaseConfig, {
       entry: es5Entry,
-      dest: path.join(distFolder, `${libName}.es5.js`),
+      dest: path.join(distFolder, 'fesm5', `${libName}.js`),
       format: 'es'
     });
 
     // ESM+ES2015 flat module bundle.
     const fesm2015config = Object.assign({}, rollupBaseConfig, {
       entry: es2015Entry,
-      dest: path.join(distFolder, `${libName}.js`),
+      dest: path.join(distFolder, 'fesm2015', `${libName}.js`),
       format: 'es'
     });
 
