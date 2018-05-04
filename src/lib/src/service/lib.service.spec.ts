@@ -7,13 +7,12 @@ import { LocalStorageDatabase } from './databases/localstorage-database';
 import { MockLocalDatabase } from './databases/mock-local-database';
 import { JSONSchema } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
-import { AsyncLocalStorage } from '../../index';
 
-function testGetItem<T>(type: 'primitive' | 'object', localStorage: LocalStorage, value: T, done: DoneFn) {
+function testGetItem<T>(type: 'primitive' | 'object', localStorageService: LocalStorage, value: T, done: DoneFn) {
 
-  localStorage.setItem('test', value).subscribe(() => {
+  localStorageService.setItem('test', value).subscribe(() => {
 
-    localStorage.getItem<T>('test').subscribe((data) => {
+    localStorageService.getItem<T>('test').subscribe((data) => {
 
       if (type === 'primitive') {
         expect(data).toBe(value);
@@ -29,29 +28,29 @@ function testGetItem<T>(type: 'primitive' | 'object', localStorage: LocalStorage
 
 }
 
-function testGetItemPrimitive<T>(localStorage: LocalStorage, value: T, done: DoneFn) {
+function testGetItemPrimitive<T>(localStorageService: LocalStorage, value: T, done: DoneFn) {
 
-  testGetItem<T>('primitive', localStorage, value, done);
-
-}
-
-function testGetItemObject<T>(localStorage: LocalStorage, value: T, done: DoneFn) {
-
-  testGetItem<T>('object', localStorage, value, done);
+  testGetItem<T>('primitive', localStorageService, value, done);
 
 }
 
-function tests(localStorage: LocalStorage) {
+function testGetItemObject<T>(localStorageService: LocalStorage, value: T, done: DoneFn) {
+
+  testGetItem<T>('object', localStorageService, value, done);
+
+}
+
+function tests(localStorageService: LocalStorage) {
 
   beforeEach((done: DoneFn) => {
-    localStorage.clear().subscribe(() => {
+    localStorageService.clear().subscribe(() => {
       done();
     });
   });
 
   it('should return null on unknown index', (done: DoneFn) => {
 
-    localStorage.getItem('unknown').subscribe((data) => {
+    localStorageService.getItem('unknown').subscribe((data) => {
 
       expect(data).toBeNull();
 
@@ -63,55 +62,55 @@ function tests(localStorage: LocalStorage) {
 
   it('should store and return a string', (done: DoneFn) => {
 
-    testGetItemPrimitive<string>(localStorage, 'blue', done);
+    testGetItemPrimitive<string>(localStorageService, 'blue', done);
 
   });
 
   it('should store and return an empty string', (done: DoneFn) => {
 
-    testGetItemPrimitive<string>(localStorage, '', done);
+    testGetItemPrimitive<string>(localStorageService, '', done);
 
   });
 
   it('should store and return a number', (done: DoneFn) => {
 
-    testGetItemPrimitive<number>(localStorage, 10, done);
+    testGetItemPrimitive<number>(localStorageService, 10, done);
 
   });
 
   it('should store and return zero', (done: DoneFn) => {
 
-    testGetItemPrimitive<number>(localStorage, 0, done);
+    testGetItemPrimitive<number>(localStorageService, 0, done);
 
   });
 
   it('should store and return true', (done: DoneFn) => {
 
-    testGetItemPrimitive<boolean>(localStorage, true, done);
+    testGetItemPrimitive<boolean>(localStorageService, true, done);
 
   });
 
   it('should store and return false', (done: DoneFn) => {
 
-    testGetItemPrimitive<boolean>(localStorage, false, done);
+    testGetItemPrimitive<boolean>(localStorageService, false, done);
 
   });
 
   it('should store and return null', (done: DoneFn) => {
 
-    testGetItemPrimitive<null>(localStorage, null, done);
+    testGetItemPrimitive<null>(localStorageService, null, done);
 
   });
 
   it('should store and return an array', (done: DoneFn) => {
 
-    testGetItemObject<number[]>(localStorage, [1, 2, 3], done);
+    testGetItemObject<number[]>(localStorageService, [1, 2, 3], done);
 
   });
 
   it('should store and return an object', (done: DoneFn) => {
 
-    testGetItemObject<{name: string}>(localStorage, { name: 'test' }, done);
+    testGetItemObject<{name: string}>(localStorageService, { name: 'test' }, done);
 
   });
 
@@ -119,11 +118,11 @@ function tests(localStorage: LocalStorage) {
 
     const index = 'test';
 
-    localStorage.setItem(index, 'test').subscribe(() => {
+    localStorageService.setItem(index, 'test').subscribe(() => {
 
-      localStorage.removeItem(index).subscribe(() => {
+      localStorageService.removeItem(index).subscribe(() => {
 
-        localStorage.getItem<string>(index).subscribe((data) => {
+        localStorageService.getItem<string>(index).subscribe((data) => {
 
           expect(data).toBeNull();
 
@@ -142,9 +141,9 @@ function tests(localStorage: LocalStorage) {
     const index = 'index';
     const value = 'value';
 
-    localStorage.setItem(index, value).subscribe(() => {
+    localStorageService.setItem(index, value).subscribe(() => {
 
-      localStorage.getItem<string>(index).pipe(map((data) => data)).subscribe((data) => {
+      localStorageService.getItem<string>(index).pipe(map((data) => data)).subscribe((data) => {
 
         expect(data).toBe(value);
 
@@ -171,9 +170,9 @@ function tests(localStorage: LocalStorage) {
       required: ['expected']
     };
 
-    localStorage.setItem(index, value).subscribe(() => {
+    localStorageService.setItem(index, value).subscribe(() => {
 
-      localStorage.getItem<{ expected: string }>(index, { schema }).subscribe((data) => {
+      localStorageService.getItem<{ expected: string }>(index, { schema }).subscribe((data) => {
 
         fail();
 
@@ -199,9 +198,9 @@ function tests(localStorage: LocalStorage) {
       required: ['expected']
     };
 
-    localStorage.setItem(index, value).subscribe(() => {
+    localStorageService.setItem(index, value).subscribe(() => {
 
-      localStorage.getItem(index, { schema }).subscribe((data) => {
+      localStorageService.getItem(index, { schema }).subscribe((data) => {
 
         fail();
 
@@ -234,9 +233,9 @@ function tests(localStorage: LocalStorage) {
       required: ['expected']
     };
 
-    localStorage.setItem(index, value).subscribe(() => {
+    localStorageService.setItem(index, value).subscribe(() => {
 
-      localStorage.getItem<{ expected: string }>(index, { schema }).subscribe((data) => {
+      localStorageService.getItem<{ expected: string }>(index, { schema }).subscribe((data) => {
 
         expect(data).toEqual(value);
 
@@ -265,7 +264,7 @@ function tests(localStorage: LocalStorage) {
       required: ['expected']
     };
 
-    localStorage.getItem<{ expected: string }>('notexisting', { schema }).subscribe((data) => {
+    localStorageService.getItem<{ expected: string }>('notexisting', { schema }).subscribe((data) => {
 
       expect((data)).toBeNull();
 
@@ -283,7 +282,7 @@ function tests(localStorage: LocalStorage) {
 
   it('should call complete on setItem', (done: DoneFn) => {
 
-    localStorage.setItem('index', 'value').subscribe({ complete: () => { done(); } });
+    localStorageService.setItem('index', 'value').subscribe({ complete: () => { done(); } });
 
   });
 
@@ -292,9 +291,9 @@ function tests(localStorage: LocalStorage) {
     const index = 'index';
     const value = 'value';
 
-    localStorage.setItem(index, value).subscribe(() => {
+    localStorageService.setItem(index, value).subscribe(() => {
 
-      localStorage.getItem<string>(index).subscribe({ complete: () => { done(); } });
+      localStorageService.getItem<string>(index).subscribe({ complete: () => { done(); } });
 
     });
 
@@ -302,7 +301,7 @@ function tests(localStorage: LocalStorage) {
 
   it('should call complete on unexisting getItem', (done: DoneFn) => {
 
-    localStorage.getItem<string>('notexisting').subscribe({ complete: () => { done(); } });
+    localStorageService.getItem<string>('notexisting').subscribe({ complete: () => { done(); } });
 
   });
 
@@ -310,9 +309,9 @@ function tests(localStorage: LocalStorage) {
 
     const index = 'index';
 
-    localStorage.setItem(index, 'value').subscribe(() => {
+    localStorageService.setItem(index, 'value').subscribe(() => {
 
-      localStorage.removeItem(index).subscribe({ complete: () => { done(); } });
+      localStorageService.removeItem(index).subscribe({ complete: () => { done(); } });
 
     });
 
@@ -320,25 +319,25 @@ function tests(localStorage: LocalStorage) {
 
   it('should call complete on unexisting removeItem', (done: DoneFn) => {
 
-    localStorage.removeItem('notexisting').subscribe({ complete: () => { done(); } });
+    localStorageService.removeItem('notexisting').subscribe({ complete: () => { done(); } });
 
   });
 
   it('should call complete on clear', (done: DoneFn) => {
 
-    localStorage.clear().subscribe({ complete: () => { done(); } });
+    localStorageService.clear().subscribe({ complete: () => { done(); } });
 
   });
 
   it('should be OK if user manually used first() to complete', (done: DoneFn) => {
 
-    localStorage.clear().pipe(first()).subscribe({ complete: () => { done(); } });
+    localStorageService.clear().pipe(first()).subscribe({ complete: () => { done(); } });
 
   });
 
   it('should be OK if user manually used take(1) to complete', (done: DoneFn) => {
 
-    localStorage.clear().pipe(take(1)).subscribe({ complete: () => { done(); } });
+    localStorageService.clear().pipe(take(1)).subscribe({ complete: () => { done(); } });
 
   });
 
@@ -346,9 +345,9 @@ function tests(localStorage: LocalStorage) {
 
     const index = 'index';
 
-    localStorage.setItem(index, 'value').subscribe(() => {
+    localStorageService.setItem(index, 'value').subscribe(() => {
 
-      localStorage.setItem(index, 'updated').subscribe(() => {
+      localStorageService.setItem(index, 'updated').subscribe(() => {
         done();
       }, () => {
         fail();
@@ -363,8 +362,8 @@ function tests(localStorage: LocalStorage) {
     const index = 'index';
     const value = 'test';
 
-    localStorage.setItem(index, value).toPromise()
-    .then(() => localStorage.getItem(index).toPromise())
+    localStorageService.setItem(index, value).toPromise()
+    .then(() => localStorageService.getItem(index).toPromise())
     .then((result) => {
       expect(result).toBe(value);
       done();
@@ -379,12 +378,11 @@ function tests(localStorage: LocalStorage) {
     const index = 'index';
     const value = 'test';
 
-
-    localStorage.setItemSubscribe(index, value);
+    localStorageService.setItemSubscribe(index, value);
 
     window.setTimeout(() => {
 
-      localStorage.getItem<string>(index).subscribe((data) => {
+      localStorageService.getItem<string>(index).subscribe((data) => {
         expect(data).toBe(value);
         done();
       }, () => {
@@ -400,13 +398,13 @@ function tests(localStorage: LocalStorage) {
     const index = 'index';
     const value = 'test';
 
-    localStorage.setItem(index, value).subscribe(() => {
+    localStorageService.setItem(index, value).subscribe(() => {
 
-      localStorage.removeItemSubscribe(index);
+      localStorageService.removeItemSubscribe(index);
 
       window.setTimeout(() => {
 
-        localStorage.getItem<string>(index).subscribe((data) => {
+        localStorageService.getItem<string>(index).subscribe((data) => {
           expect(data).toBe(null);
           done();
         }, () => {
@@ -424,13 +422,13 @@ function tests(localStorage: LocalStorage) {
     const index = 'index';
     const value = 'test';
 
-    localStorage.setItem(index, value).subscribe(() => {
+    localStorageService.setItem(index, value).subscribe(() => {
 
-      localStorage.clearSubscribe();
+      localStorageService.clearSubscribe();
 
       window.setTimeout(() => {
 
-        localStorage.getItem<string>(index).subscribe((data) => {
+        localStorageService.getItem<string>(index).subscribe((data) => {
           expect(data).toBe(null);
           done();
         }, () => {
@@ -447,54 +445,54 @@ function tests(localStorage: LocalStorage) {
 
 describe('LocalStorage with mock storage', () => {
 
-  let localStorage = new LocalStorage(new MockLocalDatabase(), new JSONValidator());
+  let localStorageService = new LocalStorage(new MockLocalDatabase(), new JSONValidator());
 
-  tests(localStorage);
+  tests(localStorageService);
 
 });
 
 describe('LocalStorage with localStorage', () => {
 
-  let localStorage = new LocalStorage(new LocalStorageDatabase(), new JSONValidator());
+  let localStorageService = new LocalStorage(new LocalStorageDatabase(), new JSONValidator());
 
-  tests(localStorage);
+  tests(localStorageService);
 
 });
 
 describe('LocalStorage with IndexedDB', () => {
 
-  let localStorage = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
+  let localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
 
-  tests(localStorage);
+  tests(localStorageService);
 
 });
 
 describe('LocalStorage with localStorage and a prefix', () => {
 
-  let localStorage = new LocalStorage(new LocalStorageDatabase('myapp'), new JSONValidator());
+  let localStorageService = new LocalStorage(new LocalStorageDatabase('myapp'), new JSONValidator());
 
-  tests(localStorage);
+  tests(localStorageService);
 
 });
 
 describe('LocalStorage with IndexedDB and a prefix', () => {
 
-  let localStorage = new LocalStorage(new IndexedDBDatabase('myapp'), new JSONValidator());
+  let localStorageService = new LocalStorage(new IndexedDBDatabase('myapp'), new JSONValidator());
 
-  tests(localStorage);
+  tests(localStorageService);
 
 });
 
 describe('LocalStorage with automatic storage injection', () => {
 
-  it('should store and get the same value', async(inject([LocalStorage], (localStorage: LocalStorage) => {
+  it('should store and get the same value', async(inject([LocalStorage], (localStorageService: LocalStorage) => {
 
     const index = 'index';
     const value = 'value';
 
-    localStorage.setItem(index, value).subscribe(() => {
+    localStorageService.setItem(index, value).subscribe(() => {
 
-      localStorage.getItem<string>(index).subscribe((data) => {
+      localStorageService.getItem<string>(index).subscribe((data) => {
         expect(data).toBe(value);
       });
 
