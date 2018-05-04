@@ -1,16 +1,29 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { of as observableOf } from 'rxjs/observable/of';
 import { _throw as observableThrow } from 'rxjs/observable/throw';
 
 import { LocalDatabase } from './local-database';
+import { LOCAL_STORAGE_PREFIX } from '../../tokens';
 
 @Injectable()
 export class LocalStorageDatabase extends LocalDatabase {
 
-  /* Initializing native localStorage right now to be able to check its support on class instanciation */
-  protected localStorage = localStorage;
+  protected prefix = '';
+
+  /**
+   * @param prefix Optional prefix to avoid collision in multiple apps on same subdomain
+   */
+  constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected userPrefix: string | null) {
+
+    super();
+
+    if (userPrefix) {
+      this.prefix = `${userPrefix}_`;
+    }
+
+  }
 
   /**
    * Gets an item value in local storage
@@ -19,7 +32,7 @@ export class LocalStorageDatabase extends LocalDatabase {
    */
   getItem<T = any>(key: string): Observable<T | null> {
 
-    const unparsedData = this.localStorage.getItem(key);
+    const unparsedData = localStorage.getItem(`${this.prefix}${key}`);
     let parsedData: T | null = null;
 
     if (unparsedData != null) {
@@ -44,7 +57,7 @@ export class LocalStorageDatabase extends LocalDatabase {
    */
   setItem(key: string, data: any) {
 
-    this.localStorage.setItem(key, JSON.stringify(data));
+    localStorage.setItem(`${this.prefix}${key}`, JSON.stringify(data));
 
     return observableOf(true);
 
@@ -57,7 +70,7 @@ export class LocalStorageDatabase extends LocalDatabase {
    */
   removeItem(key: string) {
 
-    this.localStorage.removeItem(key);
+    localStorage.removeItem(`${this.prefix}${key}`);
 
     return observableOf(true);
 
@@ -69,7 +82,7 @@ export class LocalStorageDatabase extends LocalDatabase {
    */
   clear() {
 
-    this.localStorage.clear();
+    localStorage.clear();
 
     return observableOf(true);
 

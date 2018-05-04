@@ -1,4 +1,4 @@
-import { NgModule, PLATFORM_ID } from '@angular/core';
+import { NgModule, PLATFORM_ID, Optional } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 import { JSONValidator } from './service/validation/json-validator';
@@ -7,18 +7,19 @@ import { LocalDatabase } from './service/databases/local-database';
 import { IndexedDBDatabase } from './service/databases/indexeddb-database';
 import { LocalStorageDatabase } from './service/databases/localstorage-database';
 import { MockLocalDatabase } from './service/databases/mock-local-database';
+import { LOCAL_STORAGE_PREFIX } from './tokens';
 
-export function databaseFactory(platformId: Object) {
+export function databaseFactory(platformId: string, prefix: string | null) {
 
   if (isPlatformBrowser(platformId) && ('indexedDB' in window) && (indexedDB !== undefined) && (indexedDB !== null)) {
 
     /* Try with IndexedDB in modern browsers */
-    return new IndexedDBDatabase();
+    return new IndexedDBDatabase(prefix);
 
   } else if (isPlatformBrowser(platformId) && ('localStorage' in window) && (localStorage !== undefined) && (localStorage !== null)) {
 
     /* Try with localStorage in old browsers (IE9) */
-    return new LocalStorageDatabase();
+    return new LocalStorageDatabase(prefix);
 
   } else {
 
@@ -35,7 +36,7 @@ export function databaseFactory(platformId: Object) {
     {
       provide: LocalDatabase,
       useFactory: databaseFactory,
-      deps: [PLATFORM_ID]
+      deps: [PLATFORM_ID, [new Optional(), LOCAL_STORAGE_PREFIX]]
     },
     LocalStorage,
   ]
