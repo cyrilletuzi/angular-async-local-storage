@@ -15,7 +15,7 @@ export class LocalStorageDatabase extends LocalDatabase {
   /**
    * @param prefix Optional prefix to avoid collision in multiple apps on same subdomain
    */
-  constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected userPrefix: string | null) {
+  constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected userPrefix: string | null = null) {
 
     super();
 

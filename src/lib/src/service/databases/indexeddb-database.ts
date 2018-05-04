@@ -39,7 +39,7 @@ export class IndexedDBDatabase extends LocalDatabase {
   /**
    * Connects to IndexedDB
    */
-  constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected prefix: string | null) {
+  constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected prefix: string | null = null) {
 
     super();
 
