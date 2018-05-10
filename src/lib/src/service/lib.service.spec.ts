@@ -373,6 +373,19 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
+  it('should work with async / await', async () => {
+
+    const index = 'index';
+    const value = 'test';
+
+    await localStorageService.setItem(index, value).toPromise();
+
+    let result = await localStorageService.getItem(index).toPromise();
+
+    expect(result).toBe(value);
+
+  });
+
   it('should set item and auto-subscribe', (done: DoneFn) => {
 
     const index = 'index';
