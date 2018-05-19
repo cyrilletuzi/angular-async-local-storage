@@ -45,7 +45,7 @@ Install the same version as your Angular one via [npm](http://npmjs.com):
 
 ```bash
 # For Angular 6:
-npm install @ngx-pwa/local-storage@6
+npm install @ngx-pwa/local-storage@latest
 
 # For Angular 5:
 npm install @ngx-pwa/local-storage@5
