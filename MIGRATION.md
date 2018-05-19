@@ -21,12 +21,14 @@ npm uninstall angular-async-local-storage
 
 Then install the new package:
 ```bash
-# If you use Angular 5 (angular-async-local-storage v3 or v5):
-npm install @ngx-pwa/local-storage
-# If you use Angular 4 (angular-async-local-storage v2 or v4):
+# For Angular 6:
+npm install @ngx-pwa/local-storage@latest
+
+# For Angular 5:
+npm install @ngx-pwa/local-storage@5
+
+# For Angular 4 (and TypeScript >= 2.3):
 npm install @ngx-pwa/local-storage@4
-# If you use Angular 6 (angular-async-local-storage v6):
-npm install @ngx-pwa/local-storage@next
 ```
 
 Finally, do a global search of `angular-async-local-storage` in your project, and replace with `@ngx-pwa/local-storage`.
@@ -38,7 +40,7 @@ Done.
 For shorter code and more consistency, the `Async` prefix has been dropped everywhere.
 Previous classes names are still here in v4 and v5, but deprecated. They are removed in v6.
 
-So you if you are currently Angular 4 or 5, you can update the lib without worrying, everything will still work.
+So you if you currently use Angular 4 or 5, you can update the lib without worrying, everything will still work.
 But if you are updating to Angular 6, changes are required.
 So when you have some time, you can easily and quickly migrate to be ready for v6 by doing a global search/replace of:
 - `AsyncLocalStorageModule` => `LocalStorageModule` (removed in v6, see below)
@@ -49,4 +51,4 @@ So when you have some time, you can easily and quickly migrate to be ready for v
 ## Version >= 6: no more NgModule
 
 Since *version 6*, `LocalStorageModule` is no longer needed and so removed. Just delete the import in your `AppModule`.
-Services will be provided directly when injected.
+Services are provided directly when injected.
