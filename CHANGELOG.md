@@ -8,7 +8,7 @@ we're staying in Release Candidate until then to avoid any unexpected breaking c
 
 ### Features
 
-- Support of Angular 6, install with: `npm install @ngx-pwa/local-storage@rc`
+- Support of Angular 6, install with: `npm install @ngx-pwa/local-storage@latest`
 
 - New JSON Schema validation options supported (see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list).
 
