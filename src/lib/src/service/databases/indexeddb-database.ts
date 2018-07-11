@@ -43,12 +43,6 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     }
 
-    if (prefix) {
-
-      this.dbName = `${prefix}_${this.dbName}`;
-
-    }
-
     /* Creating the RxJS ReplaySubject */
     this.database = new ReplaySubject<IDBDatabase>();
 
