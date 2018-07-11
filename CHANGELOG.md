@@ -1,10 +1,21 @@
 # Changelog
 
-## 6.0.0-rc.0 (2018-05-03)
+## 6.0.0-rc.1 (2018-07-11)
 
 Note: we are confident with this release to be used with Angular 6 final.
 But as we may switch to the new official CLI library generation,
 we're staying in Release Candidate until then to avoid any unexpected breaking change.
+
+### Bug fix
+
+- `localStorageProviders({ prefix: 'myapp' })` feature was adding the prefix twice.
+
+### Breaking change
+
+- If you were relying on the `prefix` option above, your app will restart from empty data.
+If you want to keep your previous data, double the prefix, for example: `localStorageProviders({ prefix: 'myapp_myapp' })`
+
+## 6.0.0-rc.0 (2018-05-03)
 
 ### Features
 

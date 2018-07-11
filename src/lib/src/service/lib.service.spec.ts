@@ -482,6 +482,22 @@ describe('LocalStorage with IndexedDB', () => {
 
 describe('LocalStorage with localStorage and a prefix', () => {
 
+  it('should have the wanted prefix', () => {
+
+    const prefix = 'myapp';
+
+    class LocalStorageDatabasePrefix extends LocalStorageDatabase {
+      getPrefix() {
+        return this.prefix;
+      }
+    }
+
+    const localStorageService = new LocalStorageDatabasePrefix(prefix);
+
+    expect(localStorageService.getPrefix()).toBe(`${prefix}_`);
+
+  });
+
   let localStorageService = new LocalStorage(new LocalStorageDatabase('myapp'), new JSONValidator());
 
   tests(localStorageService);
@@ -489,6 +505,23 @@ describe('LocalStorage with localStorage and a prefix', () => {
 });
 
 describe('LocalStorage with IndexedDB and a prefix', () => {
+
+  it('should have the wanted prefix', () => {
+
+    const prefix = 'myapp';
+    const dbName = 'ngStorage';
+
+    class IndexedDBDatabasePrefix extends IndexedDBDatabase {
+      getDbBame() {
+        return this.dbName;
+      }
+    }
+
+    const indexedDBService = new IndexedDBDatabasePrefix(prefix);
+
+    expect(indexedDBService.getDbBame()).toBe(`${prefix}_${dbName}`);
+
+  });
 
   let localStorageService = new LocalStorage(new IndexedDBDatabase('myapp'), new JSONValidator());
 
