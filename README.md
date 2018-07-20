@@ -215,7 +215,7 @@ for an example.
 This lib major version is aligned to the major version of Angular. Meaning for Angular 4 you need version 4,
 for Angular 5 you need version 5, for Angular 6 you need version 6, and so on.
 
-We follow [Angular LTS support](https://github.com/angular/angular/blob/master/docs/RELEASE_SCHEDULE.md),
+We follow [Angular LTS support](https://angular.io/guide/releases),
 meaning we support Angular 4 minimum, until October 2018.
 
 This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler).
@@ -271,10 +271,6 @@ export class AppModule {}
 ```
 
 Be sure to be compatible with Universal by checking the current platform before using any browser-specific API.
-
-### Extend JSON Validator
-
-You can also extend the JSON validator, but if you do so, please contribute so everyone can enjoy.
 
 ## Changelog
 
