@@ -65,7 +65,7 @@ export class JSONValidator {
 
   }
 
-  protected validateProperties(data: {}, schema: JSONSchema): boolean {
+  protected validateProperties(data: { [k: string]: any; }, schema: JSONSchema): boolean {
 
     if (!schema.hasOwnProperty('properties') || (schema.properties == null)) {
       return true;

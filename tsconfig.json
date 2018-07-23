@@ -16,6 +16,7 @@
       "es2017",
       "dom"
     ],
+    "strict": true,
     "paths": {
       "@ngx-pwa/local-storage": [
         "dist/ngx-pwa/local-storage"
