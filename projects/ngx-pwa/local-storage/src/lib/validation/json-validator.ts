@@ -88,7 +88,7 @@ export class JSONValidator {
     }
 
     /* Recursively validate all properties */
-    for (let property in schema.properties) {
+    for (const property in schema.properties) {
 
       if (schema.properties.hasOwnProperty(property) && data.hasOwnProperty(property)) {
 
@@ -118,7 +118,7 @@ export class JSONValidator {
 
     }
 
-    for (let requiredProp of schema.required) {
+    for (const requiredProp of schema.required) {
 
       /* Checks if the property is present in the schema 'properties' */
       if (!schema.properties || !schema.properties.hasOwnProperty(requiredProp)) {
@@ -237,7 +237,7 @@ export class JSONValidator {
 
     }
 
-    for (let value of data) {
+    for (const value of data) {
 
       if (!this.validate(value, schema.items)) {
         return false;

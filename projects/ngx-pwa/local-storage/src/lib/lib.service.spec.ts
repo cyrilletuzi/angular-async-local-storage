@@ -380,7 +380,7 @@ function tests(localStorageService: LocalStorage) {
 
     await localStorageService.setItem(index, value).toPromise();
 
-    let result = await localStorageService.getItem(index).toPromise();
+    const result = await localStorageService.getItem(index).toPromise();
 
     expect(result).toBe(value);
 
@@ -458,7 +458,7 @@ function tests(localStorageService: LocalStorage) {
 
 describe('LocalStorage with mock storage', () => {
 
-  let localStorageService = new LocalStorage(new MockLocalDatabase(), new JSONValidator());
+  const localStorageService = new LocalStorage(new MockLocalDatabase(), new JSONValidator());
 
   tests(localStorageService);
 
@@ -466,7 +466,7 @@ describe('LocalStorage with mock storage', () => {
 
 describe('LocalStorage with localStorage', () => {
 
-  let localStorageService = new LocalStorage(new LocalStorageDatabase(), new JSONValidator());
+  const localStorageService = new LocalStorage(new LocalStorageDatabase(), new JSONValidator());
 
   tests(localStorageService);
 
@@ -474,7 +474,7 @@ describe('LocalStorage with localStorage', () => {
 
 describe('LocalStorage with IndexedDB', () => {
 
-  let localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
+  const localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
 
   tests(localStorageService);
 
@@ -498,7 +498,7 @@ describe('LocalStorage with localStorage and a prefix', () => {
 
   });
 
-  let localStorageService = new LocalStorage(new LocalStorageDatabase('myapp'), new JSONValidator());
+  const localStorageService = new LocalStorage(new LocalStorageDatabase('myapp'), new JSONValidator());
 
   tests(localStorageService);
 
@@ -523,7 +523,7 @@ describe('LocalStorage with IndexedDB and a prefix', () => {
 
   });
 
-  let localStorageService = new LocalStorage(new IndexedDBDatabase('myapp'), new JSONValidator());
+  const localStorageService = new LocalStorage(new IndexedDBDatabase('myapp'), new JSONValidator());
 
   tests(localStorageService);
 
