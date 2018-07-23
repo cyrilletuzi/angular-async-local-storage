@@ -1,9 +1,0 @@
-{
-  "server": {
-    "baseDir": "src/demo",
-    "routes": {
-      "/node_modules": "node_modules",
-      "/@ngx-pwa/local-storage": "src/lib"
-    }
-  }
-}
