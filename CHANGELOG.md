@@ -1,5 +1,22 @@
 # Changelog
 
+## 6.0.0-rc.2 (2018-07-23)
+
+Note: this release is feature complete and ready to be used with Angular 6.
+We just waited for official Angular CLI library generation to be stable with ng-packagr 4. 
+Expect stable release soon.
+
+### Feature
+
+- Full support of official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit)
+
+### Breaking change
+
+- Distribution files and directories have been changed to match
+official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit).
+It affects your code only if you were manually loading UMD bundles,
+otherwise building tools like Angular CLI / webpack know where to find the files.
+
 ## 6.0.0-rc.1 (2018-07-11)
 
 Note: we are confident with this release to be used with Angular 6 final.
@@ -30,8 +47,6 @@ If you want to keep your previous data, double the prefix, for example: `localSt
 - Tree-shakable providers.
 
 - `sideEffects: false` for webpack optimization
-- Partial support of official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit)
-(non-flatenned packages are not yet available, waiting for more info on this)
 
 ### Breaking changes
 
@@ -58,10 +73,6 @@ it is no longer possible to specify an array for `type`.
 #### Others
 
 - `LocalStorageModule` no longer needed and so removed. Just delete the import in your `AppModule`.
-
-- Distribution files and directories of non-UMD packages have been changed to match
-official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit).
-It should not affect your code, as building tools like webpack know where to find the new packages.
 
 ## 5.3.0 (2018-05-03)
 
