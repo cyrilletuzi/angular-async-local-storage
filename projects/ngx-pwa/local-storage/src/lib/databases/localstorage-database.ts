@@ -1,6 +1,5 @@
 import { Injectable, Optional, Inject } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { LOCAL_STORAGE_PREFIX } from '../tokens';
@@ -51,7 +50,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    * @param data The item's value, must NOT be null or undefined
    * @returns An RxJS Observable to wait the end of the operation
    */
-  setItem(key: string, data: any) {
+  setItem(key: string, data: any): Observable<boolean> {
 
     localStorage.setItem(`${this.prefix}${key}`, JSON.stringify(data));
 
@@ -64,7 +63,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns An RxJS Observable to wait the end of the operation
    */
-  removeItem(key: string) {
+  removeItem(key: string): Observable<boolean> {
 
     localStorage.removeItem(`${this.prefix}${key}`);
 
@@ -76,7 +75,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    * Deletes all items from local storage
    * @returns An RxJS Observable to wait the end of the operation
    */
-  clear() {
+  clear(): Observable<boolean> {
 
     localStorage.clear();
 

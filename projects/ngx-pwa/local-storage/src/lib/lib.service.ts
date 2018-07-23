@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 

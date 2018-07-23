@@ -1,5 +1,5 @@
 import { Injectable, Optional, Inject } from '@angular/core';
-import { Observable, ReplaySubject, fromEvent as fromEvent, of as of, throwError, race } from 'rxjs';
+import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
 import { map, mergeMap, first } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
@@ -56,7 +56,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  getItem<T = any>(key: string) {
+  getItem<T = any>(key: string): Observable<T | null> {
 
     /* Opening a trasaction and requesting the item in local storage */
     return this.transaction().pipe(
@@ -85,7 +85,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param data The item's value, must NOT be null or undefined
    * @returns An RxJS Observable to wait the end of the operation
    */
-  setItem(key: string, data: any) {
+  setItem(key: string, data: any): Observable<boolean> {
 
     /* Storing null is not correctly supported by IndexedDB and unnecessary here */
     if (data == null) {
@@ -132,7 +132,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns An RxJS Observable to wait the end of the operation
    */
-  removeItem(key: string) {
+  removeItem(key: string): Observable<boolean> {
 
     /* Opening a transaction and checking if the item exists in local storage */
     return this.getItem(key).pipe(
@@ -168,7 +168,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * Deletes all items from local storage
    * @returns An RxJS Observable to wait the end of the operation
    */
-  clear() {
+  clear(): Observable<boolean> {
 
     /* Opening a transaction */
     return this.transaction('readwrite').pipe(
@@ -190,7 +190,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * Connects to IndexedDB and creates the object store on first time
    */
-  protected connect() {
+  protected connect(): void {
 
     /* Connecting to IndexedDB */
     const request = indexedDB.open(this.dbName);
@@ -237,7 +237,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param mode Default to 'readonly' for read operations, or 'readwrite' for write operations
    * @returns An IndexedDB transaction object store, wrapped in an RxJS Observable
    */
-  protected transaction(mode: 'readonly' | 'readwrite' = 'readonly') {
+  protected transaction(mode: 'readonly' | 'readwrite' = 'readonly'): Observable<IDBObjectStore> {
 
     /* From the IndexedDB connection, opening a transaction and getting the local storage objet store */
     return this.database
@@ -250,7 +250,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param request The request to listen
    * @returns A RxJS Observable with true value
    */
-  protected toSuccessObservable(request: IDBRequest) {
+  protected toSuccessObservable(request: IDBRequest): Observable<boolean> {
 
     /* Transforming a IndexedDB success event in an RxJS Observable with true value */
     return (fromEvent(request, 'success') as Observable<Event>)
@@ -264,7 +264,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param error Optionnal details about the error's origin
    * @returns A RxJS ErrorObservable
    */
-  protected toErrorObservable(request: IDBRequest, error = ``) {
+  protected toErrorObservable(request: IDBRequest, error = ``): Observable<never> {
 
     /* Transforming a IndexedDB error event in an RxJS ErrorObservable */
     return (fromEvent(request, 'error') as Observable<Event>)
