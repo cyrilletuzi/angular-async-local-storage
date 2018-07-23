@@ -6,9 +6,9 @@
     "start": "ng serve",
     "build": "ng build @ngx-pwa/local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage",
     "test": "ng test @ngx-pwa/local-storage",
-    "test-all-single": "ng test @ngx-pwa/local-storage --watch false && ng test angular-async-local-storage --watch false",
+    "testAll": "ng test @ngx-pwa/local-storage --watch false && ng test angular-async-local-storage --watch false",
     "lint": "ng lint",
-    "prepublishOnly": "npm run lint && npm run test-all-single && npm run build",
+    "prepublishOnly": "npm run lint && npm run testAll && npm run build",
     "publish": "npm publish dist/ngx-pwa/local-storage --access public"
   },
   "private": true,
