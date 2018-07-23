@@ -492,9 +492,9 @@ describe('LocalStorage with localStorage and a prefix', () => {
       }
     }
 
-    const localStorageService = new LocalStorageDatabasePrefix(prefix);
+    const localStorageServicePrefix = new LocalStorageDatabasePrefix(prefix);
 
-    expect(localStorageService.getPrefix()).toBe(`${prefix}_`);
+    expect(localStorageServicePrefix.getPrefix()).toBe(`${prefix}_`);
 
   });
 

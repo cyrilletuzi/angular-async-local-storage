@@ -26,7 +26,7 @@ export function localDatabaseFactory(platformId: Object, prefix: string | null) 
 
   }
 
-};
+}
 
 @Injectable({
   providedIn: 'root',
