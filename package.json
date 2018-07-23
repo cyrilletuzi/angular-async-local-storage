@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build @ngx-pwa/local-storage --prod",
+    "build": "ng build @ngx-pwa/local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage",
     "test": "ng test @ngx-pwa/local-storage",
     "test-all-single": "ng test @ngx-pwa/local-storage --watch false && ng test angular-async-local-storage --watch false",
     "lint": "ng lint",
@@ -36,6 +36,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.2.1",
+    "copyfiles": "^2.0.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~1.7.1",
