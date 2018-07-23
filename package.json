@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "prod": "ng build @ngx-pwa/local-storage --prod",
-    "test": "ng test",
+    "test": "ng test @ngx-pwa/local-storage",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },

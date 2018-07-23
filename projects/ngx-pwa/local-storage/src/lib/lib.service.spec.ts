@@ -172,7 +172,7 @@ function tests(localStorageService: LocalStorage) {
 
     localStorageService.setItem(index, value).subscribe(() => {
 
-      localStorageService.getItem<{ expected: string }>(index, { schema }).subscribe((data) => {
+      localStorageService.getItem<{ expected: string }>(index, { schema }).subscribe(() => {
 
         fail();
 
@@ -200,7 +200,7 @@ function tests(localStorageService: LocalStorage) {
 
     localStorageService.setItem(index, value).subscribe(() => {
 
-      localStorageService.getItem(index, { schema }).subscribe((data) => {
+      localStorageService.getItem(index, { schema }).subscribe(() => {
 
         fail();
 
