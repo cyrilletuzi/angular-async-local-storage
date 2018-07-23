@@ -15,6 +15,14 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@ngx-pwa/local-storage": [
+        "dist/ngx-pwa/local-storage"
+      ],
+      "@ngx-pwa/local-storage/*": [
+        "dist/ngx-pwa/local-storage/*"
+      ]
+    }
   }
 }
