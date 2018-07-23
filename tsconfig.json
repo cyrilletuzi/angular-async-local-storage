@@ -17,6 +17,10 @@
       "dom"
     ],
     "strict": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "paths": {
       "@ngx-pwa/local-storage": [
         "dist/ngx-pwa/local-storage"
