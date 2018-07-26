@@ -22,6 +22,7 @@ is available to ease the update. It's just a couple of refactorings.
 #### Supported version
 
 - Angular 6
+- TypeScript 2.7, 2.8 & 2.9
 
 #### New names
 
