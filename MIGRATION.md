@@ -22,7 +22,7 @@ npm uninstall angular-async-local-storage
 Then install the new package:
 ```bash
 # For Angular 6:
-npm install @ngx-pwa/local-storage@latest
+npm install @ngx-pwa/local-storage@6
 
 # For Angular 5:
 npm install @ngx-pwa/local-storage@5

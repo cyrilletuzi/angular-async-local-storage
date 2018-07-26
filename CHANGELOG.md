@@ -1,42 +1,8 @@
 # Changelog
 
-## 6.0.0-rc.2 (2018-07-23)
-
-Note: this release is feature complete and ready to be used with Angular 6.
-We just waited for official Angular CLI library generation to be stable with ng-packagr 4. 
-Expect stable release soon.
-
-### Feature
-
-- Full support of official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit)
-
-### Breaking change
-
-- Distribution files and directories have been changed to match
-official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit).
-It affects your code only if you were manually loading UMD bundles,
-otherwise building tools like Angular CLI / webpack know where to find the files.
-
-## 6.0.0-rc.1 (2018-07-11)
-
-Note: we are confident with this release to be used with Angular 6 final.
-But as we may switch to the new official CLI library generation,
-we're staying in Release Candidate until then to avoid any unexpected breaking change.
-
-### Bug fix
-
-- `localStorageProviders({ prefix: 'myapp' })` feature was adding the prefix twice.
-
-### Breaking change
-
-- If you were relying on the `prefix` option above, your app will restart from empty data.
-If you want to keep your previous data, double the prefix, for example: `localStorageProviders({ prefix: 'myapp_myapp' })`
-
-## 6.0.0-rc.0 (2018-05-03)
+## 6.0.0 (2018-07-26)
 
 ### Features
-
-- Support of Angular 6, install with: `npm install @ngx-pwa/local-storage@latest`
 
 - New JSON Schema validation options supported (see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list).
 
@@ -44,16 +10,18 @@ If you want to keep your previous data, double the prefix, for example: `localSt
 
 - `localStorageProviders({ prefix: 'myapp' })` to avoid collision in multiple apps on same subdomain 
 
-- Tree-shakable providers.
-
-- `sideEffects: false` for webpack optimization
-
 ### Breaking changes
 
+A [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md)
+is available to ease the update. It's just a couple of refactorings.
+(If you want to contribute,
+[it could be automated](https://github.com/cyrilletuzi/angular-async-local-storage/issues/31).)
+
 #### New requirements
-  - Angular 6
-  - TypeScript 2.7
-  - RxJS 6
+
+#### Supported version
+
+- Angular 6
 
 #### New names
 
@@ -64,6 +32,10 @@ If you want to keep your previous data, double the prefix, for example: `localSt
   - `AsyncLocalDatabase` removed, renamed to `LocalDatabase`.
   - `ALSGetItemOptions` removed, renamed to `LSGetItemOptions`.
 
+#### No more `LocalStorageModule`
+
+`LocalStorageModule` no longer needed and so removed. **You must delete the import in your `AppModule`.**
+
 #### Validation
 
 - To be consistent with the strict validation, and to prepare future enhancement of JSON Schema typings,
@@ -72,7 +44,36 @@ it is no longer possible to specify an array for `type`.
 
 #### Others
 
-- `LocalStorageModule` no longer needed and so removed. Just delete the import in your `AppModule`.
+- Distribution files and directories have been changed to match
+official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit).
+It affects your code only if you were manually loading UMD bundles,
+otherwise building tools like Angular CLI / webpack know where to find the files.
+
+### Internal changes for better performance
+
+- Tree-shakable providers.
+- Full support of official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit)
+
+## 6.0.0-rc.2 (2018-07-23)
+
+### Breaking change
+
+- Distribution files and directories have been changed to match
+official [Angular Package Format v6](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit).
+It affects your code only if you were manually loading UMD bundles,
+otherwise building tools like Angular CLI / webpack know where to find the files.
+
+## 6.0.0-rc.1 (2018-07-11)
+
+### Bug fix
+
+- `localStorageProviders({ prefix: 'myapp' })` feature was adding the prefix twice.
+
+### Breaking change
+
+- If you were using previous v6 RC (v5 is not concerned) and relying on the `prefix` option above,
+your app will restart from empty data.
+If you want to keep your previous data, double the prefix, for example: `localStorageProviders({ prefix: 'myapp_myapp' })`
 
 ## 5.3.0 (2018-05-03)
 

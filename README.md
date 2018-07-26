@@ -35,9 +35,10 @@ This module is based on the same idea as localForage, but in ES6/ES2015
 and additionally wrapped into [RxJS Observables](http://reactivex.io/rxjs/) 
 to be homogeneous with other Angular modules.
 
-## Migration from angular-async-local-storage
+## Migration from angular-async-local-storage or from v5
 
-If you already use the previous `angular-async-local-storage` package, see the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
+If you already use the previous `angular-async-local-storage` package, or to update to version 6,
+see the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
 
 ## Getting started
 
@@ -45,7 +46,7 @@ Install the same version as your Angular one via [npm](http://npmjs.com):
 
 ```bash
 # For Angular 6:
-npm install @ngx-pwa/local-storage@latest
+npm install @ngx-pwa/local-storage@6
 
 # For Angular 5:
 npm install @ngx-pwa/local-storage@5
