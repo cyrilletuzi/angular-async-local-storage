@@ -1,5 +1,13 @@
 # Changelog
 
+## 6.1.0-beta.1 (2018-07-27)
+
+### Feature
+
+- Fallback to `localStorage` if `IndexedDb` connection fails (fixes
+[#26](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26) and
+[#42](https://github.com/cyrilletuzi/angular-async-local-storage/issues/42))
+
 ## 6.0.0 (2018-07-26)
 
 ### Features
