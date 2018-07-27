@@ -4,6 +4,7 @@ import { map, mergeMap, first } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { LOCAL_STORAGE_PREFIX } from '../tokens';
+import { LocalStorageDatabase } from './localstorage-database';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * even after the connection success event happened
    */
   protected database: ReplaySubject<IDBDatabase>;
+  protected fallback: LocalStorageDatabase | null = null;
 
   /**
    * Connects to IndexedDB
@@ -47,7 +49,7 @@ export class IndexedDBDatabase implements LocalDatabase {
     this.database = new ReplaySubject<IDBDatabase>();
 
     /* Connecting to IndexedDB */
-    this.connect();
+    this.connect(prefix);
 
   }
 
@@ -57,6 +59,10 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
   getItem<T = any>(key: string): Observable<T | null> {
+
+    if (this.fallback) {
+      return this.fallback.getItem<T>(key);
+    }
 
     /* Opening a trasaction and requesting the item in local storage */
     return this.transaction().pipe(
@@ -92,6 +98,10 @@ export class IndexedDBDatabase implements LocalDatabase {
 
       return of(true);
 
+    }
+
+    if (this.fallback) {
+      return this.fallback.setItem(key, data);
     }
 
     /* Opening a transaction and checking if the item already exists in local storage */
@@ -134,6 +144,10 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   removeItem(key: string): Observable<boolean> {
 
+    if (this.fallback) {
+      return this.fallback.removeItem(key);
+    }
+
     /* Opening a transaction and checking if the item exists in local storage */
     return this.getItem(key).pipe(
       mergeMap((data) => {
@@ -170,6 +184,10 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   clear(): Observable<boolean> {
 
+    if (this.fallback) {
+      return this.fallback.clear();
+    }
+
     /* Opening a transaction */
     return this.transaction('readwrite').pipe(
       mergeMap((transaction) => {
@@ -190,7 +208,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * Connects to IndexedDB and creates the object store on first time
    */
-  protected connect(): void {
+  protected connect(prefix: string | null = null): void {
 
     /* Connecting to IndexedDB */
     const request = indexedDB.open(this.dbName);
@@ -224,9 +242,11 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Storing the database connection for further access */
         this.database.next((event.target as IDBRequest).result as IDBDatabase);
 
-      }, (error) => {
+      }, () => {
 
-        this.database.error(error as Error);
+        this.fallback = new LocalStorageDatabase(prefix);
+
+        // this.database.error(error as Error);
 
       });
 
