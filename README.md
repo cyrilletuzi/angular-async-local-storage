@@ -240,7 +240,7 @@ This module is not impacted by IE/Edge missing IndexedDB features.
 It also works in tools based on browser engines (like Electron) but not in non-browser tools (like NativeScript, see
 [#11](https://github.com/cyrilletuzi/angular-async-local-storage/issues/11)).
 
-### Private mode
+### Browsers restrictions
 
 Be aware that local storage is limited in browsers when in private / incognito modes. Most browsers will delete the data when the private browsing session ends. 
 It's not a real issue as local storage is useful for apps, and apps should not be in private mode.
@@ -249,6 +249,10 @@ In IE / Edge, `indexedDB`  is `null` when in private mode. The lib fallbacks to 
 
 In Firefox, `indexedDB` API is available in code but throwing error on usage. It's a bug in the browser, this lib can't handle it, see
 [#26](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26).
+
+In Safari, when in a cross-origin iframe, `indexedDB` API is available in code but throwing error on usage.
+It's a bug in the browser, this lib can't handle it, see
+[#42](https://github.com/cyrilletuzi/angular-async-local-storage/issues/42).
 
 ## Extensibility
 
