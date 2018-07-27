@@ -58,12 +58,12 @@ module.exports = function (config) {
     /* Tests on Mac in private modes
      * IMPORTANT : Safari does not have a command line option for private mode (if you know one, please tell me),
      * so you have to manually configure it to open a new private tab on launch, before launching the tests */
-    browsers: ['Chrome_private', 'Firefox_private', 'Safari'],
+    browsers: ['Chrome', 'Chrome_private', 'Firefox_private', 'Safari'],
     /* Tests on Windows */
     // browsers: ['Chrome', 'Firefox', 'Edge', 'IE'],
     /* Tests on Windows in private mode
      * Not sure the private option for Edge is working... */
-    // browsers: ['Chrome_private', 'Firefox_private', 'Edge_private', 'IE_private'],
+    // browsers: ['Chrome', 'Chrome_private', 'Firefox_private', 'Edge_private', 'IE_private'],
     singleRun: false
   });
 };
