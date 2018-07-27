@@ -3,8 +3,8 @@ import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs
 import { map, mergeMap, first } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
-import { LOCAL_STORAGE_PREFIX } from '../tokens';
 import { LocalStorageDatabase } from './localstorage-database';
+import { LOCAL_STORAGE_PREFIX } from '../tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,11 @@ export class IndexedDBDatabase implements LocalDatabase {
    * even after the connection success event happened
    */
   protected database: ReplaySubject<IDBDatabase>;
-  protected fallback: LocalStorageDatabase | null = null;
+  /**
+   * IndexedDB is available but failing in some scenarios (Firefox private mode, Safari cross-origin iframes),
+   * so a fallback can be needed.
+   */
+  protected fallback: LocalDatabase | null = null;
 
   /**
    * Connects to IndexedDB
@@ -60,6 +64,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   getItem<T = any>(key: string): Observable<T | null> {
 
+    /* Fallback storage if set */
     if (this.fallback) {
       return this.fallback.getItem<T>(key);
     }
@@ -93,15 +98,16 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   setItem(key: string, data: any): Observable<boolean> {
 
+    /* Fallback storage if set */
+    if (this.fallback) {
+      return this.fallback.setItem(key, data);
+    }
+
     /* Storing null is not correctly supported by IndexedDB and unnecessary here */
     if (data == null) {
 
       return of(true);
 
-    }
-
-    if (this.fallback) {
-      return this.fallback.setItem(key, data);
     }
 
     /* Opening a transaction and checking if the item already exists in local storage */
@@ -144,6 +150,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   removeItem(key: string): Observable<boolean> {
 
+    /* Fallback storage if set */
     if (this.fallback) {
       return this.fallback.removeItem(key);
     }
@@ -184,6 +191,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   clear(): Observable<boolean> {
 
+    /* Fallback storage if set */
     if (this.fallback) {
       return this.fallback.clear();
     }
@@ -244,9 +252,8 @@ export class IndexedDBDatabase implements LocalDatabase {
 
       }, () => {
 
+        /* Fallback storage if IndexedDb connection is failing */
         this.fallback = new LocalStorageDatabase(prefix);
-
-        // this.database.error(error as Error);
 
       });
 
