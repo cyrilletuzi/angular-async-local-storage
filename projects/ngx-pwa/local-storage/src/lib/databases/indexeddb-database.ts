@@ -218,8 +218,21 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   protected connect(prefix: string | null = null): void {
 
+    let request: IDBOpenDBRequest;
+
     /* Connecting to IndexedDB */
-    const request = indexedDB.open(this.dbName);
+    try {
+
+      request = indexedDB.open(this.dbName);
+
+    } catch (error) {
+
+      /* Fallback storage if IndexedDb connection is failing */
+      this.setFallback(prefix);
+
+      return;
+
+    }
 
     /* Listening the event fired on first connection, creating the object store for local storage */
     (fromEvent(request, 'upgradeneeded') as Observable<Event>)
@@ -253,7 +266,7 @@ export class IndexedDBDatabase implements LocalDatabase {
       }, () => {
 
         /* Fallback storage if IndexedDb connection is failing */
-        this.fallback = new LocalStorageDatabase(prefix);
+        this.setFallback(prefix);
 
       });
 
@@ -297,6 +310,10 @@ export class IndexedDBDatabase implements LocalDatabase {
     return (fromEvent(request, 'error') as Observable<Event>)
       .pipe(mergeMap(() => throwError(new Error(`IndexedDB ${error} issue : ${request.error.message}.`))));
 
+  }
+
+  protected setFallback(prefix: string | null): void {
+    this.fallback = new LocalStorageDatabase(prefix);
   }
 
 }
