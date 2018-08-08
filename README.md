@@ -5,7 +5,7 @@ Efficient local storage module for Angular apps and Progressive Wep apps (PWA):
 - **perfomance**: internally stored via the asynchronous `IndexedDB` API,
 - **Angular-like**: wrapped in RxJS `Observables`,
 - **security**: validate data with a JSON Schema,
-- **extensibility**: add your own storage.
+- **compatibility**: works around some browsers issues.
 
 You could also be interested by [@ngx-pwa/offline](https://github.com/cyrilletuzi/ngx-pwa-offline).
 
@@ -235,12 +235,12 @@ current browsers support is far enough.
 Even so, IE9 is supported but use native localStorage as a fallback, 
 so internal operations are synchronous (the public API remains asynchronous-like).
 
-This module is not impacted by IE/Edge missing IndexedDB features.
-
 It also works in tools based on browser engines (like Electron) but not in non-browser tools (like NativeScript, see
 [#11](https://github.com/cyrilletuzi/angular-async-local-storage/issues/11)).
 
 ### Browsers restrictions
+
+This module is not impacted by IE/Edge missing IndexedDB features.
 
 Be aware that local storage is limited in browsers when in private / incognito modes. Most browsers will delete the data when the private browsing session ends. 
 It's not a real issue as local storage is useful for apps, and apps should not be in private mode.
@@ -250,29 +250,6 @@ In some scenarios, `indexedDB`  is not available, so the lib fallbacks to (synch
 - IE/Edge private mode
 - Safari, when in a cross-origin iframe (see
 [#42](https://github.com/cyrilletuzi/angular-async-local-storage/issues/42))
-
-## Extensibility
-
-### Add your own storage
-
-Starting with *version 5*, you can easily add your own storage:
-
-```typescript
-import { LocalDatabase } from '@ngx-pwa/local-storage';
-
-export class MyDatabase implements LocalDatabase {
-
-  /* Implement the methods required by the LocalDatabase class */
-
-}
-
-@NgModule({
-  providers: [{ provide: LocalDatabase, useClass: MyDatabase }]
-})
-export class AppModule {}
-```
-
-Be sure to be compatible with Universal by checking the current platform before using any browser-specific API.
 
 ## Changelog
 
