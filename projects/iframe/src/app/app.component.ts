@@ -11,7 +11,6 @@ interface Data {
   selector: 'app-root',
   template: `
     <h1>{{(data$ | async)?.title}}</h1>
-    <iframe src="http://localhost:8080"></iframe>
     <router-outlet></router-outlet>
   `
 })

@@ -165,6 +165,148 @@
           }
         }
       }
+    },
+    "iframe": {
+      "root": "projects/iframe/",
+      "sourceRoot": "projects/iframe/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {
+        "@schematics/angular:component": {
+          "inlineTemplate": true,
+          "spec": false
+        },
+        "@schematics/angular:class": {
+          "spec": false
+        },
+        "@schematics/angular:directive": {
+          "spec": false
+        },
+        "@schematics/angular:guard": {
+          "spec": false
+        },
+        "@schematics/angular:module": {
+          "spec": false
+        },
+        "@schematics/angular:pipe": {
+          "spec": false
+        },
+        "@schematics/angular:service": {
+          "spec": false
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/iframe",
+            "index": "projects/iframe/src/index.html",
+            "main": "projects/iframe/src/main.ts",
+            "polyfills": "projects/iframe/src/polyfills.ts",
+            "tsConfig": "projects/iframe/tsconfig.app.json",
+            "assets": [
+              "projects/iframe/src/favicon.ico",
+              "projects/iframe/src/assets"
+            ],
+            "styles": [
+              "projects/iframe/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/iframe/src/environments/environment.ts",
+                  "with": "projects/iframe/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "iframe:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "iframe:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "iframe:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/iframe/src/test.ts",
+            "polyfills": "projects/iframe/src/polyfills.ts",
+            "tsConfig": "projects/iframe/tsconfig.spec.json",
+            "karmaConfig": "projects/iframe/karma.conf.js",
+            "styles": [
+              "projects/iframe/src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "projects/iframe/src/favicon.ico",
+              "projects/iframe/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/iframe/tsconfig.app.json",
+              "projects/iframe/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "iframe-e2e": {
+      "root": "projects/iframe-e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/iframe-e2e/protractor.conf.js",
+            "devServerTarget": "iframe:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "iframe:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/iframe-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "angular-async-local-storage"
