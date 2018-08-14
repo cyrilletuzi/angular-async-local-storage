@@ -308,7 +308,7 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Transforming a IndexedDB error event in an RxJS ErrorObservable */
     return (fromEvent(request, 'error') as Observable<Event>)
-      .pipe(mergeMap(() => throwError(new Error(`IndexedDB ${error} issue : ${request.error.message}.`))));
+      .pipe(mergeMap(() => throwError(new Error(`IndexedDB ${error} issue : ${(request.error as DOMException).message}.`))));
 
   }
 
