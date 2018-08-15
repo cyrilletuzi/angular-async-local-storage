@@ -5,7 +5,8 @@ Efficient local storage module for Angular apps and Progressive Wep apps (PWA):
 - **perfomance**: internally stored via the asynchronous `IndexedDB` API,
 - **Angular-like**: wrapped in RxJS `Observables`,
 - **security**: validate data with a JSON Schema,
-- **compatibility**: works around some browsers issues.
+- **compatibility**: works around some browsers issues,
+- **documentation**: API fully explained, and a changelog!
 
 You could also be interested by [@ngx-pwa/offline](https://github.com/cyrilletuzi/ngx-pwa-offline).
 
@@ -26,12 +27,12 @@ your app will soon begin to freeze.
 The `IndexedDB` API is asynchronous and efficient, but it's a mess to use: 
 you'll soon be caught by the callback hell, as it does not support Promises yet.
 
-Mozilla has done a very great job with the [localForage library](http://localforage.github.io/localForage/) : 
+Mozilla has done a very great job with the [localForage library](http://localforage.github.io/localForage/): 
 a simple API based on native `localStorage`,
 but internally stored via the asynchronous `IndexedDB` for performance.
 But it's built in ES5 old school way and then it's a mess to include into Angular.
 
-This module is based on the same idea as localForage, but in ES6/ES2015 
+This module is based on the same idea as localForage, but in ES6 
 and additionally wrapped into [RxJS Observables](http://reactivex.io/rxjs/) 
 to be homogeneous with other Angular modules.
 
@@ -55,7 +56,7 @@ npm install @ngx-pwa/local-storage@5
 npm install @ngx-pwa/local-storage@4
 ```
 
-Then, **for *versions 4 & 5 only*, include the `LocalStorageModule`** in your app root module (just once, do NOT re-import it in your submodules). **Since *version 6*, this step is no longer required and `LocalStorageModule` is *removed*.**
+Then, **for *versions 4 & 5 only*, include the `LocalStorageModule`** in your app root module (just once, do NOT re-import it in your submodules). **Since *version 6*, this step must be skipped, as `LocalStorageModule` is *removed*.**
 
 ```typescript
 import { LocalStorageModule } from '@ngx-pwa/local-storage';
@@ -155,7 +156,7 @@ this.localStorage.getItem<User>('user', { schema }).subscribe((user) => {
 ```
 
 Note: last draft of JSON Schema is used (draft 7 at this time),
-but we don't support all validation features. Just follow the interface or see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list.
+but we don't support all validation features. Just follow the `JSONSchema` interface or see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list.
 
 Note: as the goal is validation, types are enforced: each value MUST have either `type` or `properties` or `items` or `const` or `enum`.
 
@@ -195,7 +196,7 @@ export class AppModule {}
 
 ### Other notes
 
-- Errors are unlikely to happen, but in an app, it's better to catch any potential error (there is currently an [issue in Firefox private browsing mode](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26)).
+- Errors are unlikely to happen, but in an app, it's better to catch any potential error:
 
 ```typescript
 this.localStorage.setItem('color', 'red').subscribe(() => {
