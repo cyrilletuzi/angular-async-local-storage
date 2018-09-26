@@ -74,6 +74,12 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   }
 
+  /**
+   * Gets an item value in local storage
+   * @param key The item's key
+   * @param transactionParam Optional pre-existing transaction to use for the read request
+   * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
+   */
   private getItemFromTransaction<T = any>(key: string, transactionParam?: IDBObjectStore): Observable<T | null> {
 
     const transaction$ = transactionParam ? of(transactionParam) : this.transaction();
@@ -117,11 +123,7 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     }
 
-    /* Opening a transaction and checking if the item already exists in local storage */
-    // return this.getItem(key).pipe(
-      // map((existingData) => (existingData == null) ? 'add' : 'put'),
-      //mergeMap((method) => {
-
+    /* Transaction must be the same for read and write, to avoid concurrency issues */
     const transaction$ = this.transaction('readwrite');
     let transaction: IDBObjectStore | null = null;
 
@@ -130,6 +132,7 @@ export class IndexedDBDatabase implements LocalDatabase {
           tap((value) => {
             transaction = value;
           }),
+          /* Check if the key already exists or not */
           mergeMap(() => this.getItemFromTransaction(key, (transaction as IDBObjectStore))),
           map((existingData) => (existingData == null) ? 'add' : 'put'),
           mergeMap((method) => {
