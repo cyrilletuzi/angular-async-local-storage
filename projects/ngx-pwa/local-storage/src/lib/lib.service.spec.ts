@@ -454,6 +454,25 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
+  it('should not cause concurrency issue when not waiting setItem to be done', (done: DoneFn) => {
+
+    const index = 'index';
+    const value = 'test';
+
+    expect(() => {
+
+      localStorageService.setItem(index, value).subscribe();
+
+      localStorageService.setItem(index, value).subscribe(() => {
+
+        done();
+
+      });
+
+    }).not.toThrow();
+
+  });
+
 }
 
 describe('LocalStorage with mock storage', () => {
