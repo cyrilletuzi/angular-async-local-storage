@@ -457,15 +457,22 @@ function tests(localStorageService: LocalStorage) {
   it('should not cause concurrency issue when not waiting setItem to be done', (done: DoneFn) => {
 
     const index = 'index';
-    const value = 'test';
+    const value1 = 'test1';
+    const value2 = 'test2';
 
     expect(() => {
 
-      localStorageService.setItem(index, value).subscribe();
+      localStorageService.setItem(index, value1).subscribe();
 
-      localStorageService.setItem(index, value).subscribe(() => {
+      localStorageService.setItem(index, value2).subscribe(() => {
 
-        done();
+        localStorageService.getItem(index).subscribe((result) => {
+
+          expect(result).toBe(value2);
+
+          done();
+
+        });
 
       });
 
