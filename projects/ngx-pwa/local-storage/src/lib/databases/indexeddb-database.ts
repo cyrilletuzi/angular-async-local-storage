@@ -1,6 +1,6 @@
 import { Injectable, Optional, Inject } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
-import { map, mergeMap, first } from 'rxjs/operators';
+import { map, mergeMap, first, tap } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { LocalStorageDatabase } from './localstorage-database';
@@ -70,7 +70,15 @@ export class IndexedDBDatabase implements LocalDatabase {
     }
 
     /* Opening a trasaction and requesting the item in local storage */
-    return this.transaction().pipe(
+    return this.getItemFromTransaction<T>(key);
+
+  }
+
+  private getItemFromTransaction<T = any>(key: string, transactionParam?: IDBObjectStore): Observable<T | null> {
+
+    const transaction$ = transactionParam ? of(transactionParam) : this.transaction();
+
+    return transaction$.pipe(
       map((transaction) => transaction.get(key)),
       mergeMap((request) => {
 
@@ -83,7 +91,6 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Merging success and errors events and autoclosing the observable */
         return (race(success, this.toErrorObservable(request, `getter`)) as Observable<T | null>)
           .pipe(first());
-
       }),
       first()
     );
@@ -111,35 +118,42 @@ export class IndexedDBDatabase implements LocalDatabase {
     }
 
     /* Opening a transaction and checking if the item already exists in local storage */
-    return this.getItem(key).pipe(
-      map((existingData) => (existingData == null) ? 'add' : 'put'),
-      mergeMap((method) => {
+    // return this.getItem(key).pipe(
+      // map((existingData) => (existingData == null) ? 'add' : 'put'),
+      //mergeMap((method) => {
+
+    const transaction$ = this.transaction('readwrite');
+    let transaction: IDBObjectStore | null = null;
 
         /* Opening a transaction */
-        return this.transaction('readwrite').pipe(mergeMap((transaction) => {
+        return transaction$.pipe(
+          tap((value) => {
+            transaction = value;
+          }),
+          mergeMap(() => this.getItemFromTransaction(key, (transaction as IDBObjectStore))),
+          map((existingData) => (existingData == null) ? 'add' : 'put'),
+          mergeMap((method) => {
 
-          let request: IDBRequest;
+            let request: IDBRequest;
 
-          /* Adding or updating local storage, based on previous checking */
-          switch (method) {
-            case 'add':
-              request = transaction.add({ [this.dataPath]: data }, key);
-              break;
-            case 'put':
-            default:
-              request = transaction.put({ [this.dataPath]: data }, key);
-              break;
-          }
+            /* Adding or updating local storage, based on previous checking */
+            switch (method) {
+              case 'add':
+                request = (transaction as IDBObjectStore).add({ [this.dataPath]: data }, key);
+                break;
+              case 'put':
+              default:
+                request = (transaction as IDBObjectStore).put({ [this.dataPath]: data }, key);
+                break;
+            }
 
-          /* Merging success (passing true) and error events and autoclosing the observable */
-          return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `setter`)) as Observable<boolean>)
-            .pipe(first());
+            /* Merging success (passing true) and error events and autoclosing the observable */
+            return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `setter`)) as Observable<boolean>)
+              .pipe(first());
 
-        }));
-
-      }),
-      first()
-    );
+        }),
+        first()
+      );
 
   }
 
