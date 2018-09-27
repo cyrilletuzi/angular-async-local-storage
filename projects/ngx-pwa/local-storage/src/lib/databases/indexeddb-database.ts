@@ -125,7 +125,7 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Transaction must be the same for read and write, to avoid concurrency issues */
     const transaction$ = this.transaction('readwrite');
-    let transaction: IDBObjectStore | null = null;
+    let transaction: IDBObjectStore;
 
         /* Opening a transaction */
         return transaction$.pipe(
@@ -133,7 +133,7 @@ export class IndexedDBDatabase implements LocalDatabase {
             transaction = value;
           }),
           /* Check if the key already exists or not */
-          mergeMap(() => this.getItemFromTransaction(key, (transaction as IDBObjectStore))),
+          mergeMap(() => this.getItemFromTransaction(key, transaction)),
           map((existingData) => (existingData == null) ? 'add' : 'put'),
           mergeMap((method) => {
 
@@ -142,11 +142,11 @@ export class IndexedDBDatabase implements LocalDatabase {
             /* Adding or updating local storage, based on previous checking */
             switch (method) {
               case 'add':
-                request = (transaction as IDBObjectStore).add({ [this.dataPath]: data }, key);
+                request = transaction.add({ [this.dataPath]: data }, key);
                 break;
               case 'put':
               default:
-                request = (transaction as IDBObjectStore).put({ [this.dataPath]: data }, key);
+                request = transaction.put({ [this.dataPath]: data }, key);
                 break;
             }
 
