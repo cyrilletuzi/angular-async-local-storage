@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.1.1 (2018-09-29)
+
+### Bug fix
+
+- Fixed `IndexedDB setter issue : Key already exists in the object store` when there are concurrent `setItem` calls
+(note this situation should *not* happen, see [#47](https://github.com/cyrilletuzi/angular-async-local-storage/issues/47) for details)
+
 ## 6.1.0 (2018-08-13)
 
 ### Feature
