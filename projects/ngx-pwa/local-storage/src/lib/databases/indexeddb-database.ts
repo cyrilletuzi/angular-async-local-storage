@@ -75,7 +75,8 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
-   * Gets an item value in local storage
+   * Internal method to factorize the getter for getItem and setItem,
+   * the last one needing to be from a preexisting transaction
    * @param key The item's key
    * @param transactionParam Optional pre-existing transaction to use for the read request
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
