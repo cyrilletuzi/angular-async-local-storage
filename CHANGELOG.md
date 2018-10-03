@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.0.0-beta.0 (2018-10-03)
+
+### Breaking change
+
+- Angular 7 is now required
+
 ## 6.1.1 and 5.3.1 (2018-09-29)
 
 ### Bug fix

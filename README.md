@@ -46,6 +46,9 @@ see the [migration guide](https://github.com/cyrilletuzi/angular-async-local-sto
 Install the same version as your Angular one via [npm](http://npmjs.com):
 
 ```bash
+# For Angular 7:
+npm install @ngx-pwa/local-storage@7
+
 # For Angular 6:
 npm install @ngx-pwa/local-storage@6
 
@@ -212,7 +215,7 @@ for an example.
 ## Angular support
 
 This lib major version is aligned to the major version of Angular. Meaning for Angular 5 you need version 5,
-for Angular 6 you need version 6, and so on.
+for Angular 6 you need version 6, for Angular 7 you need version 7, and so on.
 
 We follow [Angular LTS support](https://angular.io/guide/releases),
 meaning we support Angular 5 minimum, until May 2019.
