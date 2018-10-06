@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.0.0-beta.0 (2018-10-06)
+
+### Breaking change
+
+- Beta support of Angular 7: `npm install @ngx-pwa/local-storage@next`
+
 ## 6.1.1 and 5.3.1 (2018-09-29)
 
 ### Bug fix
