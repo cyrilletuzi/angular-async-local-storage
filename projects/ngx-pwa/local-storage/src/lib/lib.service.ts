@@ -26,14 +26,20 @@ export class LocalStorage {
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  getItem<T = any>(key: string, options: LSGetItemOptions = this.getItemOptionsDefault): Observable<T | null> {
+  getItem<T = any>(key: string, options: LSGetItemOptions & { schema: JSONSchema }): Observable<T | null>;
+  getItem<T = any>(key: string, options?: LSGetItemOptions): Observable<unknown>;
+  getItem<T = any>(key: string, options = this.getItemOptionsDefault) {
 
     return this.database.getItem<T>(key).pipe(
 
       /* Validate data upon a json schema if requested */
       mergeMap((data) => {
 
-        if (options.schema && data !== null) {
+        if (data === null) {
+
+          return of(null);
+
+        } else if (options.schema) {
 
           let validation = true;
 
@@ -49,7 +55,7 @@ export class LocalStorage {
 
         }
 
-        return of(data);
+        return of(data as unknown);
 
       }));
 
