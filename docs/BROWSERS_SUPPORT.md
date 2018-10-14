@@ -25,4 +25,4 @@ In some scenarios, `indexedDB`  is not available, so the lib fallbacks to (synch
 - Safari, when in a cross-origin iframe (see
 [#42](https://github.com/cyrilletuzi/angular-async-local-storage/issues/42))
 
-[Back to general documentation](../README)
+[Back to general documentation](../README.md)

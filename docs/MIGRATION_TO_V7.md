@@ -16,7 +16,7 @@ as the client can forge the value (intentionally to attack your app, or unintent
 
 It can cause obvious **security issues**, but also **errors** and thus crashes (as the received data type may not be what you expected).
 
-Then, **any data coming from client-side storage should be checked before used**, as mentionned in the [README](../README).
+Then, **any data coming from client-side storage should be checked before used**, as mentionned in the [README](../README.md).
 
 That's why v5 of this lib introduced a new option for `getItem()` to validate the data against a JSON schema.
 But until now it was optional (to not break with previous versions and to let you use your own validation system), which is bad.

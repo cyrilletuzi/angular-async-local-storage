@@ -17,4 +17,4 @@ import { LocalStorageModule } from '@ngx-pwa/local-storage';
 export class AppModule {}
 ```
 
-[Back to general documentation](../README)
+[Back to general documentation](../README.md)

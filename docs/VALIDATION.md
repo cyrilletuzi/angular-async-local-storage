@@ -169,4 +169,4 @@ So the cast is a convenience so you don't end up with `any` while you already ch
 It means **you are responsible the casted type describes the same structure as the JSON schema**.
 The lib can't check that.
 
-[Back to general documentation](../README)
+[Back to general documentation](../README.md)
