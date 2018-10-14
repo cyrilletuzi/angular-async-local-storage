@@ -137,14 +137,26 @@ this.localStorage.getItem('test').subscribe((unsafeResult) => {
 });
 ```
 
-### Solution 3: no validation (quick and dirty)
+### Solution 3: defer the upgrade (temporary)
 
-For back-compatible behavior, version 7 of the lib introduces a new `getUnsafeItem()` method,
+**Version 6 of the library is compatible with Angular 7.**
+So you can upgrade to Angular 7 now and defer the upgrade of this lib,
+to have some extra time to add validation.
+
+Of course, it should be a temporary solution as this scenario is *not* heavily tested,
+and as you'll miss new features and bug fixes.
+
+### Solution 4: no validation (dirty)
+
+In some special scenarios, like development-only code,
+it could be painful to manage validation.
+
+So version 7 of the lib introduces a new `getUnsafeItem()` method,
 which is the same as the `getItem()` method from previous versions, where validation was optional.
-**You can easily and quickly migrate by doing a global search/replace**.
+**You can easily do a search/replace**.
 
-Note this a bad solution, only introduced to allow you to upgrade to Angular 7 now while giving you some extra time to add proper validation.
-**You should not rely on this new method as it could be deleted in future versions**.
+Note this a dirty, unsecure and error-prone solution, **you should *not* use it in production code**,
+and it could be removed in future versions.
 
 ## More documentation
 
