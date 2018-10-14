@@ -156,7 +156,8 @@ which is the same as the `getItem()` method from previous versions, where valida
 **You can easily do a search/replace**.
 
 Note this a dirty, unsecure and error-prone solution, **you should *not* use it in production code**,
-and it could be removed in future versions.
+and it could be removed in future versions. Also, it could raise warnings when linting,
+as this method as been flagged as deprecated.
 
 ## More documentation
 
