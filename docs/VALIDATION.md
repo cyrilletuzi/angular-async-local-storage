@@ -4,7 +4,7 @@
 You can see this as an equivalent to the DTD in XML, the Doctype in HTML or interfaces in TypeScript.
 
 It can have many uses (it's why you have autocompletion in some JSON files in Visual Studio Code).
-In this lib, JSON schemas are used to validate the data retrieved from local storage.
+**In this lib, JSON schemas are used to validate the data retrieved from local storage.**
 You can learn why it's important in the [migration guide to v7](./MIGRATION_TO_V7.md), as it is indeed required since version 7 of the lib.
 
 The JSON schema standard has its own [documentation](https://json-schema.org/),
@@ -13,7 +13,7 @@ and you can also follow the `JSONSchema` interface exported by the lib:
 ```typescript
 import { JSONSchema } from '@ngw-pwa/local-storage';
 
-const schema = { type: 'string' };
+const schema: JSONSchema = { type: 'string' };
 ```
 
 But as a convenience, we'll show here how to validate the common scenarios.
