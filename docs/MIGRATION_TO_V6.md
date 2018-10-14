@@ -26,4 +26,8 @@ Just **delete the `LocalStorageModule` import in your `AppModule`**.
 
 Done.
 
-[Back to the other migrations guide.](../MIGRATION.md)
+## More documentation
+
+- [Full changelog for v6](../CHANGELOG.md#600-2018-07-26)
+- [Other migration guides](../MIGRATION.md)
+- [Main documentation](../README.md)

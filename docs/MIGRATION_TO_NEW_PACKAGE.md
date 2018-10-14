@@ -51,3 +51,8 @@ Done.
 There is **no code change in v4 and v5**.
 
 There are code changes if you're upgrading to Angular >=6, see [the other migration guides](../MIGRATION.md).
+
+## More documentation
+
+- [Other migration guides](../MIGRATION.md)
+- [Main documentation](../README.md)

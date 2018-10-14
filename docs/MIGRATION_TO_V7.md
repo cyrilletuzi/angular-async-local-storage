@@ -146,4 +146,8 @@ which is the same as the `getItem()` method from previous versions, where valida
 Note this a bad solution, only introduced to allow you to upgrade to Angular 7 now while giving you some extra time to add proper validation.
 **You should not rely on this new method as it could be deleted in future versions**.
 
-[Back to the other migrations guide.](../MIGRATION.md)
+## More documentation
+
+- [Full changelog for v7](../CHANGELOG.md)
+- [Other migration guides](../MIGRATION.md)
+- [Main documentation](../README.md)
