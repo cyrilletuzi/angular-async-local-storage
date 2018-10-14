@@ -4,4 +4,6 @@
 - [Migration to version 6](./docs/MIGRATION_TO_V6.md)
 - [Migration to version 7](./docs/MIGRATION_TO_V7.md)
 
+[Full changelog available here.](./CHANGELOG.md)
+
 [Back to general documentation](./README.md)
