@@ -71,7 +71,7 @@ Versions 4 & 5 (only) need an additional setup step explained in [the old module
 
 ## Upgrading
 
-If you still use the old `angular-async-local-storage` package, or to update to version 6 and 7,
+If you still use the old `angular-async-local-storage` package, or to update to versions 6 and 7,
 see the [migration guides](./MIGRATION.md).
 
 ## API
