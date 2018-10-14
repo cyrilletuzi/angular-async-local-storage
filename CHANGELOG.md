@@ -1,5 +1,7 @@
 # Changelog
 
+This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
+
 ## 7.0.0-beta.1 (2018-10-06)
 
 ### Breaking change
