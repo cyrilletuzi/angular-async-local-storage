@@ -32,7 +32,7 @@ npm install @ngx-pwa/local-storage@5
 
 - for **Angular 6**:
 ```bash
-npm install @ngx-pwa/local-storage@5
+npm install @ngx-pwa/local-storage@6
 ```
 
 ## Refactoring
