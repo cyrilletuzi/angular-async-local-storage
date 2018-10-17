@@ -1,59 +1,56 @@
-/**
- * Subset of the JSON Schema.
- * Types are enforced to validate everything: each value MUST have either 'type' or 'properties' or 'items' or 'const' or 'enum'.
- * Therefore, unlike the spec, booleans are not allowed as schemas.
- * @see http://json-schema.org/latest/json-schema-validation.html
- * Not all validation features are supported: just follow the interface.
- * @todo When TS 2.8, explore if this schemas can be split for object and arrays with conditional types.
- */
-export interface JSONSchema {
-
-  /**
-   * Type for a primitive value.
-   * Not required for objects, just set 'properties'.
-   * Not required for arrays, just set 'items'.
-   * Not required for const and enum.
-   */
-  type?: 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object' | 'null';
-
-  /**
-   * List of properties schemas for an object.
-   */
-  properties?: {
-    [k: string]: JSONSchema;
-  };
-
-  /**
-   * Array of names of the required properties for an object.
-   * Properties set as required should be present in 'properties' too.
-   * Note that in the last spec, booleans are not supported anymore.
-   */
-  required?: string[];
-
-  /**
-   * Schema for the values of an array.
-   * 'type' of values should be a string (not an array of type).
-   */
-  items?: JSONSchema | JSONSchema[];
+export interface JSONSchemaConst {
 
   /**
    * Checks if a value is strictly equal to this.
+   * Can't be an object or array, as two objects or arrays are never equal.
    */
-  const?: any;
+  const: string | number | boolean | null;
+
+}
+
+export interface JSONSchemaEnum {
 
   /**
    * Checks if a value is strictly equal to one of the value of enum.
+   * Can't be an object or array, as two objects or arrays are never equal.
    */
-  enum?: any[];
+  enum: (string | number | boolean | null)[];
+
+}
+
+export interface JSONSchemaBoolean {
 
   /**
-   * Minumum lenght for a string.
+   * Type for a boolean value.
+   */
+  type: 'boolean';
+
+}
+
+export interface JSONSchemaNull {
+
+  /**
+   * Type for a null value.
+   */
+  type: 'null';
+
+}
+
+export interface JSONSchemaString {
+
+  /**
+   * Type for a string value.
+   */
+  type: 'string';
+
+  /**
+   * Maxium length for a string.
    * Must be a non-negative integer.
    */
   maxLength?: number;
 
   /**
-   * Minumum lenght for a string.
+   * Minimum length for a string.
    * Must be a non-negative integer.
    */
   minLength?: number;
@@ -63,6 +60,12 @@ export interface JSONSchema {
    * Must be a valid regular expression, WITHOUT the / delimiters.
    */
   pattern?: string;
+
+}
+
+export interface JSONSchemaNumeric {
+
+  type: 'number' | 'integer';
 
   /**
    * Check if a number is a multiple of x.
@@ -90,6 +93,21 @@ export interface JSONSchema {
    */
   exclusiveMinimum?: number;
 
+}
+
+export interface JSONSchemaArray {
+
+  /**
+   * Type for an array value. Avoid to explicit this, "items" is enough,
+   */
+  type?: 'array';
+
+  /**
+   * Schema for the values of an array.
+   * 'type' of values should be a string (not an array of type).
+   */
+  items: JSONSchema | JSONSchema[];
+
   /**
    * Check if an array length is less or equal to this value.
    * Must be a non negative integer.
@@ -107,9 +125,40 @@ export interface JSONSchema {
    */
   uniqueItems?: boolean;
 
+}
+
+export interface JSONSchemaObject {
+
   /**
-   * Allow other properties, to not fail with existing JSON schemas.
+   * Type for an object value.  Avoid to explicit this, "properties" is enough,
    */
-  [k: string]: any;
+  type?: 'object';
+
+  /**
+   * List of properties schemas for an object.
+   */
+  properties: {
+    [k: string]: JSONSchema;
+  };
+
+  /**
+   * Array of names of the required properties for an object.
+   * Properties set as required should be present in 'properties' too.
+   * Note that in the last spec, booleans are not supported anymore.
+   */
+  required?: string[];
 
 }
+
+/**
+ * Subset of the JSON Schema.
+ * Types are enforced to validate everything:
+ * each value MUST have just ONE of either 'type' or 'properties' or 'items' or 'const' or 'enum'.
+ * Therefore, unlike the spec, booleans are not allowed as schemas.
+ * @see http://json-schema.org/latest/json-schema-validation.html
+ * Not all validation features are supported: just follow the interface.
+ */
+export type JSONSchema = (JSONSchemaConst | JSONSchemaEnum |
+  JSONSchemaBoolean | JSONSchemaNull | JSONSchemaString | JSONSchemaNumeric |
+  JSONSchemaArray | JSONSchemaObject)
+  & { [k: string]: any; };

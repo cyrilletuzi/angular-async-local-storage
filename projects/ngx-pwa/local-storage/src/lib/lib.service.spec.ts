@@ -201,34 +201,6 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
-  it('should call error callback if the JSON schema itself is invalid', (done: DoneFn) => {
-
-    const index = 'doesnotmatter';
-    const value = 'doesnotmatter';
-    const schema: JSONSchema = {
-      required: ['expected']
-    };
-
-    localStorageService.setItem(index, value).subscribe(() => {
-
-      localStorageService.getItem(index, { schema }).subscribe(() => {
-
-        fail();
-
-        done();
-
-      }, (error) => {
-
-        expect(error).toBeTruthy();
-
-        done();
-
-      });
-
-    });
-
-  });
-
   it('should return the data if JSON schema is valid', (done: DoneFn) => {
 
     const index = 'index';

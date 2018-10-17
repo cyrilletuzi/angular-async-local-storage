@@ -1,41 +1,57 @@
 # Validation guide
 
+## Why validation?
+
+Any client-side storage (cookies, `localStorage`, `indexedDb`...) is not secure by nature,
+as the client can forge the value (intentionally to attack your app, or unintentionally because it is affected by a virus or a XSS attack).
+
+It can cause obvious **security issues**, but also **errors** and thus crashes (as the received data type may not be what you expected).
+
+Then, **any data coming from client-side storage should be checked before used**.
+
+It was allowed since v5 of the lib, and is **now required since v7** (see the [migration guide](./MIGRATION_TO_V7.md)).
+
+## Why JSON schemas?
+
 [JSON Schema](https://json-schema.org/) is a standard to describe the structure of a JSON data.
 You can see this as an equivalent to the DTD in XML, the Doctype in HTML or interfaces in TypeScript.
 
 It can have many uses (it's why you have autocompletion in some JSON files in Visual Studio Code).
 **In this lib, JSON schemas are used to validate the data retrieved from local storage.**
-You can learn why it's important in the [migration guide to v7](./MIGRATION_TO_V7.md), as it is indeed required since version 7 of the lib.
 
 The JSON schema standard has its own [documentation](https://json-schema.org/),
-and you can also follow the `JSONSchema` interface exported by the lib:
-
-```typescript
-import { JSONSchema } from '@ngw-pwa/local-storage';
-
-const schema: JSONSchema = { type: 'string' };
-```
-
-But as a convenience, we'll show here how to validate the common scenarios.
+and you can also follow the `JSONSchema` interfaces exported by the lib. But as a convenience, we'll show here how to validate the common scenarios.
 
 ## How to validate?
 
 ### Validating a boolean
 
 ```typescript
-this.localStorage.getItem<boolean>('test', { schema: { type: 'boolean' } })
+import { JSONSchemaBoolean } from '@ngw-pwa/local-storage';
+
+const schema: JSONSchemaBoolean = { type: 'boolean' };
+
+this.localStorage.getItem<boolean>('test', { schema })
 ```
 
 ### Validating a number
 
 For a number:
 ```typescript
-this.localStorage.getItem<number>('test', { schema: { type: 'number' } })
+import { JSONSchemaNumeric } from '@ngw-pwa/local-storage';
+
+const schema: JSONSchemaNumeric = { type: 'number' };
+
+this.localStorage.getItem<number>('test', { schema })
 ```
 
 For an integer only:
 ```typescript
-this.localStorage.getItem<number>('test', { schema: { type: 'integer' } })
+import { JSONSchemaNumeric } from '@ngw-pwa/local-storage';
+
+const schema: JSONSchemaNumeric = { type: 'integer' };
+
+this.localStorage.getItem<number>('test', { schema })
 ```
 
 For numbers and integers, in version >= 6, you can also add the following optional validations:
@@ -48,7 +64,11 @@ For numbers and integers, in version >= 6, you can also add the following option
 ### Validating a string
 
 ```typescript
-this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
+import { JSONSchemaString } from '@ngw-pwa/local-storage';
+
+const schema: JSONSchemaString = { type: 'string' };
+
+this.localStorage.getItem<string>('test', { schema })
 ```
 
 For strings, in version >= 6, you can also add the following optional validations:
@@ -59,7 +79,11 @@ For strings, in version >= 6, you can also add the following optional validation
 ### Validating an array
 
 ```typescript
-this.localStorage.getItem<string[]>('test', { schema: { items: { type: 'string' } } })
+import { JSONSchemaArray, JSONSchemaString } from '@ngw-pwa/local-storage';
+
+const schema: JSONSchemaArray = { items: { type: 'string' } as JSONSchemaString };
+
+this.localStorage.getItem<string[]>('test', { schema })
 ```
 
 What's expected in `items` is another JSON schema,
@@ -73,20 +97,24 @@ For arrays, in version >= 6, you can also add the following optional validations
 ### Validating an object
 
 ```typescript
+import { JSONSchemaObject, JSONSchemaString, JSONSchemaNumeric } from '@ngw-pwa/local-storage';
+
 interface User {
   firstName: string;
   lastName: string;
   age?: number;
 }
 
-this.localStorage.getItem<User>('test', { schema: {
+const schema: JSONSchemaObject = {
   properties: {
-    firstName: { type: 'string' },
-    lastName: { type: 'string' },
-    age: { type: 'number' }
+    firstName: { type: 'string' } as JSONSchemaString,
+    lastName: { type: 'string' } as JSONSchemaString,
+    age: { type: 'number' } as JSONSchemaNumeric
   },
   required: ['firstName', 'lastName']
-} })
+};
+
+this.localStorage.getItem<User>('test', { schema })
 ```
 
 What's expected for each property is another JSON schema,
@@ -96,12 +124,20 @@ so you can also add the other optional validations related to the chosen type.
 
 Since version >= 6, if it can only be a fixed value:
 ```typescript
-this.localStorage.getItem<string>('test', { schema: { const: 'some value' } })
+import { JSONSchemaConst } from '@ngw-pwa/local-storage';
+
+const schema: JSONSchemaConst = { const: 'some value' };
+
+this.localStorage.getItem<string>('test', { schema })
 ```
 
 Since version >= 6, if it can only be a fixed value among a list:
 ```typescript
-this.localStorage.getItem<string>('test', { schema: { enum: ['value 1', 'value 2'] } })
+import { JSONSchemaEnum } from '@ngw-pwa/local-storage';
+
+const schema: JSONSchemaEnum = { enum: ['value 1', 'value 2'] };
+
+this.localStorage.getItem<string>('test', { schema })
 ```
 
 ## Errors vs. `null`
@@ -168,5 +204,14 @@ So the cast is a convenience so you don't end up with `any` while you already ch
 
 It means **you are responsible the casted type describes the same structure as the JSON schema**.
 The lib can't check that.
+
+## Why specific JSONSchema interfaces?
+
+Unfortunately, the JSON schema standard is structured in such a way it's currently impossible to do an equivalent TypeScript interface,
+which would be generic for all types, but only allowing you the optional validations relative to the type you choose
+(for example, `maxLength` should only be allowed when `type` is set to `'string'`).
+
+Thus casting with a more specific interface (like `JSONSchemaString`) allows TypeScript to check your JSON Schema is really valid.
+But it's not mandatory.
 
 [Back to general documentation](../README.md)

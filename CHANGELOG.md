@@ -2,9 +2,22 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 7.0.0-beta.2 (2018-10-14)
+## 7.0.0-beta.3 (2018-10-16)
 
 - Beta support of Angular 7: `npm install @ngx-pwa/local-storage@next`
+
+### Feature
+
+- New interfaces for better validation of your JSON schemas:
+  - `JSONSchemaConst`
+  - `JSONSchemaEnum`
+  - `JSONSchemaString`
+  - `JSONSchemaNumeric`
+  - `JSONSchemaBoolean`
+  - `JSONSchemaArray`
+  - `JSONSchemaObject`
+
+See the [full validation guide](./docs/VALIDATION.md) for more info.
 
 ### Breaking change
 

@@ -85,7 +85,8 @@ If you were not already validating your data, there are several options.
 
 ### Solution 1: JSON schema validation (recommended)
 
-The simpler and better way to validate your data is to **use the JSON schema option proposed by the lib**. For example:
+The simpler and better way to validate your data is to search `getItem` in your project 
+and **use the JSON schema option proposed by the lib**. For example:
 
 ```typescript
 this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
@@ -95,7 +96,7 @@ this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
 });
 ```
 
-A [full validation guide](./VALIDATION.md) is available with all the options.
+**A [full validation guide](./VALIDATION.md) is available with all the options.**
 
 ### Solution 2: custom validation (painful)
 
@@ -162,5 +163,6 @@ as this method as been flagged as deprecated.
 ## More documentation
 
 - [Full changelog for v7](../CHANGELOG.md)
+- [Full validation guide](./VALIDATION.md)
 - [Other migration guides](../MIGRATION.md)
 - [Main documentation](../README.md)

@@ -2,7 +2,10 @@
  * Public API Surface of local-storage
  */
 
-export { JSONSchema } from './lib/validation/json-schema';
+export {
+  JSONSchema, JSONSchemaConst, JSONSchemaEnum, JSONSchemaBoolean,
+  JSONSchemaNumeric, JSONSchemaString, JSONSchemaArray, JSONSchemaObject
+} from './lib/validation/json-schema';
 export { LocalDatabase } from './lib/databases/local-database';
 export { IndexedDBDatabase } from './lib/databases/indexeddb-database';
 export { LocalStorageDatabase } from './lib/databases/localstorage-database';
