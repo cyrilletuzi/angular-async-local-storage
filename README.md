@@ -15,10 +15,7 @@ Efficient local storage module for Angular apps and Progressive Wep apps (PWA):
 - Library [@ngx-pwa/offline](https://github.com/cyrilletuzi/ngx-pwa-offline)
 - Popular [Angular posts on Medium](https://medium.com/@cyrilletuzi)
 - Follow updates of this lib on [Twitter](https://twitter.com/cyrilletuzi)
-
-## Angular onsite training
-
-The author of this library organizes Angular courses (based in Paris, France, but open to travel). You can find [my bio here](https://www.cyrilletuzi.com/en/web/) (in English) and [course details here](https://formationjavascript.com/formation-angular/) (in French).
+- **[Angular onsite tranings](https://formationjavascript.com/formation-angular/)** (based in Paris, so the website is in French, but [my English bio is here](https://www.cyrilletuzi.com/en/web/) and I'm open to travel)
 
 ## Why this module?
 
