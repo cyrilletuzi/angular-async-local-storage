@@ -7,8 +7,12 @@ Efficient local storage module for Angular apps and Progressive Wep apps (PWA):
 - **security**: validate data with a JSON Schema,
 - **compatibility**: works around some browsers issues,
 - **documentation**: API fully explained, and a changelog!
+- **reference**: 1st Angular library for local storage according to [ngx.tools](https://ngx.tools/#/search?q=local%20storage)
 
-You could also be interested by [@ngx-pwa/offline](https://github.com/cyrilletuzi/ngx-pwa-offline).
+## By the same author
+
+- [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics) (GUI for Angular CLI commands)
+- [@ngx-pwa/offline](https://github.com/cyrilletuzi/ngx-pwa-offline)
 
 ## Angular onsite training
 
