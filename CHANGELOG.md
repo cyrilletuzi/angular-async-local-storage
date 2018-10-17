@@ -1,45 +1,33 @@
 # Changelog
 
-## 7.0.0-beta.1 (2018-10-06)
-
-### Breaking change
-
-- `getItem()` calls without the schema option (to validate the data against a JSON schema)
-will now return the new TypeScript 3 `unknown` type instead of `any`, requiring from you to check the data manually
-(as it could have been forged by the client). For example:
-
-```typescript
-// Before v7.0.0-beta.1
-this.localStorage.getItem('test').subscribe((result) => {
-  result; // type: any
-  result.substr(0, 2); // Bad but compilation OK
-});
-
-// With v7.0.0-beta.1
-this.localStorage.getItem('test').subscribe((result) => {
-
-  result; // type: unknown
-  result.substr(0, 2); // Compilation error
-
-  if (typeof result === 'string') {
-    result; // type: string
-    result.substr(0, 2); // OK
-  }
-
-});
-```
-
-It's an important breaking change, which is not yet confirmed for stable.
-Stick to v7.0.0-beta.0 (`next` tag) if you just want Angular 7 support, this beta is here for testing purpose:
-`npm install @ngx-pwa/local-storage@beta`
-
-Feedback welcome in [#49](https://github.com/cyrilletuzi/angular-async-local-storage/issues/49).
-
-## 7.0.0-beta.0 (2018-10-06)
-
-### Breaking change
+## 7.0.0-beta.3 (2018-10-16)
 
 - Beta support of Angular 7: `npm install @ngx-pwa/local-storage@next`
+
+### Feature
+
+- New interfaces for better validation of your JSON schemas:
+  - `JSONSchemaConst`
+  - `JSONSchemaEnum`
+  - `JSONSchemaString`
+  - `JSONSchemaNumeric`
+  - `JSONSchemaBoolean`
+  - `JSONSchemaArray`
+  - `JSONSchemaObject`
+
+See the [full validation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/ng7/docs/VALIDATION.md) for more info.
+
+### Breaking change
+
+A [migration guide to version 7](https://github.com/cyrilletuzi/angular-async-local-storage/blob/ng7/docs/MIGRATION_TO_V7.md) is available.
+**Be sure to read it before upgrading**, as v7 introduces an important major change.
+Validation of data is now required when using `getItem()`:
+
+- `getItem<string>('test', { schema: { type: 'string' } })`: no change
+
+- `getItem<string>('test')`: now returns the new TypeScript 3 `unknown` type instead of `any`, requiring from you to check the data manually
+
+Feedback welcome in [#49](https://github.com/cyrilletuzi/angular-async-local-storage/issues/49).
 
 ## 6.1.1 and 5.3.1 (2018-09-29)
 
