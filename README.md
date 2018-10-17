@@ -12,7 +12,9 @@ Efficient local storage module for Angular apps and Progressive Wep apps (PWA):
 ## By the same author
 
 - [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics) (GUI for Angular CLI commands)
-- [@ngx-pwa/offline](https://github.com/cyrilletuzi/ngx-pwa-offline)
+- Library [@ngx-pwa/offline](https://github.com/cyrilletuzi/ngx-pwa-offline)
+- Popular [Angular posts on Medium](https://medium.com/@cyrilletuzi)
+- Follow updates of this lib on [Twitter](https://twitter.com/cyrilletuzi)
 
 ## Angular onsite training
 
