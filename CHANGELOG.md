@@ -2,9 +2,9 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 7.0.0-beta.3 (2018-10-16)
+## 7.0.0 (2018-10-19)
 
-- Beta support of Angular 7: `npm install @ngx-pwa/local-storage@next`
+- Support of Angular 7
 
 ### Feature
 
@@ -29,7 +29,13 @@ Validation of data is now required when using `getItem()`:
 
 - `getItem<string>('test')`: now returns the new TypeScript 3 `unknown` type instead of `any`, requiring from you to check the data manually
 
-Feedback welcome in [#49](https://github.com/cyrilletuzi/angular-async-local-storage/issues/49).
+**Migration is not urgent: while you manage this breaking change, you can just upgrade to v6.2.0, which is compatible with Angular 7.**
+
+## 6.2.0 (2018-10-19)
+
+### Feature
+
+- Allow Angular 7 in `peerDependencies`
 
 ## 6.1.1 and 5.3.1 (2018-09-29)
 
