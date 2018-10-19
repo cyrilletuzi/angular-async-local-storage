@@ -1,8 +1,10 @@
 # Changelog
 
-## 7.0.0-beta.3 (2018-10-16)
+This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-- Beta support of Angular 7: `npm install @ngx-pwa/local-storage@next`
+## 7.0.0 (2018-10-19)
+
+- Support of Angular 7
 
 ### Feature
 
@@ -15,11 +17,11 @@
   - `JSONSchemaArray`
   - `JSONSchemaObject`
 
-See the [full validation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/ng7/docs/VALIDATION.md) for more info.
+See the [full validation guide](./docs/VALIDATION.md) for more info.
 
 ### Breaking change
 
-A [migration guide to version 7](https://github.com/cyrilletuzi/angular-async-local-storage/blob/ng7/docs/MIGRATION_TO_V7.md) is available.
+A [migration guide to version 7](./docs/MIGRATION_TO_V7.md) is available.
 **Be sure to read it before upgrading**, as v7 introduces an important major change.
 Validation of data is now required when using `getItem()`:
 
@@ -27,7 +29,13 @@ Validation of data is now required when using `getItem()`:
 
 - `getItem<string>('test')`: now returns the new TypeScript 3 `unknown` type instead of `any`, requiring from you to check the data manually
 
-Feedback welcome in [#49](https://github.com/cyrilletuzi/angular-async-local-storage/issues/49).
+**Migration is not urgent: while you manage this breaking change, you can just upgrade to v6.2.0, which is compatible with Angular 7.**
+
+## 6.2.0 (2018-10-19)
+
+### Feature
+
+- Allow Angular 7 in `peerDependencies`
 
 ## 6.1.1 and 5.3.1 (2018-09-29)
 
@@ -56,7 +64,7 @@ Feedback welcome in [#49](https://github.com/cyrilletuzi/angular-async-local-sto
 
 ### Breaking changes
 
-A [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md)
+A [migration guide](./docs/MIGRATION_TO_V6.md)
 is available to ease the update. It's just a couple of refactorings.
 (If you want to contribute,
 [it could be automated](https://github.com/cyrilletuzi/angular-async-local-storage/issues/31).)
@@ -68,14 +76,11 @@ is available to ease the update. It's just a couple of refactorings.
 - Angular 6
 - TypeScript 2.7, 2.8 & 2.9
 
-#### New names
+#### New classes names
 
-- This lib has been renamed to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
-
-- Classes renamed. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
-  - `AsyncLocalStorage` removed, renamed to `LocalStorage`.
-  - `AsyncLocalDatabase` removed, renamed to `LocalDatabase`.
-  - `ALSGetItemOptions` removed, renamed to `LSGetItemOptions`.
+- `AsyncLocalStorage` removed, renamed to `LocalStorage`.
+- `AsyncLocalDatabase` removed, renamed to `LocalDatabase`.
+- `ALSGetItemOptions` removed, renamed to `LSGetItemOptions`.
 
 #### No more `LocalStorageModule`
 
@@ -147,13 +152,13 @@ If you want to keep your previous data, double the prefix, for example: `localSt
 - `AsyncLocalDatabase` deprecated (but still working). Renamed to `LocalDatabase`
 - `ALSGetItemOptions` deprecated (but still working). Renamed to `LSGetItemOptions`
 
-See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
+See the [migration guides](./MIGRATION.md).
 
 ## 5.0.0 (2018-04-03)
 
 ### New package name
 
-This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
+This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](./docs/MIGRATION_TO_NEW_PACKAGE.md).
 
 ### Version alignement
 
@@ -163,7 +168,7 @@ This lib major version is now aligned to the major version of Angular. Meaning t
 
 ### New package name
 
-This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
+This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](./docs/MIGRATION_TO_NEW_PACKAGE.md).
 
 ### Version alignement
 

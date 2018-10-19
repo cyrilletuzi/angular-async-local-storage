@@ -39,37 +39,19 @@ This module is based on the same idea as localForage, but in ES6
 and additionally wrapped into [RxJS Observables](http://reactivex.io/rxjs/) 
 to be homogeneous with other Angular modules.
 
-## Migration from angular-async-local-storage or from v5
-
-If you already use the previous `angular-async-local-storage` package, or to update to version 6,
-see the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md).
-
 ## Getting started
 
 Install the same version as your Angular one via [npm](http://npmjs.com):
 
 ```bash
+# For Angular 7:
+npm install @ngx-pwa/local-storage@7
+
 # For Angular 6:
 npm install @ngx-pwa/local-storage@6
 
 # For Angular 5:
 npm install @ngx-pwa/local-storage@5
-```
-
-Then, **for *version 5 only*, include the `LocalStorageModule`** in your app root module (just once, do NOT re-import it in your submodules). **Since *version 6*, this step must be skipped, as `LocalStorageModule` is *removed*.**
-
-```typescript
-import { LocalStorageModule } from '@ngx-pwa/local-storage';
-
-@NgModule({
-  imports: [
-    BrowserModule,
-    LocalStorageModule,
-    ...
-  ]
-  ...
-})
-export class AppModule {}
 ```
 
 Now you just have to inject the service where you need it:
@@ -84,6 +66,13 @@ export class YourService {
 
 }
 ```
+
+Versions 4 & 5 (only) need an additional setup step explained in [the old module guide](./docs/OLD_MODULE.md).
+
+## Upgrading
+
+If you still use the old `angular-async-local-storage` package, or to update to versions 6 and 7,
+see the [migration guides](./MIGRATION.md).
 
 ## API
 
@@ -135,30 +124,22 @@ this.localStorage.getItem('notexisting').subscribe((data) => {
 ### Checking data
 
 Don't forget it's client-side storage: **always check the data**, as it could have been forged or deleted.
+
 Starting with *version 5*, you can use a [JSON Schema](http://json-schema.org/) to validate the data.
 
+**Starting with *version 7*, validation is now required.**
+A [migration guide](./docs/MIGRATION_TO_V7.md) is available.
+
 ```typescript
-import { JSONSchema } from '@ngx-pwa/local-storage';
-
-const schema: JSONSchema = {
-  properties: {
-    firstName: { type: 'string' },
-    lastName: { type: 'string' }
-  },
-  required: ['firstName', 'lastName']
-};
-
-this.localStorage.getItem<User>('user', { schema }).subscribe((user) => {
+this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
+.subscribe((user) => {
   // Called if data is valid or null
 }, (error) => {
   // Called if data is invalid
 });
 ```
 
-Note: last draft of JSON Schema is used (draft 7 at this time),
-but we don't support all validation features. Just follow the `JSONSchema` interface or see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list.
-
-Note: as the goal is validation, types are enforced: each value MUST have either `type` or `properties` or `items` or `const` or `enum`.
+See the [full validation guide](./docs/VALIDATION.md) to see how to validate all common scenarios.
 
 ### Subscription
 
@@ -180,19 +161,8 @@ this.localStorage.clearSubscribe();
 
 ### Prefix
 
-`localStorage` and `IndexedDB` are restricted to the same subdomain, so no risk of collision in most cases.
-*Only* if you have multiple apps on the same *sub*domain *and* you don't want to share data between them, add a prefix:
-
-```typescript
-import { localStorageProviders } from '@ngx-pwa/local-storage';
-
-@NgModule({
-  providers: [
-    localStorageProviders({ prefix: 'myapp' })
-  ]
-})
-export class AppModule {}
-```
+If you have multiple apps on the same *sub*domain *and* you don't want to share data between them,
+see the [prefix guide](./docs/PREFIX.md).
 
 ### Other notes
 
@@ -215,7 +185,7 @@ for an example.
 ## Angular support
 
 This lib major version is aligned to the major version of Angular. Meaning for Angular 5 you need version 5,
-for Angular 6 you need version 6, and so on.
+for Angular 6 you need version 6, for Angular 7 you need version 7, and so on.
 
 We follow [Angular LTS support](https://angular.io/guide/releases),
 meaning we support Angular 5 minimum, until May 2019.
@@ -230,31 +200,11 @@ via a mock storage.
 [All browsers supporting IndexedDB](http://caniuse.com/#feat=indexeddb), ie. **all current browsers** :
 Firefox, Chrome, Opera, Safari, Edge, and IE10+.
 
-Local storage is required only for apps, and given that you won't do an app in older browsers,
-current browsers support is far enough.
-
-Even so, IE9 is supported but use native localStorage as a fallback, 
-so internal operations are synchronous (the public API remains asynchronous-like).
-
-This module is not impacted by IE/Edge missing IndexedDB features.
-
-It also works in tools based on browser engines (like Electron) but not in non-browser tools (like NativeScript, see
-[#11](https://github.com/cyrilletuzi/angular-async-local-storage/issues/11)).
-
-### Browsers restrictions
-
-Be aware that local storage is limited in browsers when in private / incognito modes. Most browsers will delete the data when the private browsing session ends. 
-It's not a real issue as local storage is useful for apps, and apps should not be in private mode.
-
-In some scenarios, `indexedDB`  is not available, so the lib fallbacks to (synchronous) `localStorage`. It happens in:
-- Firefox private mode (see [#26](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26))
-- IE/Edge private mode
-- Safari, when in a cross-origin iframe (see
-[#42](https://github.com/cyrilletuzi/angular-async-local-storage/issues/42))
+See [the browsers support guide](./docs/BROWSERS_SUPPORT.md) for more details and special cases (like private browsing).
 
 ## Changelog
 
-[Changelog available here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/CHANGELOG.md).
+[Changelog available here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/CHANGELOG.md), and [migration guides here](./MIGRATION.md).
 
 ## License
 

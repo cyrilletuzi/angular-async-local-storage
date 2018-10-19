@@ -26,14 +26,20 @@ export class LocalStorage {
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
-  getItem<T = any>(key: string, options: LSGetItemOptions = this.getItemOptionsDefault): Observable<T | null> {
+  getItem<T = any>(key: string, options: LSGetItemOptions & { schema: JSONSchema }): Observable<T | null>;
+  getItem<T = any>(key: string, options?: LSGetItemOptions): Observable<unknown>;
+  getItem<T = any>(key: string, options = this.getItemOptionsDefault) {
 
     return this.database.getItem<T>(key).pipe(
 
       /* Validate data upon a json schema if requested */
       mergeMap((data) => {
 
-        if (options.schema && data !== null) {
+        if (data === null) {
+
+          return of(null);
+
+        } else if (options.schema) {
 
           let validation = true;
 
@@ -49,9 +55,25 @@ export class LocalStorage {
 
         }
 
-        return of(data);
+        return of(data as unknown);
 
       }));
+
+  }
+
+  /**
+   * Gets an item value in local storage WITHOUT any validation.
+   * It is a convenience method for development only: do NOT use it in production code,
+   * as it can cause security issues and errors and may be removed in future versions.
+   * Use the normal .getItem() method instead.
+   * @ignore
+   * @deprecated
+   * @param key The item's key
+   * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
+   */
+  getUnsafeItem<T = any>(key: string): Observable<T | null> {
+
+    return this.database.getItem<T>(key);
 
   }
 

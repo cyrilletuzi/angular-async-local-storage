@@ -26,6 +26,17 @@ function testGetItem<T>(type: 'primitive' | 'object', localStorageService: Local
 
   });
 
+  /*
+  localStorageService.getItem('test').subscribe((result) => {});
+  localStorageService.getItem<string>('test').subscribe((result) => {});
+  localStorageService.getItem<string>('test', {}).subscribe((result) => {});
+  localStorageService.getItem<string>('test', { schema: { type: 'string' }}).subscribe((result) => {});
+  localStorageService.getItem('test', { schema: { type: 'string' }}).subscribe((result) => {});
+
+  localStorageService.getUnsafeItem('test').subscribe((result) => {});
+  localStorageService.getUnsafeItem<string>('test').subscribe((result) => {});
+  */
+
 }
 
 function testGetItemPrimitive<T>(localStorageService: LocalStorage, value: T, done: DoneFn) {
@@ -181,34 +192,6 @@ function tests(localStorageService: LocalStorage) {
       }, (error) => {
 
         expect(error.message).toBe(`JSON invalid`);
-
-        done();
-
-      });
-
-    });
-
-  });
-
-  it('should call error callback if the JSON schema itself is invalid', (done: DoneFn) => {
-
-    const index = 'doesnotmatter';
-    const value = 'doesnotmatter';
-    const schema: JSONSchema = {
-      required: ['expected']
-    };
-
-    localStorageService.setItem(index, value).subscribe(() => {
-
-      localStorageService.getItem(index, { schema }).subscribe(() => {
-
-        fail();
-
-        done();
-
-      }, (error) => {
-
-        expect(error).toBeTruthy();
 
         done();
 

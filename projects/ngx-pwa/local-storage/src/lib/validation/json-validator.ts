@@ -175,6 +175,8 @@ export class JSONValidator {
 
     }
 
+    return true;
+
   }
 
   protected validateItems(data: any[], schema: JSONSchema): boolean {
