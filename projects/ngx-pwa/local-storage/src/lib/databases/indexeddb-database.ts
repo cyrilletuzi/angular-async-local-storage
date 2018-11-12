@@ -38,6 +38,33 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   protected fallback: LocalDatabase | null = null;
 
+  get length(): Observable<number> {
+
+    /* Fallback storage if set */
+    if (this.fallback) {
+      return this.fallback.length;
+    }
+
+    return this.transaction('readonly').pipe(
+      mergeMap((transaction) => {
+
+        /* Deleting the item in local storage */
+        const request = transaction.count();
+
+        const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
+          map((event) => (event.target as IDBRequest).result as number),
+        );
+
+        /* Merging success and errors events and autoclosing the observable */
+        return (race(success, this.toErrorObservable(request, `length`)) as Observable<number>)
+          .pipe(first());
+
+      }),
+      first()
+    );
+
+  }
+
   /**
    * Connects to IndexedDB
    */
@@ -223,6 +250,34 @@ export class IndexedDBDatabase implements LocalDatabase {
 
         /* Merging success (passing true) and error events and autoclosing the observable */
         return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `clearer`)) as Observable<boolean>)
+          .pipe(first());
+
+      }),
+      first()
+    );
+
+  }
+
+  key(index: number): Observable<string | null> {
+
+    /* Fallback storage if set */
+    if (this.fallback) {
+      return this.fallback.key(index);
+    }
+
+    return this.transaction('readonly').pipe(
+      mergeMap((transaction) => {
+
+        /* Deleting the item in local storage */
+        const request = transaction.getAllKeys();
+
+        const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
+          map((event) => (event.target as IDBRequest).result as IDBValidKey[]),
+          map((result) => result[index] !== undefined ? result[index] as string : null)
+        );
+
+        /* Merging success and errors events and autoclosing the observable */
+        return (race(success, this.toErrorObservable(request, `key`)) as Observable<string | null>)
           .pipe(first());
 
       }),

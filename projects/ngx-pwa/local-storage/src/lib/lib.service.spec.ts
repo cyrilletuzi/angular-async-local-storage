@@ -147,6 +147,94 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
+  it('should count the size of items stored', (done: DoneFn) => {
+
+    localStorageService.length.subscribe((length0) => {
+
+      expect(length0).toBe(0);
+
+      localStorageService.setItem('test1', 'test').subscribe(() => {
+
+        localStorageService.length.subscribe((length1) => {
+
+          expect(length1).toBe(1);
+
+          localStorageService.setItem('test2', 'test').subscribe(() => {
+
+            localStorageService.length.subscribe((length2) => {
+
+              expect(length2).toBe(2);
+
+              localStorageService.clear().subscribe(() => {
+
+                localStorageService.length.subscribe((length3) => {
+
+                  expect(length3).toBe(0);
+
+                  done();
+
+                });
+
+              });
+
+            });
+
+          });
+
+        });
+
+      });
+
+    });
+
+  });
+
+  it('should get index from keys', (done: DoneFn) => {
+
+    const index1 = 'index1';
+    const index2 = 'index2';
+
+    localStorageService.key(1).subscribe((noIndex) => {
+
+      expect(noIndex).toBe(null);
+
+      localStorageService.setItem(index1, 'test').subscribe(() => {
+
+        localStorageService.key(0).subscribe((indexResult1) => {
+
+          /* Test with toContain(), as there can be a prefix */
+          expect(indexResult1).toContain(index1);
+
+          localStorageService.setItem(index2, 'test').subscribe(() => {
+
+            localStorageService.key(1).subscribe((indexResult2) => {
+
+              expect(indexResult2).toContain(index2);
+
+              localStorageService.removeItem(index1).subscribe(() => {
+
+                localStorageService.key(0).subscribe((indexResult3) => {
+
+                  expect(indexResult3).toContain(index2);
+
+                  done();
+
+                });
+
+              });
+
+            });
+
+          });
+
+        });
+
+      });
+
+    });
+
+  });
+
   it('should allow to use operators', (done: DoneFn) => {
 
     const index = 'index';
@@ -309,6 +397,28 @@ function tests(localStorageService: LocalStorage) {
   it('should call complete on clear', (done: DoneFn) => {
 
     localStorageService.clear().subscribe({ complete: () => { done(); } });
+
+  });
+
+  it('should call complete on length', (done: DoneFn) => {
+
+    localStorageService.length.subscribe({ complete: () => { done(); } });
+
+  });
+
+  it('should call complete on existing key', (done: DoneFn) => {
+
+    localStorageService.setItem('index', 'value').subscribe(() => {
+
+      localStorageService.key(0).subscribe({ complete: () => { done(); } });
+
+    });
+
+  });
+
+  it('should call complete on unexisting key', (done: DoneFn) => {
+
+    localStorageService.key(5).subscribe({ complete: () => { done(); } });
 
   });
 

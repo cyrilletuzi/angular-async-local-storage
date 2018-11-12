@@ -15,6 +15,15 @@ export interface LSGetItemOptions {
 })
 export class LocalStorage {
 
+  /**
+   * Number of items in the storage
+   */
+  get length(): Observable<number> {
+
+    return this.database.length;
+
+  }
+
   protected readonly getItemOptionsDefault: LSGetItemOptions = {
     schema: null
   };
@@ -107,6 +116,19 @@ export class LocalStorage {
    clear(): Observable<boolean> {
 
     return this.database.clear();
+
+  }
+
+  /**
+   * Get an item's index based on its position.
+   * Not useful byt itself you can't be sure of the position, but combined with .length,
+   * it allows advanced operations like getting all the items in storage
+   * @param index The item's position
+   * @returns A RxJS Observable with the index of the item if exists, or null
+   */
+  key(index: number): Observable<string | null> {
+
+    return this.database.key(index);
 
   }
 

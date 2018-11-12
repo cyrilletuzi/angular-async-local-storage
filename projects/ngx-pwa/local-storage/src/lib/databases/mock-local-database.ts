@@ -10,6 +10,10 @@ export class MockLocalDatabase implements LocalDatabase {
 
   protected localStorage = new Map<string, any>();
 
+  get length(): Observable<number> {
+    return of(this.localStorage.size);
+  }
+
   /**
    * Gets an item value in local storage
    * @param key The item's key
@@ -59,6 +63,14 @@ export class MockLocalDatabase implements LocalDatabase {
     this.localStorage.clear();
 
     return of(true);
+
+  }
+
+  key(index: number): Observable<string | null> {
+
+    const key = Array.from(this.localStorage.keys())[index];
+
+    return of((key !== undefined) ? key : null);
 
   }
 

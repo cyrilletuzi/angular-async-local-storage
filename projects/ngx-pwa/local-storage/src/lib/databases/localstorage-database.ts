@@ -12,6 +12,10 @@ export class LocalStorageDatabase implements LocalDatabase {
   /* Initializing native localStorage right now to be able to check its support on class instanciation */
   protected prefix = '';
 
+  get length(): Observable<number> {
+    return of(localStorage.length);
+  }
+
   constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected userPrefix: string | null = null) {
 
     if (userPrefix) {
@@ -80,6 +84,12 @@ export class LocalStorageDatabase implements LocalDatabase {
     localStorage.clear();
 
     return of(true);
+
+  }
+
+  key(index: number): Observable<string | null> {
+
+    return of(localStorage.key(index));
 
   }
 

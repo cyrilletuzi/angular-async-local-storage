@@ -38,9 +38,12 @@ export function localDatabaseFactory(platformId: Object, prefix: string | null) 
 })
 export abstract class LocalDatabase {
 
+  abstract readonly length: Observable<number>;
+
   abstract getItem<T = any>(key: string): Observable<T | null>;
   abstract setItem(key: string, data: any): Observable<boolean>;
   abstract removeItem(key: string): Observable<boolean>;
   abstract clear(): Observable<boolean>;
+  abstract key(index: number): Observable<string | null>;
 
 }
