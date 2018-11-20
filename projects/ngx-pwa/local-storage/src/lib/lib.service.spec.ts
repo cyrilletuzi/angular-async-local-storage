@@ -149,25 +149,25 @@ function tests(localStorageService: LocalStorage) {
 
   it('should count the size of items stored', (done: DoneFn) => {
 
-    localStorageService.length.subscribe((length0) => {
+    localStorageService.size.subscribe((length0) => {
 
       expect(length0).toBe(0);
 
       localStorageService.setItem('test1', 'test').subscribe(() => {
 
-        localStorageService.length.subscribe((length1) => {
+        localStorageService.size.subscribe((length1) => {
 
           expect(length1).toBe(1);
 
           localStorageService.setItem('test2', 'test').subscribe(() => {
 
-            localStorageService.length.subscribe((length2) => {
+            localStorageService.size.subscribe((length2) => {
 
               expect(length2).toBe(2);
 
               localStorageService.clear().subscribe(() => {
 
-                localStorageService.length.subscribe((length3) => {
+                localStorageService.size.subscribe((length3) => {
 
                   expect(length3).toBe(0);
 
@@ -402,7 +402,7 @@ function tests(localStorageService: LocalStorage) {
 
   it('should call complete on length', (done: DoneFn) => {
 
-    localStorageService.length.subscribe({ complete: () => { done(); } });
+    localStorageService.size.subscribe({ complete: () => { done(); } });
 
   });
 
@@ -419,6 +419,26 @@ function tests(localStorageService: LocalStorage) {
   it('should call complete on unexisting key', (done: DoneFn) => {
 
     localStorageService.key(5).subscribe({ complete: () => { done(); } });
+
+  });
+
+  it('should call complete with existing keys', (done: DoneFn) => {
+
+    localStorageService.setItem('index1', 'value').subscribe(() => {
+
+      localStorageService.setItem('index2', 'value').subscribe(() => {
+
+        localStorageService.keys().subscribe({ complete: () => { done(); } });
+
+      });
+
+    });
+
+  });
+
+  it('should call complete with no keys', (done: DoneFn) => {
+
+    localStorageService.keys().subscribe({ complete: () => { done(); } });
 
   });
 

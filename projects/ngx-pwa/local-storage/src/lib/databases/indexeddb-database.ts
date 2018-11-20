@@ -1,6 +1,6 @@
 import { Injectable, Optional, Inject } from '@angular/core';
-import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
-import { map, mergeMap, first, tap } from 'rxjs/operators';
+import { Observable, ReplaySubject, fromEvent, of, throwError, race, from } from 'rxjs';
+import { map, mergeMap, first, tap, take } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { LocalStorageDatabase } from './localstorage-database';
@@ -38,11 +38,11 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   protected fallback: LocalDatabase | null = null;
 
-  get length(): Observable<number> {
+  get size(): Observable<number> {
 
     /* Fallback storage if set */
     if (this.fallback) {
-      return this.fallback.length;
+      return this.fallback.size;
     }
 
     return this.transaction('readonly').pipe(
@@ -282,6 +282,35 @@ export class IndexedDBDatabase implements LocalDatabase {
 
       }),
       first()
+    );
+
+  }
+
+  keys(): Observable<string> {
+
+    /* Fallback storage if set */
+    if (this.fallback) {
+      return this.fallback.keys();
+    }
+
+    let keysSize = 0;
+
+    return this.transaction('readonly').pipe(
+      mergeMap((transaction) => {
+
+        /* Deleting the item in local storage */
+        const request = transaction.getAllKeys();
+
+        return (fromEvent(request, 'success') as Observable<Event>).pipe(
+          map((event) => (event.target as IDBRequest).result as string[]),
+          mergeMap((keys) => {
+            keysSize = keys.length;
+            return from(keys);
+          })
+        );
+
+      }),
+      take(keysSize)
     );
 
   }

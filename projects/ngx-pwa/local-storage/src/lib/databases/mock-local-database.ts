@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 
 import { LocalDatabase } from './local-database';
 
@@ -10,7 +10,7 @@ export class MockLocalDatabase implements LocalDatabase {
 
   protected localStorage = new Map<string, any>();
 
-  get length(): Observable<number> {
+  get size(): Observable<number> {
     return of(this.localStorage.size);
   }
 
@@ -71,6 +71,12 @@ export class MockLocalDatabase implements LocalDatabase {
     const key = Array.from(this.localStorage.keys())[index];
 
     return of((key !== undefined) ? key : null);
+
+  }
+
+  keys(): Observable<string> {
+
+    return from(this.localStorage.keys());
 
   }
 

@@ -18,9 +18,9 @@ export class LocalStorage {
   /**
    * Number of items in the storage
    */
-  get length(): Observable<number> {
+  get size(): Observable<number> {
 
-    return this.database.length;
+    return this.database.size;
 
   }
 
@@ -129,6 +129,16 @@ export class LocalStorage {
   key(index: number): Observable<string | null> {
 
     return this.database.key(index);
+
+  }
+
+  /**
+   * Get all keys stored in local storage
+   * @returns A RxJS Observable iterating over the indexes
+   */
+  keys(): Observable<string> {
+
+    return this.database.keys();
 
   }
 

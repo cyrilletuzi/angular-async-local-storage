@@ -1,5 +1,5 @@
 import { Injectable, Optional, Inject } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, from, throwError } from 'rxjs';
 
 import { LocalDatabase } from './local-database';
 import { LOCAL_STORAGE_PREFIX } from '../tokens';
@@ -12,7 +12,7 @@ export class LocalStorageDatabase implements LocalDatabase {
   /* Initializing native localStorage right now to be able to check its support on class instanciation */
   protected prefix = '';
 
-  get length(): Observable<number> {
+  get size(): Observable<number> {
     return of(localStorage.length);
   }
 
@@ -90,6 +90,20 @@ export class LocalStorageDatabase implements LocalDatabase {
   key(index: number): Observable<string | null> {
 
     return of(localStorage.key(index));
+
+  }
+
+  keys(): Observable<string> {
+
+    const keys: string[] = [];
+
+    for (let index = 0; index < localStorage.length; index += 1) {
+
+      keys.push(localStorage.key(index) as string);
+
+    }
+
+    return from(keys);
 
   }
 
