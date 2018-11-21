@@ -189,52 +189,6 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
-  it('should get index from keys', (done: DoneFn) => {
-
-    const index1 = 'index1';
-    const index2 = 'index2';
-
-    localStorageService.key(1).subscribe((noIndex) => {
-
-      expect(noIndex).toBe(null);
-
-      localStorageService.setItem(index1, 'test').subscribe(() => {
-
-        localStorageService.key(0).subscribe((indexResult1) => {
-
-          /* Test with toContain(), as there can be a prefix */
-          expect(indexResult1).toContain(index1);
-
-          localStorageService.setItem(index2, 'test').subscribe(() => {
-
-            localStorageService.key(1).subscribe((indexResult2) => {
-
-              expect(indexResult2).toContain(index2);
-
-              localStorageService.removeItem(index1).subscribe(() => {
-
-                localStorageService.key(0).subscribe((indexResult3) => {
-
-                  expect(indexResult3).toContain(index2);
-
-                  done();
-
-                });
-
-              });
-
-            });
-
-          });
-
-        });
-
-      });
-
-    });
-
-  });
-
   it('should get keys', (done: DoneFn) => {
 
     const index1 = 'index1';
@@ -438,22 +392,6 @@ function tests(localStorageService: LocalStorage) {
   it('should call complete on length', (done: DoneFn) => {
 
     localStorageService.size.subscribe({ complete: () => { done(); } });
-
-  });
-
-  it('should call complete on existing key', (done: DoneFn) => {
-
-    localStorageService.setItem('index', 'value').subscribe(() => {
-
-      localStorageService.key(0).subscribe({ complete: () => { done(); } });
-
-    });
-
-  });
-
-  it('should call complete on unexisting key', (done: DoneFn) => {
-
-    localStorageService.key(5).subscribe({ complete: () => { done(); } });
 
   });
 

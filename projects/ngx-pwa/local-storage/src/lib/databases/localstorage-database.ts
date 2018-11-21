@@ -87,12 +87,6 @@ export class LocalStorageDatabase implements LocalDatabase {
 
   }
 
-  key(index: number): Observable<string | null> {
-
-    return of(localStorage.key(index));
-
-  }
-
   keys(): Observable<string> {
 
     const keys: string[] = [];

@@ -248,32 +248,6 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   }
 
-  key(index: number): Observable<string | null> {
-
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.key(index);
-    }
-
-    return this.transaction('readonly').pipe(
-      mergeMap((transaction) => {
-
-        /* Deleting the item in local storage */
-        const request = transaction.getAllKeys();
-
-        const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
-          map((event) => (event.target as IDBRequest).result as IDBValidKey[]),
-          map((result) => result[index] !== undefined ? result[index] as string : null)
-        );
-
-        /* Merging success and errors events and autoclosing the observable */
-        return (race(success, this.toErrorObservable(request, `key`)));
-
-      })
-    );
-
-  }
-
   keys(): Observable<string> {
 
     /* Fallback storage if set */

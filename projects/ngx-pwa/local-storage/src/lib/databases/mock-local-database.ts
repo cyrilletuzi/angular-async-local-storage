@@ -66,14 +66,6 @@ export class MockLocalDatabase implements LocalDatabase {
 
   }
 
-  key(index: number): Observable<string | null> {
-
-    const key = Array.from(this.localStorage.keys())[index];
-
-    return of((key !== undefined) ? key : null);
-
-  }
-
   keys(): Observable<string> {
 
     return (this.localStorage.size > 0) ? from(this.localStorage.keys()) : EMPTY;
