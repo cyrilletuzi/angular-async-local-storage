@@ -1,5 +1,5 @@
 import { inject, async } from '@angular/core/testing';
-import { map, first, take } from 'rxjs/operators';
+import { map, first, take, filter, mergeMap } from 'rxjs/operators';
 
 import { LocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
@@ -204,7 +204,7 @@ function tests(localStorageService: LocalStorage) {
           total += 1;
 
           /* Test with .includes as there can be a prefix */
-          expect(key.includes(index1) || key.includes(index2)).toBeTruthy();
+          expect([index1, index2]).toContain(key);
 
         }, () => {
 
@@ -215,6 +215,46 @@ function tests(localStorageService: LocalStorage) {
           expect(total).toBe(2);
 
           done();
+
+        });
+
+      });
+
+    });
+
+  });
+
+  it('should be able to remove only some items', (done: DoneFn) => {
+
+    const index1 = 'user_firstname';
+    const index2 = 'user_lastname';
+    const index3 = 'app_data1';
+    const index4 = 'app_data2';
+
+    localStorageService.setItem(index1, 'test').subscribe(() => {
+
+      localStorageService.setItem(index2, 'test').subscribe(() => {
+
+        localStorageService.setItem(index3, 'test').subscribe(() => {
+
+          localStorageService.setItem(index4, 'test').subscribe(() => {
+
+            localStorageService.keys().pipe(
+              filter((key) => key.includes('app_')),
+              mergeMap((key) => localStorageService.removeItem(key))
+            ).subscribe({ complete: () => {
+
+              localStorageService.size.subscribe((size) => {
+
+                expect(size).toBe(2);
+
+                done();
+
+              });
+
+            } });
+
+          });
 
         });
 
