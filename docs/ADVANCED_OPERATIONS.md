@@ -1,4 +1,4 @@
-# Browser support guide
+# Advanced operations
 
 Starting with version >= 7.1, in addition to the classic `localStorage`-like API,
 this lib also provides `Map`-like methods for advanced operations:
