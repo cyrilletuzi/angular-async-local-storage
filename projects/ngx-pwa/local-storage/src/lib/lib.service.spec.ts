@@ -203,7 +203,6 @@ function tests(localStorageService: LocalStorage) {
 
           total += 1;
 
-          /* Test with .includes as there can be a prefix */
           expect([index1, index2]).toContain(key);
 
         }, () => {
@@ -240,7 +239,7 @@ function tests(localStorageService: LocalStorage) {
           localStorageService.setItem(index4, 'test').subscribe(() => {
 
             localStorageService.keys().pipe(
-              filter((key) => key.includes('app_')),
+              filter((key) => key.startsWith('app_')),
               mergeMap((key) => localStorageService.removeItem(key))
             ).subscribe({ complete: () => {
 
