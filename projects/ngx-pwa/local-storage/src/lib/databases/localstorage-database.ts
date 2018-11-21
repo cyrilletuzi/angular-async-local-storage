@@ -93,7 +93,9 @@ export class LocalStorageDatabase implements LocalDatabase {
 
     for (let index = 0; index < localStorage.length; index += 1) {
 
-      keys.push(localStorage.key(index) as string);
+      const key = localStorage.key(index) as string;
+
+      keys.push((this.prefix === '') ? key : key.substr(this.prefix.length));
 
     }
 
