@@ -159,6 +159,14 @@ this.localStorage.clearSubscribe();
 - you don't need to manage the error callback (with these methods, errors will silently fail),
 - you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
 
+### Advanced operations
+
+Starting *with version >= 7.1*, in addition to the classic `localStorage`-like API,
+this lib also provides `Map`-like methods for advanced operations:
+- `.keys()`
+
+See the [documentation](./docs/ADVANCED_OPERATIONS.md) for some recipes.
+
 ### Prefix
 
 If you have multiple apps on the same *sub*domain *and* you don't want to share data between them,
