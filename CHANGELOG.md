@@ -2,6 +2,10 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 7.1.0-beta.0 (2018-11-21)
+
+- Added `.keys()` method, see [documentation](./docs/ADVANCED_OPERATIONS.md).
+
 ## 7.0.0 (2018-10-19)
 
 - Support of Angular 7
