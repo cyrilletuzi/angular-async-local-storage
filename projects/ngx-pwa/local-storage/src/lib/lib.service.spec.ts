@@ -239,12 +239,15 @@ function tests(localStorageService: LocalStorage) {
 
     const index1 = 'index1';
     const index2 = 'index2';
+    let total = 0;
 
     localStorageService.setItem(index1, 'test').subscribe(() => {
 
       localStorageService.setItem(index2, 'test').subscribe(() => {
 
         localStorageService.keys().subscribe((key) => {
+
+          total += 1;
 
           /* Test with .includes as there can be a prefix */
           expect(key.includes(index1) || key.includes(index2)).toBeTruthy();
@@ -254,6 +257,8 @@ function tests(localStorageService: LocalStorage) {
           fail();
 
         }, () => {
+
+          expect(total).toBe(2);
 
           done();
 

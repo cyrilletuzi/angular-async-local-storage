@@ -56,11 +56,9 @@ export class IndexedDBDatabase implements LocalDatabase {
         );
 
         /* Merging success and errors events and autoclosing the observable */
-        return (race(success, this.toErrorObservable(request, `length`)) as Observable<number>)
-          .pipe(first());
+        return (race(success, this.toErrorObservable(request, `length`)) as Observable<number>);
 
-      }),
-      first()
+      })
     );
 
   }
@@ -123,10 +121,8 @@ export class IndexedDBDatabase implements LocalDatabase {
         );
 
         /* Merging success and errors events and autoclosing the observable */
-        return (race(success, this.toErrorObservable(request, `getter`)) as Observable<T | null>)
-          .pipe(first());
-      }),
-      first()
+        return (race(success, this.toErrorObservable(request, `getter`)));
+      })
     );
 
   }
@@ -179,11 +175,9 @@ export class IndexedDBDatabase implements LocalDatabase {
             }
 
             /* Merging success (passing true) and error events and autoclosing the observable */
-            return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `setter`)) as Observable<boolean>)
-              .pipe(first());
+            return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `setter`)));
 
-        }),
-        first()
+        })
       );
 
   }
@@ -214,8 +208,7 @@ export class IndexedDBDatabase implements LocalDatabase {
             const request = transaction.delete(key);
 
             /* Merging success (passing true) and error events and autoclosing the observable */
-            return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `remover`)) as Observable<boolean>)
-              .pipe(first());
+            return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `remover`)));
 
           }));
 
@@ -224,8 +217,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Passing true if the item does not exist in local storage */
         return of(true);
 
-      }),
-      first()
+      })
     );
 
   }
@@ -249,11 +241,9 @@ export class IndexedDBDatabase implements LocalDatabase {
         const request = transaction.clear();
 
         /* Merging success (passing true) and error events and autoclosing the observable */
-        return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `clearer`)) as Observable<boolean>)
-          .pipe(first());
+        return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `clearer`)));
 
-      }),
-      first()
+      })
     );
 
   }
@@ -277,11 +267,9 @@ export class IndexedDBDatabase implements LocalDatabase {
         );
 
         /* Merging success and errors events and autoclosing the observable */
-        return (race(success, this.toErrorObservable(request, `key`)) as Observable<string | null>)
-          .pipe(first());
+        return (race(success, this.toErrorObservable(request, `key`)));
 
-      }),
-      first()
+      })
     );
 
   }
@@ -310,10 +298,9 @@ export class IndexedDBDatabase implements LocalDatabase {
         );
 
         /* Merging success and errors events and autoclosing the observable */
-        return (race(success, this.toErrorObservable(request, `keys`)) as Observable<string>);
+        return (race(success, this.toErrorObservable(request, `keys`)));
 
-      }),
-      take(keysSize)
+      })
     );
 
   }
@@ -413,7 +400,10 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Transforming a IndexedDB error event in an RxJS ErrorObservable */
     return (fromEvent(request, 'error') as Observable<Event>)
-      .pipe(mergeMap(() => throwError(new Error(`IndexedDB ${error} issue : ${(request.error as DOMException).message}.`))));
+      .pipe(
+        mergeMap(() => throwError(new Error(`IndexedDB ${error} issue : ${(request.error as DOMException).message}.`))),
+        take(0)
+      );
 
   }
 
