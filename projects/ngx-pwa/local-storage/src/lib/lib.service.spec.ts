@@ -235,6 +235,35 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
+  it('should get keys', (done: DoneFn) => {
+
+    const index1 = 'index1';
+    const index2 = 'index2';
+
+    localStorageService.setItem(index1, 'test').subscribe(() => {
+
+      localStorageService.setItem(index2, 'test').subscribe(() => {
+
+        localStorageService.keys().subscribe((key) => {
+
+          expect(key.includes(index1) || key.includes(index2)).toBeTruthy();
+
+        }, () => {
+
+          fail();
+
+        }, () => {
+
+          done();
+
+        });
+
+      });
+
+    });
+
+  });
+
   it('should allow to use operators', (done: DoneFn) => {
 
     const index = 'index';
