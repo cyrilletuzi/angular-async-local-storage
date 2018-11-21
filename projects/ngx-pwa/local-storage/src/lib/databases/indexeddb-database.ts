@@ -1,5 +1,5 @@
 import { Injectable, Optional, Inject } from '@angular/core';
-import { Observable, ReplaySubject, fromEvent, of, throwError, race, from } from 'rxjs';
+import { Observable, ReplaySubject, fromEvent, of, throwError, race, from, EMPTY } from 'rxjs';
 import { map, mergeMap, first, tap, take } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
@@ -301,13 +301,16 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Deleting the item in local storage */
         const request = transaction.getAllKeys();
 
-        return (fromEvent(request, 'success') as Observable<Event>).pipe(
+        const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
           map((event) => (event.target as IDBRequest).result as string[]),
           mergeMap((keys) => {
             keysSize = keys.length;
-            return from(keys);
+            return (keysSize > 0) ? from(keys) : EMPTY;
           })
         );
+
+        /* Merging success and errors events and autoclosing the observable */
+        return (race(success, this.toErrorObservable(request, `keys`)) as Observable<string>);
 
       }),
       take(keysSize)
