@@ -246,6 +246,7 @@ function tests(localStorageService: LocalStorage) {
 
         localStorageService.keys().subscribe((key) => {
 
+          /* Test with .includes as there can be a prefix */
           expect(key.includes(index1) || key.includes(index2)).toBeTruthy();
 
         }, () => {
