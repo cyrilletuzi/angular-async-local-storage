@@ -1,12 +1,43 @@
 # Advanced operations
 
 Starting with version >= 7.1, in addition to the classic `localStorage`-like API,
-this lib also provides `Map`-like methods for advanced operations:
-- `.keys()`
+this lib also provides a partial `Map`-like API for advanced operations.
 
-As a convenience, below are some recipes for operations asked by the community.
+## `.keys()` method
 
-## Multiple stores
+Gives you an `Observable` iterating over all the keys you stored:
+
+```typescript
+this.localStorage.keys().subscribe((key) => {
+
+  console.log(key);
+
+}, () => {}, () => {
+
+  // If you need to something after the whole iteration,
+  // be sure to act on complete, and not on success as usual,
+  // as this Obserbable will emit several times, for each key
+
+});
+```
+
+## `.size` property
+
+Number of items stored in local storage.
+
+```typescript
+this.localStorage.size.subscribe((size) => {
+
+  console.log(size);
+
+});
+```
+
+## Recipes
+
+As a convenience, below are some recipes for advanced operations asked by the community.
+
+### Multiple stores
 
 Let's say you stored:
 - some app's data with such indexes: `app_data1`, `app_data2`...
@@ -20,8 +51,7 @@ this.localStorage.keys().pipe(
   mergeMap((key) => this.localStorage.removeItem(key))
 ).subscribe({ complete: () => {
 
-  // Be sure to act on complete, and not on success as usual,
-  // as this Obserbable will emit several times, for each key
+  // Done
 
 } });
 ```
