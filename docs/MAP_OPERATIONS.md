@@ -51,7 +51,7 @@ this.localStorage.size.subscribe((size) => {
 
 ## Other methods
 
-`.values()` and `.entries` have not been implemented on purpose, because it would not be a good idea for performance.
+`.values()` and `.entries()` have not been implemented on purpose, because it would not be a good idea for performance.
 But you can easily do your own implementation via `keys()`. 
 
 ## Recipes
