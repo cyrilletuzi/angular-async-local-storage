@@ -72,4 +72,10 @@ export class MockLocalDatabase implements LocalDatabase {
 
   }
 
+  has(key: string): Observable<boolean> {
+
+    return of(this.localStorage.has(key));
+
+  }
+
 }

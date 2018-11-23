@@ -223,6 +223,36 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
+  it('should returns true if a key exists', (done: DoneFn) => {
+
+    const index = 'hello';
+
+    localStorageService.setItem(index, 'test').subscribe(() => {
+
+      localStorageService.has(index).subscribe((result) => {
+
+        expect(result).toBe(true);
+
+        done();
+
+      });
+
+    });
+
+  });
+
+  it('should returns false if a key does not exist', (done: DoneFn) => {
+
+    localStorageService.has('sdcccscsd').subscribe((result) => {
+
+      expect(result).toBe(false);
+
+      done();
+
+    });
+
+  });
+
   it('should be able to remove only some items', (done: DoneFn) => {
 
     const index1 = 'user_firstname';
@@ -434,7 +464,7 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
-  it('should call complete with existing keys', (done: DoneFn) => {
+  it('should call complete when getting existing keys', (done: DoneFn) => {
 
     localStorageService.setItem('index1', 'value').subscribe(() => {
 
@@ -448,9 +478,27 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
-  it('should call complete with no keys', (done: DoneFn) => {
+  it('should call complete when getting no keys', (done: DoneFn) => {
 
     localStorageService.keys().subscribe({ complete: () => { done(); } });
+
+  });
+
+  it('should call complete when checking existing key', (done: DoneFn) => {
+
+    const index = 'world';
+
+    localStorageService.setItem(index, 'test').subscribe(() => {
+
+      localStorageService.has(index).subscribe({ complete: () => { done(); } });
+
+    });
+
+  });
+
+  it('should call complete when checking unexisting key', (done: DoneFn) => {
+
+    localStorageService.has('sdscsdlkscocoucsnoc').subscribe({ complete: () => { done(); } });
 
   });
 

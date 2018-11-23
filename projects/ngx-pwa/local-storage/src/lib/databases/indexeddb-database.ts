@@ -279,6 +279,30 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   }
 
+  has(key: string): Observable<boolean> {
+
+    /* Fallback storage if set */
+    if (this.fallback) {
+      return this.fallback.has(key);
+    }
+
+    return this.transaction('readonly').pipe(
+      map((transaction) => transaction.getKey(key)),
+      mergeMap((request) => {
+
+        /* Listening to the success event, and passing the item value if found, null otherwise */
+        const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
+          map((event) => (event.target as IDBRequest).result),
+          map((result) => (result !== undefined) ? true : false)
+        );
+
+        /* Merging success and errors events and autoclosing the observable */
+        return (race(success, this.toErrorObservable(request, `has`)));
+      })
+    );
+
+  }
+
   /**
    * Connects to IndexedDB and creates the object store on first time
    */

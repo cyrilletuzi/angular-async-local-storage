@@ -2,13 +2,14 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 7.1.0-beta.0 (2018-11-21)
+## 7.1.0 (2018-11-23)
 
 - Added a partial `Map`-like API:
   - `.keys()` method
+  - `.has(key)` method
   - `.size` property
 
-See [documentation](./docs/ADVANCED_OPERATIONS.md).
+See [documentation](./docs/MAP_OPERATIONS.md).
 
 ## 7.0.0 (2018-10-19)
 

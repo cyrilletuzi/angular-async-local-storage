@@ -45,5 +45,6 @@ export abstract class LocalDatabase {
   abstract removeItem(key: string): Observable<boolean>;
   abstract clear(): Observable<boolean>;
   abstract keys(): Observable<string>;
+  abstract has(key: string): Observable<boolean>;
 
 }

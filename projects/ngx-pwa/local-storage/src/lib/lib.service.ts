@@ -92,7 +92,7 @@ export class LocalStorage {
    * @param data The item's value, must NOT be null or undefined
    * @returns An RxJS Observable to wait the end of the operation
    */
-   setItem(key: string, data: any): Observable<boolean> {
+  setItem(key: string, data: any): Observable<boolean> {
 
     return this.database.setItem(key, data);
 
@@ -103,7 +103,7 @@ export class LocalStorage {
    * @param key The item's key
    * @returns An RxJS Observable to wait the end of the operation
    */
-   removeItem(key: string): Observable<boolean> {
+  removeItem(key: string): Observable<boolean> {
 
     return this.database.removeItem(key);
 
@@ -113,7 +113,7 @@ export class LocalStorage {
    * Deletes all items from local storage
    * @returns An RxJS Observable to wait the end of the operation
    */
-   clear(): Observable<boolean> {
+  clear(): Observable<boolean> {
 
     return this.database.clear();
 
@@ -126,6 +126,16 @@ export class LocalStorage {
   keys(): Observable<string> {
 
     return this.database.keys();
+
+  }
+
+  /**
+   * Tells if a key exists in storage
+   * @returns A RxJS Observable telling if the key exists
+   */
+  has(key: string): Observable<boolean> {
+
+    return this.database.has(key);
 
   }
 

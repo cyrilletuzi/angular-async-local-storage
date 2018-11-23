@@ -159,14 +159,15 @@ this.localStorage.clearSubscribe();
 - you don't need to manage the error callback (with these methods, errors will silently fail),
 - you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
 
-### Advanced operations
+### Map-like operations
 
 Starting *with version >= 7.1*, in addition to the classic `localStorage`-like API,
 this lib also provides some `Map`-like methods for advanced operations:
   - `.keys()` method
+  - `.has(key)` method
   - `.size` property
 
-See the [documentation](./docs/ADVANCED_OPERATIONS.md) for some recipes.
+See the [documentation](./docs/MAP_OPERATIONS.md) for more info and some recipes.
 
 ### Prefix
 

@@ -21,6 +21,22 @@ this.localStorage.keys().subscribe((key) => {
 });
 ```
 
+## `.has(key)` method
+
+Gives you an `Observable` telling you if a key exists in storage:
+
+```typescript
+this.localStorage.has('someindex').subscribe((result) => {
+
+  if (result) {
+    console.log('The key exists :)');
+  } else {
+    console.log('The key does not exist :(');
+  }
+
+});
+```
+
 ## `.size` property
 
 Number of items stored in local storage.
@@ -32,6 +48,11 @@ this.localStorage.size.subscribe((size) => {
 
 });
 ```
+
+## Other methods
+
+`.values()` and `.entries` have not been implemented on purpose, because it would not be a good idea for performance.
+But you can easily do your own implementation via `keys()`. 
 
 ## Recipes
 

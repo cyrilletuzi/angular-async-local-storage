@@ -93,13 +93,41 @@ export class LocalStorageDatabase implements LocalDatabase {
 
     for (let index = 0; index < localStorage.length; index += 1) {
 
-      const key = localStorage.key(index) as string;
-
-      keys.push((this.prefix === '') ? key : key.substr(this.prefix.length));
+      keys.push(this.getKey(index) as string);
 
     }
 
     return (keys.length > 0) ? from(keys) : EMPTY;
+
+  }
+
+  has(key: string): Observable<boolean> {
+
+    for (let index = 0; index < localStorage.length; index += 1) {
+
+      if (key === this.getKey(index)) {
+
+        return of(true);
+
+      }
+
+    }
+
+    return of(false);
+
+  }
+
+  protected getKey(index: number): string | null {
+
+    const prefixedKey = localStorage.key(index);
+
+    if (prefixedKey !== null) {
+
+      return (this.prefix === '') ? prefixedKey : prefixedKey.substr(this.prefix.length);
+
+    }
+
+    return null;
 
   }
 
