@@ -1,4 +1,4 @@
-# Advanced operations
+# `Map`-like operations
 
 Starting with version >= 7.1, in addition to the classic `localStorage`-like API,
 this lib also provides a partial `Map`-like API for advanced operations.
