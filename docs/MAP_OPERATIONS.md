@@ -14,7 +14,7 @@ this.localStorage.keys().subscribe((key) => {
 
 }, () => {}, () => {
 
-  // If you need to something after the whole iteration,
+  // If you need to do something after the whole iteration,
   // be sure to act on complete, and not on success as usual,
   // as this Obserbable will emit several times, for each key
 
