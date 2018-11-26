@@ -2,6 +2,12 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 7.1.1 (2018-11-26)
+
+- Urgent fix of [#57](https://github.com/cyrilletuzi/angular-async-local-storage/issues/57),
+but introduces [#58](https://github.com/cyrilletuzi/angular-async-local-storage/issues/58):
+`keys()` works but temporarly does not complete (will be fixed soon)
+
 ## 7.1.0 (2018-11-23)
 
 - Added a partial `Map`-like API:

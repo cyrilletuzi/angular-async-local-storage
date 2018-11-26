@@ -1,6 +1,6 @@
 import { Injectable, Optional, Inject } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent, of, throwError, race, from, EMPTY } from 'rxjs';
-import { map, mergeMap, first, tap, take } from 'rxjs/operators';
+import { map, mergeMap, first, tap } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { LocalStorageDatabase } from './localstorage-database';
@@ -58,7 +58,8 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Merging success and errors events and autoclosing the observable */
         return (race(success, this.toErrorObservable(request, `length`)) as Observable<number>);
 
-      })
+      }),
+      first()
     );
 
   }
@@ -122,7 +123,8 @@ export class IndexedDBDatabase implements LocalDatabase {
 
         /* Merging success and errors events and autoclosing the observable */
         return (race(success, this.toErrorObservable(request, `getter`)));
-      })
+      }),
+      first()
     );
 
   }
@@ -177,7 +179,8 @@ export class IndexedDBDatabase implements LocalDatabase {
             /* Merging success (passing true) and error events and autoclosing the observable */
             return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `setter`)));
 
-        })
+        }),
+        first()
       );
 
   }
@@ -217,7 +220,8 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Passing true if the item does not exist in local storage */
         return of(true);
 
-      })
+      }),
+      first()
     );
 
   }
@@ -243,7 +247,8 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Merging success (passing true) and error events and autoclosing the observable */
         return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `clearer`)));
 
-      })
+      }),
+      first()
     );
 
   }
@@ -298,7 +303,8 @@ export class IndexedDBDatabase implements LocalDatabase {
 
         /* Merging success and errors events and autoclosing the observable */
         return (race(success, this.toErrorObservable(request, `has`)));
-      })
+      }),
+      first()
     );
 
   }
@@ -399,8 +405,7 @@ export class IndexedDBDatabase implements LocalDatabase {
     /* Transforming a IndexedDB error event in an RxJS ErrorObservable */
     return (fromEvent(request, 'error') as Observable<Event>)
       .pipe(
-        mergeMap(() => throwError(new Error(`IndexedDB ${error} issue : ${(request.error as DOMException).message}.`))),
-        take(0)
+        mergeMap(() => throwError(new Error(`IndexedDB ${error} issue : ${(request.error as DOMException).message}.`)))
       );
 
   }

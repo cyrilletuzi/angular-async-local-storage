@@ -677,6 +677,33 @@ describe('LocalStorage with IndexedDB', () => {
 
   tests(localStorageService);
 
+  it('should use IndexedDb (will fail in private mode and some other special cases)', (done: DoneFn) => {
+
+    const index = 'test';
+    const value = 'test';
+
+    localStorageService.setItem(index, value).subscribe(() => {
+
+      indexedDB.open('ngStorage').addEventListener('success', (event) => {
+
+        const database = (event.target as IDBRequest).result as IDBDatabase;
+
+        const localStorageObject = database.transaction(['localStorage'], 'readonly').objectStore('localStorage');
+
+        localStorageObject.get(index).addEventListener('success', (event) => {
+
+          expect((event.target as IDBRequest).result).toEqual({ value });
+
+          done();
+
+        });
+
+      });
+
+    });
+
+  });
+
 });
 
 describe('LocalStorage with localStorage and a prefix', () => {
