@@ -5,7 +5,7 @@ this lib also provides a partial `Map`-like API for advanced operations.
 
 ## `.keys()` method
 
-An `Observable` return an array of keys:
+An `Observable` returning an array of keys:
 
 ```typescript
 this.localStorage.keys().subscribe((keys) => {

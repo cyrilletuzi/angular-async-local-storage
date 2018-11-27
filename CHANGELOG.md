@@ -15,7 +15,7 @@ See [documentation](./docs/MAP_OPERATIONS.md).
 
 ### Breaking change
 
-One of the features released in 7.1 caused an unforeseen critial regression.
+One of the features released in 7.1 caused an unforeseen critical regression.
 As it concerned only a minor feature introduced in 7.1, released only 4 days ago
 (so probably no one is using it yet), decision has been made to do an exceptional breaking change
 of this just released minor feature, before it was too late.
