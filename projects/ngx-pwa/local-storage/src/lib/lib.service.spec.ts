@@ -1,5 +1,6 @@
 import { inject, async } from '@angular/core/testing';
-import { map, first, take, filter, mergeMap } from 'rxjs/operators';
+import { from } from 'rxjs';
+import { map, first, take, mergeMap, filter } from 'rxjs/operators';
 
 import { LocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
@@ -193,31 +194,32 @@ function tests(localStorageService: LocalStorage) {
 
     const index1 = 'index1';
     const index2 = 'index2';
-    let total = 0;
 
     localStorageService.setItem(index1, 'test').subscribe(() => {
 
       localStorageService.setItem(index2, 'test').subscribe(() => {
 
-        localStorageService.keys().subscribe((key) => {
+        localStorageService.keys().subscribe((keys) => {
 
-          total += 1;
-
-          expect([index1, index2]).toContain(key);
-
-        }, () => {
-
-          fail();
-
-        }, () => {
-
-          expect(total).toBe(2);
+          expect([index1, index2]).toEqual(keys);
 
           done();
 
         });
 
       });
+
+    });
+
+  });
+
+  it('should get an empty arrays if no keys', (done: DoneFn) => {
+
+    localStorageService.keys().subscribe((keys) => {
+
+      expect(keys.length).toBe(0);
+
+      done();
 
     });
 
@@ -269,6 +271,7 @@ function tests(localStorageService: LocalStorage) {
           localStorageService.setItem(index4, 'test').subscribe(() => {
 
             localStorageService.keys().pipe(
+              mergeMap((keys) => from(keys)),
               filter((key) => key.startsWith('app_')),
               mergeMap((key) => localStorageService.removeItem(key))
             ).subscribe({ complete: () => {
@@ -281,7 +284,7 @@ function tests(localStorageService: LocalStorage) {
 
               });
 
-            } });
+            } });
 
           });
 
@@ -679,20 +682,20 @@ describe('LocalStorage with IndexedDB', () => {
 
   it('should use IndexedDb (will fail in private mode and some other special cases)', (done: DoneFn) => {
 
-    const index = 'test';
+    const index = `test${Date.now()}`;
     const value = 'test';
 
     localStorageService.setItem(index, value).subscribe(() => {
 
-      indexedDB.open('ngStorage').addEventListener('success', (event) => {
+      indexedDB.open('ngStorage').addEventListener('success', (openEvent) => {
 
-        const database = (event.target as IDBRequest).result as IDBDatabase;
+        const database = (openEvent.target as IDBRequest).result as IDBDatabase;
 
         const localStorageObject = database.transaction(['localStorage'], 'readonly').objectStore('localStorage');
 
-        localStorageObject.get(index).addEventListener('success', (event) => {
+        localStorageObject.get(index).addEventListener('success', (requestEvent) => {
 
-          expect((event.target as IDBRequest).result).toEqual({ value });
+          expect((requestEvent.target as IDBRequest).result).toEqual({ value });
 
           done();
 

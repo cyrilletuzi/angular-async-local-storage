@@ -121,9 +121,9 @@ export class LocalStorage {
 
   /**
    * Get all keys stored in local storage
-   * @returns A RxJS Observable iterating over the indexes
+   * @returns A RxJS Observable returning an array of the indexes
    */
-  keys(): Observable<string> {
+  keys(): Observable<string[]> {
 
     return this.database.keys();
 

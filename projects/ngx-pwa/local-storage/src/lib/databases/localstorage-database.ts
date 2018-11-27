@@ -1,5 +1,5 @@
 import { Injectable, Optional, Inject } from '@angular/core';
-import { Observable, of, from, throwError, EMPTY } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 import { LocalDatabase } from './local-database';
 import { LOCAL_STORAGE_PREFIX } from '../tokens';
@@ -87,7 +87,7 @@ export class LocalStorageDatabase implements LocalDatabase {
 
   }
 
-  keys(): Observable<string> {
+  keys(): Observable<string[]> {
 
     const keys: string[] = [];
 
@@ -97,7 +97,7 @@ export class LocalStorageDatabase implements LocalDatabase {
 
     }
 
-    return (keys.length > 0) ? from(keys) : EMPTY;
+    return of(keys);
 
   }
 

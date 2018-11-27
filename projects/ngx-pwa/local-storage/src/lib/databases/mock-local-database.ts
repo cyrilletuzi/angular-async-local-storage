@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, from, EMPTY } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { LocalDatabase } from './local-database';
 
@@ -66,9 +66,9 @@ export class MockLocalDatabase implements LocalDatabase {
 
   }
 
-  keys(): Observable<string> {
+  keys(): Observable<string[]> {
 
-    return (this.localStorage.size > 0) ? from(this.localStorage.keys()) : EMPTY;
+    return of(Array.from(this.localStorage.keys()));
 
   }
 

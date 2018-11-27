@@ -1,5 +1,5 @@
 import { Injectable, Optional, Inject } from '@angular/core';
-import { Observable, ReplaySubject, fromEvent, of, throwError, race, from, EMPTY } from 'rxjs';
+import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
 import { map, mergeMap, first, tap } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
@@ -253,14 +253,12 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   }
 
-  keys(): Observable<string> {
+  keys(): Observable<string[]> {
 
     /* Fallback storage if set */
     if (this.fallback) {
       return this.fallback.keys();
     }
-
-    let keysSize = 0;
 
     return this.transaction('readonly').pipe(
       mergeMap((transaction) => {
@@ -269,17 +267,14 @@ export class IndexedDBDatabase implements LocalDatabase {
         const request = transaction.getAllKeys();
 
         const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
-          map((event) => (event.target as IDBRequest).result as string[]),
-          mergeMap((keys) => {
-            keysSize = keys.length;
-            return (keysSize > 0) ? from(keys) : EMPTY;
-          })
+          map((event) => (event.target as IDBRequest).result as string[])
         );
 
         /* Merging success and errors events and autoclosing the observable */
         return (race(success, this.toErrorObservable(request, `keys`)));
 
-      })
+      }),
+      first()
     );
 
   }

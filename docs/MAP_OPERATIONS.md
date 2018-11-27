@@ -5,21 +5,17 @@ this lib also provides a partial `Map`-like API for advanced operations.
 
 ## `.keys()` method
 
-Gives you an `Observable` iterating over all the keys you stored:
+An `Observable` return an array of keys:
 
 ```typescript
-this.localStorage.keys().subscribe((key) => {
+this.localStorage.keys().subscribe((keys) => {
 
-  console.log(key);
-
-}, () => {}, () => {
-
-  // If you need to do something after the whole iteration,
-  // be sure to act on complete, and not on success as usual,
-  // as this Obserbable will emit several times, for each key
+  console.log(keys);
 
 });
 ```
+
+If there is no keys, an empty array is returned.
 
 ## `.has(key)` method
 
@@ -67,12 +63,29 @@ Let's say you stored:
 You can then delete only app data:
 
 ```typescript
-this.localStorage.keys().pipe(
+import { from } from 'rxjs';
+import { filter, mergeMap } from 'rxjs/operators';
+
+this.localStorageService.keys().pipe(
+
+  /* Transform the array of keys in an Observable iterating over the array.
+   * Why not iterating on the array directly with a `for... of` or `forEach`?
+   * Because the next step (removing the item) will be asynchronous,
+   * and we want to keep track of the process to know when everything is over  */
+  mergeMap((keys) => from(keys)),
+
+  /* Keep only keys starting with 'app_' */
   filter((key) => key.startsWith('app_')),
-  mergeMap((key) => this.localStorage.removeItem(key))
+
+  /* Remove the item for each key */
+  mergeMap((key) => localStorageService.removeItem(key))
+
 ).subscribe({ complete: () => {
 
-  // Done
+  /* Note we don't act in the classic success callback as it will be trigerred for each key,
+   * while we want to act only when all the operations are done */
 
-} });
+  console.log('Done!');
+
+} });
 ```

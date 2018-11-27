@@ -2,13 +2,9 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 7.1.1 (2018-11-26)
+## 7.2.0 (2018-11-27)
 
-- Urgent fix of [#57](https://github.com/cyrilletuzi/angular-async-local-storage/issues/57),
-but introduces [#58](https://github.com/cyrilletuzi/angular-async-local-storage/issues/58):
-`keys()` works but temporarly does not complete (will be fixed soon)
-
-## 7.1.0 (2018-11-23)
+### Feature
 
 - Added a partial `Map`-like API:
   - `.keys()` method
@@ -16,6 +12,22 @@ but introduces [#58](https://github.com/cyrilletuzi/angular-async-local-storage/
   - `.size` property
 
 See [documentation](./docs/MAP_OPERATIONS.md).
+
+### Breaking change
+
+One of the features released in 7.1 caused an unforeseen critial regression.
+As it concerned only a minor feature introduced in 7.1, released only 4 days ago
+(so probably no one is using it yet), decision has been made to do an exceptional breaking change
+of this just released minor feature, before it was too late.
+
+- `keys()` is now returning `Observable<string[]>` (returning directly an array with all keys)
+instead of `Observable<string>` (it was iterating over the keys).
+
+[Documentation](./docs/MAP_OPERATIONS.md) has been updated accordingly.
+
+## 7.1.0 (2018-11-23) & 7.1.1 (2018-11-26)
+
+These releases have been **deprecated** due to a critical regression.
 
 ## 7.0.0 (2018-10-19)
 
