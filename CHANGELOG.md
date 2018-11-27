@@ -13,7 +13,7 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 
 See [documentation](./docs/MAP_OPERATIONS.md).
 
-### Breaking change
+### Breaking change (from v7.1 only)
 
 One of the features released in 7.1 caused an unforeseen critical regression.
 As it concerned only a minor feature introduced in 7.1, released only 4 days ago
