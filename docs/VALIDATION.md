@@ -27,7 +27,7 @@ and you can also follow the `JSONSchema` interfaces exported by the lib. But as 
 ### Validating a boolean
 
 ```typescript
-import { JSONSchemaBoolean } from '@ngw-pwa/local-storage';
+import { JSONSchemaBoolean } from '@ngx-pwa/local-storage';
 
 const schema: JSONSchemaBoolean = { type: 'boolean' };
 
@@ -38,7 +38,7 @@ this.localStorage.getItem<boolean>('test', { schema })
 
 For a number:
 ```typescript
-import { JSONSchemaNumeric } from '@ngw-pwa/local-storage';
+import { JSONSchemaNumeric } from '@ngx-pwa/local-storage';
 
 const schema: JSONSchemaNumeric = { type: 'number' };
 
@@ -47,7 +47,7 @@ this.localStorage.getItem<number>('test', { schema })
 
 For an integer only:
 ```typescript
-import { JSONSchemaNumeric } from '@ngw-pwa/local-storage';
+import { JSONSchemaNumeric } from '@ngx-pwa/local-storage';
 
 const schema: JSONSchemaNumeric = { type: 'integer' };
 
@@ -64,7 +64,7 @@ For numbers and integers, in version >= 6, you can also add the following option
 ### Validating a string
 
 ```typescript
-import { JSONSchemaString } from '@ngw-pwa/local-storage';
+import { JSONSchemaString } from '@ngx-pwa/local-storage';
 
 const schema: JSONSchemaString = { type: 'string' };
 
@@ -79,7 +79,7 @@ For strings, in version >= 6, you can also add the following optional validation
 ### Validating an array
 
 ```typescript
-import { JSONSchemaArray, JSONSchemaString } from '@ngw-pwa/local-storage';
+import { JSONSchemaArray, JSONSchemaString } from '@ngx-pwa/local-storage';
 
 const schema: JSONSchemaArray = { items: { type: 'string' } as JSONSchemaString };
 
@@ -97,7 +97,7 @@ For arrays, in version >= 6, you can also add the following optional validations
 ### Validating an object
 
 ```typescript
-import { JSONSchemaObject, JSONSchemaString, JSONSchemaNumeric } from '@ngw-pwa/local-storage';
+import { JSONSchemaObject, JSONSchemaString, JSONSchemaNumeric } from '@ngx-pwa/local-storage';
 
 interface User {
   firstName: string;
@@ -124,7 +124,7 @@ so you can also add the other optional validations related to the chosen type.
 
 Since version >= 6, if it can only be a fixed value:
 ```typescript
-import { JSONSchemaConst } from '@ngw-pwa/local-storage';
+import { JSONSchemaConst } from '@ngx-pwa/local-storage';
 
 const schema: JSONSchemaConst = { const: 'some value' };
 
@@ -133,7 +133,7 @@ this.localStorage.getItem<string>('test', { schema })
 
 Since version >= 6, if it can only be a fixed value among a list:
 ```typescript
-import { JSONSchemaEnum } from '@ngw-pwa/local-storage';
+import { JSONSchemaEnum } from '@ngx-pwa/local-storage';
 
 const schema: JSONSchemaEnum = { enum: ['value 1', 'value 2'] };
 

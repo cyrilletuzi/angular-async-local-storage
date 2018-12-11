@@ -3,7 +3,7 @@
 ## Previous migrations
 
 If you come from the old `angular-async-local-storage` package,
-you'll need to **[migrate to the new `@ngw-pwa/local-storage` package](./MIGRATION_TO_NEW_PACKAGE.md)**
+you'll need to **[migrate to the new `@ngx-pwa/local-storage` package](./MIGRATION_TO_NEW_PACKAGE.md)**
 first before upgrading to v6.
 
 ## Shorter classes names
