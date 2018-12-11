@@ -214,4 +214,29 @@ which would be generic for all types, but only allowing you the optional validat
 Thus casting with a more specific interface (like `JSONSchemaString`) allows TypeScript to check your JSON Schema is really valid.
 But it's not mandatory.
 
+## ES6 shortcut
+
+In EcmaScript >= 6, this:
+
+```typescript
+const schema: JSONSchemaBoolean = { type: 'boolean' };
+
+this.localStorage.getItem<boolean>('test', { schema });
+```
+
+is a shortcut for this:
+```typescript
+const schema: JSONSchemaBoolean = { type: 'boolean' };
+
+this.localStorage.getItem<boolean>('test', { schema: schema });
+```
+
+which works only if the property and the variable have the same name.
+So if your variable has another name, you can't use the shortcut:
+```typescript
+const customSchema: JSONSchemaBoolean = { type: 'boolean' };
+
+this.localStorage.getItem<boolean>('test', { schema: customSchema });
+```
+
 [Back to general documentation](../README.md)
