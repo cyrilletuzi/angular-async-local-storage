@@ -631,6 +631,21 @@ describe(`JSONValidator`, () => {
 
     });
 
+    it(`should return true on an object with the required properties and missing optional property`, () => {
+
+      const test = jsonValidator.validate({ test1: '', test2: '' }, {
+        required: ['test1', 'test2'],
+        properties: {
+          test1: { type: 'string' },
+          test2: { type: 'string' },
+          test3: { type: 'string' }
+        }
+      } as JSONSchemaObject);
+
+      expect(test).toBe(true);
+
+    });
+
     it(`should return false on an object with missing required properties`, () => {
 
       const test = jsonValidator.validate({ test1: '' }, { required: ['test1', 'test2'],

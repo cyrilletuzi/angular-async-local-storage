@@ -81,7 +81,7 @@ export class JSONValidator {
      * Check if the object doesn't have more properties than expected
      * Equivalent of additionalProperties: false
      */
-    if (Object.keys(schema.properties).length !== Object.keys(data).length) {
+    if (Object.keys(schema.properties).length < Object.keys(data).length) {
 
       return false;
 
