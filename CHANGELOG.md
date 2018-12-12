@@ -2,6 +2,12 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 5.3.2 and 6.2.1 and 7.2.1 (2018-12-12)
+
+### Bug fix
+
+- Correct validation for required vs optional properties (fixes [#63](https://github.com/cyrilletuzi/angular-async-local-storage/issues/63))
+
 ## 7.2.0 (2018-11-27)
 
 ### Feature
