@@ -9,7 +9,7 @@
     "test": "ng test @ngx-pwa/local-storage",
     "testAll": "ng test @ngx-pwa/local-storage --watch false && ng test angular-async-local-storage --watch false",
     "lint": "ng lint",
-    "publish": "npm run lint && npm run testAll && npm run build && npm publish dist/ngx-pwa/local-storage --access public"
+    "publish": "npm run lint && npm run build && npm run testAll && npm publish dist/ngx-pwa/local-storage --access public"
   },
   "private": true,
   "dependencies": {
