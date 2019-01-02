@@ -6,7 +6,7 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 
 ### Bug fix
 
-- Avoid throwing when storing `undefined` in `localStorage` fallback, storing `null` instead
+- Avoid throwing when storing `undefined` in `localStorage` fallback
 
 ## 5.3.2 and 6.2.1 and 7.2.1 (2018-12-12)
 
