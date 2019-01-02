@@ -121,6 +121,8 @@ this.localStorage.getItem('notexisting').subscribe((data) => {
 });
 ```
 
+If you tried to store `undefined`, you'll get `null` too, as some storages don't allow `undefined`.
+
 ### Checking data
 
 Don't forget it's client-side storage: **always check the data**, as it could have been forged or deleted.

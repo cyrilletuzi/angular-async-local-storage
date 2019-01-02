@@ -2,6 +2,12 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 5.3.3 and 6.2.2 and 7.2.2 (2019-01-02)
+
+### Bug fix
+
+- Avoid throwing when storing `undefined` in `localStorage` fallback, storing `null` instead
+
 ## 5.3.2 and 6.2.1 and 7.2.1 (2018-12-12)
 
 ### Bug fix
