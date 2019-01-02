@@ -56,7 +56,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   setItem(key: string, data: any): Observable<boolean> {
 
-    /* localStorage can't store undefined and would throw an exception */
+    /* Storing undefined in localStorage would then throw when getting and parsing the value */
     if (data !== undefined) {
 
       localStorage.setItem(`${this.prefix}${key}`, JSON.stringify(data));
