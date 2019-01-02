@@ -120,6 +120,9 @@ this.localStorage.getItem<User>('test', { schema })
 What's expected for each property is another JSON schema,
 so you can also add the other optional validations related to the chosen type.
 
+If you're using TypeScript 3.2, be sure to cast sub-schemas, due to a regression issue in TS 3.2
+(see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)).
+
 ### Validating fixed values
 
 Since version >= 6, if it can only be a fixed value:
