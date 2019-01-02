@@ -27,17 +27,6 @@ function testGetItem<T>(type: 'primitive' | 'object', localStorageService: Local
 
   });
 
-  /*
-  localStorageService.getItem('test').subscribe((result) => {});
-  localStorageService.getItem<string>('test').subscribe((result) => {});
-  localStorageService.getItem<string>('test', {}).subscribe((result) => {});
-  localStorageService.getItem<string>('test', { schema: { type: 'string' }}).subscribe((result) => {});
-  localStorageService.getItem('test', { schema: { type: 'string' }}).subscribe((result) => {});
-
-  localStorageService.getUnsafeItem('test').subscribe((result) => {});
-  localStorageService.getUnsafeItem<string>('test').subscribe((result) => {});
-  */
-
 }
 
 function testGetItemPrimitive<T>(localStorageService: LocalStorage, value: T, done: DoneFn) {
