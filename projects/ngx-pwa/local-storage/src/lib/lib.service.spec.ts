@@ -6,7 +6,7 @@ import { LocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
 import { LocalStorageDatabase } from './databases/localstorage-database';
 import { MockLocalDatabase } from './databases/mock-local-database';
-import { JSONSchema } from './validation/json-schema';
+import { JSONSchema, JSONSchemaString } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
 
 function testGetItem<T>(type: 'primitive' | 'object', localStorageService: LocalStorage, value: T, done: DoneFn) {
@@ -325,7 +325,7 @@ function tests(localStorageService: LocalStorage) {
       properties: {
         expected: {
           type: 'string'
-        }
+        } as JSONSchemaString
       },
       required: ['expected']
     };
@@ -360,7 +360,7 @@ function tests(localStorageService: LocalStorage) {
       properties: {
         expected: {
           type: 'string'
-        }
+        } as JSONSchemaString
       },
       required: ['expected']
     };
@@ -391,7 +391,7 @@ function tests(localStorageService: LocalStorage) {
       properties: {
         expected: {
           type: 'string'
-        }
+        } as JSONSchemaString
       },
       required: ['expected']
     };
