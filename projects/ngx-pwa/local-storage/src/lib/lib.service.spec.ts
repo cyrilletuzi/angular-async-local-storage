@@ -712,6 +712,41 @@ describe('LocalStorage with IndexedDB', () => {
 
   });
 
+  function testSetCompatibilityWithNativeAPI(done: DoneFn, value: any) {
+
+    const index = 'test';
+
+    indexedDB.open('ngStorage').addEventListener('success', (openEvent) => {
+
+      const database = (openEvent.target as IDBRequest).result as IDBDatabase;
+
+      const localStorageObject = database.transaction(['localStorage'], 'readwrite').objectStore('localStorage');
+
+      localStorageObject.add(value, index).addEventListener('success', () => {
+
+        localStorageService.setItem(index, 'world').subscribe(() => {
+
+          done();
+
+        });
+
+      });
+
+    });
+
+  }
+
+  it('should store a value on an index previously used by a native or other lib API', (done: DoneFn) => {
+
+    testSetCompatibilityWithNativeAPI(done, 'hello');
+    testSetCompatibilityWithNativeAPI(done, '');
+    testSetCompatibilityWithNativeAPI(done, 0);
+    testSetCompatibilityWithNativeAPI(done, false);
+    testSetCompatibilityWithNativeAPI(done, null);
+    testSetCompatibilityWithNativeAPI(done, undefined);
+
+  });
+
 });
 
 describe('LocalStorage with localStorage and a prefix', () => {
