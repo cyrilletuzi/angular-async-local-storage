@@ -149,7 +149,7 @@ export class IndexedDBDatabase implements LocalDatabase {
 
             /* Listening to the success event, and passing the item value if found, null otherwise */
             const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
-              map((event) => (event.target as IDBRequest).result),
+              map((event) => (event.target as IDBRequest).result as string | undefined),
             );
 
             /* Merging success and errors events and autoclosing the observable */
