@@ -320,6 +320,7 @@ function tests(localStorageService: LocalStorage) {
     const value = {
       unexpected: 'value'
     };
+    // TODO: delete cast when TS 3.2 issue is fixed
     const schema: JSONSchema = {
       properties: {
         expected: {
@@ -355,6 +356,7 @@ function tests(localStorageService: LocalStorage) {
     const value = {
       expected: 'value'
     };
+    // TODO: delete cast when TS 3.2 issue is fixed
     const schema: JSONSchema = {
       properties: {
         expected: {
@@ -386,6 +388,7 @@ function tests(localStorageService: LocalStorage) {
 
   it('should return the data if the data is null (no validation)', (done: DoneFn) => {
 
+    // TODO: delete cast when TS 3.2 issue is fixed
     const schema: JSONSchema = {
       properties: {
         expected: {
@@ -753,6 +756,56 @@ describe('LocalStorage with IndexedDB', () => {
     it('should store a value on an index previously used by a native or other lib API', (done: DoneFn) => {
 
       testSetCompatibilityWithNativeAPI(done, setTestValue);
+
+    });
+
+  }
+
+  function testGetCompatibilityWithNativeAPI(done: DoneFn, value: any, schema: JSONSchema) {
+
+    const index = 'test';
+
+    indexedDB.open('ngStorage').addEventListener('success', (openEvent) => {
+
+      const database = (openEvent.target as IDBRequest).result as IDBDatabase;
+
+      const localStorageObject = database.transaction(['localStorage'], 'readwrite').objectStore('localStorage');
+
+      localStorageObject.add(value, index).addEventListener('success', () => {
+
+        localStorageService.getItem(index, { schema }).subscribe((result) => {
+
+          expect(result).toEqual((value !== undefined) ? value : null);
+
+          done();
+
+        });
+
+      });
+
+    });
+
+  }
+
+  const getTestValues: [any, JSONSchema][] = [
+    ['hello', { type: 'string' }],
+    ['', { type: 'string' }],
+    [0, { type: 'number' }],
+    [1, { type: 'number' }],
+    [true, { type: 'boolean' }],
+    [false, { type: 'boolean' }],
+    // TODO: delete cast when TS 3.2 issue is fixed
+    [[1, 2, 3], { items: { type: 'number' } } as JSONSchema],
+    [{ test: 'value' }, { properties: { test: { type: 'string' } } } as JSONSchema],
+    [null, { type: 'null' }],
+    [undefined, { type: 'null' }],
+  ];
+
+  for (const [getTestValue, getTestSchema] of getTestValues) {
+
+    it('should get a value on an index previously used by a native or other lib API', (done: DoneFn) => {
+
+      testGetCompatibilityWithNativeAPI(done, getTestValue, getTestSchema);
 
     });
 

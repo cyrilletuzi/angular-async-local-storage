@@ -214,6 +214,12 @@ Firefox, Chrome, Opera, Safari, Edge, and IE10+.
 
 See [the browsers support guide](./docs/BROWSERS_SUPPORT.md) for more details and special cases (like private browsing).
 
+## Interoperability
+
+For interoperability when mixing this lib with direct usage of native APIs or other libs
+(which doesn't make sense in most of cases),
+see the [interoperability documentation](./docs/INTEROPERABILITY.md).
+
 ## Changelog
 
 [Changelog available here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/CHANGELOG.md), and [migration guides here](./MIGRATION.md).

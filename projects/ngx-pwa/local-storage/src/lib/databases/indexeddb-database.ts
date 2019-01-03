@@ -103,7 +103,17 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Listening to the success event, and passing the item value if found, null otherwise */
         const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
           map((event) => (event.target as IDBRequest).result),
-          map((result) => result && (this.dataPath in result) ? (result[this.dataPath] as T) : null)
+          map((result) => {
+
+            if ((result != null) && (typeof result === 'object') && (this.dataPath in result) && (result[this.dataPath] != null)) {
+              return (result[this.dataPath] as T);
+            } else if (result != null) {
+              return result as T;
+            }
+
+            return null;
+
+          })
         );
 
         /* Merging success and errors events and autoclosing the observable */
@@ -143,8 +153,12 @@ export class IndexedDBDatabase implements LocalDatabase {
           tap((value) => {
             transaction = value;
           }),
-          /* Check if the key already exists or not */
-          map(() => transaction.getKey(key)),
+          /* Check if the key already exists or not
+           * `getKey()` is only available in indexedDb v2 (Chrome >= 58)
+           * In older browsers, the value is checked instead, but it could lead to an exception
+           * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDb` API)
+           */
+          map(() => ('getKey' in transaction) ? transaction.getKey(key) : (transaction as IDBObjectStore).get(key)),
           mergeMap((request) => {
 
             /* Listening to the success event, and passing the item value if found, null otherwise */
@@ -156,10 +170,10 @@ export class IndexedDBDatabase implements LocalDatabase {
             return (race(success, this.toErrorObservable(request, `setter`)));
 
           }),
-          mergeMap((existingKey) => {
+          mergeMap((existingEntry) => {
 
             /* Adding or updating local storage, based on previous checking */
-            const request: IDBRequest = (existingKey === undefined) ?
+            const request: IDBRequest = (existingEntry === undefined) ?
               transaction.add({ [this.dataPath]: data }, key) :
               transaction.put({ [this.dataPath]: data }, key);
 
