@@ -8,7 +8,8 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 
 - `getItem()` and `setItem()` will now work with values stored from elsewhere
 (ie. via the native APIs or via another lib like `localForage`), given some limitations and adaptations
-(see the [interoperability documentation](./docs/INTEROPERABILITY.md)).
+(see the [interoperability documentation](./docs/INTEROPERABILITY.md))
+(fixes [#65](https://github.com/cyrilletuzi/angular-async-local-storage/issues/65))
 
 ## 5.3.3 and 6.2.2 and 7.2.2 (2019-01-02)
 
