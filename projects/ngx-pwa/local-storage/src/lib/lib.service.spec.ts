@@ -43,12 +43,6 @@ function testGetItemObject<T>(localStorageService: LocalStorage, value: T, done:
 
 function tests(localStorageService: LocalStorage) {
 
-  beforeEach((done: DoneFn) => {
-    localStorageService.clear().subscribe(() => {
-      done();
-    });
-  });
-
   it('should return null on unknown index', (done: DoneFn) => {
 
     localStorageService.getItem('unknown').subscribe((data) => {
@@ -667,6 +661,12 @@ describe('LocalStorage with mock storage', () => {
 
   const localStorageService = new LocalStorage(new MockLocalDatabase(), new JSONValidator());
 
+  beforeEach((done: DoneFn) => {
+    localStorageService.clear().subscribe(() => {
+      done();
+    });
+  });
+
   tests(localStorageService);
 
 });
@@ -675,6 +675,10 @@ describe('LocalStorage with localStorage', () => {
 
   const localStorageService = new LocalStorage(new LocalStorageDatabase(), new JSONValidator());
 
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   tests(localStorageService);
 
 });
@@ -682,6 +686,12 @@ describe('LocalStorage with localStorage', () => {
 describe('LocalStorage with IndexedDB', () => {
 
   const localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
+
+  beforeEach((done: DoneFn) => {
+    localStorageService.clear().subscribe(() => {
+      done();
+    });
+  });
 
   tests(localStorageService);
 
@@ -736,16 +746,17 @@ describe('LocalStorage with IndexedDB', () => {
 
   }
 
-  it('should store a value on an index previously used by a native or other lib API', (done: DoneFn) => {
+  const setTestValues = ['hello', '', 0, false, null, undefined];
 
-    testSetCompatibilityWithNativeAPI(done, 'hello');
-    testSetCompatibilityWithNativeAPI(done, '');
-    testSetCompatibilityWithNativeAPI(done, 0);
-    testSetCompatibilityWithNativeAPI(done, false);
-    testSetCompatibilityWithNativeAPI(done, null);
-    testSetCompatibilityWithNativeAPI(done, undefined);
+  for (const setTestValue of setTestValues) {
 
-  });
+    it('should store a value on an index previously used by a native or other lib API', (done: DoneFn) => {
+
+      testSetCompatibilityWithNativeAPI(done, setTestValue);
+
+    });
+
+  }
 
 });
 
@@ -768,6 +779,10 @@ describe('LocalStorage with localStorage and a prefix', () => {
   });
 
   const localStorageService = new LocalStorage(new LocalStorageDatabase('myapp'), new JSONValidator());
+
+  beforeEach(() => {
+    localStorage.clear();
+  });
 
   tests(localStorageService);
 
@@ -793,6 +808,12 @@ describe('LocalStorage with IndexedDB and a prefix', () => {
   });
 
   const localStorageService = new LocalStorage(new IndexedDBDatabase('myapp'), new JSONValidator());
+
+  beforeEach((done: DoneFn) => {
+    localStorageService.clear().subscribe(() => {
+      done();
+    });
+  });
 
   tests(localStorageService);
 

@@ -144,7 +144,7 @@ export class IndexedDBDatabase implements LocalDatabase {
             transaction = value;
           }),
           /* Check if the key already exists or not */
-          map(() => transaction.get(key)),
+          map(() => transaction.getKey(key)),
           mergeMap((request) => {
 
             /* Listening to the success event, and passing the item value if found, null otherwise */
@@ -153,14 +153,13 @@ export class IndexedDBDatabase implements LocalDatabase {
             );
 
             /* Merging success and errors events and autoclosing the observable */
-            return (race(success, this.toErrorObservable(request, `getter`)));
+            return (race(success, this.toErrorObservable(request, `setter`)));
 
           }),
-          map((existingData) => (existingData == null) ? 'add' : 'put'),
-          mergeMap((method) => {
+          mergeMap((existingKey) => {
 
             /* Adding or updating local storage, based on previous checking */
-            const request: IDBRequest = (method === 'add') ?
+            const request: IDBRequest = (existingKey === undefined) ?
               transaction.add({ [this.dataPath]: data }, key) :
               transaction.put({ [this.dataPath]: data }, key);
 
