@@ -1,4 +1,4 @@
-import { inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { from } from 'rxjs';
 import { map, first, take, mergeMap, filter } from 'rxjs/operators';
 
@@ -779,14 +779,16 @@ describe('LocalStorage with IndexedDB', () => {
 
   tests(localStorageService);
 
-  it('should use IndexedDb (will fail in private mode and some other special cases)', (done: DoneFn) => {
+  it('should use IndexedDb (will be pending in Firefox private mode)', (done: DoneFn) => {
 
     const index = `test${Date.now()}`;
     const value = 'test';
 
     localStorageService.setItem(index, value).subscribe(() => {
 
-      indexedDB.open('ngStorage').addEventListener('success', (openEvent) => {
+      const dbOpen = indexedDB.open('ngStorage');
+
+      dbOpen.addEventListener('success', (openEvent) => {
 
         const database = (openEvent.target as IDBRequest).result as IDBDatabase;
 
@@ -802,6 +804,12 @@ describe('LocalStorage with IndexedDB', () => {
 
       });
 
+      dbOpen.addEventListener('error', () => {
+
+        pending();
+
+      });
+
     });
 
   });
@@ -810,7 +818,9 @@ describe('LocalStorage with IndexedDB', () => {
 
     const index = 'test';
 
-    indexedDB.open('ngStorage').addEventListener('success', (openEvent) => {
+    const dbOpen = indexedDB.open('ngStorage');
+
+    dbOpen.addEventListener('success', (openEvent) => {
 
       const database = (openEvent.target as IDBRequest).result as IDBDatabase;
 
@@ -830,13 +840,19 @@ describe('LocalStorage with IndexedDB', () => {
 
     });
 
+    dbOpen.addEventListener('error', () => {
+
+      pending();
+
+    });
+
   }
 
   const setTestValues = ['hello', '', 0, false, null, undefined];
 
   for (const setTestValue of setTestValues) {
 
-    it('should store a value on an index previously used by a native or other lib API', (done: DoneFn) => {
+    it('should store a value on an index previously used by another API (will be pending in Firefox private mode)', (done: DoneFn) => {
 
       testSetCompatibilityWithNativeAPI(done, setTestValue);
 
@@ -848,7 +864,9 @@ describe('LocalStorage with IndexedDB', () => {
 
     const index = 'test';
 
-    indexedDB.open('ngStorage').addEventListener('success', (openEvent) => {
+    const dbOpen = indexedDB.open('ngStorage');
+
+    dbOpen.addEventListener('success', (openEvent) => {
 
       const database = (openEvent.target as IDBRequest).result as IDBDatabase;
 
@@ -865,6 +883,12 @@ describe('LocalStorage with IndexedDB', () => {
         });
 
       });
+
+    });
+
+    dbOpen.addEventListener('error', () => {
+
+      pending();
 
     });
 
@@ -886,7 +910,7 @@ describe('LocalStorage with IndexedDB', () => {
 
   for (const [getTestValue, getTestSchema] of getTestValues) {
 
-    it('should get a value on an index previously used by a native or other lib API', (done: DoneFn) => {
+    it('should get a value on an index previously used by another lib API (will be pending in Firefox private mode)', (done: DoneFn) => {
 
       testGetCompatibilityWithNativeAPI(done, getTestValue, getTestSchema);
 
@@ -959,21 +983,21 @@ describe('LocalStorage with automatic storage injection', () => {
 
   it('should store and get the same value', (done: DoneFn) => {
 
-    (inject([LocalStorage], (localStorageService: LocalStorage) => {
+    // TODO: investigate why the test is failing in Firefox private mode
 
-      const index = 'index';
-      const value = 'value';
+    const localStorageService = TestBed.get(LocalStorage) as LocalStorage;
 
-      localStorageService.setItem(index, value).subscribe(() => {
+    const index = 'index';
+    const value = 'value';
 
-        localStorageService.getItem<string>(index).subscribe((data) => {
-          expect(data).toBe(value);
-          done();
-        });
+    localStorageService.setItem(index, value).subscribe(() => {
 
+      localStorageService.getItem<string>(index).subscribe((data) => {
+        expect(data).toBe(value);
+        done();
       });
 
-    }))();
+    });
 
   });
 
