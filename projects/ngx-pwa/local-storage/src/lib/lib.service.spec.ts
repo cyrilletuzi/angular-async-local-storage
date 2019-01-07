@@ -200,7 +200,8 @@ function tests(localStorageService: LocalStorage) {
 
         localStorageService.keys().subscribe((keys) => {
 
-          expect([index1, index2]).toEqual(keys);
+          /* Sorting because Firefox keys order is inconsistent */
+          expect([index1, index2].sort()).toEqual(keys.sort());
 
           done();
 
