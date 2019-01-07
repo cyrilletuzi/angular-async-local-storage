@@ -32,6 +32,9 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
   - `.has(key)` method
   - `.size` property
 
+Currently, `has()` and `keys()` are not supported in Internet Explorer and Edge
+(tracked in [#69](https://github.com/cyrilletuzi/angular-async-local-storage/issues/69)).
+
 See [documentation](./docs/MAP_OPERATIONS.md).
 
 ### Breaking change (from v7.1 only)

@@ -1,7 +1,10 @@
 # `Map`-like operations
 
-Starting with version >= 7.1, in addition to the classic `localStorage`-like API,
+Starting with version >= 7.2, in addition to the classic `localStorage`-like API,
 this lib also provides a partial `Map`-like API for advanced operations.
+
+Currently, **`has()` and `keys()` are not supported in Internet Explorer and Edge**
+(tracked in [#69](https://github.com/cyrilletuzi/angular-async-local-storage/issues/69)).
 
 ## `.keys()` method
 
