@@ -10,6 +10,7 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
       require('karma-safari-launcher'),
+      require('karma-safari-private-launcher'),
       require('karma-edge-launcher'),
       require('karma-ie-launcher'),
       require('karma-jasmine-html-reporter'),
@@ -54,11 +55,9 @@ module.exports = function (config) {
      * which leads some tests to crash because of asynchronicty. To avoid this, manually close all Karma tabs in Safari, or run in the terminal:
      * defaults write com.apple.Safari ApplePersistenceIgnoreState YES
      */
-    // browsers: ['Chrome', 'Firefox', 'Safari', 'Chrome_private'],
-    /* Tests on Mac in private modes
-     * IMPORTANT : Safari does not have a command line option for private mode (if you know one, please tell me),
-     * so you have to manually configure it to open a new private tab on launch, before launching the tests */
-    // browsers: ['Chrome', 'Chrome_private', 'Firefox_private', 'Safari'],
+    // browsers: ['Chrome', 'Firefox', 'Safari'],
+    /* Tests on Mac in private modes */
+    // browsers: ['Chrome_private', 'Firefox_private', 'SafariPrivate'],
     /* Tests on Windows */
     // browsers: ['Chrome', 'Firefox', 'Edge', 'IE'],
     /* Tests on Windows in private mode
