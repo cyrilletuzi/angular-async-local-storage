@@ -49,13 +49,10 @@ module.exports = function (config) {
       }
     },
     /* Quick tests */
-    browsers: ['Chrome'],
+    // browsers: ['Chrome'],
     /* Tests on Mac
-     * IMPORTANT FOR SAFARI: by default, Safari reopens previous tabs, meaning there can be multiple instances of the same tests running at the same time,
-     * which leads some tests to crash because of asynchronicty. To avoid this, manually close all Karma tabs in Safari, or run in the terminal:
-     * defaults write com.apple.Safari ApplePersistenceIgnoreState YES
      */
-    // browsers: ['Chrome', 'Firefox', 'Safari'],
+    browsers: ['Chrome', 'Firefox', 'Safari'],
     /* Tests on Mac in private modes */
     // browsers: ['Chrome_private', 'Firefox_private', 'SafariPrivate'],
     /* Tests on Windows */
