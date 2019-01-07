@@ -51,6 +51,8 @@ module.exports = function (config) {
     /* Quick tests */
     // browsers: ['Chrome'],
     /* Tests on Mac
+     * There is currently an issue with karma and Safari 12,
+     * needing to explicitly click "open" to launch the tests
      */
     browsers: ['Chrome', 'Firefox', 'Safari'],
     /* Tests on Mac in private modes */
