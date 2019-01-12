@@ -163,7 +163,7 @@ this.localStorage.clearSubscribe();
 
 ### `Map`-like operations
 
-Starting *with version >= 7.1*, in addition to the classic `localStorage`-like API,
+Starting *with version >= 7.4*, in addition to the classic `localStorage`-like API,
 this lib also provides some `Map`-like methods for advanced operations:
   - `.keys()` method
   - `.has(key)` method

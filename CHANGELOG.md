@@ -2,6 +2,13 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 7.4.0 (2019-01-12)
+
+### Feature
+
+- `has()` and `keys()` now work in Edge/IE too
+(fixes [#69](https://github.com/cyrilletuzi/angular-async-local-storage/issues/69))
+
 ## 7.3.0 (2019-01-03)
 
 ### Feature
@@ -32,8 +39,7 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
   - `.has(key)` method
   - `.size` property
 
-Currently, `has()` and `keys()` are not supported in Internet Explorer and Edge
-(tracked in [#69](https://github.com/cyrilletuzi/angular-async-local-storage/issues/69)).
+In v7.2, `has()` and `keys()` were not supported in Internet Explorer and Edge. Update to v7.4.
 
 See [documentation](./docs/MAP_OPERATIONS.md).
 
