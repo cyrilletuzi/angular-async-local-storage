@@ -288,7 +288,7 @@ export class IndexedDBDatabase implements LocalDatabase {
     }
 
     return this.transaction('readonly').pipe(
-      map((transaction) => transaction.getKey(key)),
+      map((transaction) => ('getKey' in transaction) ? transaction.getKey(key) : (transaction as IDBObjectStore).get(key)),
       mergeMap((request) => {
 
         /* Listening to the success event, and passing the item value if found, null otherwise */
