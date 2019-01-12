@@ -54,11 +54,11 @@ module.exports = function (config) {
      * There is currently an issue with karma and Safari 12,
      * needing to explicitly click "open" to launch the tests
      */
-    browsers: ['Chrome', 'Firefox', 'Safari'],
+    // browsers: ['Chrome', 'Firefox', 'Safari'],
     /* Tests on Mac in private modes */
     // browsers: ['Chrome_private', 'Firefox_private', 'SafariPrivate'],
     /* Tests on Windows */
-    // browsers: ['Chrome', 'Firefox', 'Edge', 'IE'],
+    browsers: ['Edge'],
     /* Tests on Windows in private mode
      * Not sure the private option for Edge is working... */
     // browsers: ['Chrome', 'Chrome_private', 'Firefox_private', 'Edge_private', 'IE_private'],

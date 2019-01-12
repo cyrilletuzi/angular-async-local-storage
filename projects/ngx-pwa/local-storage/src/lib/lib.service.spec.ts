@@ -826,17 +826,25 @@ describe('LocalStorage with IndexedDB', () => {
 
       const localStorageObject = database.transaction(['localStorage'], 'readwrite').objectStore('localStorage');
 
-      localStorageObject.add(value, index).addEventListener('success', () => {
+      try {
 
-        localStorageService.setItem(index, 'world').subscribe(() => {
+        localStorageObject.add(value, index).addEventListener('success', () => {
 
-          expect().nothing();
+          localStorageService.setItem(index, 'world').subscribe(() => {
 
-          done();
+            expect().nothing();
+
+            done();
+
+          });
 
         });
 
-      });
+      } catch (error) {
+
+        pending();
+
+      }
 
     });
 
@@ -852,7 +860,8 @@ describe('LocalStorage with IndexedDB', () => {
 
   for (const setTestValue of setTestValues) {
 
-    it('should store a value on an index previously used by another API (will be pending in Firefox private mode)', (done: DoneFn) => {
+    it(`should store a value on an index previously used by another API
+      (will be pending in Firefox private mode and 1 pending in Edge/IE because of undefined)`, (done: DoneFn) => {
 
       testSetCompatibilityWithNativeAPI(done, setTestValue);
 
@@ -872,17 +881,24 @@ describe('LocalStorage with IndexedDB', () => {
 
       const localStorageObject = database.transaction(['localStorage'], 'readwrite').objectStore('localStorage');
 
-      localStorageObject.add(value, index).addEventListener('success', () => {
+      try {
 
-        localStorageService.getItem(index, { schema }).subscribe((result) => {
+        localStorageObject.add(value, index).addEventListener('success', () => {
 
-          expect(result).toEqual((value !== undefined) ? value : null);
+          localStorageService.getItem(index, { schema }).subscribe((result) => {
 
-          done();
+            expect(result).toEqual((value !== undefined) ? value : null);
+
+            done();
+
+          });
 
         });
 
-      });
+      } catch (error) {
+        console.log(error);
+        pending();
+      }
 
     });
 
@@ -910,7 +926,8 @@ describe('LocalStorage with IndexedDB', () => {
 
   for (const [getTestValue, getTestSchema] of getTestValues) {
 
-    it('should get a value on an index previously used by another lib API (will be pending in Firefox private mode)', (done: DoneFn) => {
+    it(`should get a value on an index previously used by another lib API
+      (will be pending in Firefox private mode and 1 pending in Edge/IE because of null)`, (done: DoneFn) => {
 
       testGetCompatibilityWithNativeAPI(done, getTestValue, getTestSchema);
 
