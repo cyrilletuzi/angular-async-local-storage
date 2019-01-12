@@ -836,6 +836,10 @@ describe('LocalStorage with IndexedDB', () => {
 
             done();
 
+          }, () => {
+
+            pending();
+
           });
 
         });
@@ -861,7 +865,7 @@ describe('LocalStorage with IndexedDB', () => {
   for (const setTestValue of setTestValues) {
 
     it(`should store a value on an index previously used by another API
-      (will be pending in Firefox private mode and 1 pending in Edge/IE because of undefined)`, (done: DoneFn) => {
+      (will be pending in Firefox private mode and 2 pending in Edge/IE because of null and undefined)`, (done: DoneFn) => {
 
       testSetCompatibilityWithNativeAPI(done, setTestValue);
 
@@ -896,8 +900,9 @@ describe('LocalStorage with IndexedDB', () => {
         });
 
       } catch (error) {
-        console.log(error);
+
         pending();
+
       }
 
     });
