@@ -779,36 +779,46 @@ describe('LocalStorage with IndexedDB', () => {
 
   tests(localStorageService);
 
-  it('should use IndexedDb (will be pending in Firefox private mode)', (done: DoneFn) => {
+  it('should use IndexedDb (will be pending in Firefox/IE private mode)', (done: DoneFn) => {
 
     const index = `test${Date.now()}`;
     const value = 'test';
 
     localStorageService.setItem(index, value).subscribe(() => {
 
-      const dbOpen = indexedDB.open('ngStorage');
+      try {
 
-      dbOpen.addEventListener('success', (openEvent) => {
+        const dbOpen = indexedDB.open('ngStorage');
 
-        const database = (openEvent.target as IDBRequest).result as IDBDatabase;
+        dbOpen.addEventListener('success', (openEvent) => {
 
-        const localStorageObject = database.transaction(['localStorage'], 'readonly').objectStore('localStorage');
+          const database = (openEvent.target as IDBRequest).result as IDBDatabase;
 
-        localStorageObject.get(index).addEventListener('success', (requestEvent) => {
+          const localStorageObject = database.transaction(['localStorage'], 'readonly').objectStore('localStorage');
 
-          expect((requestEvent.target as IDBRequest).result).toEqual({ value });
+          localStorageObject.get(index).addEventListener('success', (requestEvent) => {
 
-          done();
+            expect((requestEvent.target as IDBRequest).result).toEqual({ value });
+
+            done();
+
+          });
 
         });
 
-      });
+        dbOpen.addEventListener('error', () => {
 
-      dbOpen.addEventListener('error', () => {
+          /* Cases : Firefox private mode where `indexedDb` exists but fails */
+          pending();
 
+        });
+
+      } catch {
+
+        /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
         pending();
 
-      });
+      }
 
     });
 
@@ -818,33 +828,57 @@ describe('LocalStorage with IndexedDB', () => {
 
     const index = 'test';
 
-    const dbOpen = indexedDB.open('ngStorage');
+    try {
 
-    dbOpen.addEventListener('success', (openEvent) => {
+      const dbOpen = indexedDB.open('ngStorage');
 
-      const database = (openEvent.target as IDBRequest).result as IDBDatabase;
+      dbOpen.addEventListener('success', (openEvent) => {
 
-      const localStorageObject = database.transaction(['localStorage'], 'readwrite').objectStore('localStorage');
+        const database = (openEvent.target as IDBRequest).result as IDBDatabase;
 
-      localStorageObject.add(value, index).addEventListener('success', () => {
+        const localStorageObject = database.transaction(['localStorage'], 'readwrite').objectStore('localStorage');
 
-        localStorageService.setItem(index, 'world').subscribe(() => {
+        try {
 
-          expect().nothing();
+          localStorageObject.add(value, index).addEventListener('success', () => {
 
-          done();
+            localStorageService.setItem(index, 'world').subscribe(() => {
 
-        });
+              expect().nothing();
+
+              done();
+
+            }, () => {
+
+              /* Cases : Edge/IE because of `undefined` */
+              pending();
+
+            });
+
+          });
+
+        } catch {
+
+          /* Cases : Edge/IE because of `null` */
+          pending();
+
+        }
 
       });
 
-    });
+      dbOpen.addEventListener('error', () => {
 
-    dbOpen.addEventListener('error', () => {
+        /* Cases : Firefox private mode where `indexedDb` exists but fails */
+        pending();
 
-      pending();
+      });
 
-    });
+    } catch {
+
+        /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
+        pending();
+
+    }
 
   }
 
@@ -852,7 +886,8 @@ describe('LocalStorage with IndexedDB', () => {
 
   for (const setTestValue of setTestValues) {
 
-    it('should store a value on an index previously used by another API (will be pending in Firefox private mode)', (done: DoneFn) => {
+    it(`should store a value on an index previously used by another API
+      (will be pending in IE/Firefox private mode and 2 pending in Edge/IE because of null and undefined)`, (done: DoneFn) => {
 
       testSetCompatibilityWithNativeAPI(done, setTestValue);
 
@@ -864,33 +899,52 @@ describe('LocalStorage with IndexedDB', () => {
 
     const index = 'test';
 
-    const dbOpen = indexedDB.open('ngStorage');
+    try {
 
-    dbOpen.addEventListener('success', (openEvent) => {
+      const dbOpen = indexedDB.open('ngStorage');
 
-      const database = (openEvent.target as IDBRequest).result as IDBDatabase;
+      dbOpen.addEventListener('success', (openEvent) => {
 
-      const localStorageObject = database.transaction(['localStorage'], 'readwrite').objectStore('localStorage');
+        const database = (openEvent.target as IDBRequest).result as IDBDatabase;
 
-      localStorageObject.add(value, index).addEventListener('success', () => {
+        const localStorageObject = database.transaction(['localStorage'], 'readwrite').objectStore('localStorage');
 
-        localStorageService.getItem(index, { schema }).subscribe((result) => {
+        try {
 
-          expect(result).toEqual((value !== undefined) ? value : null);
+          localStorageObject.add(value, index).addEventListener('success', () => {
 
-          done();
+            localStorageService.getItem(index, { schema }).subscribe((result) => {
 
-        });
+              expect(result).toEqual((value !== undefined) ? value : null);
+
+              done();
+
+            });
+
+          });
+
+        } catch {
+
+          /* Cases : Edge/IE because of `null` */
+          pending();
+
+        }
 
       });
 
-    });
+      dbOpen.addEventListener('error', () => {
 
-    dbOpen.addEventListener('error', () => {
+        /* Cases : Firefox private mode where `indexedDb` exists but fails */
+        pending();
 
-      pending();
+      });
 
-    });
+    } catch (error) {
+
+        /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
+        pending();
+
+    }
 
   }
 
@@ -910,7 +964,8 @@ describe('LocalStorage with IndexedDB', () => {
 
   for (const [getTestValue, getTestSchema] of getTestValues) {
 
-    it('should get a value on an index previously used by another lib API (will be pending in Firefox private mode)', (done: DoneFn) => {
+    it(`should get a value on an index previously used by another lib API
+      (will be pending in IE/Firefox private mode and 1 pending in Edge/IE because of null)`, (done: DoneFn) => {
 
       testGetCompatibilityWithNativeAPI(done, getTestValue, getTestSchema);
 

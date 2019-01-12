@@ -1,6 +1,6 @@
 import { Injectable, Optional, Inject } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
-import { map, mergeMap, first, tap } from 'rxjs/operators';
+import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { LocalStorageDatabase } from './localstorage-database';
@@ -264,15 +264,42 @@ export class IndexedDBDatabase implements LocalDatabase {
     return this.transaction('readonly').pipe(
       mergeMap((transaction) => {
 
-        /* Deleting the item in local storage */
-        const request = transaction.getAllKeys();
+        if ('getAllKeys' in transaction) {
 
-        const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
-          map((event) => (event.target as IDBRequest).result as string[])
-        );
+          /* Deleting the item in local storage */
+          const request = transaction.getAllKeys();
 
-        /* Merging success and errors events and autoclosing the observable */
-        return (race(success, this.toErrorObservable(request, `keys`)));
+          const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
+            map((event) => (event.target as IDBRequest).result as string[])
+          );
+
+          /* Merging success and errors events and autoclosing the observable */
+          return (race(success, this.toErrorObservable(request, `keys`)));
+
+        } else {
+
+          /* `getAllKeys()` is from IndexedDB v2.0 standard, which is not supported in IE/Edge */
+
+          const request = (transaction as IDBObjectStore).openCursor();
+
+          const keys: string[] = [];
+
+          const success = fromEvent(request, 'success').pipe(
+            map((event) => (event.target as IDBRequest).result as IDBCursorWithValue),
+            tap((cursor) =>  {
+              if (cursor) {
+                keys.push(cursor.key as string);
+                cursor.continue();
+              }
+            }),
+            filter((cursor) => !cursor),
+            map(() => keys)
+          );
+
+          /* Merging success and errors events and autoclosing the observable */
+          return (race(success, this.toErrorObservable(request, `keys`)));
+
+        }
 
       }),
       first()
@@ -288,7 +315,8 @@ export class IndexedDBDatabase implements LocalDatabase {
     }
 
     return this.transaction('readonly').pipe(
-      map((transaction) => transaction.getKey(key)),
+      /* `getKey()` is from IndexedDB v2.0 standard, which is not supported in IE/Edge */
+      map((transaction) => ('getKey' in transaction) ? transaction.getKey(key) : (transaction as IDBObjectStore).get(key)),
       mergeMap((request) => {
 
         /* Listening to the success event, and passing the item value if found, null otherwise */
