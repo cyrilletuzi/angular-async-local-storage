@@ -1,11 +1,5 @@
 # Validation guide
 
-## Guide for version >= 7.5
-
-Version 7.5+ of this lib greatly simplified validation (we recommend to update).
-
-This is the up to date guide. For validation in older versions, see [the old validation guide](./VALIDATION_BEFORE_V7.5.md).
-
 ## Why validation?
 
 Any client-side storage (cookies, `localStorage`, `indexedDb`...) is not secure by nature,
@@ -14,6 +8,8 @@ as the client can forge the value (intentionally to attack your app, or unintent
 It can cause obvious **security issues**, but also **errors** and thus crashes (as the received data type may not be what you expected).
 
 Then, **any data coming from client-side storage should be checked before used**.
+
+It was allowed since v5 of the lib, and is **now required since v7** (see the [migration guide](./MIGRATION_TO_V7.md)).
 
 ## Why JSON schemas?
 
@@ -26,17 +22,17 @@ It can have many uses (it's why you have autocompletion in some JSON files in Vi
 The JSON schema standard has its own [documentation](https://json-schema.org/),
 and you can also follow the `JSONSchema` interfaces exported by the lib. But as a convenience, we'll show here how to validate the common scenarios.
 
+## TypeScript 3.2 issue
+
+If you're using TypeScript 3.2, be sure to follow the following examples,
+ie. be sure to *externalize* your schema in a variable or constant
+*and* to use the *specific* interfaces, due to a regression issue in TypeScript 3.2
+(see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64) for more info).
+
 ## How to validate?
 
 ### Validating a boolean
 
-```typescript
-import { SCHEMA_BOOLEAN } from '@ngx-pwa/local-storage';
-
-this.localStorage.getItem<boolean>('test', { schema: SCHEMA_BOOLEAN })
-```
-
-Which is a shortcut for:
 ```typescript
 import { JSONSchemaBoolean } from '@ngx-pwa/local-storage';
 
@@ -49,36 +45,28 @@ this.localStorage.getItem<boolean>('test', { schema })
 
 For a number:
 ```typescript
-import { SCHEMA_NUMBER } from '@ngx-pwa/local-storage';
+import { JSONSchemaNumeric } from '@ngx-pwa/local-storage';
 
-this.localStorage.getItem<number>('test', { schema: SCHEMA_NUMBER })
+const schema: JSONSchemaNumeric = { type: 'number' };
+
+this.localStorage.getItem<number>('test', { schema })
 ```
 
 For an integer only:
 ```typescript
-import { SCHEMA_INTEGER } from '@ngx-pwa/local-storage';
+import { JSONSchemaNumeric } from '@ngx-pwa/local-storage';
 
-this.localStorage.getItem<number>('test', { schema: SCHEMA_INTEGER })
+const schema: JSONSchemaNumeric = { type: 'integer' };
+
+this.localStorage.getItem<number>('test', { schema })
 ```
 
-For numbers and integers, you can also add the following optional validations:
+For numbers and integers, in version >= 6, you can also add the following optional validations:
 - `multipleOf`
 - `maximum`
 - `exclusiveMaximum`
 - `minimum`
 - `exclusiveMinimum`
-
-For example:
-```typescript
-import { JSONSchemaNumeric } from '@ngx-pwa/local-storage';
-
-const schema: JSONSchemaNumeric = {
-  type: 'number',
-  maximum: 5
-};
-
-this.localStorage.getItem<number>('test', { schema })
-```
 
 ### Validating a string
 
@@ -90,29 +78,17 @@ const schema: JSONSchemaString = { type: 'string' };
 this.localStorage.getItem<string>('test', { schema })
 ```
 
-For strings, you can also add the following optional validations:
+For strings, in version >= 6, you can also add the following optional validations:
 - `maxLength`
 - `minLength`
 - `pattern`
 
-For example:
-```typescript
-import { JSONSchemaString } from '@ngx-pwa/local-storage';
-
-const schema: JSONSchemaString = {
-  type: 'string',
-  maxLength: 10
-};
-
-this.localStorage.getItem<string>('test', { schema })
-```
-
 ### Validating an array
 
 ```typescript
-import { JSONSchemaArray, SCHEMA_STRING } from '@ngx-pwa/local-storage';
+import { JSONSchemaArray, JSONSchemaString } from '@ngx-pwa/local-storage';
 
-const schema: JSONSchemaArray = { items: SCHEMA_STRING };
+const schema: JSONSchemaArray = { items: { type: 'string' } as JSONSchemaString };
 
 this.localStorage.getItem<string[]>('test', { schema })
 ```
@@ -120,27 +96,15 @@ this.localStorage.getItem<string[]>('test', { schema })
 What's expected in `items` is another JSON schema,
 so you can also add the other optional validations related to the chosen type.
 
-For arrays, you can also add the following optional validations:
+For arrays, in version >= 6, you can also add the following optional validations:
 - `maxItems`
 - `minItems`
 - `uniqueItems`
 
-For example:
-```typescript
-import { JSONSchemaArray, SCHEMA_STRING } from '@ngx-pwa/local-storage';
-
-const schema: JSONSchemaArray = {
-  items: SCHEMA_STRING,
-  maxItems: 5
-};
-
-this.localStorage.getItem<string[]>('test', { schema })
-```
-
 ### Validating an object
 
 ```typescript
-import { JSONSchemaObject, SCHEMA_NUMBER, SCHEMA_STRING } from '@ngx-pwa/local-storage';
+import { JSONSchemaObject, JSONSchemaString, JSONSchemaNumeric } from '@ngx-pwa/local-storage';
 
 interface User {
   firstName: string;
@@ -150,9 +114,9 @@ interface User {
 
 const schema: JSONSchemaObject = {
   properties: {
-    firstName: SCHEMA_STRING,
-    lastName: SCHEMA_STRING,
-    age: SCHEMA_NUMBER
+    firstName: { type: 'string' } as JSONSchemaString,
+    lastName: { type: 'string' } as JSONSchemaString,
+    age: { type: 'number' } as JSONSchemaNumeric
   },
   required: ['firstName', 'lastName']
 };
@@ -165,7 +129,7 @@ so you can also add the other optional validations related to the chosen type.
 
 ### Validating fixed values
 
-If it can only be a fixed value:
+Since version >= 6, if it can only be a fixed value:
 ```typescript
 import { JSONSchemaConst } from '@ngx-pwa/local-storage';
 
@@ -174,7 +138,7 @@ const schema: JSONSchemaConst = { const: 'some value' };
 this.localStorage.getItem<string>('test', { schema })
 ```
 
-If it can only be a fixed value among a list:
+Since version >= 6, if it can only be a fixed value among a list:
 ```typescript
 import { JSONSchemaEnum } from '@ngx-pwa/local-storage';
 
@@ -183,39 +147,12 @@ const schema: JSONSchemaEnum = { enum: ['value 1', 'value 2'] };
 this.localStorage.getItem<string>('test', { schema })
 ```
 
-### Validating nested array/objects types
-
-When nesting array and/or objects, you'll need to cast subschemas:
-
-```typescript
-import { JSONSchemaArray, JSONSchemaObject, SCHEMA_STRING } from '@ngx-pwa/local-storage';
-
-interface User {
-  firstName: string;
-  lastName: string;
-}
-
-const schema: JSONSchemaArray = {
-  items: {
-    properties: {
-      firstName: SCHEMA_STRING,
-      lastName: SCHEMA_STRING
-    },
-    required: ['firstName', 'lastName']
-  } as JSONSchemaObject
-};
-
-this.localStorage.getItem<User[]>('test', { schema })
-```
-
-As a general recommendation, keep your data structures as simple as possible.
-
 ## Errors vs. `null`
 
 If validation fails, it'll go in the error callback:
 
 ```typescript
-this.localStorage.getItem<string>('existing', { schema: SCHEMA_STRING })
+this.localStorage.getItem<string>('existing', { schema: { type: 'string' } })
 .subscribe((result) => {
   // Called if data is valid or null
 }, (error) => {
@@ -226,7 +163,7 @@ this.localStorage.getItem<string>('existing', { schema: SCHEMA_STRING })
 But as usual (like when you do a database request), not finding an item is not an error. It succeeds but returns `null`.
 
 ```typescript
-this.localStorage.getItem<string>('notExisting', { schema: SCHEMA_STRING })
+this.localStorage.getItem<string>('notExisting', { schema: { type: 'string' } })
 .subscribe((result) => {
   result; // null
 }, (error) => {
@@ -262,7 +199,7 @@ are *not* available in this lib:
 
 ## Why a schema AND a cast?
 
-You may ask why we have to define a TypeScript cast with `getItem<string>()` AND a JSON schema with `{ schema: SCHEMA_STRING }`.
+You may ask why we have to define a TypeScript cast with `getItem<string>()` AND a JSON schema with `{ schema: { type: 'string' } }`.
 
 It's because a cast only means: "TypeScript, trust me, I'm telling you it will be a string".
 But TypeScript won't do any real validation as it can't:

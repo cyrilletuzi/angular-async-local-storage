@@ -1,8 +1,9 @@
 import { JSONValidator } from './json-validator';
 import {
   JSONSchemaConst, JSONSchemaEnum, JSONSchemaBoolean, JSONSchemaNull,
-  JSONSchemaNumeric, JSONSchemaString, JSONSchemaObject, JSONSchemaArray
+  JSONSchemaNumeric, JSONSchemaString, JSONSchemaObject, JSONSchemaArray, JSONSchema
 } from './json-schema';
+import { SCHEMA_BOOLEAN, SCHEMA_STRING, SCHEMA_NUMBER, SCHEMA_INTEGER } from './constants';
 
 describe(`JSONValidator`, () => {
 
@@ -20,7 +21,8 @@ describe(`JSONValidator`, () => {
 
       expect(() => {
 
-        jsonValidator.validate({ test: 'test' }, { properties: { test: { type: 'string' } }, additionalProperties: true });
+        // TODO: remove casting when T3.2 issue is fixed
+        jsonValidator.validate({ test: 'test' }, { properties: { test: { type: 'string' } }, additionalProperties: true } as JSONSchema);
 
       }).not.toThrow();
 
@@ -188,6 +190,10 @@ describe(`JSONValidator`, () => {
 
       expect(test).toBe(true);
 
+      const test2 = jsonValidator.validate(true, SCHEMA_BOOLEAN);
+
+      expect(test2).toBe(true);
+
     });
 
     it(`should return true on a false value with a boolean type`, () => {
@@ -195,6 +201,10 @@ describe(`JSONValidator`, () => {
       const test = jsonValidator.validate(false, { type: 'boolean' } as JSONSchemaBoolean);
 
       expect(test).toBe(true);
+
+      const test2 = jsonValidator.validate(false, SCHEMA_BOOLEAN);
+
+      expect(test2).toBe(true);
 
     });
 
@@ -223,6 +233,22 @@ describe(`JSONValidator`, () => {
       const test = jsonValidator.validate('test', { type: 'string' } as JSONSchemaString);
 
       expect(test).toBe(true);
+
+      const test2 = jsonValidator.validate('test', SCHEMA_STRING);
+
+      expect(test2).toBe(true);
+
+    });
+
+    it(`should return false on a string value with a mismatched type`, () => {
+
+      const test = jsonValidator.validate(10, { type: 'string' } as JSONSchemaString);
+
+      expect(test).toBe(false);
+
+      const test2 = jsonValidator.validate(10, SCHEMA_STRING);
+
+      expect(test2).toBe(false);
 
     });
 
@@ -324,6 +350,10 @@ describe(`JSONValidator`, () => {
 
       expect(test).toBe(true);
 
+      const test2 = jsonValidator.validate(10, SCHEMA_NUMBER);
+
+      expect(test2).toBe(true);
+
     });
 
     it(`should return true on a decimal value with a number type`, () => {
@@ -331,6 +361,10 @@ describe(`JSONValidator`, () => {
       const test = jsonValidator.validate(10.1, { type: 'number' } as JSONSchemaNumeric);
 
       expect(test).toBe(true);
+
+      const test2 = jsonValidator.validate(10.1, SCHEMA_NUMBER);
+
+      expect(test2).toBe(true);
 
     });
 
@@ -340,6 +374,10 @@ describe(`JSONValidator`, () => {
 
       expect(test).toBe(true);
 
+      const test2 = jsonValidator.validate(10, SCHEMA_INTEGER);
+
+      expect(test2).toBe(true);
+
     });
 
     it(`should return false on a decimal value with an integer type`, () => {
@@ -347,6 +385,10 @@ describe(`JSONValidator`, () => {
       const test = jsonValidator.validate(10.1, { type: 'integer' } as JSONSchemaNumeric);
 
       expect(test).toBe(false);
+
+      const test2 = jsonValidator.validate(10.1, SCHEMA_INTEGER);
+
+      expect(test2).toBe(false);
 
     });
 

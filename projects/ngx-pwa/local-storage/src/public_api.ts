@@ -13,3 +13,4 @@ export { MockLocalDatabase } from './lib/databases/mock-local-database';
 export { JSONValidator } from './lib/validation/json-validator';
 export { LSGetItemOptions, LocalStorage } from './lib/lib.service';
 export { localStorageProviders, LocalStorageProvidersConfig, LOCAL_STORAGE_PREFIX } from './lib/tokens';
+export { SCHEMA_BOOLEAN, SCHEMA_INTEGER, SCHEMA_NUMBER, SCHEMA_STRING } from './lib/validation/constants';

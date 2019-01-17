@@ -2,6 +2,18 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 7.5.0 (2019-01-18)
+
+### Feature
+
+- Added predefined constants for basic JSON schemas to simplify validation:
+  - `SCHEMA_BOOLEAN` (shortcut for: `{ type: 'boolean' }`)
+  - `SCHEMA_INTEGER` (shortcut for: `{ type: 'integer' }`)
+  - `SCHEMA_NUMBER` (shortcut for: `{ type: 'number' }`)
+  - `SCHEMA_STRING` (shortcut for: `{ type: 'string' }`)
+
+See the [new validation guide](./docs/VALIDATION.md).
+
 ## 7.4.0 (2019-01-12)
 
 ### Feature
