@@ -22,6 +22,13 @@ It can have many uses (it's why you have autocompletion in some JSON files in Vi
 The JSON schema standard has its own [documentation](https://json-schema.org/),
 and you can also follow the `JSONSchema` interfaces exported by the lib. But as a convenience, we'll show here how to validate the common scenarios.
 
+## TypeScript 3.2 issue
+
+If you're using TypeScript 3.2, be sure to follow the following examples,
+ie. be sure to *externalize* your schema in a variable or constant
+*and* to use the *specific* interfaces, due to a regression issue in TypeScript 3.2
+(see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64) for more info).
+
 ## How to validate?
 
 ### Validating a boolean
@@ -120,11 +127,6 @@ this.localStorage.getItem<User>('test', { schema })
 What's expected for each property is another JSON schema,
 so you can also add the other optional validations related to the chosen type.
 
-If you're using TypeScript 3.2, be sure to follow those examples,
-ie. be sure to *externalize* your schema in a variable or constant
-*and* to use the *specific* interfaces, due to a regression issue in TS 3.2
-(see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64) for more info).
-
 ### Validating fixed values
 
 Since version >= 6, if it can only be a fixed value:
@@ -172,7 +174,7 @@ this.localStorage.getItem<string>('notExisting', { schema: { type: 'string' } })
 ## Differences from the standard
 
 The role of the validation feature in this lib is to check the data against corruption,
-so it needs to be a stric checking. Then there are important differences with the JSON schema standards.
+so it needs to be a strict checking. Then there are important differences with the JSON schema standards.
 
 ### Restrictions
 
