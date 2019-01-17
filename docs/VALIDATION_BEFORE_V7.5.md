@@ -1,5 +1,10 @@
 # Validation guide
 
+## Old guide
+
+This is the validation guide for versions < 7.5.
+[The up to date guide is available here](./VALIDATION.md).
+
 ## Why validation?
 
 Any client-side storage (cookies, `localStorage`, `indexedDb`...) is not secure by nature,
