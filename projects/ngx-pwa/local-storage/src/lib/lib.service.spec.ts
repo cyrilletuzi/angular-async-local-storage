@@ -189,6 +189,48 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
+  it('should count the size of items stored with alias', (done: DoneFn) => {
+
+    localStorageService.length.subscribe((length0) => {
+
+      expect(length0).toBe(0);
+
+      localStorageService.setItem('test1', 'test').subscribe(() => {
+
+        localStorageService.length.subscribe((length1) => {
+
+          expect(length1).toBe(1);
+
+          localStorageService.setItem('test2', 'test').subscribe(() => {
+
+            localStorageService.length.subscribe((length2) => {
+
+              expect(length2).toBe(2);
+
+              localStorageService.clear().subscribe(() => {
+
+                localStorageService.length.subscribe((length3) => {
+
+                  expect(length3).toBe(0);
+
+                  done();
+
+                });
+
+              });
+
+            });
+
+          });
+
+        });
+
+      });
+
+    });
+
+  });
+
   it('should get keys', (done: DoneFn) => {
 
     const index1 = 'index1';

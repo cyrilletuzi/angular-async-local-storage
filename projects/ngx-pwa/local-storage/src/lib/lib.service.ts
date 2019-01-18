@@ -24,6 +24,17 @@ export class LocalStorage {
 
   }
 
+  /**
+   * Alias. Prefer .size
+   * @alias
+   * @ignore
+   */
+  get length(): Observable<number> {
+
+    return this.size;
+
+  }
+
   protected readonly getItemOptionsDefault: LSGetItemOptions = {
     schema: null
   };
