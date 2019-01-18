@@ -183,12 +183,13 @@ const schema: JSONSchemaEnum = { enum: ['value 1', 'value 2'] };
 this.localStorage.getItem<string>('test', { schema })
 ```
 
-### Validating nested array/objects types
+### Validating nested types
 
-When nesting array and/or objects, you'll need to cast subschemas:
+Due to a limitation of TypeScript, when nesting array, objects or advanced types,
+you'll need to cast subschemas:
 
 ```typescript
-import { JSONSchemaArray, JSONSchemaObject, SCHEMA_STRING } from '@ngx-pwa/local-storage';
+import { JSONSchemaArray, JSONSchemaObject, JSONSchemaString, SCHEMA_STRING } from '@ngx-pwa/local-storage';
 
 interface User {
   firstName: string;
@@ -198,7 +199,10 @@ interface User {
 const schema: JSONSchemaArray = {
   items: {
     properties: {
-      firstName: SCHEMA_STRING,
+      firstName: {
+        type: 'string',
+        maxLength: 10
+      } as JSONSchemaString,
       lastName: SCHEMA_STRING
     },
     required: ['firstName', 'lastName']
