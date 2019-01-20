@@ -3,7 +3,10 @@ import { Observable, throwError, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
 import { LocalDatabase } from './databases/local-database';
-import { JSONSchema } from './validation/json-schema';
+import {
+  JSONSchema, JSONSchemaString, JSONSchemaNumeric, JSONSchemaBoolean,
+  JSONSchemaArrayOf, JSONSchemaConstOf, JSONSchemaEnumOf
+} from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
 
 export interface LSGetItemOptions {
@@ -35,6 +38,18 @@ export class LocalStorage {
    * @param key The item's key
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
+  getItem(key: string, options: LSGetItemOptions &
+    { schema: JSONSchemaBoolean | JSONSchemaConstOf<boolean> }): Observable<boolean | null>;
+  getItem(key: string, options: LSGetItemOptions &
+    { schema: JSONSchemaNumeric | JSONSchemaConstOf<number> | JSONSchemaEnumOf<number> }): Observable<number | null>;
+  getItem(key: string, options: LSGetItemOptions &
+    { schema: JSONSchemaString | JSONSchemaConstOf<string> | JSONSchemaEnumOf<string> }): Observable<string | null>;
+  getItem(key: string, options: LSGetItemOptions &
+    { schema: JSONSchemaArrayOf<JSONSchemaBoolean> }): Observable<boolean[] | null>;
+  getItem(key: string, options: LSGetItemOptions &
+    { schema: JSONSchemaArrayOf<JSONSchemaNumeric> }): Observable<number[] | null>;
+  getItem(key: string, options: LSGetItemOptions &
+    { schema: JSONSchemaArrayOf<JSONSchemaString> }): Observable<string[] | null>;
   getItem<T = any>(key: string, options: LSGetItemOptions & { schema: JSONSchema }): Observable<T | null>;
   getItem<T = any>(key: string, options?: LSGetItemOptions): Observable<unknown>;
   getItem<T = any>(key: string, options = this.getItemOptionsDefault) {

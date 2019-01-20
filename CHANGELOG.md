@@ -4,15 +4,56 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 
 ## 7.5.0 (2019-01-18)
 
-### Feature
+### Features
 
 - Added predefined constants for basic JSON schemas to simplify validation:
   - `SCHEMA_BOOLEAN` (shortcut for: `{ type: 'boolean' }`)
   - `SCHEMA_INTEGER` (shortcut for: `{ type: 'integer' }`)
   - `SCHEMA_NUMBER` (shortcut for: `{ type: 'number' }`)
   - `SCHEMA_STRING` (shortcut for: `{ type: 'string' }`)
+  - `SCHEMA_ARRAY_OF_BOOLEANS` (shortcut for: `{ items: { type: 'boolean' } }`)
+  - `SCHEMA_ARRAY_OF_INTEGER` (shortcut for: `{ items: { type: 'integer' } }`)
+  - `SCHEMA_ARRAY_OF_NUMBER` (shortcut for: `{ items: { type: 'number' } }`)
+  - `SCHEMA_ARRAY_OF_STRINGS` (shortcut for: `{ items: { type: 'string' } }`)
 
-See the [new validation guide](./docs/VALIDATION.md).
+This is especially useful for advanced types (arrays, objects, nested types),
+to avoid TypeScript limitations.
+
+- For the same types as above, the result type is now automatically infered,
+meaning you don't need to cast anymore!
+
+Before v7.5:
+```typescript
+this.localStorage.getItem('test', { schema: { type: 'string' } })
+.subscribe((result) => {
+  result; // type: any :(
+});
+
+this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
+.subscribe((result) => {
+  result; // type: string :)
+});
+```
+
+From v7.5:
+```typescript
+import { SCHEMA_STRING } from '@ngx-pwa/local-storage';
+
+this.localStorage.getItem('test', { schema: SCHEMA_STRING })
+.subscribe((result) => {
+  result; // type: string :D
+});
+```
+
+- Added better interfaces for some JSON schemas:
+  - `JSONSchemaArrayOf<T>`
+  - `JSONSchemaConstOf<T>`
+  - `JSONSchemaEnumOf<T>`
+
+**See the [new validation guide](./docs/VALIDATION.md).**
+
+This is only a feature release, so don't worry: nothing changes in existing code.
+It's just new tools to simplify validation and thus ease migration to v7.
 
 ## 7.4.0 (2019-01-12)
 

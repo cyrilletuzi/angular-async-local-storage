@@ -111,8 +111,6 @@ this.localStorage.getItem<User>('user').subscribe((user) => {
 });
 ```
 
-As any data can be stored, you can type your data.
-
 Not finding an item is not an error, it succeeds but returns `null`.
 
 ```typescript
@@ -133,7 +131,7 @@ Starting with *version 5*, you can use a [JSON Schema](http://json-schema.org/) 
 A [migration guide](./docs/MIGRATION_TO_V7.md) is available.
 
 ```typescript
-this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
+this.localStorage.getItem('test', { schema: { type: 'string' } })
 .subscribe((user) => {
   // Called if data is valid or null
 }, (error) => {

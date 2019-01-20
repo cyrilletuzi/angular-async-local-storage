@@ -69,13 +69,10 @@ this.localStorage.getItem<string>('test').subscribe((result) => {
 });
 ```
 
-It's only a convenience allowed by the library. It's useful when you're already validating the data with a JSON schema,
-to cast the data type.
-
-But **when you were not validating the data, it was really bad**.
+`getItem<string>` **doesn't perform any real validation**.
 Casting like this only means: "TypeScript, trust me, I'm telling you it will be a string".
 But TypeScript won't do any real validation as it can't:
-**TypeScript can only manage checks at compilation time, while client-side storage checks can only happen at runtime**.
+**TypeScript can only manage checks at *compilation* time, while client-side storage checks can only happen at *runtime***.
 
 So you ended up with a `string` type while the real data may not be a `string` at all, leading to security issues and errors.
 
@@ -89,7 +86,9 @@ The simpler and better way to validate your data is to search `getItem` in your 
 and **use the JSON schema option proposed by the lib**. For example:
 
 ```typescript
-this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
+import { SCHEMA_STRING } from '@ngx-pwa/local-storage';
+
+this.localStorage.getItem('test', { schema: SCHEMA_STRING })
 .subscribe((result) => {
   result; // type: string
   result.substr(0, 2); // OK
@@ -97,6 +96,10 @@ this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
 ```
 
 **A [full validation guide](./VALIDATION.md) is available with all the options.**
+
+Note the above example only works with version >= 7.5, which has done a lot of things to simplify validation:
+- predefined constants (like `SCHEMA_STRING`) are available for common structures,
+- casting (`.getItem<string>`) is no longer required for most types, as it's now automatically infered.
 
 ### Solution 2: custom validation (painful)
 

@@ -1,3 +1,6 @@
+/**
+ * Prefer `JSONSchemaConstOf<T>`, which is more precise
+ */
 export interface JSONSchemaConst {
 
   /**
@@ -8,6 +11,15 @@ export interface JSONSchemaConst {
 
 }
 
+export interface JSONSchemaConstOf<T extends string | number | boolean> extends JSONSchemaConst {
+
+  const: T;
+
+}
+
+/**
+ * Prefer `JSONSchemaEnumOf<T>`, which is more precise
+ */
 export interface JSONSchemaEnum {
 
   /**
@@ -15,6 +27,12 @@ export interface JSONSchemaEnum {
    * Can't be an object or array, as two objects or arrays are never equal.
    */
   enum: (string | number | boolean | null)[];
+
+}
+
+export interface JSONSchemaEnumOf<T extends string | number> extends JSONSchemaEnum {
+
+  enum: T[];
 
 }
 
@@ -95,6 +113,10 @@ export interface JSONSchemaNumeric {
 
 }
 
+/**
+ * For basic arrays (of booleans, integers, numbers or strings),
+ * prefer `JSONSchemaArrayOf<T>`, which is more precise
+ */
 export interface JSONSchemaArray {
 
   /**
@@ -124,6 +146,12 @@ export interface JSONSchemaArray {
    * Check if an array only have unique values.
    */
   uniqueItems?: boolean;
+
+}
+
+export interface JSONSchemaArrayOf<T extends JSONSchemaBoolean | JSONSchemaNumeric | JSONSchemaString> extends JSONSchemaArray {
+
+  items: T;
 
 }
 
