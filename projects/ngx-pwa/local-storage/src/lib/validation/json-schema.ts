@@ -180,6 +180,8 @@ export interface JSONSchemaObject {
 
 /**
  * Subset of the JSON Schema.
+ * Due to limitations in TypeScript, prefer specific interfaces (`JSONSchemaBoolean`, `JSONSchemaString`...)
+ * as autocompletion and checks will be more accurate.
  * Types are enforced to validate everything:
  * each value MUST have just ONE of either 'type' or 'properties' or 'items' or 'const' or 'enum'.
  * Therefore, unlike the spec, booleans are not allowed as schemas.

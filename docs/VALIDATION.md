@@ -24,7 +24,8 @@ It can have many uses (it's why you have autocompletion in some JSON files in Vi
 **In this lib, JSON schemas are used to validate the data retrieved from local storage.**
 
 The JSON schema standard has its own [documentation](https://json-schema.org/),
-and you can also follow the `JSONSchema` interfaces exported by the lib. But as a convenience, we'll show here how to validate the common scenarios.
+and you can also follow the `JSONSchema` interfaces exported by the lib.
+But we recommend to following examples.
 
 ## How to validate simple data
 
@@ -118,8 +119,7 @@ const schema: JSONSchemaObject = {
 this.localStorage.getItem<User>('test', { schema })
 ```
 
-What's expected for each property is another JSON schema,
-so you can also add the other optional validations related to the chosen type.
+What's expected for each property is another JSON schema.
 
 ### Why a schema *and* a cast?
 
@@ -223,8 +223,7 @@ const schema: JSONSchemaArrayOf<JSONSchemaString> = {
 this.localStorage.getItem('test', { schema })
 ```
 
-What's expected in `items` is another JSON schema,
-so you can also add the other optional validations related to the chosen type.
+What's expected in `items` is another JSON schema.
 
 ## How to validate nested types
 
@@ -305,16 +304,17 @@ are *not* available in this lib:
 - `oneOf`
 - array for `type`
 
-## Why specific JSONSchema interfaces?
+## Other notes
+
+### Why specific JSONSchema interfaces?
 
 Unfortunately, the JSON schema standard is structured in such a way it's currently impossible to do an equivalent TypeScript interface,
 which would be generic for all types, but only allowing you the optional validations relative to the type you choose
 (for example, `maxLength` should only be allowed when `type` is set to `'string'`).
 
 Thus casting with a more specific interface (like `JSONSchemaString`) allows TypeScript to check your JSON Schema is really valid.
-But it's not mandatory.
 
-## ES6 shortcut
+### ES6 shortcut
 
 In EcmaScript >= 6, this:
 
