@@ -8,9 +8,15 @@ describe('getItem() overload signature', () => {
 
   let localStorageService: LocalStorage;
 
-  beforeEach(() => {
+  beforeEach((done: DoneFn) => {
 
     localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
+
+    localStorageService.clear().subscribe(() => {
+
+      done();
+
+    });
 
   });
 
