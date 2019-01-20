@@ -10,6 +10,8 @@ import {
 import { JSONValidator } from './validation/json-validator';
 
 export interface LSGetItemOptions {
+  /** JSON schema which will be used to validate the data
+   * Predefined constants (`SCHEMA_`) are exported by the lib to simplify common scenarios */
   schema?: JSONSchema | null;
 }
 
@@ -36,6 +38,7 @@ export class LocalStorage {
   /**
    * Gets an item value in local storage
    * @param key The item's key
+   * @param options Current options include a JSON schema to validate the data
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
   getItem(key: string, options: LSGetItemOptions &
