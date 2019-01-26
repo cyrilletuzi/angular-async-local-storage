@@ -1,7 +1,7 @@
 import { LocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
 import { JSONValidator } from './validation/json-validator';
-import { SCHEMA_STRING, SCHEMA_ARRAY_OF_BOOLEANS } from './validation/constants';
+import { SCHEMA_STRING, SCHEMA_ARRAY_OF_NUMBERS, SCHEMA_ARRAY_OF_BOOLEANS, SCHEMA_ARRAY_OF_STRINGS } from './validation/constants';
 import { JSONSchemaString, JSONSchema, JSONSchemaArrayOf } from './validation/json-schema';
 
 describe('getItem() overload signature', () => {
@@ -230,7 +230,7 @@ describe('getItem() overload signature', () => {
 
   it('should compile for array of strings', (done: DoneFn) => {
 
-    localStorageService.getItem('test', { schema: { items: { type: 'string' } } }).subscribe((_) => {
+    localStorageService.getItem('test', { schema: SCHEMA_ARRAY_OF_STRINGS }).subscribe((_) => {
 
       expect().nothing();
 
@@ -242,7 +242,7 @@ describe('getItem() overload signature', () => {
 
   it('should compile for array of numbers', (done: DoneFn) => {
 
-    localStorageService.getItem('test', { schema: { items: { type: 'number' } } }).subscribe((_) => {
+    localStorageService.getItem('test', { schema: SCHEMA_ARRAY_OF_NUMBERS }).subscribe((_) => {
 
       expect().nothing();
 
@@ -254,7 +254,7 @@ describe('getItem() overload signature', () => {
 
   it('should compile for array of booleans', (done: DoneFn) => {
 
-    localStorageService.getItem('test', { schema: { items: { type: 'boolean' } } }).subscribe((_) => {
+    localStorageService.getItem('test', { schema: SCHEMA_ARRAY_OF_BOOLEANS }).subscribe((_) => {
 
       expect().nothing();
 
@@ -267,6 +267,7 @@ describe('getItem() overload signature', () => {
   it('should compile for array with extra options', (done: DoneFn) => {
 
     const schema: JSONSchemaArrayOf<JSONSchemaString> = {
+      type: 'array',
       items: { type: 'string' },
       maxItems: 5
     };

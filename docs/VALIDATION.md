@@ -108,6 +108,7 @@ interface User {
 }
 
 const schema: JSONSchemaObject = {
+  type: 'object',
   properties: {
     firstName: SCHEMA_STRING,
     lastName: SCHEMA_STRING,
@@ -216,6 +217,7 @@ For example:
 import { JSONSchemaArrayOf, JSONSchemaString, SCHEMA_STRING } from '@ngx-pwa/local-storage';
 
 const schema: JSONSchemaArrayOf<JSONSchemaString> = {
+  type: 'array',
   items: SCHEMA_STRING,
   maxItems: 5
 };
@@ -239,7 +241,9 @@ interface User {
 }
 
 const schema: JSONSchemaArray = {
+  type: 'array',
   items: {
+    type: 'object',
     properties: {
       firstName: {
         type: 'string',

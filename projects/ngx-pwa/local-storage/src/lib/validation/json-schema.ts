@@ -151,6 +151,8 @@ export interface JSONSchemaArray {
 
 export interface JSONSchemaArrayOf<T extends JSONSchemaBoolean | JSONSchemaNumeric | JSONSchemaString> extends JSONSchemaArray {
 
+  type: 'array';
+
   items: T;
 
 }
