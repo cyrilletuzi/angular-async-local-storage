@@ -124,7 +124,7 @@ describe(`JSONValidator`, () => {
 
     it(`should return false on a value not included in an enum`, () => {
 
-      const test = jsonValidator.validate('test2', { type: 'boolean', enum: ['test', 'hello'] });
+      const test = jsonValidator.validate('test2', { type: 'string', enum: ['test', 'hello'] });
 
       expect(test).toBe(false);
 
