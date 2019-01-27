@@ -362,7 +362,7 @@ function tests(localStorageService: LocalStorage) {
       properties: {
         expected: {
           type: 'string'
-        } as JSONSchemaString
+        }
       },
       required: ['expected']
     };
@@ -395,7 +395,7 @@ function tests(localStorageService: LocalStorage) {
       properties: {
         expected: {
           type: 'string'
-        } as JSONSchemaString
+        }
       },
       required: ['expected']
     };
@@ -957,8 +957,8 @@ describe('LocalStorage with IndexedDB', () => {
     [true, { type: 'boolean' }],
     [false, { type: 'boolean' }],
     // TODO: delete cast when TS 3.2 issue is fixed
-    [[1, 2, 3], { items: { type: 'number' } } as JSONSchema],
-    [{ test: 'value' }, { type: 'object', properties: { test: { type: 'string' } } } as JSONSchema],
+    [[1, 2, 3], { type: 'array', items: { type: 'number' } }],
+    [{ test: 'value' }, { type: 'object', properties: { test: { type: 'string' } } }],
   ];
 
   for (const [getTestValue, getTestSchema] of getTestValues) {
