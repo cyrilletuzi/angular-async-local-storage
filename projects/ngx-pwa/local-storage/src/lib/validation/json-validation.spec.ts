@@ -896,7 +896,7 @@ describe(`JSONValidator`, () => {
 
     it(`should return true with an array with more items than minItems`, () => {
 
-      const test = jsonValidator.validate([1, 2, 3, 4], { type: 'array',items: { type: 'number' }, minItems: 3 });
+      const test = jsonValidator.validate([1, 2, 3, 4], { type: 'array', items: { type: 'number' }, minItems: 3 });
 
       expect(test).toBe(true);
 
