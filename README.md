@@ -114,8 +114,6 @@ this.localStorage.getItem<User>('user').subscribe((user) => {
 });
 ```
 
-As any data can be stored, you can type your data.
-
 Not finding an item is not an error, it succeeds but returns `null`.
 
 ```typescript
