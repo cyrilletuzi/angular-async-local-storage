@@ -2,8 +2,8 @@
 
 ## Version
 
-This is the up to date guide about validation for version >= 8.
-The old guide for validation in versions < 8 is available [here](./VALIDATION_BEFORE_V8.md).
+This is old guide for validation in versions < 8.
+The up to date guide about validation for version >= 8 is available [here](./VALIDATION.md).
 
 ## Why validation?
 
@@ -32,52 +32,52 @@ as you'll see the more complex it is, the more complex is validation too.
 ### Boolean
 
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'boolean' } })
+this.localStorage.getItem<boolean>('test', { schema: { type: 'boolean' } })
 ```
 
 ### Integer
 
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'integer' } })
+this.localStorage.getItem<number>('test', { schema: { type: 'integer' } })
 ```
 
 ### Number
 
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'number' } })
+this.localStorage.getItem<number>('test', { schema: { type: 'number' } })
 ```
 
 ### String
 
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'string' } })
+this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
 ```
 
 ### Arrays
 
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.localStorage.getItem<boolean[]>('test', { schema: {
   type: 'array',
   items: { type: 'boolean' }
 } })
 ```
 
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.localStorage.getItem<number[]>('test', { schema: {
   type: 'array',
   items: { type: 'integer' }
 } })
 ```
 
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.localStorage.getItem<number[]>('test', { schema: {
   type: 'array',
   items: { type: 'number' }
 } })
 ```
 
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.localStorage.getItem<string[]>('test', { schema: {
   type: 'array',
   items: { type: 'string' }
 } })
@@ -112,7 +112,7 @@ this.localStorage.getItem<User>('test', { schema })
 
 What's expected for each property is another JSON schema.
 
-### Why a schema *and* a cast?
+## Why a schema *and* a cast?
 
 You may ask why we have to define a TypeScript cast with `getItem<User>()` *and* a JSON schema with `{ schema }`.
 
@@ -122,24 +122,22 @@ It's because they happen at different steps:
 
 So they each serve a different purpose:
 - casting allow you to retrieve the data if the good type instead of `any`
-- the schema allow the lib to validate the data at 
-
-For previous basic types, as they are static, we can infer automatically.
-But as objects properties are dynamic, we can't do the same for objects.
+- the schema allow the lib to validate the data at runtime
 
 Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
 The lib can't check that.
 
+## How to validate fixed values
+
+Temporarily, documentation for constants and enums is removed,
+as there will be a breaking change in v8.
+
 ## Additional validation
 
-### Options for booleans
-
-- `const`
+Some types have additional validation options since version >= 6.
 
 ### Options for integers and numbers
 
-- `const`
-- `enum`
 - `multipleOf`
 - `maximum`
 - `exclusiveMaximum`
@@ -147,6 +145,7 @@ The lib can't check that.
 - `exclusiveMinimum`
 
 For example:
+
 ```typescript
 this.localStorage.getItem('test', { schema: {
   type: 'number',
@@ -156,8 +155,6 @@ this.localStorage.getItem('test', { schema: {
 
 ### Options for strings
 
-- `const`
-- `enum`
 - `maxLength`
 - `minLength`
 - `pattern`
@@ -218,7 +215,7 @@ this.localStorage.getItem<User[]>('test', { schema })
 If validation fails, it'll go in the error callback:
 
 ```typescript
-this.localStorage.getItem('existing', { schema: { type: 'string' } })
+this.localStorage.getItem<string>('existing', { schema: { type: 'string' } })
 .subscribe((result) => {
   // Called if data is valid or null
 }, (error) => {
@@ -229,7 +226,7 @@ this.localStorage.getItem('existing', { schema: { type: 'string' } })
 But as usual (like when you do a database request), not finding an item is not an error. It succeeds but returns `null`.
 
 ```typescript
-this.localStorage.getItem('notExisting', { schema: { type: 'string' } })
+this.localStorage.getItem<string>('notExisting', { schema: { type: 'string' } })
 .subscribe((result) => {
   result; // null
 }, (error) => {

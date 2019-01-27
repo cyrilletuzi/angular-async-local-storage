@@ -136,7 +136,7 @@ Starting with *version 5*, you can use a [JSON Schema](http://json-schema.org/) 
 A [migration guide](./docs/MIGRATION_TO_V7.md) is available.
 
 ```typescript
-this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
+this.localStorage.getItem('test', { schema: { type: 'string' } })
 .subscribe((user) => {
   // Called if data is valid or null
 }, (error) => {
