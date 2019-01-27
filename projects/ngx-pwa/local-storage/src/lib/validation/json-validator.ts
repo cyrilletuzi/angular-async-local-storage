@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { JSONSchema } from './json-schema';
+import {
+  JSONSchema, JSONSchemaString, JSONSchemaInteger, JSONSchemaNumber, JSONSchemaBoolean,
+  JSONSchemaArray, JSONSchemaObject
+} from './json-schema';
 
 /**
  * @todo Add other JSON Schema validation features
@@ -21,60 +24,28 @@ export class JSONValidator {
    */
   validate(data: any, schema: JSONSchema): boolean {
 
-    /** @todo When TS 2.8, explore if this is possible with conditional types */
-    if (((!(schema.hasOwnProperty('const') && schema.const !== undefined)
-    && !(schema.hasOwnProperty('enum') && schema.enum != null) && !(schema.hasOwnProperty('type') && schema.type != null))
-    || schema.type === 'array' || schema.type === 'object')
-    && !(schema.hasOwnProperty('properties') && schema.properties != null)  && !(schema.hasOwnProperty('items') && schema.items != null)) {
+    switch (schema.type) {
 
-      throw new Error(`Each value must have a 'type' or 'properties' or 'items' or 'const' or 'enum', to enforce strict types.`);
+      case 'string':
+        return this.validateString(data, schema);
+      case 'number':
+      case 'integer':
+        return this.validateNumber(data, schema);
+      case 'boolean':
+        return this.validateBoolean(data, schema);
+      case 'array':
+        return this.validateArray(data, schema);
+      case 'object':
+        return this.validateObject(data, schema);
 
     }
-
-    if (schema.hasOwnProperty('const') && schema.const !== undefined && (data !== schema.const)) {
-      return false;
-    }
-
-    if (!this.validateEnum(data, schema)) {
-      return false;
-    }
-
-    if (!this.validateType(data, schema)) {
-      return false;
-    }
-
-    if (!this.validateItems(data, schema)) {
-      return false;
-    }
-
-    if (!this.validateProperties(data, schema)) {
-      return false;
-    }
-
-    if (!this.validateRequired(data, schema)) {
-      return false;
-    }
-
-    return true;
 
   }
 
-  protected isObjectNotNull(value: any): boolean {
+  protected validateObject(data: { [k: string]: any; }, schema: JSONSchemaObject): boolean {
 
-    return (value !== null) && (typeof value === 'object');
-
-  }
-
-  protected validateProperties(data: { [k: string]: any; }, schema: JSONSchema): boolean {
-
-    if (!schema.hasOwnProperty('properties') || (schema.properties == null)) {
-      return true;
-    }
-
-    if (!this.isObjectNotNull(data)) {
-
+    if ((data === null) || (typeof data !== 'object')) {
       return false;
-
     }
 
     /**
@@ -82,9 +53,11 @@ export class JSONValidator {
      * Equivalent of additionalProperties: false
      */
     if (Object.keys(schema.properties).length < Object.keys(data).length) {
-
       return false;
+    }
 
+    if (!this.validateRequired(data, schema)) {
+      return false;
     }
 
     /* Recursively validate all properties */
@@ -106,32 +79,22 @@ export class JSONValidator {
 
   }
 
-  protected validateRequired(data: {}, schema: JSONSchema): boolean {
+  protected validateRequired(data: {}, schema: JSONSchemaObject): boolean {
 
-    if (!schema.hasOwnProperty('required') || (schema.required == null)) {
+    if (!schema.required) {
       return true;
-    }
-
-    if (!this.isObjectNotNull(data)) {
-
-      return false;
-
     }
 
     for (const requiredProp of schema.required) {
 
       /* Checks if the property is present in the schema 'properties' */
-      if (!schema.properties || !schema.properties.hasOwnProperty(requiredProp)) {
-
+      if (!schema.properties.hasOwnProperty(requiredProp)) {
         throw new Error(`'required' properties must be described in 'properties' too.`);
-
       }
 
       /* Checks if the property is present in the data */
       if (!data.hasOwnProperty(requiredProp)) {
-
         return false;
-
       }
 
     }
@@ -140,63 +103,37 @@ export class JSONValidator {
 
   }
 
-  protected validateEnum(data: any, schema: JSONSchema): boolean {
+  protected validateConst(data: any, schema: JSONSchemaBoolean | JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
 
-    if (!schema.hasOwnProperty('enum') || (schema.enum == null)) {
+    if (!schema.const) {
+      return true;
+    }
+
+    return (data === schema.const);
+
+  }
+
+  protected validateEnum(data: any, schema: JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
+
+    if (!schema.enum) {
       return true;
     }
 
     /** @todo Move to ES2016 .includes() ? */
-    return (schema.enum.indexOf(data) !== -1);
+    return ((schema.enum as any[]).indexOf(data) !== -1);
 
   }
 
-  protected validateType(data: any, schema: JSONSchema): boolean {
-
-    if (!schema.hasOwnProperty('type') || (schema.type == null)) {
-      return true;
-    }
-
-    switch (schema.type) {
-
-      case 'null':
-        return data === null;
-      case 'string':
-        return this.validateString(data, schema);
-      case 'number':
-      case 'integer':
-        return this.validateNumber(data, schema);
-      case 'boolean':
-        return typeof data === 'boolean';
-      case 'object':
-        return typeof data === 'object';
-      case 'array':
-        return Array.isArray(data);
-
-    }
-
-    return true;
-
-  }
-
-  protected validateItems(data: any[], schema: JSONSchema): boolean {
-
-    if (!schema.hasOwnProperty('items') || (schema.items == null)) {
-      return true;
-    }
+  protected validateArray(data: any[], schema: JSONSchemaArray): boolean {
 
     if (!Array.isArray(data)) {
-
       return false;
-
     }
 
-    if (schema.hasOwnProperty('maxItems') && (schema.maxItems != null)) {
+    if (schema.hasOwnProperty('maxItems') && (schema.maxItems !== undefined)) {
 
       if (!Number.isInteger(schema.maxItems) || schema.maxItems < 0) {
-
         throw new Error(`'maxItems' must be a non-negative integer.`);
-
       }
 
       if (data.length > schema.maxItems) {
@@ -205,12 +142,10 @@ export class JSONValidator {
 
     }
 
-    if (schema.hasOwnProperty('minItems') && (schema.minItems != null)) {
+    if (schema.hasOwnProperty('minItems') && (schema.minItems !== undefined)) {
 
       if (!Number.isInteger(schema.minItems) || schema.minItems < 0) {
-
         throw new Error(`'minItems' must be a non-negative integer.`);
-
       }
 
       if (data.length < schema.minItems) {
@@ -219,7 +154,7 @@ export class JSONValidator {
 
     }
 
-    if (schema.hasOwnProperty('uniqueItems') && (schema.uniqueItems != null)) {
+    if (schema.hasOwnProperty('uniqueItems') && (schema.uniqueItems !== undefined)) {
 
       if (schema.uniqueItems) {
 
@@ -230,12 +165,6 @@ export class JSONValidator {
         }
 
       }
-
-    }
-
-    if (Array.isArray(schema.items)) {
-
-      return this.validateItemsList(data, schema);
 
     }
 
@@ -251,40 +180,24 @@ export class JSONValidator {
 
   }
 
-  protected validateItemsList(data: any, schema: JSONSchema): boolean {
-
-    const items = schema.items as JSONSchema[];
-
-    if (data.length !== items.length) {
-
-      return false;
-
-    }
-
-    for (let i = 0; i < items.length; i += 1) {
-
-      if (!this.validate(data[i], items[i])) {
-        return false;
-      }
-
-    }
-
-    return true;
-
-  }
-
-  protected validateString(data: any, schema: JSONSchema): boolean {
+  protected validateString(data: any, schema: JSONSchemaString): boolean {
 
     if (typeof data !== 'string') {
       return false;
     }
 
-    if (schema.hasOwnProperty('maxLength') && (schema.maxLength != null)) {
+    if (!this.validateConst(data, schema)) {
+      return false;
+    }
+
+    if (!this.validateEnum(data, schema)) {
+      return false;
+    }
+
+    if (schema.hasOwnProperty('maxLength') && (schema.maxLength !== undefined)) {
 
       if (!Number.isInteger(schema.maxLength) || schema.maxLength < 0) {
-
         throw new Error(`'maxLength' must be a non-negative integer.`);
-
       }
 
       if (data.length > schema.maxLength) {
@@ -293,12 +206,10 @@ export class JSONValidator {
 
     }
 
-    if (schema.hasOwnProperty('minLength') && (schema.minLength != null)) {
+    if (schema.hasOwnProperty('minLength') && (schema.minLength !== undefined)) {
 
       if (!Number.isInteger(schema.minLength) || schema.minLength < 0) {
-
         throw new Error(`'minLength' must be a non-negative integer.`);
-
       }
 
       if (data.length < schema.minLength) {
@@ -307,7 +218,7 @@ export class JSONValidator {
 
     }
 
-    if (schema.hasOwnProperty('pattern') && (schema.pattern != null)) {
+    if (schema.pattern) {
 
       const regularExpression = new RegExp(schema.pattern);
 
@@ -321,7 +232,21 @@ export class JSONValidator {
 
   }
 
-  protected validateNumber(data: any, schema: JSONSchema): boolean {
+  protected validateBoolean(data: any, schema: JSONSchemaBoolean): boolean {
+
+    if (typeof data !== 'boolean') {
+      return false;
+    }
+
+    if (!this.validateConst(data, schema)) {
+      return false;
+    }
+
+    return true;
+
+  }
+
+  protected validateNumber(data: any, schema: JSONSchemaNumber | JSONSchemaInteger): boolean {
 
     if (typeof data !== 'number') {
       return false;
@@ -331,12 +256,18 @@ export class JSONValidator {
       return false;
     }
 
-    if (schema.hasOwnProperty('multipleOf') && (schema.multipleOf != null)) {
+    if (!this.validateConst(data, schema)) {
+      return false;
+    }
+
+    if (!this.validateEnum(data, schema)) {
+      return false;
+    }
+
+    if (schema.hasOwnProperty('multipleOf') && (schema.multipleOf !== undefined)) {
 
       if (schema.multipleOf <= 0) {
-
         throw new Error(`'multipleOf' must be a number strictly greater than 0.`);
-
       }
 
       if (!Number.isInteger(data / schema.multipleOf)) {
@@ -345,36 +276,22 @@ export class JSONValidator {
 
     }
 
-    if (schema.hasOwnProperty('maximum') && (schema.maximum != null)) {
-
-      if (data > schema.maximum) {
+    if (schema.hasOwnProperty('maximum') && (schema.maximum !== undefined) && (data > schema.maximum)) {
         return false;
-      }
+    }
+
+    if (schema.hasOwnProperty('exclusiveMaximum') && (schema.exclusiveMaximum !== undefined) && (data >= schema.exclusiveMaximum)) {
+      return false;
 
     }
 
-    if (schema.hasOwnProperty('exclusiveMaximum') && (schema.exclusiveMaximum != null)) {
-
-      if (data >= schema.exclusiveMaximum) {
-        return false;
-      }
+    if (schema.hasOwnProperty('minimum') && (schema.minimum !== undefined) && (data < schema.minimum)) {
+      return false;
 
     }
 
-    if (schema.hasOwnProperty('minimum') && (schema.minimum != null)) {
-
-      if (data < schema.minimum) {
+    if (schema.hasOwnProperty('exclusiveMinimum') && (schema.exclusiveMinimum !== undefined) && (data <= schema.exclusiveMinimum)) {
         return false;
-      }
-
-    }
-
-    if (schema.hasOwnProperty('exclusiveMinimum') && (schema.exclusiveMinimum != null)) {
-
-      if (data <= schema.exclusiveMinimum) {
-        return false;
-      }
-
     }
 
     return true;

@@ -3,8 +3,8 @@
  */
 
 export {
-  JSONSchema, JSONSchemaConst, JSONSchemaEnum, JSONSchemaBoolean,
-  JSONSchemaNumeric, JSONSchemaString, JSONSchemaArray, JSONSchemaObject
+  JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber,
+  JSONSchemaNumeric, JSONSchemaString, JSONSchemaArray, JSONSchemaArrayOf, JSONSchemaObject
 } from './lib/validation/json-schema';
 export { LocalDatabase } from './lib/databases/local-database';
 export { IndexedDBDatabase } from './lib/databases/indexeddb-database';

@@ -321,12 +321,12 @@ function tests(localStorageService: LocalStorage) {
     const value = {
       unexpected: 'value'
     };
-    // TODO: delete cast when TS 3.2 issue is fixed
     const schema: JSONSchema = {
+      type: 'object',
       properties: {
         expected: {
           type: 'string'
-        } as JSONSchemaString
+        }
       },
       required: ['expected']
     };
@@ -357,8 +357,8 @@ function tests(localStorageService: LocalStorage) {
     const value = {
       expected: 'value'
     };
-    // TODO: delete cast when TS 3.2 issue is fixed
     const schema: JSONSchema = {
+      type: 'object',
       properties: {
         expected: {
           type: 'string'
@@ -391,6 +391,7 @@ function tests(localStorageService: LocalStorage) {
 
     // TODO: delete cast when TS 3.2 issue is fixed
     const schema: JSONSchema = {
+      type: 'object',
       properties: {
         expected: {
           type: 'string'
@@ -895,7 +896,7 @@ describe('LocalStorage with IndexedDB', () => {
 
   }
 
-  function testGetCompatibilityWithNativeAPI(done: DoneFn, value: any, schema: JSONSchema) {
+  function testGetCompatibilityWithNativeAPI(done: DoneFn, value: any, schema?: JSONSchema) {
 
     const index = 'test';
 
@@ -948,7 +949,7 @@ describe('LocalStorage with IndexedDB', () => {
 
   }
 
-  const getTestValues: [any, JSONSchema][] = [
+  const getTestValues: [any, JSONSchema | undefined][] = [
     ['hello', { type: 'string' }],
     ['', { type: 'string' }],
     [0, { type: 'number' }],
@@ -957,21 +958,33 @@ describe('LocalStorage with IndexedDB', () => {
     [false, { type: 'boolean' }],
     // TODO: delete cast when TS 3.2 issue is fixed
     [[1, 2, 3], { items: { type: 'number' } } as JSONSchema],
-    [{ test: 'value' }, { properties: { test: { type: 'string' } } } as JSONSchema],
-    [null, { type: 'null' }],
-    [undefined, { type: 'null' }],
+    [{ test: 'value' }, { type: 'object', properties: { test: { type: 'string' } } } as JSONSchema],
   ];
 
   for (const [getTestValue, getTestSchema] of getTestValues) {
 
     it(`should get a value on an index previously used by another lib API
-      (will be pending in IE/Firefox private mode and 1 pending in Edge/IE because of null)`, (done: DoneFn) => {
+      (will be pending in IE/Firefox private mode)`, (done: DoneFn) => {
 
       testGetCompatibilityWithNativeAPI(done, getTestValue, getTestSchema);
 
     });
 
   }
+
+  it(`should get a null value on an index previously used by another lib API
+  (will be pending in IE/Firefox private mode and in Edge/IE because of null)`, (done: DoneFn) => {
+
+    testGetCompatibilityWithNativeAPI(done, null);
+
+  });
+
+  it(`should get a value on an index previously used by another lib API
+  (will be pending in IE/Firefox private mode)`, (done: DoneFn) => {
+
+    testGetCompatibilityWithNativeAPI(done, undefined);
+
+  });
 
 });
 
