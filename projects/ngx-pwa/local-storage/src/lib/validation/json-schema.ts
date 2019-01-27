@@ -1,3 +1,6 @@
+/**
+ * Avoid: will be removed in v8 in favor of another interface.
+ */
 export interface JSONSchemaConst {
 
   /**
@@ -8,6 +11,9 @@ export interface JSONSchemaConst {
 
 }
 
+/**
+ * Avoid: will be removed in v8 in favor of another interface.
+ */
 export interface JSONSchemaEnum {
 
   /**
@@ -27,6 +33,9 @@ export interface JSONSchemaBoolean {
 
 }
 
+/**
+ * Avoid: will be removed in v8.
+ */
 export interface JSONSchemaNull {
 
   /**
@@ -98,13 +107,14 @@ export interface JSONSchemaNumeric {
 export interface JSONSchemaArray {
 
   /**
-   * Type for an array value. Avoid to explicit this, "items" is enough,
+   * Type for an array value.
+   * Will be *required* in v8, so explicit this now!
    */
   type?: 'array';
 
   /**
    * Schema for the values of an array.
-   * 'type' of values should be a string (not an array of type).
+   * Avoid to use an array of schemas, this feature will be removed in v8.
    */
   items: JSONSchema | JSONSchema[];
 
@@ -130,7 +140,8 @@ export interface JSONSchemaArray {
 export interface JSONSchemaObject {
 
   /**
-   * Type for an object value.  Avoid to explicit this, "properties" is enough,
+   * Type for an object value.
+   * Will be *required* in v8, so explicit this now!
    */
   type?: 'object';
 
@@ -152,10 +163,7 @@ export interface JSONSchemaObject {
 
 /**
  * Subset of the JSON Schema.
- * Types are enforced to validate everything:
- * each value MUST have just ONE of either 'type' or 'properties' or 'items' or 'const' or 'enum'.
- * Therefore, unlike the spec, booleans are not allowed as schemas.
- * @see http://json-schema.org/latest/json-schema-validation.html
+ * Types are enforced to validate everything: each value MUST have a ONE of either `type`.
  * Not all validation features are supported: just follow the interface.
  */
 export type JSONSchema = (JSONSchemaConst | JSONSchemaEnum |

@@ -6,7 +6,7 @@ import { LocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
 import { LocalStorageDatabase } from './databases/localstorage-database';
 import { MockLocalDatabase } from './databases/mock-local-database';
-import { JSONSchema, JSONSchemaString } from './validation/json-schema';
+import { JSONSchema } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
 
 function testGetItem<T>(type: 'primitive' | 'object', localStorageService: LocalStorage, value: T, done: DoneFn) {
@@ -321,12 +321,12 @@ function tests(localStorageService: LocalStorage) {
     const value = {
       unexpected: 'value'
     };
-    // TODO: delete cast when TS 3.2 issue is fixed
     const schema: JSONSchema = {
+      type: 'object',
       properties: {
         expected: {
           type: 'string'
-        } as JSONSchemaString
+        }
       },
       required: ['expected']
     };
@@ -357,12 +357,12 @@ function tests(localStorageService: LocalStorage) {
     const value = {
       expected: 'value'
     };
-    // TODO: delete cast when TS 3.2 issue is fixed
     const schema: JSONSchema = {
+      type: 'object',
       properties: {
         expected: {
           type: 'string'
-        } as JSONSchemaString
+        }
       },
       required: ['expected']
     };
@@ -389,12 +389,12 @@ function tests(localStorageService: LocalStorage) {
 
   it('should return the data if the data is null (no validation)', (done: DoneFn) => {
 
-    // TODO: delete cast when TS 3.2 issue is fixed
     const schema: JSONSchema = {
+      type: 'object',
       properties: {
         expected: {
           type: 'string'
-        } as JSONSchemaString
+        }
       },
       required: ['expected']
     };
@@ -956,8 +956,8 @@ describe('LocalStorage with IndexedDB', () => {
     [true, { type: 'boolean' }],
     [false, { type: 'boolean' }],
     // TODO: delete cast when TS 3.2 issue is fixed
-    [[1, 2, 3], { items: { type: 'number' } } as JSONSchema],
-    [{ test: 'value' }, { properties: { test: { type: 'string' } } } as JSONSchema],
+    [[1, 2, 3], { type: 'array', items: { type: 'number' } }],
+    [{ test: 'value' }, { type: 'object', properties: { test: { type: 'string' } } }],
     [null, { type: 'null' }],
     [undefined, { type: 'null' }],
   ];
