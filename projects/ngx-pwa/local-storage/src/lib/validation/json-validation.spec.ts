@@ -48,7 +48,7 @@ describe(`JSONValidator`, () => {
 
     it(`should return true on a number equal to a number const`, () => {
 
-      const test = jsonValidator.validate(1.5, { type: 'integer', const: 1.5 });
+      const test = jsonValidator.validate(1.5, { type: 'number', const: 1.5 });
 
       expect(test).toBe(true);
 
@@ -56,7 +56,7 @@ describe(`JSONValidator`, () => {
 
     it(`should return false on a number not equal to a number const`, () => {
 
-      const test = jsonValidator.validate(2.5, { type: 'integer', const: 1.5 });
+      const test = jsonValidator.validate(2.5, { type: 'number', const: 1.5 });
 
       expect(test).toBe(false);
 
@@ -64,7 +64,7 @@ describe(`JSONValidator`, () => {
 
     it(`should return true on an integer equal to an integer const`, () => {
 
-      const test = jsonValidator.validate(1, { type: 'number', const: 1 });
+      const test = jsonValidator.validate(1, { type: 'integer', const: 1 });
 
       expect(test).toBe(true);
 
@@ -72,7 +72,7 @@ describe(`JSONValidator`, () => {
 
     it(`should return false on an integer not equal to an integer const`, () => {
 
-      const test = jsonValidator.validate(2, { type: 'number', const: 1 });
+      const test = jsonValidator.validate(2, { type: 'integer', const: 1 });
 
       expect(test).toBe(false);
 
