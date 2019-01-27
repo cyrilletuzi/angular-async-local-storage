@@ -67,30 +67,6 @@ describe('getItem() overload signature', () => {
 
   });
 
-  it('should compile with shortcut type and without type param', (done: DoneFn) => {
-
-    localStorageService.getItem('test', { type: 'string' }).subscribe((_) => {
-
-      expect().nothing();
-
-      done();
-
-    });
-
-  });
-
-  it('should compile with shortcut type and with type param', (done: DoneFn) => {
-
-    localStorageService.getItem<string>('test', { type: 'string' }).subscribe((_) => {
-
-      expect().nothing();
-
-      done();
-
-    });
-
-  });
-
   it('should compile with literal basic schema and extra options', (done: DoneFn) => {
 
     localStorageService.getItem<string>('test', { schema: { type: 'string', maxLength: 10 } }).subscribe((_) => {

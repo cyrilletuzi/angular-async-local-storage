@@ -11,7 +11,6 @@ import { JSONValidator } from './validation/json-validator';
 
 export interface LSGetItemOptions {
   schema?: JSONSchema | null;
-  type?: 'boolean' | 'integer' | 'number' | 'string' | 'boolean[]' | 'integer[]' | 'number[]' | 'string[]' | null;
 }
 
 @Injectable({
@@ -30,7 +29,6 @@ export class LocalStorage {
 
   protected readonly getItemOptionsDefault: LSGetItemOptions = {
     schema: null,
-    type: null,
   };
 
   constructor(protected database: LocalDatabase, protected jsonValidator: JSONValidator) {}
@@ -43,17 +41,17 @@ export class LocalStorage {
    * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
    */
   getItem<T = boolean>(key: string, options: LSGetItemOptions &
-    ({ schema: JSONSchemaBoolean } | { type: 'boolean' })): Observable<boolean | null>;
+    { schema: JSONSchemaBoolean }): Observable<boolean | null>;
   getItem<T = number>(key: string, options: LSGetItemOptions &
-    ({ schema: JSONSchemaInteger | JSONSchemaNumber } | { type: 'integer' | 'number' })): Observable<number | null>;
+    { schema: JSONSchemaInteger | JSONSchemaNumber }): Observable<number | null>;
   getItem<T = string>(key: string, options: LSGetItemOptions &
-    ({ schema: JSONSchemaString } | { type: 'string' })): Observable<string | null>;
+    { schema: JSONSchemaString }): Observable<string | null>;
   getItem<T = boolean[]>(key: string, options: LSGetItemOptions &
-    ({ schema: JSONSchemaArrayOf<JSONSchemaBoolean> } | { type: 'boolean[]' })): Observable<boolean[] | null>;
+    { schema: JSONSchemaArrayOf<JSONSchemaBoolean> }): Observable<boolean[] | null>;
   getItem<T = number[]>(key: string, options: LSGetItemOptions &
-    ({ schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber> } | { type: 'integer[]' | 'number[]'})): Observable<number[] | null>;
+    { schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber> }): Observable<number[] | null>;
   getItem<T = string[]>(key: string, options: LSGetItemOptions &
-    ({ schema: JSONSchemaArrayOf<JSONSchemaString> } | { type: 'string[]' })): Observable<string[] | null>;
+    { schema: JSONSchemaArrayOf<JSONSchemaString> }): Observable<string[] | null>;
   getItem<T = any>(key: string, options: LSGetItemOptions & { schema: JSONSchema }): Observable<T | null>;
   getItem<T = any>(key: string, options?: LSGetItemOptions): Observable<unknown>;
   getItem<T = any>(key: string, options = this.getItemOptionsDefault) {
@@ -67,15 +65,7 @@ export class LocalStorage {
 
           return of(null);
 
-        }
-
-        if (!options.schema && options.type) {
-
-          options.schema = this.typeToSchema(options.type);
-
-        }
-
-        if (options.schema) {
+        } else if (options.schema) {
 
           let validation = true;
 
@@ -191,41 +181,6 @@ export class LocalStorage {
   clearSubscribe(): void {
 
     this.clear().subscribe(() => {}, () => {});
-
-  }
-
-  private typeToSchema(type: LSGetItemOptions['type']): JSONSchema | null {
-
-    switch (type) {
-
-      case 'boolean':
-      return { type: 'boolean' };
-
-      case 'integer':
-      return { type: 'integer' };
-
-      case 'number':
-      return { type: 'number' };
-
-      case 'string':
-      return { type: 'string' };
-
-      case 'boolean[]':
-      return { type: 'array', items: { type: 'boolean' } };
-
-      case 'integer[]':
-      return { type: 'array', items: { type: 'integer' } };
-
-      case 'number[]':
-      return { type: 'array', items: { type: 'number' } };
-
-      case 'string[]':
-      return { type: 'array', items: { type: 'string' } };
-
-      default:
-      return null;
-
-    }
 
   }
 
