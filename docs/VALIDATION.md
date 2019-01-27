@@ -19,92 +19,72 @@ You can see this as an equivalent to the DTD in XML, the Doctype in HTML or inte
 It can have many uses (it's why you have autocompletion in some JSON files in Visual Studio Code).
 **In this lib, JSON schemas are used to validate the data retrieved from local storage.**
 
-The JSON schema standard has its own [documentation](https://json-schema.org/),
-and you can also follow the `JSONSchema` interfaces exported by the lib. But as a convenience, we'll show here how to validate the common scenarios.
+## How to validate simple data
 
-## TypeScript 3.2 issue
+As a general recommendation, we recommend to keep your data structures as simple as possible,
+as you'll see the more complex it is, the more complex is validation too.
 
-If you're using TypeScript 3.2, be sure to follow the following examples,
-ie. be sure to *externalize* your schema in a variable or constant
-*and* to use the *specific* interfaces, due to a regression issue in TypeScript 3.2
-(see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64) for more info).
-
-## How to validate?
-
-### Validating a boolean
+### Boolean
 
 ```typescript
-import { JSONSchemaBoolean } from '@ngx-pwa/local-storage';
-
-const schema: JSONSchemaBoolean = { type: 'boolean' };
-
-this.localStorage.getItem<boolean>('test', { schema })
+this.localStorage.getItem<boolean>('test', { schema: { type: 'boolean' } })
 ```
 
-### Validating a number
+### Integer
 
-For a number:
 ```typescript
-import { JSONSchemaNumeric } from '@ngx-pwa/local-storage';
-
-const schema: JSONSchemaNumeric = { type: 'number' };
-
-this.localStorage.getItem<number>('test', { schema })
+this.localStorage.getItem<number>('test', { schema: { type: 'integer' } })
 ```
 
-For an integer only:
+### Number
+
 ```typescript
-import { JSONSchemaNumeric } from '@ngx-pwa/local-storage';
-
-const schema: JSONSchemaNumeric = { type: 'integer' };
-
-this.localStorage.getItem<number>('test', { schema })
+this.localStorage.getItem<number>('test', { schema: { type: 'number' } })
 ```
 
-For numbers and integers, in version >= 6, you can also add the following optional validations:
-- `multipleOf`
-- `maximum`
-- `exclusiveMaximum`
-- `minimum`
-- `exclusiveMinimum`
-
-### Validating a string
+### String
 
 ```typescript
-import { JSONSchemaString } from '@ngx-pwa/local-storage';
-
-const schema: JSONSchemaString = { type: 'string' };
-
-this.localStorage.getItem<string>('test', { schema })
+this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
 ```
 
-For strings, in version >= 6, you can also add the following optional validations:
-- `maxLength`
-- `minLength`
-- `pattern`
-
-### Validating an array
+### Arrays
 
 ```typescript
-import { JSONSchemaArray, JSONSchemaString } from '@ngx-pwa/local-storage';
-
-const schema: JSONSchemaArray = { items: { type: 'string' } as JSONSchemaString };
-
-this.localStorage.getItem<string[]>('test', { schema })
+this.localStorage.getItem<boolean[]>('test', { schema: {
+  type: 'array',
+  items: { type: 'boolean' }
+} })
 ```
 
-What's expected in `items` is another JSON schema,
-so you can also add the other optional validations related to the chosen type.
-
-For arrays, in version >= 6, you can also add the following optional validations:
-- `maxItems`
-- `minItems`
-- `uniqueItems`
-
-### Validating an object
+```typescript
+this.localStorage.getItem<number[]>('test', { schema: {
+  type: 'array',
+  items: { type: 'integer' }
+} })
+```
 
 ```typescript
-import { JSONSchemaObject, JSONSchemaString, JSONSchemaNumeric } from '@ngx-pwa/local-storage';
+this.localStorage.getItem<number[]>('test', { schema: {
+  type: 'array',
+  items: { type: 'number' }
+} })
+```
+
+```typescript
+this.localStorage.getItem<string[]>('test', { schema: {
+  type: 'array',
+  items: { type: 'string' }
+} })
+```
+
+What's expected in `items` is another JSON schema.
+
+## How to validate objects
+
+For example:
+```typescript
+import { JSONSchema } from '@ngx-pwa/local-storage';
 
 interface User {
   firstName: string;
@@ -112,11 +92,12 @@ interface User {
   age?: number;
 }
 
-const schema: JSONSchemaObject = {
+const schema: JSONSchema = {
+  type: 'object',
   properties: {
-    firstName: { type: 'string' } as JSONSchemaString,
-    lastName: { type: 'string' } as JSONSchemaString,
-    age: { type: 'number' } as JSONSchemaNumeric
+    firstName: { type: 'string' },
+    lastName: { type: 'string' },
+    age: { type: 'number' },
   },
   required: ['firstName', 'lastName']
 };
@@ -124,27 +105,104 @@ const schema: JSONSchemaObject = {
 this.localStorage.getItem<User>('test', { schema })
 ```
 
-What's expected for each property is another JSON schema,
-so you can also add the other optional validations related to the chosen type.
+What's expected for each property is another JSON schema.
 
-### Validating fixed values
+## Why a schema *and* a cast?
 
-Since version >= 6, if it can only be a fixed value:
+You may ask why we have to define a TypeScript cast with `getItem<User>()` *and* a JSON schema with `{ schema }`.
+
+It's because they happen at different steps:
+- a cast (`getItem<User>()`) just says "TypeScript, trust me, I'm telling you it will be a `User`", but it only happens at *compilation* time (it won't be checked at runtime)
+- the JSON schema (`{ schema }`) will be used at *runtime* when getting data in local storage for real.
+
+So they each serve a different purpose:
+- casting allow you to retrieve the data if the good type instead of `any`
+- the schema allow the lib to validate the data at runtime
+
+Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
+The lib can't check that.
+
+## How to validate fixed values
+
+Temporarily, documentation for constants and enums is removed,
+as there will be a breaking change in v8.
+
+## Additional validation
+
+Some types have additional validation options since version >= 6.
+
+### Options for integers and numbers
+
+- `multipleOf`
+- `maximum`
+- `exclusiveMaximum`
+- `minimum`
+- `exclusiveMinimum`
+
+For example:
+
 ```typescript
-import { JSONSchemaConst } from '@ngx-pwa/local-storage';
-
-const schema: JSONSchemaConst = { const: 'some value' };
-
-this.localStorage.getItem<string>('test', { schema })
+this.localStorage.getItem('test', { schema: {
+  type: 'number',
+  maximum: 5
+} })
 ```
 
-Since version >= 6, if it can only be a fixed value among a list:
+### Options for strings
+
+- `maxLength`
+- `minLength`
+- `pattern`
+
+For example:
 ```typescript
-import { JSONSchemaEnum } from '@ngx-pwa/local-storage';
+this.localStorage.getItem('test', { schema: {
+  type: 'string',
+  maxLength: 10
+} })
+```
 
-const schema: JSONSchemaEnum = { enum: ['value 1', 'value 2'] };
+### Options for arrays
 
-this.localStorage.getItem<string>('test', { schema })
+- `maxItems`
+- `minItems`
+- `uniqueItems`
+
+For example:
+```typescript
+this.localStorage.getItem('test', { schema: {
+  type: 'array',
+  items: { type: 'string' },
+  maxItems: 5
+} })
+```
+
+## How to validate nested types
+
+```typescript
+import { JSONSchema } from '@ngx-pwa/local-storage';
+
+interface User {
+  firstName: string;
+  lastName: string;
+}
+
+const schema: JSONSchema = {
+  type: 'array',
+  items: {
+    type: 'object',
+    properties: {
+      firstName: {
+        type: 'string',
+        maxLength: 10
+      },
+      lastName: { type: 'string' }
+    },
+    required: ['firstName', 'lastName']
+  }
+};
+
+this.localStorage.getItem<User[]>('test', { schema })
 ```
 
 ## Errors vs. `null`
@@ -178,7 +236,7 @@ so it needs to be a strict checking. Then there are important differences with t
 
 ### Restrictions
 
-Types are enforced: each value MUST have either `type` or `properties` or `items` or `const` or `enum`.
+Types are enforced: each value MUST have a `type`.
 
 ### Unsupported features
 
@@ -196,30 +254,6 @@ are *not* available in this lib:
 - `anyOf`
 - `oneOf`
 - array for `type`
-
-## Why a schema AND a cast?
-
-You may ask why we have to define a TypeScript cast with `getItem<string>()` AND a JSON schema with `{ schema: { type: 'string' } }`.
-
-It's because a cast only means: "TypeScript, trust me, I'm telling you it will be a string".
-But TypeScript won't do any real validation as it can't:
-**TypeScript can only manage checks at compilation time, while client-side storage checks can only happen at runtime**.
-So the JSON schema is required for real validation.
-
-And in the opposite way, the JSON schema doesn't tell TypeScript what will be the type of the data.
-So the cast is a convenience so you don't end up with `any` while you already checked the data.
-
-It means **you are responsible the casted type describes the same structure as the JSON schema**.
-The lib can't check that.
-
-## Why specific JSONSchema interfaces?
-
-Unfortunately, the JSON schema standard is structured in such a way it's currently impossible to do an equivalent TypeScript interface,
-which would be generic for all types, but only allowing you the optional validations relative to the type you choose
-(for example, `maxLength` should only be allowed when `type` is set to `'string'`).
-
-Thus casting with a more specific interface (like `JSONSchemaString`) allows TypeScript to check your JSON Schema is really valid.
-But it's not mandatory.
 
 ## ES6 shortcut
 

@@ -2,6 +2,17 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 7.4.1 (2019-01-27)
+
+### Documentation
+
+- No code change, only changes in JSON Schema interfaces documentation to prepare changes in v8:
+  - explicit `type: 'array'` when validating arrays
+  - explicit `type: 'object'` when validating objects
+  - prefer the generic `JSONSchema` interface
+  - avoid constants and enums validation (for now)
+  - avoid `null` (forever)
+
 ## 7.4.0 (2019-01-12)
 
 ### Feature

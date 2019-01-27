@@ -807,7 +807,7 @@ describe(`JSONValidator`, () => {
 
       const test = jsonValidator.validate([{ test: 'test' }, [{ test: 'test' }]], {
         type: 'array',
-        items: {type: 'object',  properties: { test: { type: 'string' } } }
+        items: { type: 'object',  properties: { test: { type: 'string' } } }
       });
 
       expect(test).toBe(true);
@@ -817,7 +817,7 @@ describe(`JSONValidator`, () => {
     it(`should throw if maxItems is not an integer`, () => {
 
       expect(() => {
-        jsonValidator.validate([], {type: 'array', items: { type: 'string' }, maxItems: 10.5 });
+        jsonValidator.validate([], { type: 'array', items: { type: 'string' }, maxItems: 10.5 });
       }).toThrowError();
 
     });
