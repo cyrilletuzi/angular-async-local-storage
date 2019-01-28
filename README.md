@@ -1,13 +1,14 @@
 # Async local storage for Angular
 
 Efficient local storage module for Angular apps and Progressive Wep apps (PWA):
-- **simplicity**: based on native `localStorage` API and automatic JSON stringify/parse,
+- **simplicity**: based on native `localStorage` API, with automatic JSON stringify/parse,
 - **perfomance**: internally stored via the asynchronous `IndexedDB` API,
 - **Angular-like**: wrapped in RxJS `Observables`,
 - **security**: validate data with a JSON Schema,
 - **compatibility**: works around some browsers issues,
 - **documentation**: API fully explained, and a changelog!
-- **reference**: 1st Angular library for local storage according to [ngx.tools](https://ngx.tools/#/search?q=local%20storage)
+- **maintenance**: the lib follows Angular LTS and anticipates the next Angular version,
+- **reference**: 1st Angular library for local storage according to [ngx.tools](https://ngx.tools/#/search?q=local%20storage).
 
 ## By the same author
 
