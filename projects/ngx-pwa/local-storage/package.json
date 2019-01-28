@@ -29,6 +29,6 @@
   "peerDependencies": {
     "@angular/common": "^8.0.0-beta || ^8.0.0-rc || ^8.0.0",
     "@angular/core": "^8.0.0-beta || ^8.0.0-rc || ^8.0.0",
-    "rxjs": "^6.3.0"
+    "rxjs": "^6.0.0"
   }
 }
