@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
 
     const key = 'test';
     const schema: JSONSchema = {
+      type: 'object',
       properties: {
         title: {
           type: 'string'
