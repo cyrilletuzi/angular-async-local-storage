@@ -9,7 +9,8 @@ import { MockLocalDatabase } from './databases/mock-local-database';
 import { JSONSchema } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
 
-function testGetItem<T extends string | number | boolean | object>(type: 'primitive' | 'object', localStorageService: LocalStorage, value: T, done: DoneFn) {
+function testGetItem<T extends string | number | boolean | object>
+(type: 'primitive' | 'object', localStorageService: LocalStorage, value: T, done: DoneFn) {
 
   localStorageService.setItem('test', value).subscribe(() => {
 
