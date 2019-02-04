@@ -2,6 +2,24 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 8.0.0-beta.0 (2019-02-04)
+
+### Features
+
+- The returned type of `getItem()` is now inferred for basic types (`string`, `number`, `boolean`)
+and arrays of basic types (`string[]`, `number[]`, `boolean[]`).
+- Just use the new `JSONSchema` interface, IntelliSense will adjust itself based on the `type` option.
+
+### Breaking changes
+
+A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.
+
+- `type` now required for array, object, const and enums validation schemas
+- `setItem()` and `setItemSubscribe()` no longer accept `null` or `undefined` when in `--strictNullChecks`
+- `JSONSchemaNull` removed and `JSONSchemaNumeric` deprecated
+- `items` in arrays schemas no longer accepts an array of JSON schemas
+- extra properties no longer accepted in `JSONSchema`
+
 ## 7.4.1 (2019-01-27)
 
 ### Documentation
