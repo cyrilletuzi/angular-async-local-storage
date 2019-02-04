@@ -105,10 +105,10 @@ export class LocalStorage {
   /**
    * Sets an item in local storage
    * @param key The item's key
-   * @param data The item's value, **must not be `null` or `undefined`**
+   * @param data The item's value
    * @returns An RxJS `Observable` to wait the end of the operation
    */
-  setItem(key: string, data: any): Observable<boolean> {
+  setItem(key: string, data: string | number | boolean | object): Observable<boolean> {
 
     return this.database.setItem(key, data);
 
@@ -158,9 +158,9 @@ export class LocalStorage {
   /**
    * Sets an item in local storage, and auto-subscribes
    * @param key The item's key
-   * @param data The item's value, **must not be `null` or `undefined`**
+   * @param data The item's value
    */
-  setItemSubscribe(key: string, data: any): void {
+  setItemSubscribe(key: string, data: string | number | boolean | object): void {
 
     this.setItem(key, data).subscribe(() => {}, () => {});
 

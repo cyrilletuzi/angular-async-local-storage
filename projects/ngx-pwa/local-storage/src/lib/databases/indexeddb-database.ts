@@ -130,7 +130,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param data The item's value, must NOT be null or undefined
    * @returns An RxJS Observable to wait the end of the operation
    */
-  setItem(key: string, data: any): Observable<boolean> {
+  setItem(key: string, data: string | number | boolean | object): Observable<boolean> {
 
     /* Fallback storage if set */
     if (this.fallback) {

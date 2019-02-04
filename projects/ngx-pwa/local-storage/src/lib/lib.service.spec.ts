@@ -9,7 +9,7 @@ import { MockLocalDatabase } from './databases/mock-local-database';
 import { JSONSchema } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
 
-function testGetItem<T>(type: 'primitive' | 'object', localStorageService: LocalStorage, value: T, done: DoneFn) {
+function testGetItem<T extends string | number | boolean | object>(type: 'primitive' | 'object', localStorageService: LocalStorage, value: T, done: DoneFn) {
 
   localStorageService.setItem('test', value).subscribe(() => {
 
@@ -29,13 +29,13 @@ function testGetItem<T>(type: 'primitive' | 'object', localStorageService: Local
 
 }
 
-function testGetItemPrimitive<T>(localStorageService: LocalStorage, value: T, done: DoneFn) {
+function testGetItemPrimitive<T extends string | number | boolean>(localStorageService: LocalStorage, value: T, done: DoneFn) {
 
   testGetItem<T>('primitive', localStorageService, value, done);
 
 }
 
-function testGetItemObject<T>(localStorageService: LocalStorage, value: T, done: DoneFn) {
+function testGetItemObject<T extends object>(localStorageService: LocalStorage, value: T, done: DoneFn) {
 
   testGetItem<T>('object', localStorageService, value, done);
 
@@ -93,13 +93,13 @@ function tests(localStorageService: LocalStorage) {
 
   it('should store and return null', (done: DoneFn) => {
 
-    testGetItemPrimitive<null>(localStorageService, null, done);
+    testGetItemPrimitive(localStorageService, null as any, done);
 
   });
 
   it('should store and return null for undefined too', (done: DoneFn) => {
 
-    localStorageService.setItem('test', undefined).subscribe(() => {
+    localStorageService.setItem('test', undefined as any).subscribe(() => {
 
       localStorageService.getItem('test').subscribe((data) => {
 
