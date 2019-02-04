@@ -1,5 +1,6 @@
 /**
  * JSON Schema to describe a boolean value.
+ * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaBoolean {
 
@@ -17,6 +18,7 @@ export interface JSONSchemaBoolean {
 
 /**
  * JSON Schema to describe a number value.
+ * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaNumber {
 
@@ -65,6 +67,7 @@ export interface JSONSchemaNumber {
 
 /**
  * JSON Schema to describe an integer value.
+ * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaInteger {
 
@@ -113,6 +116,7 @@ export interface JSONSchemaInteger {
 
 /**
  * JSON Schema to describe a string value.
+ * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaString {
 
@@ -153,8 +157,7 @@ export interface JSONSchemaString {
 
 /**
  * JSON schema to describe an array of values.
- * For arrays of primitive types (booleans, numbers and strings),
- * prefer the more specific `JSONSchemaArrayOf` interface.
+ * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaArray {
 
@@ -193,6 +196,7 @@ export interface JSONSchemaArray {
  * - array of numbers: `JSONSchemaArrayOf<JSONSchemaNumber>`,
  * - array of integers: `JSONSchemaArrayOf<JSONSchemaInteger>`,
  * - array of strings: `JSONSchemaArrayOf<JSONSchemaString>`.
+ * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaArrayOf<T extends JSONSchemaBoolean | JSONSchemaNumber | JSONSchemaInteger | JSONSchemaString> {
 
@@ -227,6 +231,7 @@ export interface JSONSchemaArrayOf<T extends JSONSchemaBoolean | JSONSchemaNumbe
 
 /**
  * JSON schema to describe an object.
+ * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaObject {
 
@@ -251,19 +256,13 @@ export interface JSONSchemaObject {
 }
 
 /**
- * Available for backward-compatibility only,
- * please avoid `JSONSchemaNumeric` and prefer `JSONSchemaNumber` or `JSONSchemaInteger`
- * @deprecated
- * @ignore
+ * @deprecated Available for backward-compatibility only, **do not use**, use `JSONSchema` instead
  */
 export type JSONSchemaNumeric = JSONSchemaNumber | JSONSchemaInteger;
 
 /**
- * Subset of the JSON Schema.
- * Types are enforced to validate everything: each value MUST have a `type`.
- * @see http://json-schema.org/latest/json-schema-validation.html
- * Not all validation features are supported: just follow the interface.
+ * Subset of the JSON Schema standard.
+ * Types are enforced to validate everything: each value **must** have a `type`.
+ * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
  */
-export type JSONSchema =
-  JSONSchemaBoolean | JSONSchemaString | JSONSchemaNumber | JSONSchemaInteger |
-  JSONSchemaArray | JSONSchemaObject;
+export type JSONSchema = JSONSchemaString | JSONSchemaNumber | JSONSchemaInteger | JSONSchemaBoolean | JSONSchemaArray | JSONSchemaObject;
