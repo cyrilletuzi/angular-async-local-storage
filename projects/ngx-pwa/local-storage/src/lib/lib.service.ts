@@ -38,20 +38,20 @@ export class LocalStorage {
    * The signature has many overloads due to validation, please refer to the documentation.
    * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
    * @param key The item's key
-   * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
+   * @returns The item's value if the key exists, `null` otherwise, wrapped in an RxJS `Observable`
    */
-  getItem<T = boolean>(key: string, options: LSGetItemOptions &
-    { schema: JSONSchemaBoolean }): Observable<boolean | null>;
-  getItem<T = number>(key: string, options: LSGetItemOptions &
-    { schema: JSONSchemaInteger | JSONSchemaNumber }): Observable<number | null>;
   getItem<T = string>(key: string, options: LSGetItemOptions &
     { schema: JSONSchemaString }): Observable<string | null>;
-  getItem<T = boolean[]>(key: string, options: LSGetItemOptions &
-    { schema: JSONSchemaArrayOf<JSONSchemaBoolean> }): Observable<boolean[] | null>;
-  getItem<T = number[]>(key: string, options: LSGetItemOptions &
-    { schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber> }): Observable<number[] | null>;
+  getItem<T = number>(key: string, options: LSGetItemOptions &
+    { schema: JSONSchemaInteger | JSONSchemaNumber }): Observable<number | null>;
+  getItem<T = boolean>(key: string, options: LSGetItemOptions &
+    { schema: JSONSchemaBoolean }): Observable<boolean | null>;
   getItem<T = string[]>(key: string, options: LSGetItemOptions &
     { schema: JSONSchemaArrayOf<JSONSchemaString> }): Observable<string[] | null>;
+  getItem<T = number[]>(key: string, options: LSGetItemOptions &
+    { schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber> }): Observable<number[] | null>;
+  getItem<T = boolean[]>(key: string, options: LSGetItemOptions &
+    { schema: JSONSchemaArrayOf<JSONSchemaBoolean> }): Observable<boolean[] | null>;
   getItem<T = any>(key: string, options: LSGetItemOptions & { schema: JSONSchema }): Observable<T | null>;
   getItem<T = any>(key: string, options?: LSGetItemOptions): Observable<unknown>;
   getItem<T = any>(key: string, options = this.getItemOptionsDefault) {
@@ -88,14 +88,13 @@ export class LocalStorage {
   }
 
   /**
-   * Gets an item value in local storage WITHOUT any validation.
-   * It is a convenience method for development only: do NOT use it in production code,
-   * as it can cause security issues and errors and may be removed in future versions.
-   * Use the normal .getItem() method instead.
-   * @ignore
-   * @deprecated
+   * Gets an item value in local storage *without* any validation.
+   * It is a convenience method for development only: **do not use it in production code**,
+   * as it can cause security issues and errors.
+   * @ignore Use the `.getItem()` method instead.
+   * @deprecated May be removed in future versions.
    * @param key The item's key
-   * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
+   * @returns The item's value if the key exists, `null` otherwise, wrapped in an RxJS `Observable`
    */
   getUnsafeItem<T = any>(key: string): Observable<T | null> {
 
@@ -106,8 +105,8 @@ export class LocalStorage {
   /**
    * Sets an item in local storage
    * @param key The item's key
-   * @param data The item's value, must NOT be null or undefined
-   * @returns An RxJS Observable to wait the end of the operation
+   * @param data The item's value, **must not be `null` or `undefined`**
+   * @returns An RxJS `Observable` to wait the end of the operation
    */
   setItem(key: string, data: any): Observable<boolean> {
 
@@ -118,7 +117,7 @@ export class LocalStorage {
   /**
    * Deletes an item in local storage
    * @param key The item's key
-   * @returns An RxJS Observable to wait the end of the operation
+   * @returns An RxJS `Observable` to wait the end of the operation
    */
   removeItem(key: string): Observable<boolean> {
 
@@ -128,7 +127,7 @@ export class LocalStorage {
 
   /**
    * Deletes all items from local storage
-   * @returns An RxJS Observable to wait the end of the operation
+   * @returns An RxJS `Observable` to wait the end of the operation
    */
   clear(): Observable<boolean> {
 
@@ -138,7 +137,7 @@ export class LocalStorage {
 
   /**
    * Get all keys stored in local storage
-   * @returns A RxJS Observable returning an array of the indexes
+   * @returns A RxJS `Observable` returning an array of the indexes
    */
   keys(): Observable<string[]> {
 
@@ -148,7 +147,7 @@ export class LocalStorage {
 
   /**
    * Tells if a key exists in storage
-   * @returns A RxJS Observable telling if the key exists
+   * @returns A RxJS `Observable` telling if the key exists
    */
   has(key: string): Observable<boolean> {
 
@@ -159,7 +158,7 @@ export class LocalStorage {
   /**
    * Sets an item in local storage, and auto-subscribes
    * @param key The item's key
-   * @param data The item's value, must NOT be null or undefined
+   * @param data The item's value, **must not be `null` or `undefined`**
    */
   setItemSubscribe(key: string, data: any): void {
 
