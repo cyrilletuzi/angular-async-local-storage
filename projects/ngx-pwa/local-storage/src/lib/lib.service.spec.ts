@@ -1035,7 +1035,38 @@ describe('LocalStorage with IndexedDB and a prefix', () => {
 
   });
 
+  it('should have the wanted prefix with custom database and object store names', () => {
+
+    const prefix = 'myapp';
+    const dbName = 'customDb';
+
+    class IndexedDBDatabasePrefix extends IndexedDBDatabase {
+      getDbBame() {
+        return this.dbName;
+      }
+    }
+
+    const indexedDBService = new IndexedDBDatabasePrefix(prefix, dbName);
+
+    expect(indexedDBService.getDbBame()).toBe(`${prefix}_${dbName}`);
+
+  });
+
   const localStorageService = new LocalStorage(new IndexedDBDatabase('myapp'), new JSONValidator());
+
+  beforeEach((done: DoneFn) => {
+    localStorageService.clear().subscribe(() => {
+      done();
+    });
+  });
+
+  tests(localStorageService);
+
+});
+
+describe('LocalStorage with IndexedDB and a custom database and object store names', () => {
+
+  const localStorageService = new LocalStorage(new IndexedDBDatabase(null, 'dBcustom', 'storeCustom'), new JSONValidator());
 
   beforeEach((done: DoneFn) => {
     localStorageService.clear().subscribe(() => {

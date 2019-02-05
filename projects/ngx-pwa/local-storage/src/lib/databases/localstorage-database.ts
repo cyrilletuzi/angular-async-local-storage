@@ -2,7 +2,7 @@ import { Injectable, Optional, Inject } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 
 import { LocalDatabase } from './local-database';
-import { LOCAL_STORAGE_PREFIX } from '../tokens';
+import { PREFIX } from '../tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class LocalStorageDatabase implements LocalDatabase {
     return of(localStorage.length);
   }
 
-  constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected userPrefix: string | null = null) {
+  constructor(@Optional() @Inject(PREFIX) userPrefix: string | null = null) {
 
     if (userPrefix) {
       this.prefix = `${userPrefix}_`;
