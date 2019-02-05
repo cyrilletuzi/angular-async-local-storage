@@ -12,6 +12,37 @@ but not all are built with the same framework, so each one will use a different 
 
 Interoperability can be achieved since v7.3.0 of this lib, given some limitations and adaptations.
 
+## `indexedDb` database and object store names
+
+When storing in `indexedDb`, names are used for the database and the object store,
+so you will need that all APIs use the same names.
+**The following options are available since version >= 8.**
+
+Option 1 (recommended): keep the config of this lib and change the names in the other APIs,
+by using the default values exported by the lib:
+
+```typescript
+import { DEFAULT_INDEXEDDB_NAME, DEFAULT_INDEXEDDB_STORE_NAME } from '@ngx-pwa/local-storage';
+```
+
+Option 2: change this lib config, according to your other APIs:
+
+```typescript
+import { localStorageProviders } from '@ngx-pwa/local-storage';
+
+@NgModule({
+  providers: [
+    localStorageProviders({
+      indexedDbName: 'customDbName',
+      indexedDbStoreName: 'customStoreName'
+    })
+  ]
+})
+export class AppModule {}
+```
+
+Note: it is an initialization step, so as mentioned in the example, **it must be done in `AppModule`**.
+
 ## Wrapping of values
 
 For legacy reasons, when storing in `indexedDb`, this lib currently wraps the value in this structure: `{ value: ... }`.
