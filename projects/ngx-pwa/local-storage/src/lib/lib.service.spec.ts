@@ -148,6 +148,18 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
+  it('should be ok when deleting an unexisting key', (done: DoneFn) => {
+
+    localStorageService.removeItem('dscdsdlkccicniocncsoncoscounococnn').subscribe(() => {
+
+        expect().nothing();
+
+        done();
+
+    });
+
+  });
+
   it('should count the size of items stored', (done: DoneFn) => {
 
     localStorageService.size.subscribe((length0) => {
@@ -1041,9 +1053,11 @@ describe('LocalStorage with IndexedDB and a prefix', () => {
     const dbName = 'customDb';
 
     class IndexedDBDatabasePrefix extends IndexedDBDatabase {
+
       getDbBame() {
         return this.dbName;
       }
+
     }
 
     const indexedDBService = new IndexedDBDatabasePrefix(prefix, dbName);
