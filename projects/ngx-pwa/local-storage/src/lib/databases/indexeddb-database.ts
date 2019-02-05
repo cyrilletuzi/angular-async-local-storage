@@ -4,7 +4,7 @@ import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { LocalStorageDatabase } from './localstorage-database';
-import { LOCAL_STORAGE_PREFIX } from '../tokens';
+import { PREFIX, INDEXEDDB_NAME, DEFAULT_INDEXEDDB_NAME, INDEXEDDB_STORE_NAME, DEFAULT_INDEXEDDB_STORE_NAME } from '../tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -14,15 +14,11 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * IndexedDB database name for local storage
    */
-  protected dbName = 'ngStorage';
+  protected dbName: string;
   /**
    * IndexedDB object store name for local storage
    */
-  protected readonly objectStoreName = 'localStorage';
-  /**
-   * IndexedDB key path name for local storage (where an item's key will be stored)
-   */
-  protected readonly keyPath = 'key';
+  protected objectStoreName: string;
   /**
    * IndexedDB data path name for local storage (where items' value will be stored)
    */
@@ -67,13 +63,15 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * Connects to IndexedDB
    */
-  constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected prefix: string | null = null) {
+  constructor(
+    @Optional() @Inject(PREFIX) prefix: string | null = null,
+    @Optional() @Inject(INDEXEDDB_NAME) dbName = DEFAULT_INDEXEDDB_NAME,
+    @Optional() @Inject(INDEXEDDB_STORE_NAME) storeName = DEFAULT_INDEXEDDB_STORE_NAME,
+  ) {
 
-    if (prefix) {
+    this.dbName = prefix ? `${prefix}_${dbName}` : dbName;
 
-      this.dbName = `${prefix}_${this.dbName}`;
-
-    }
+    this.objectStoreName = storeName;
 
     /* Creating the RxJS ReplaySubject */
     this.database = new ReplaySubject<IDBDatabase>();

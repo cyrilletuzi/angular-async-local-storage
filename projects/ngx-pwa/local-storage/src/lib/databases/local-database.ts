@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { IndexedDBDatabase } from './indexeddb-database';
 import { LocalStorageDatabase } from './localstorage-database';
 import { MockLocalDatabase } from './mock-local-database';
-import { LOCAL_STORAGE_PREFIX } from '../tokens';
+import { PREFIX } from '../tokens';
 
 export function localDatabaseFactory(platformId: Object, prefix: string | null) {
 
@@ -33,7 +33,7 @@ export function localDatabaseFactory(platformId: Object, prefix: string | null) 
   useFactory: localDatabaseFactory,
   deps: [
     PLATFORM_ID,
-    [new Optional(), LOCAL_STORAGE_PREFIX]
+    [new Optional(), PREFIX]
   ]
 })
 export abstract class LocalDatabase {
