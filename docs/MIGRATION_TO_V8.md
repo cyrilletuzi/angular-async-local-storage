@@ -114,8 +114,11 @@ which is a subset of the JSON Schema standard.
 This lib has always discarded some features of the standard, as it uses the schemas for a specific purpose (validation).
 But before v8, extra properties in the schema were accepted even if not supported. It is no longer possible since v8.
 
-Don't think it concerns anyone, but if you are concerned, feel free to open an issue:
-an helper function could be done to change a standard JSON schema to our subset.
+While not recommended, you can still force it:
+```typescript
+this.localStorage.getItem('test', { schema: someSchema as any })
+```
+
 
 ## The good part: simplication changes
 
