@@ -26,12 +26,13 @@ A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.
 
 - `JSONSchemaNumeric` deprecated
 
-### Internal refactoring
+### Reduced public API
 
-Should not concern you as it is internal stuff.
+Should not concern you as it was internal stuff.
 
-- `LOCAL_STORAGE_PREFIX` deprecated (you should use `localStorageProviders()`)
-- `MockLocalDatabase` renamed `MemoryDatabase`
+- `LOCAL_STORAGE_PREFIX` renamed and not exported anymore (you should already use `localStorageProviders()`, see [prefix guide](./docs/PREFIX.md))
+- `IndexedDBDatabase`, `LocalStorageDatabase` and `JSONValidator` not exported anymore
+- `MockLocalDatabase` renamed and not exported anymore
 
 ## 7.4.1 (2019-01-27)
 
