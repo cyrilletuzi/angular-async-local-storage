@@ -65,3 +65,5 @@ But if you use the native APIs (`localStorage` and `indexedDb`) directly,
 you could manage to store `undefined`, but it will then throw exceptions in some cases.
 
 So **don't store `undefined`**.
+
+Starting with version 8, the lib will prevent you to do that if your are in TypeScript `--strictNullChecks` mode.

@@ -256,7 +256,8 @@ export interface JSONSchemaObject {
 }
 
 /**
- * @deprecated Available for backward-compatibility only, **do not use**, use `JSONSchema` instead
+ * @deprecated Available for backward-compatibility only, **do not use**, use `JSONSchema` instead.
+ * May be removed in v9.
  */
 export type JSONSchemaNumeric = JSONSchemaNumber | JSONSchemaInteger;
 
