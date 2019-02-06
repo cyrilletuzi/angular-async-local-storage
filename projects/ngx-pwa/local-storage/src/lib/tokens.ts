@@ -1,5 +1,7 @@
 import { InjectionToken, Provider } from '@angular/core';
 
+// TODO: check if all characters are OK for options
+
 /**
  * Internal. Use the `localStorageProviders()` helper function to provide options.
  */

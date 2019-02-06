@@ -14,6 +14,8 @@ import { localStorageProviders } from '@ngx-pwa/local-storage';
 export class AppModule {}
 ```
 
-Note: it is an initialization step, so as mentioned in the example, **it must be done in `AppModule`**.
+Note:
+- it is an initialization step, so as mentioned in the example, **it must be done in `AppModule`**,
+- **avoid special characters.**
 
 [Back to general documentation](../README.md)
