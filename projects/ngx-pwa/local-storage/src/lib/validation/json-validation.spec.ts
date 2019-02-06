@@ -186,22 +186,6 @@ describe(`JSONValidator`, () => {
 
     });
 
-    it(`should throw if maxLength is not an integer`, () => {
-
-      expect(() => {
-        jsonValidator.validate('test', { type: 'string', maxLength: 10.5 });
-      }).toThrowError();
-
-    });
-
-    it(`should throw if maxLength is negative`, () => {
-
-      expect(() => {
-        jsonValidator.validate('test', { type: 'string', maxLength: -1 });
-      }).toThrowError();
-
-    });
-
     it(`should return true with a string respecting maxLength`, () => {
 
       const test = jsonValidator.validate('test', { type: 'string', maxLength: 10 });
@@ -215,22 +199,6 @@ describe(`JSONValidator`, () => {
       const test = jsonValidator.validate('test', { type: 'string', maxLength: 2 });
 
       expect(test).toBe(false);
-
-    });
-
-    it(`should throw if minLength is not an integer`, () => {
-
-      expect(() => {
-        jsonValidator.validate('test', { type: 'string', minLength: 10.5 });
-      }).toThrowError();
-
-    });
-
-    it(`should throw if minLength is negative`, () => {
-
-      expect(() => {
-        jsonValidator.validate('test', { type: 'string', minLength: -1 });
-      }).toThrowError();
 
     });
 
@@ -310,11 +278,11 @@ describe(`JSONValidator`, () => {
 
     });
 
-    it(`should throw if multipleOf is not strictly greater than 0`, () => {
+    it(`should return true with a number is a multiple of 0`, () => {
 
-      expect(() => {
-        jsonValidator.validate(10, { type: 'number', multipleOf: 0 });
-      }).toThrowError();
+      const test = jsonValidator.validate(5.2, { type: 'number', multipleOf: 0 });
+
+      expect(test).toBe(true);
 
     });
 
@@ -551,18 +519,6 @@ describe(`JSONValidator`, () => {
       const test = jsonValidator.validate('', { type: 'object', required: [], properties: {} });
 
       expect(test).toBe(false);
-
-    });
-
-    it(`should throw if required properties are not described in 'properties'`, () => {
-
-      expect(() => {
-        jsonValidator.validate({ test: 'test' }, {
-          type: 'object',
-          properties: { other: { type: 'string' } },
-          required: ['test']
-        });
-      }).toThrowError();
 
     });
 
@@ -814,22 +770,6 @@ describe(`JSONValidator`, () => {
 
     });
 
-    it(`should throw if maxItems is not an integer`, () => {
-
-      expect(() => {
-        jsonValidator.validate([], { type: 'array', items: { type: 'string' }, maxItems: 10.5 });
-      }).toThrowError();
-
-    });
-
-    it(`should throw if maxItems is not positive`, () => {
-
-      expect(() => {
-        jsonValidator.validate([], { type: 'array', items: { type: 'string' }, maxItems: -1 });
-      }).toThrowError();
-
-    });
-
     it(`should return true with an array with less items than maxItems`, () => {
 
       const test = jsonValidator.validate([1, 2], { type: 'array', items: { type: 'number' }, maxItems: 3 });
@@ -851,22 +791,6 @@ describe(`JSONValidator`, () => {
       const test = jsonValidator.validate([1, 2, 4, 4], { type: 'array', items: { type: 'number' }, maxItems: 3 });
 
       expect(test).toBe(false);
-
-    });
-
-    it(`should throw if minItems is not an integer`, () => {
-
-      expect(() => {
-        jsonValidator.validate([], { type: 'array', items: { type: 'string' }, minItems: 10.5 });
-      }).toThrowError();
-
-    });
-
-    it(`should throw if minItems is not positive`, () => {
-
-      expect(() => {
-        jsonValidator.validate([], { type: 'array', items: { type: 'string' }, minItems: -1 });
-      }).toThrowError();
 
     });
 
