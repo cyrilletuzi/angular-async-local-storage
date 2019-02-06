@@ -24,19 +24,19 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * `indexedDB` data path name for local storage (where items' value will be stored)
    */
-  protected readonly dataPath = 'value';
+  private readonly dataPath = 'value';
 
   /**
    * `indexedDB` database connection, wrapped in a RxJS `ReplaySubject` to be able to access the connection
    * even after the connection success event happened
    */
-  protected database: ReplaySubject<IDBDatabase>;
+  private database: ReplaySubject<IDBDatabase>;
 
   /**
    * `indexedDB` is available but failing in some scenarios (some browsers private mode...),
    * so a fallback can be needed.
    */
-  protected fallback: LocalDatabase | null = null;
+  private fallback: LocalDatabase | null = null;
 
   /**
    * Number of items in our `indexedDB` database and object store
@@ -332,7 +332,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * Connects to `indexedDB` and creates the object store on first time
    * @param prefix
    */
-  protected connect(prefix: string | null = null): void {
+  private connect(prefix: string | null = null): void {
 
     let request: IDBOpenDBRequest;
 
@@ -344,7 +344,10 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     } catch (error) {
 
-      /* Fallback storage if IndexedDb connection is failing */
+      /* Fallback storage if IndexedDb connection is failing
+       * Safari cross-origin iframes
+       * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/42
+       */
       this.setFallback(prefix);
 
       return;
@@ -365,8 +368,34 @@ export class IndexedDBDatabase implements LocalDatabase {
 
       }, () => {
 
-        /* Fallback storage if IndexedDb connection is failing */
+        /* Firefox private mode issue: fallback storage if IndexedDb connection is failing
+         * @see https://bugzilla.mozilla.org/show_bug.cgi?id=781982
+         * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/26 */
         this.setFallback(prefix);
+
+      });
+
+  }
+
+  /**
+   * Create store on first use of `indexedDB`
+   * @param request `indexedDB` database opening request
+   */
+  private createStore(request: IDBOpenDBRequest): void {
+
+    /* Listen to the event fired on first connection */
+    fromEvent(request, 'upgradeneeded')
+      /* The observable will complete */
+      .pipe(first())
+      .subscribe(() => {
+
+        /* Check if the store already exists, to avoid error */
+        if (!request.result.objectStoreNames.contains(this.storeName)) {
+
+          /* Create the object store */
+          request.result.createObjectStore(this.storeName);
+
+        }
 
       });
 
@@ -377,7 +406,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param mode `readonly` or `readwrite`
    * @returns An `indexedDB` store, wrapped in an RxJS `Observable`
    */
-  protected transaction(mode: IDBTransactionMode): Observable<IDBObjectStore> {
+  private transaction(mode: IDBTransactionMode): Observable<IDBObjectStore> {
 
     /* From the `indexedDB` connection, open a transaction and get the store */
     return this.database
@@ -395,7 +424,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param request Request to listen
    * @returns An RxJS `Observable` listening to the success event
    */
-  protected successEvent(request: IDBRequest): Observable<Event> {
+  private successEvent(request: IDBRequest): Observable<Event> {
 
     return fromEvent(request, 'success');
 
@@ -406,7 +435,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param request Request to listen
    * @returns An RxJS `Observable` listening to the error event and if so, throwing an error
    */
-  protected errorEvent(request: IDBRequest): Observable<never> {
+  private errorEvent(request: IDBRequest): Observable<never> {
 
     return fromEvent(request, 'error').pipe(mergeMap(() => throwError(request.error)));
 
@@ -418,7 +447,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param mapCallback Callback returning the wanted value
    * @returns An RxJS `Observable` listening to request events and mapping to the wanted value
    */
-  protected requestEventsAndMapTo<T>(request: IDBRequest, mapCallback: () => T): Observable<T> {
+  private requestEventsAndMapTo<T>(request: IDBRequest, mapCallback: () => T): Observable<T> {
 
     /* Listen to the success event and map to the wanted value
      * `mapTo()` must not be used here as it would eval `request.result` too soon */
@@ -438,7 +467,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param key Key to check
    * @returns An `indexedDB` request
    */
-  protected getKeyRequest(store: IDBObjectStore, key: string): IDBRequest {
+  private getKeyRequest(store: IDBObjectStore, key: string): IDBRequest {
 
     /* `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge).
      * In older browsers, the value is checked instead, but it could lead to an exception
@@ -452,7 +481,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * Get all keys from store from a cursor, for older browsers still in `indexedDB` v1
    * @param request Request containing the cursor
    */
-  protected getKeysFromCursor(request: IDBRequest<IDBCursorWithValue | null>): Observable<string[]> {
+  private getKeysFromCursor(request: IDBRequest<IDBCursorWithValue | null>): Observable<string[]> {
 
     /* Keys will be stored here */
     const keys: string[] = [];
@@ -475,30 +504,6 @@ export class IndexedDBDatabase implements LocalDatabase {
       /* Map to the retrieved keys */
       map(() => keys)
     );
-
-  }
-
-  /**
-   * Create store on first use of `indexedDB`
-   * @param request `indexedDB` database opening request
-   */
-  protected createStore(request: IDBOpenDBRequest): void {
-
-    /* Listen to the event fired on first connection */
-    fromEvent(request, 'upgradeneeded')
-      /* The observable will complete */
-      .pipe(first())
-      .subscribe(() => {
-
-        /* Check if the store already exists, to avoid error */
-        if (!request.result.objectStoreNames.contains(this.storeName)) {
-
-          /* Create the object store */
-          request.result.createObjectStore(this.storeName);
-
-        }
-
-      });
 
   }
 

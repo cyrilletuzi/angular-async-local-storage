@@ -7,21 +7,49 @@ import { LocalStorageDatabase } from './localstorage-database';
 import { MockLocalDatabase } from './mock-local-database';
 import { PREFIX } from '../tokens';
 
-export function localDatabaseFactory(platformId: Object, prefix: string | null) {
+/**
+ * Factory to create a storage according to browser support
+ * @param platformId Context about the platform (`browser`, `server`...)
+ * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
+ */
+export function localDatabaseFactory(platformId: Object, prefix: string | null): LocalDatabase {
 
-  if (isPlatformBrowser(platformId) && ('indexedDB' in window) && (indexedDB !== undefined) && (indexedDB !== null)) {
+  // TODO: investigate about webworker context
 
-    /* Try with IndexedDB in modern browsers */
+  /*
+   * Check:
+   * - if we are in a browser context (issue: server-side rendering)
+   * - if `indexedDB` exists (issue: IE9)
+   * - it could exist but be `undefined` or `null` (issue: IE / Edge private mode)
+   */
+  if (isPlatformBrowser(platformId) && ('indexedDB' in window) && (window.indexedDB !== undefined) && (window.indexedDB !== null)) {
+
+    /* Will be the case for:
+     * - IE10+ and all other browsers in normal mode
+     * - Chromium / Safari private mode, but in this case, data will be swiped when the user leaves the app */
     return new IndexedDBDatabase(prefix);
 
-  } else if (isPlatformBrowser(platformId) && ('localStorage' in window) && (localStorage !== undefined) && (localStorage !== null)) {
+  }
+  /* Check:
+   * - if we are in a browser context (issue: server-side rendering)
+   * - if `localStorage` exists (to be sure)
+   */
+  else if (isPlatformBrowser(platformId) && ('localStorage' in window) && (window.localStorage !== undefined) && (window.localStorage !== null)) {
 
-    /* Try with localStorage in old browsers (IE9) */
+    /* Will be the case for:
+     * - IE9
+     * - Safari cross-origin iframes, detected later in `IndexedDBDatabase.connect()` @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/42
+     * - IE / Edge / Firefox private mode, but in this case, data will be swiped when the user leaves the app
+     * For Firefox, can only be detected later in `IndexedDBDatabase.connect()` @see https://bugzilla.mozilla.org/show_bug.cgi?id=781982
+     */
     return new LocalStorageDatabase(prefix);
 
   } else {
 
-    /* Fake database for server-side rendering (Universal) */
+    /* Will be the case for:
+     * - Server-side rendering
+     * - All other non-browser context
+     */
     return new MockLocalDatabase();
 
   }
