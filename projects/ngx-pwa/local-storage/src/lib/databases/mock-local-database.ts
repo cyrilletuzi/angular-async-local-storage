@@ -8,73 +8,101 @@ import { LocalDatabase } from './local-database';
 })
 export class MockLocalDatabase implements LocalDatabase {
 
-  protected localStorage = new Map<string, any>();
+  /**
+   * Memory storage
+   */
+  private memoryStorage = new Map<string, any>();
 
+  /**
+   * Number of items in memory
+   */
   get size(): Observable<number> {
-    return of(this.localStorage.size);
+
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
+    return of(this.memoryStorage.size);
+
   }
 
   /**
-   * Gets an item value in local storage
+   * Gets an item value in memory
    * @param key The item's key
-   * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
+   * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
    */
    getItem<T = any>(key: string): Observable<T | null> {
 
-    const rawData: T | null = this.localStorage.get(key);
+    const rawData = this.memoryStorage.get(key) as T | null;
 
+    /* If data is `undefined`, returns `null` instead for the API to be consistent.
+     * Wrap in a RxJS `Observable` to be consistent with other storages */
     return of((rawData !== undefined) ? rawData : null);
 
   }
 
   /**
-   * Sets an item in local storage
+   * Sets an item in memory
    * @param key The item's key
-   * @param data The item's value, must NOT be null or undefined
-   * @returns An RxJS Observable to wait the end of the operation
+   * @param data The item's value
+   * @returns A RxJS `Observable` to wait the end of the operation
    */
    setItem(key: string, data: string | number | boolean | object): Observable<boolean> {
 
-    this.localStorage.set(key, data);
+    this.memoryStorage.set(key, data);
 
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(true);
 
   }
 
   /**
-   * Deletes an item in local storage
+   * Deletes an item in memory
    * @param key The item's key
-   * @returns An RxJS Observable to wait the end of the operation
+   * @returns A RxJS `Observable` to wait the end of the operation
    */
    removeItem(key: string): Observable<boolean> {
 
-    this.localStorage.delete(key);
+    this.memoryStorage.delete(key);
 
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(true);
 
   }
 
   /**
-   * Deletes all items from local storage
-   * @returns An RxJS Observable to wait the end of the operation
+   * Deletes all items in memory
+   * @returns A RxJS `Observable` to wait the end of the operation
    */
    clear(): Observable<boolean> {
 
-    this.localStorage.clear();
+    this.memoryStorage.clear();
 
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(true);
 
   }
 
+  /**
+   * Get all keys in memory
+   * @returns List of all keys, wrapped in a RxJS `Observable`
+   */
   keys(): Observable<string[]> {
 
-    return of(Array.from(this.localStorage.keys()));
+    /* Transform to a classic array for the API to be consistent */
+    const keys = Array.from(this.memoryStorage.keys());
+
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
+    return of(keys);
 
   }
 
+  /**
+   * Check if a key exists in memory
+   * @param key Key name
+   * @returns a RxJS `Observable` telling if the key exists or not
+   */
   has(key: string): Observable<boolean> {
 
-    return of(this.localStorage.has(key));
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
+    return of(this.memoryStorage.has(key));
 
   }
 

@@ -18,7 +18,10 @@ export class LocalStorageDatabase implements LocalDatabase {
    * Number of items in `localStorage`
    */
   get size(): Observable<number> {
+
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(localStorage.length);
+
   }
 
   /**
