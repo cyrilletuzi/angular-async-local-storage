@@ -745,8 +745,6 @@ describe('IndexedDB and a prefix', () => {
 
   it('check prefix', () => {
 
-    const dbName = 'ngStorage';
-
     class IndexedDBDatabasePrefix extends IndexedDBDatabase {
       getDbBame() {
         return this.dbName;
@@ -755,7 +753,7 @@ describe('IndexedDB and a prefix', () => {
 
     const indexedDBService = new IndexedDBDatabasePrefix(prefix);
 
-    expect(indexedDBService.getDbBame()).toBe(`${prefix}_${dbName}`);
+    expect(indexedDBService.getDbBame()).toBe(`${prefix}_${DEFAULT_IDB_DB_NAME}`);
 
   });
 
