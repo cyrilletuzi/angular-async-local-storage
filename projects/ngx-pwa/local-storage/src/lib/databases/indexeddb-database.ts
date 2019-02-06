@@ -155,20 +155,20 @@ export class IndexedDBDatabase implements LocalDatabase {
          * In older browsers, the value is checked instead, but it could lead to an exception
          * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
          */
-        const request = this.getKeyRequest(store, key);
+        const request1 = this.getKeyRequest(store, key);
 
         /* Manage success and error events, and get the request result */
-        return this.requestEventsAndMapTo(request, () => request.result).pipe(
+        return this.requestEventsAndMapTo(request1, () => request1.result).pipe(
           mergeMap((existingEntry) => {
 
             /* Add if the item is not existing yet, or update otherwise */
             // TODO: stop wrapping
-            const request = (existingEntry === undefined) ?
+            const request2 = (existingEntry === undefined) ?
               store.add({ [this.dataPath]: data }, key) :
               store.put({ [this.dataPath]: data }, key);
 
             /* Manage success and error events, and map to `true` */
-            return this.requestEventsAndMapTo(request, () => true);
+            return this.requestEventsAndMapTo(request2, () => true);
 
           }),
         );

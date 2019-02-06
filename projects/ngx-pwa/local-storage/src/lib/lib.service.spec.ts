@@ -281,22 +281,22 @@ function tests(localStorageService: LocalStorage) {
     it('size', (done: DoneFn) => {
 
       localStorageService.size.pipe(
-        tap((length) => { expect(length).toBe(0) }),
+        tap((length) => { expect(length).toBe(0); }),
         mergeMap(() => localStorageService.setItem(key, 'test')),
         mergeMap(() => localStorageService.size),
-        tap((length) => { expect(length).toBe(1) }),
+        tap((length) => { expect(length).toBe(1); }),
         mergeMap(() => localStorageService.setItem('', 'test')),
         mergeMap(() => localStorageService.size),
-        tap((length) => { expect(length).toBe(2) }),
+        tap((length) => { expect(length).toBe(2); }),
         mergeMap(() => localStorageService.removeItem(key)),
         mergeMap(() => localStorageService.size),
-        tap((length) => { expect(length).toBe(1) }),
+        tap((length) => { expect(length).toBe(1); }),
         mergeMap(() => localStorageService.clear()),
         mergeMap(() => localStorageService.size),
-        tap((length) => { expect(length).toBe(0) }),
+        tap((length) => { expect(length).toBe(0); }),
       ).subscribe(() => {
         done();
-      })
+      });
 
     });
 
@@ -367,8 +367,8 @@ function tests(localStorageService: LocalStorage) {
         mergeMap(() => localStorageService.keys()),
         /* Now we will have an `Observable` emiting multiple values */
         mergeMap((keys) => from(keys)),
-        filter((key) => key.startsWith('app_')),
-        mergeMap((key) => localStorageService.removeItem(key)),
+        filter((currentKey) => currentKey.startsWith('app_')),
+        mergeMap((currentKey) => localStorageService.removeItem(currentKey)),
       ).subscribe({
         /* So we need to wait for completion of all actions to check */
         complete: () => {
