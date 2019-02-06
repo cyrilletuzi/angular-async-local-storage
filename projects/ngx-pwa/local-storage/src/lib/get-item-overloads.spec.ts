@@ -1,5 +1,5 @@
 import { LocalStorage } from './lib.service';
-import { IndexedDBDatabase } from './databases/indexeddb-database';
+import { LocalStorageDatabase } from './databases/localstorage-database';
 import { JSONValidator } from './validation/json-validator';
 import { JSONSchemaString, JSONSchema, JSONSchemaArrayOf } from './validation/json-schema';
 
@@ -9,7 +9,7 @@ describe('getItem() overload signature', () => {
 
   beforeEach((done: DoneFn) => {
 
-    localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
+    localStorageService = new LocalStorage(new LocalStorageDatabase(), new JSONValidator());
 
     localStorageService.clear().subscribe(() => {
 

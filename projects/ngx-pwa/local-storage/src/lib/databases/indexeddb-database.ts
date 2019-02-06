@@ -3,8 +3,8 @@ import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs
 import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
-import { LocalStorageDatabase } from './localstorage-database';
 import { PREFIX, IDB_DB_NAME, DEFAULT_IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME } from '../tokens';
+import { IDBBrokenError } from '../exceptions';
 
 @Injectable({
   providedIn: 'root'
@@ -33,20 +33,9 @@ export class IndexedDBDatabase implements LocalDatabase {
   private database: ReplaySubject<IDBDatabase>;
 
   /**
-   * `indexedDB` is available but failing in some scenarios (some browsers private mode...),
-   * so a fallback can be needed.
-   */
-  private fallback: LocalDatabase | null = null;
-
-  /**
    * Number of items in our `indexedDB` database and object store
    */
   get size(): Observable<number> {
-
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.size;
-    }
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
@@ -87,7 +76,7 @@ export class IndexedDBDatabase implements LocalDatabase {
     this.database = new ReplaySubject<IDBDatabase>();
 
     /* Connect to `indexedDB`, with prefix if provided by the user */
-    this.connect(prefix);
+    this.connect();
 
   }
 
@@ -97,11 +86,6 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @returns The item's value if the key exists, `null` otherwise, wrapped in an RxJS `Observable`
    */
   getItem<T = any>(key: string): Observable<T | null> {
-
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.getItem<T>(key);
-    }
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
@@ -153,11 +137,6 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   setItem(key: string, data: string | number | boolean | object): Observable<boolean> {
 
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.setItem(key, data);
-    }
-
     /* Storing `null` or `undefined` is known to cause issues in some browsers.
      * So it's useless, not storing anything in this case */
     if ((data === undefined) || (data === null)) {
@@ -207,11 +186,6 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   removeItem(key: string): Observable<boolean> {
 
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.removeItem(key);
-    }
-
     /* Open a transaction in write mode */
     return this.transaction('readwrite').pipe(
       mergeMap((store) => {
@@ -235,11 +209,6 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   clear(): Observable<boolean> {
 
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.clear();
-    }
-
     /* Open a transaction in write mode */
     return this.transaction('readwrite').pipe(
       mergeMap((store) => {
@@ -262,11 +231,6 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @returns An RxJS `Observable` containing all the keys
    */
   keys(): Observable<string[]> {
-
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.keys();
-    }
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
@@ -312,11 +276,6 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   has(key: string): Observable<boolean> {
 
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.has(key);
-    }
-
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
       mergeMap((store) => {
@@ -338,23 +297,21 @@ export class IndexedDBDatabase implements LocalDatabase {
    * Connects to `indexedDB` and creates the object store on first time
    * @param prefix
    */
-  private connect(prefix: string | null = null): void {
+  private connect(): void {
 
     let request: IDBOpenDBRequest;
 
-    /* Connect to `indexedDB` */
+    /* Connect to `indexedDB`
+     * Will fail in Safari cross-origin iframes
+     * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/42 */
     try {
 
-      // TODO: Could be catch earlier when detecting storage support
       request = indexedDB.open(this.dbName);
 
-    } catch (error) {
+    } catch {
 
-      /* Fallback storage if IndexedDb connection is failing
-       * Safari cross-origin iframes
-       * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/42
-       */
-      this.setFallback(prefix);
+      // TODO: see if try/catch can be managed in provider factory
+      this.database.error(new IDBBrokenError());
 
       return;
 
@@ -377,7 +334,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Firefox private mode issue: fallback storage if IndexedDb connection is failing
          * @see https://bugzilla.mozilla.org/show_bug.cgi?id=781982
          * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/26 */
-        this.setFallback(prefix);
+         this.database.error(new IDBBrokenError());
 
       });
 
@@ -420,11 +377,6 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   }
 
-  // TODO: move fallback in LocalStorage service
-  private setFallback(prefix: string | null): void {
-    this.fallback = new LocalStorageDatabase(prefix);
-  }
-
   /**
    * Listen to an `indexedDB` success error event
    * @param request Request to listen
@@ -443,6 +395,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   private errorEvent(request: IDBRequest): Observable<never> {
 
+    // TODO: check the error has still the same structure as before (now it's a DOMException)
     return fromEvent(request, 'error').pipe(mergeMap(() => throwError(request.error)));
 
   }

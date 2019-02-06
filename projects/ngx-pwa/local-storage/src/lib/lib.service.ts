@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Observable, throwError, of } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { Injectable, Optional, Inject } from '@angular/core';
+import { Observable, throwError, of, OperatorFunction } from 'rxjs';
+import { mergeMap, catchError } from 'rxjs/operators';
 
 import { LocalDatabase } from './databases/local-database';
 import {
@@ -8,6 +8,9 @@ import {
   JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf
 } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
+import { IDB_BROKEN_ERROR, ValidationError } from './exceptions';
+import { LocalStorageDatabase } from './databases/localstorage-database';
+import { PREFIX } from './tokens';
 
 export interface LSGetItemOptions {
   /**
@@ -43,8 +46,13 @@ export class LocalStorage {
    * Constructor params are provided by Angular (but can also be passed manually in tests)
    * @param database Storage to use
    * @param jsonValidator Validator service
+   * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
    */
-  constructor(private database: LocalDatabase, private jsonValidator: JSONValidator) {}
+  constructor(
+    private database: LocalDatabase,
+    private jsonValidator: JSONValidator,
+    @Optional() @Inject(PREFIX) protected prefix: string | null = null,
+  ) {}
 
   /**
    * Get an item value in storage.
@@ -71,6 +79,8 @@ export class LocalStorage {
 
     /* Get the data in storage */
     return this.database.getItem<T>(key).pipe(
+      /* Check if `indexedDb` is broken */
+      this.catchIDBBroken(() => this.database.getItem<T>(key)),
       mergeMap((data) => {
 
         if (data === null) {
@@ -82,7 +92,7 @@ export class LocalStorage {
 
           /* Validate data against a JSON schema if provied */
           if (!this.jsonValidator.validate(data, options.schema)) {
-            return throwError(new Error(`Data stored is not valid against the provided JSON schema. Check your JSON schema, otherwise it means data has been corrupted.`));
+            return throwError(new ValidationError());
           }
 
         }
@@ -91,7 +101,8 @@ export class LocalStorage {
         /* Cast to unknown (will be overrided if a schema was provided) */
         return of(data as unknown);
 
-      }));
+      }),
+    );
 
   }
 
@@ -106,7 +117,9 @@ export class LocalStorage {
    */
   getUnsafeItem<T = any>(key: string): Observable<T | null> {
 
-    return this.database.getItem<T>(key);
+    return this.database.getItem<T>(key)
+      /* Catch if `indexedDb` is broken */
+      .pipe(this.catchIDBBroken(() => this.database.getItem<T>(key)));
 
   }
 
@@ -118,7 +131,9 @@ export class LocalStorage {
    */
   setItem(key: string, data: string | number | boolean | object): Observable<boolean> {
 
-    return this.database.setItem(key, data);
+    return this.database.setItem(key, data)
+      /* Catch if `indexedDb` is broken */
+      .pipe(this.catchIDBBroken(() => this.database.setItem(key, data)));
 
   }
 
@@ -129,7 +144,9 @@ export class LocalStorage {
    */
   removeItem(key: string): Observable<boolean> {
 
-    return this.database.removeItem(key);
+    return this.database.removeItem(key)
+      /* Catch if `indexedDb` is broken */
+      .pipe(this.catchIDBBroken(() => this.database.removeItem(key)));
 
   }
 
@@ -139,7 +156,9 @@ export class LocalStorage {
    */
   clear(): Observable<boolean> {
 
-    return this.database.clear();
+    return this.database.clear()
+      /* Catch if `indexedDb` is broken */
+      .pipe(this.catchIDBBroken(() => this.database.clear()));
 
   }
 
@@ -149,7 +168,9 @@ export class LocalStorage {
    */
   keys(): Observable<string[]> {
 
-    return this.database.keys();
+    return this.database.keys()
+      /* Catch if `indexedDb` is broken */
+      .pipe(this.catchIDBBroken(() => this.database.keys()));
 
   }
 
@@ -159,7 +180,9 @@ export class LocalStorage {
    */
   has(key: string): Observable<boolean> {
 
-    return this.database.has(key);
+    return this.database.has(key)
+      /* Catch if `indexedDb` is broken */
+      .pipe(this.catchIDBBroken(() => this.database.has(key)));
 
   }
 
@@ -199,6 +222,36 @@ export class LocalStorage {
   clearSubscribe(): void {
 
     this.clear().subscribe(() => {}, () => {});
+
+  }
+
+  /**
+   * RxJS operator to catch if `indexedDB` is broken
+   * @param operationCallback Callback with the operation to redo
+   */
+  private catchIDBBroken<T>(operationCallback: () => Observable<T>): OperatorFunction<T, any> {
+
+    // TODO: check if it could be something other than Error
+    return catchError((error: Error) => {
+
+      // TODO: would be better to check error instanceof, search why the specific exception is lost
+      /* Check if `indexedDB` is broken based on error message */
+      if (error.message === IDB_BROKEN_ERROR) {
+
+        /* Fallback to `localStorage` */
+        this.database = new LocalStorageDatabase(this.prefix);
+
+        /* Redo the operation */
+        return operationCallback();
+
+      } else {
+
+        /* Otherwise, rethrow the error */
+        return throwError(error);
+
+      }
+
+    });
 
   }
 

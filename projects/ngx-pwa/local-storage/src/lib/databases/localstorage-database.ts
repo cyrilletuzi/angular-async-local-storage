@@ -54,8 +54,9 @@ export class LocalStorageDatabase implements LocalDatabase {
       /* Try to parse */
       try {
         parsedData = JSON.parse(unparsedData) as T;
-      } catch {
-        return throwError(new Error(`localStorage data is not a valid JSON and cannot be parsed.`));
+      } catch (error) {
+        // TODO: check it's still the same structure as previous error
+        return throwError(error);
       }
 
     }

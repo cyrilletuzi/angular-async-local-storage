@@ -1096,8 +1096,6 @@ describe('LocalStorage with automatic storage injection', () => {
 
   it('should store and get the same value', (done: DoneFn) => {
 
-    // TODO: investigate why the test is failing in Firefox private mode
-
     const localStorageService = TestBed.get(LocalStorage) as LocalStorage;
 
     const index = 'index';

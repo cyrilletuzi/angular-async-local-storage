@@ -18,3 +18,4 @@ export {
   localStorageProviders, LocalStorageProvidersConfig, LOCAL_STORAGE_PREFIX, PREFIX,
   DEFAULT_IDB_DB_NAME, IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, IDB_STORE_NAME
 } from './lib/tokens';
+export { VALIDATION_ERROR, ValidationError } from './lib/exceptions';
