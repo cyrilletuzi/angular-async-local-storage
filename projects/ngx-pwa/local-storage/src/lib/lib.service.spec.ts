@@ -354,7 +354,7 @@ function tests(localStorageService: LocalStorage) {
 
       }, (error) => {
 
-        expect(error.message).toBe(`JSON invalid`);
+        expect(error.message).toBe(`Data stored is not valid against the provided JSON schema. Check your JSON schema, otherwise it means data has been corrupted.`);
 
         done();
 
