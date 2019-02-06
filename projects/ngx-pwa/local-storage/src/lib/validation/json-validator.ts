@@ -4,23 +4,18 @@ import {
   JSONSchemaArray, JSONSchemaObject
 } from './json-schema';
 
-/**
- * @todo Add other JSON Schema validation features
- */
 @Injectable({
   providedIn: 'root'
 })
 export class JSONValidator {
 
   /**
-   * Validate a JSON data against a JSON Schema
+   * Validate a JSON data against a Jsubset of the JSON Schema standard.
+   * Types are enforced to validate everything: each schema must
    * @param data JSON data to validate
-   * @param schema Subset of JSON Schema.
-   * Types are enforced to validate everything:
-   * each value MUST have 'type' or 'properties' or 'items' or 'const' or 'enum'.
-   * Therefore, unlike the spec, booleans are not allowed as schemas.
-   * Not all validation features are supported: just follow the interface.
-   * @returns If data is valid : true, if it is invalid : false, and throws if the schema is invalid
+   * @param schema Subset of JSON Schema. Must have a `type`.
+   * @returns If data is valid: `true`, if it is invalid: `false`
+   * @see @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
    */
   validate(data: any, schema: JSONSchema): boolean {
 
@@ -42,145 +37,12 @@ export class JSONValidator {
 
   }
 
-  protected validateObject(data: { [k: string]: any; }, schema: JSONSchemaObject): boolean {
-
-    if ((data === null) || (typeof data !== 'object')) {
-      return false;
-    }
-
-    /**
-     * Check if the object doesn't have more properties than expected
-     * Equivalent of additionalProperties: false
-     */
-    if (Object.keys(schema.properties).length < Object.keys(data).length) {
-      return false;
-    }
-
-    if (!this.validateRequired(data, schema)) {
-      return false;
-    }
-
-    /* Recursively validate all properties */
-    for (const property in schema.properties) {
-
-      if (schema.properties.hasOwnProperty(property) && data.hasOwnProperty(property)) {
-
-        if (!this.validate(data[property], schema.properties[property])) {
-
-          return false;
-
-        }
-
-      }
-
-    }
-
-    return true;
-
-  }
-
-  protected validateRequired(data: {}, schema: JSONSchemaObject): boolean {
-
-    if (!schema.required) {
-      return true;
-    }
-
-    for (const requiredProp of schema.required) {
-
-      /* Checks if the property is present in the schema 'properties' */
-      if (!schema.properties.hasOwnProperty(requiredProp)) {
-        throw new Error(`'required' properties must be described in 'properties' too.`);
-      }
-
-      /* Checks if the property is present in the data */
-      if (!data.hasOwnProperty(requiredProp)) {
-        return false;
-      }
-
-    }
-
-    return true;
-
-  }
-
-  protected validateConst(data: any, schema: JSONSchemaBoolean | JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
-
-    if (!schema.const) {
-      return true;
-    }
-
-    return (data === schema.const);
-
-  }
-
-  protected validateEnum(data: any, schema: JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
-
-    if (!schema.enum) {
-      return true;
-    }
-
-    /** @todo Move to ES2016 .includes() ? */
-    return ((schema.enum as any[]).indexOf(data) !== -1);
-
-  }
-
-  protected validateArray(data: any[], schema: JSONSchemaArray): boolean {
-
-    if (!Array.isArray(data)) {
-      return false;
-    }
-
-    if (schema.hasOwnProperty('maxItems') && (schema.maxItems !== undefined)) {
-
-      if (!Number.isInteger(schema.maxItems) || schema.maxItems < 0) {
-        throw new Error(`'maxItems' must be a non-negative integer.`);
-      }
-
-      if (data.length > schema.maxItems) {
-        return false;
-      }
-
-    }
-
-    if (schema.hasOwnProperty('minItems') && (schema.minItems !== undefined)) {
-
-      if (!Number.isInteger(schema.minItems) || schema.minItems < 0) {
-        throw new Error(`'minItems' must be a non-negative integer.`);
-      }
-
-      if (data.length < schema.minItems) {
-        return false;
-      }
-
-    }
-
-    if (schema.hasOwnProperty('uniqueItems') && (schema.uniqueItems !== undefined)) {
-
-      if (schema.uniqueItems) {
-
-        const dataSet = new Set(data);
-
-        if (data.length !== dataSet.size) {
-          return false;
-        }
-
-      }
-
-    }
-
-    for (const value of data) {
-
-      if (!this.validate(value, schema.items)) {
-        return false;
-      }
-
-    }
-
-    return true;
-
-  }
-
-  protected validateString(data: any, schema: JSONSchemaString): boolean {
+  /**
+   * Validate a string
+   * @param data Data to validate
+   * @param schema Schema describing the string
+   */
+  private validateString(data: any, schema: JSONSchemaString): boolean {
 
     if (typeof data !== 'string') {
       return false;
@@ -194,28 +56,12 @@ export class JSONValidator {
       return false;
     }
 
-    if (schema.hasOwnProperty('maxLength') && (schema.maxLength !== undefined)) {
-
-      if (!Number.isInteger(schema.maxLength) || schema.maxLength < 0) {
-        throw new Error(`'maxLength' must be a non-negative integer.`);
-      }
-
-      if (data.length > schema.maxLength) {
-        return false;
-      }
-
+    if ((schema.maxLength !== undefined) && (data.length > schema.maxLength)) {
+      return false;
     }
 
-    if (schema.hasOwnProperty('minLength') && (schema.minLength !== undefined)) {
-
-      if (!Number.isInteger(schema.minLength) || schema.minLength < 0) {
-        throw new Error(`'minLength' must be a non-negative integer.`);
-      }
-
-      if (data.length < schema.minLength) {
-        return false;
-      }
-
+    if ((schema.minLength !== undefined) && (data.length < schema.minLength)) {
+      return false;
     }
 
     if (schema.pattern) {
@@ -232,21 +78,12 @@ export class JSONValidator {
 
   }
 
-  protected validateBoolean(data: any, schema: JSONSchemaBoolean): boolean {
-
-    if (typeof data !== 'boolean') {
-      return false;
-    }
-
-    if (!this.validateConst(data, schema)) {
-      return false;
-    }
-
-    return true;
-
-  }
-
-  protected validateNumber(data: any, schema: JSONSchemaNumber | JSONSchemaInteger): boolean {
+  /**
+   * Validate a number or an integer
+   * @param data Data to validate
+   * @param schema Schema describing the number or integer
+   */
+  private validateNumber(data: any, schema: JSONSchemaNumber | JSONSchemaInteger): boolean {
 
     if (typeof data !== 'number') {
       return false;
@@ -264,37 +101,173 @@ export class JSONValidator {
       return false;
     }
 
-    if (schema.hasOwnProperty('multipleOf') && (schema.multipleOf !== undefined)) {
-
-      if (schema.multipleOf <= 0) {
-        throw new Error(`'multipleOf' must be a number strictly greater than 0.`);
-      }
-
-      if (!Number.isInteger(data / schema.multipleOf)) {
-        return false;
-      }
-
+    /* Test is done this way to not divide by 0 */
+    if (schema.multipleOf && !Number.isInteger(data / schema.multipleOf)) {
+      return false;
     }
 
-    if (schema.hasOwnProperty('maximum') && (schema.maximum !== undefined) && (data > schema.maximum)) {
+    if ((schema.maximum !== undefined) && (data > schema.maximum)) {
         return false;
     }
 
-    if (schema.hasOwnProperty('exclusiveMaximum') && (schema.exclusiveMaximum !== undefined) && (data >= schema.exclusiveMaximum)) {
+    if ((schema.exclusiveMaximum !== undefined) && (data >= schema.exclusiveMaximum)) {
       return false;
 
     }
 
-    if (schema.hasOwnProperty('minimum') && (schema.minimum !== undefined) && (data < schema.minimum)) {
+    if ((schema.minimum !== undefined) && (data < schema.minimum)) {
       return false;
 
     }
 
-    if (schema.hasOwnProperty('exclusiveMinimum') && (schema.exclusiveMinimum !== undefined) && (data <= schema.exclusiveMinimum)) {
+    if ((schema.exclusiveMinimum !== undefined) && (data <= schema.exclusiveMinimum)) {
         return false;
     }
 
     return true;
+
+  }
+
+  /**
+   * Validate a boolean
+   * @param data Data to validate
+   * @param schema Schema describing the boolean
+   */
+  private validateBoolean(data: any, schema: JSONSchemaBoolean): boolean {
+
+    if (typeof data !== 'boolean') {
+      return false;
+    }
+
+    if (!this.validateConst(data, schema)) {
+      return false;
+    }
+
+    return true;
+
+  }
+
+  /**
+   * Validate an array
+   * @param data Data to validate
+   * @param schema Schema describing the array
+   */
+  private validateArray(data: any[], schema: JSONSchemaArray): boolean {
+
+    if (!Array.isArray(data)) {
+      return false;
+    }
+
+    if ((schema.maxItems !== undefined) && (data.length > schema.maxItems)) {
+      return false;
+    }
+
+    if ((schema.minItems !== undefined) && (data.length < schema.minItems)) {
+      return false;
+    }
+
+    if (schema.uniqueItems) {
+
+      /* Create a set to eliminate values with multiple occurences */
+      const dataSet = new Set(data);
+
+      if (data.length !== dataSet.size) {
+        return false;
+      }
+
+    }
+
+    /* Validate all the values in array */
+    for (const value of data) {
+
+      if (!this.validate(value, schema.items)) {
+        return false;
+      }
+
+    }
+
+    return true;
+
+  }
+
+  /**
+   * Validate an object
+   * @param data Data to validate
+   * @param schema JSON schema describing the object
+   */
+  private validateObject(data: { [k: string]: any; }, schema: JSONSchemaObject): boolean {
+
+    /* Check the type and if not `null` as `null` also have the type `object` in old browsers */
+    if ((data === null) || (typeof data !== 'object')) {
+      return false;
+    }
+
+    /* Check if the object doesn't have more properties than expected
+     * Equivalent of `additionalProperties: false`
+     */
+    if (Object.keys(schema.properties).length < Object.keys(data).length) {
+      return false;
+    }
+
+    /* Validate required properties */
+    if (schema.required) {
+
+      for (const requiredProp of schema.required) {
+
+        if (!data.hasOwnProperty(requiredProp)) {
+          return false;
+        }
+
+      }
+
+    }
+
+    /* Recursively validate all properties */
+    for (const property in schema.properties) {
+
+      /* Filter to keep only real properties (no internal JS stuff) and check if the data has the property too */
+      if (schema.properties.hasOwnProperty(property) && data.hasOwnProperty(property)) {
+
+        if (!this.validate(data[property], schema.properties[property])) {
+          return false;
+        }
+
+      }
+
+    }
+
+    return true;
+
+  }
+
+  /**
+   * Validate a constant
+   * @param data Data ta validate
+   * @param schema JSON schema describing the constant
+   */
+  private validateConst(data: any, schema: JSONSchemaBoolean | JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
+
+    if (!schema.const) {
+      return true;
+    }
+
+    return (data === schema.const);
+
+  }
+
+  /**
+   * Validate an enum
+   * @param data Data ta validate
+   * @param schema JSON schema describing the enum
+   */
+  private validateEnum(data: any, schema: JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
+
+    if (!schema.enum) {
+      return true;
+    }
+
+    /* Cast as the data can be of multiple types, and so TypeScript is lost */
+    return ((schema.enum as any[]).includes(data));
 
   }
 
