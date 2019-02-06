@@ -117,6 +117,7 @@ export class LocalStorageDatabase implements LocalDatabase {
 
   /**
    * Get all keys in `localStorage`
+   * Note the order of the keys may be inconsistent in Firefox
    * @returns A RxJS `Observable` containing the list of keys
    */
   keys(): Observable<string[]> {

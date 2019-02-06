@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { from } from 'rxjs';
-import { map, first, take, mergeMap, filter } from 'rxjs/operators';
+import { mergeMap, filter, tap } from 'rxjs/operators';
 
 import { LocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
@@ -8,103 +8,21 @@ import { LocalStorageDatabase } from './databases/localstorage-database';
 import { MemoryDatabase } from './databases/memory-database';
 import { JSONSchema } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
-
-function testGetItem<T extends string | number | boolean | object>
-(type: 'primitive' | 'object', localStorageService: LocalStorage, value: T, done: DoneFn) {
-
-  localStorageService.setItem('test', value).subscribe(() => {
-
-    localStorageService.getItem<T>('test').subscribe((data) => {
-
-      if (type === 'primitive') {
-        expect(data).toBe(value);
-      } else {
-        expect(data).toEqual(value);
-      }
-
-      done();
-
-    });
-
-  });
-
-}
-
-function testGetItemPrimitive<T extends string | number | boolean>(localStorageService: LocalStorage, value: T, done: DoneFn) {
-
-  testGetItem<T>('primitive', localStorageService, value, done);
-
-}
-
-function testGetItemObject<T extends object>(localStorageService: LocalStorage, value: T, done: DoneFn) {
-
-  testGetItem<T>('object', localStorageService, value, done);
-
-}
+import { VALIDATION_ERROR } from './exceptions';
+import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME } from './tokens';
+import { clearIndexedDB } from './testing/indexeddb';
 
 function tests(localStorageService: LocalStorage) {
 
-  it('should return null on unknown index', (done: DoneFn) => {
+  const key = 'test';
 
-    localStorageService.getItem('unknown').subscribe((data) => {
+  describe(('setItem() + getItem()'), () => {
 
-      expect(data).toBeNull();
+    it('unexisting key', (done: DoneFn) => {
 
-      done();
+      localStorageService.getItem(`unknown${Date.now()}`).subscribe((data) => {
 
-    });
-
-  });
-
-  it('should store and return a string', (done: DoneFn) => {
-
-    testGetItemPrimitive<string>(localStorageService, 'blue', done);
-
-  });
-
-  it('should store and return an empty string', (done: DoneFn) => {
-
-    testGetItemPrimitive<string>(localStorageService, '', done);
-
-  });
-
-  it('should store and return a number', (done: DoneFn) => {
-
-    testGetItemPrimitive<number>(localStorageService, 10, done);
-
-  });
-
-  it('should store and return zero', (done: DoneFn) => {
-
-    testGetItemPrimitive<number>(localStorageService, 0, done);
-
-  });
-
-  it('should store and return true', (done: DoneFn) => {
-
-    testGetItemPrimitive<boolean>(localStorageService, true, done);
-
-  });
-
-  it('should store and return false', (done: DoneFn) => {
-
-    testGetItemPrimitive<boolean>(localStorageService, false, done);
-
-  });
-
-  it('should store and return null', (done: DoneFn) => {
-
-    testGetItemPrimitive(localStorageService, null as any, done);
-
-  });
-
-  it('should store and return null for undefined too', (done: DoneFn) => {
-
-    localStorageService.setItem('test', undefined as any).subscribe(() => {
-
-      localStorageService.getItem('test').subscribe((data) => {
-
-        expect(data).toBe(null);
+        expect(data).toBeNull();
 
         done();
 
@@ -112,139 +30,313 @@ function tests(localStorageService: LocalStorage) {
 
     });
 
-  });
+    it('string', (done: DoneFn) => {
 
-  it('should store and return an array', (done: DoneFn) => {
+      const value = 'blue';
 
-    testGetItemObject<number[]>(localStorageService, [1, 2, 3], done);
+      localStorageService.setItem(key, value).pipe(
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
 
-  });
-
-  it('should store and return an object', (done: DoneFn) => {
-
-    testGetItemObject<{name: string}>(localStorageService, { name: 'test' }, done);
-
-  });
-
-  it('should return null on deleted index', (done: DoneFn) => {
-
-    const index = 'test';
-
-    localStorageService.setItem(index, 'test').subscribe(() => {
-
-      localStorageService.removeItem(index).subscribe(() => {
-
-        localStorageService.getItem<string>(index).subscribe((data) => {
-
-          expect(data).toBeNull();
-
-          done();
-
-        });
-
-      });
-
-    });
-
-  });
-
-  it('should be ok when deleting an unexisting key', (done: DoneFn) => {
-
-    localStorageService.removeItem('dscdsdlkccicniocncsoncoscounococnn').subscribe(() => {
-
-        expect().nothing();
+        expect(result).toBe(value);
 
         done();
 
+      });
+
     });
 
-  });
+    it('empty string', (done: DoneFn) => {
 
-  it('should count the size of items stored', (done: DoneFn) => {
+      const value = '';
 
-    localStorageService.size.subscribe((length0) => {
+      localStorageService.setItem(key, value).pipe(
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
 
-      expect(length0).toBe(0);
+        expect(result).toBe(value);
 
-      localStorageService.setItem('test1', 'test').subscribe(() => {
-
-        localStorageService.size.subscribe((length1) => {
-
-          expect(length1).toBe(1);
-
-          localStorageService.setItem('test2', 'test').subscribe(() => {
-
-            localStorageService.size.subscribe((length2) => {
-
-              expect(length2).toBe(2);
-
-              localStorageService.clear().subscribe(() => {
-
-                localStorageService.size.subscribe((length3) => {
-
-                  expect(length3).toBe(0);
-
-                  done();
-
-                });
-
-              });
-
-            });
-
-          });
-
-        });
+        done();
 
       });
 
     });
 
-  });
+    it('integer', (done: DoneFn) => {
 
-  it('should get keys', (done: DoneFn) => {
+      const value = 1;
 
-    const index1 = 'index1';
-    const index2 = 'index2';
+      localStorageService.setItem(key, value).pipe(
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
 
-    localStorageService.setItem(index1, 'test').subscribe(() => {
+        expect(result).toBe(value);
 
-      localStorageService.setItem(index2, 'test').subscribe(() => {
+        done();
 
-        localStorageService.keys().subscribe((keys) => {
+      });
 
-          /* Sorting because Firefox keys order is inconsistent */
-          expect([index1, index2].sort()).toEqual(keys.sort());
+    });
+
+    it('number', (done: DoneFn) => {
+
+      const value = 1.5;
+
+      localStorageService.setItem(key, value).pipe(
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
+
+        expect(result).toBe(value);
+
+        done();
+
+      });
+
+    });
+
+    it('zero', (done: DoneFn) => {
+
+      const value = 0;
+
+      localStorageService.setItem(key, value).pipe(
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
+
+        expect(result).toBe(value);
+
+        done();
+
+      });
+
+    });
+
+    it('true', (done: DoneFn) => {
+
+      const value = true;
+
+      localStorageService.setItem(key, value).pipe(
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
+
+        expect(result).toBe(value);
+
+        done();
+
+      });
+
+    });
+
+    it('false', (done: DoneFn) => {
+
+      const value = false;
+
+      localStorageService.setItem(key, value).pipe(
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
+
+        expect(result).toBe(value);
+
+        done();
+
+      });
+
+    });
+
+    it('null', (done: DoneFn) => {
+
+      const value = null;
+
+      localStorageService.setItem(key, value as any).pipe(
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
+
+        expect(result).toBeNull();
+
+        done();
+
+      });
+
+    });
+
+    it('undefined', (done: DoneFn) => {
+
+      const value = undefined;
+
+      localStorageService.setItem(key, value as any).pipe(
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
+
+        expect(result).toBeNull();
+
+        done();
+
+      });
+
+    });
+
+    it('array', (done: DoneFn) => {
+
+      const value = [1, 2, 3];
+
+      localStorageService.setItem(key, value).pipe(
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
+
+        expect(result).toEqual(value);
+
+        done();
+
+      });
+
+    });
+
+    it('object', (done: DoneFn) => {
+
+      const value = { name: 'test' };
+
+      localStorageService.setItem(key, value).pipe(
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
+
+        expect(result).toEqual(value);
+
+        done();
+
+      });
+
+    });
+
+    it('update', (done: DoneFn) => {
+
+      localStorageService.setItem(key, 'value').pipe(
+        mergeMap(() => localStorageService.setItem(key, 'updated'))
+      ).subscribe(() => {
+
+          expect().nothing();
 
           done();
 
         });
 
+    });
+
+    it('concurrency', (done: DoneFn) => {
+
+      const value1 = 'test1';
+      const value2 = 'test2';
+
+      expect(() => {
+
+        localStorageService.setItem(key, value1).subscribe();
+
+        localStorageService.setItem(key, value2).pipe(
+          mergeMap(() => localStorageService.getItem(key))
+        ).subscribe((result) => {
+
+          expect(result).toBe(value2);
+
+          done();
+
+        });
+
+      }).not.toThrow();
+
+    });
+
+  });
+
+  describe('removeItem()', () => {
+
+    it('existing key', (done: DoneFn) => {
+
+      localStorageService.setItem(key, 'test').pipe(
+        mergeMap(() => localStorageService.removeItem(key)),
+        mergeMap(() => localStorageService.getItem(key))
+      ).subscribe((result) => {
+
+        expect(result).toBeNull();
+
+        done();
+
+      });
+
+    });
+
+    it('unexisting key', (done: DoneFn) => {
+
+      localStorageService.removeItem(`unexisting${Date.now()}`).subscribe(() => {
+
+          expect().nothing();
+
+          done();
+
       });
 
     });
 
   });
 
-  it('should get an empty arrays if no keys', (done: DoneFn) => {
+  describe('Map-like API', () => {
 
-    localStorageService.keys().subscribe((keys) => {
+    it('size', (done: DoneFn) => {
 
-      expect(keys.length).toBe(0);
-
-      done();
+      localStorageService.size.pipe(
+        tap((length) => { expect(length).toBe(0) }),
+        mergeMap(() => localStorageService.setItem(key, 'test')),
+        mergeMap(() => localStorageService.size),
+        tap((length) => { expect(length).toBe(1) }),
+        mergeMap(() => localStorageService.setItem('', 'test')),
+        mergeMap(() => localStorageService.size),
+        tap((length) => { expect(length).toBe(2) }),
+        mergeMap(() => localStorageService.removeItem(key)),
+        mergeMap(() => localStorageService.size),
+        tap((length) => { expect(length).toBe(1) }),
+        mergeMap(() => localStorageService.clear()),
+        mergeMap(() => localStorageService.size),
+        tap((length) => { expect(length).toBe(0) }),
+      ).subscribe(() => {
+        done();
+      })
 
     });
 
-  });
+    it('keys()', (done: DoneFn) => {
 
-  it('should returns true if a key exists', (done: DoneFn) => {
+      const key1 = 'index1';
+      const key2 = 'index2';
 
-    const index = 'hello';
+      localStorageService.setItem(key1, 'test').pipe(
+        mergeMap(() => localStorageService.setItem(key2, 'test')),
+        mergeMap(() => localStorageService.keys()),
+      ).subscribe((keys) => {
 
-    localStorageService.setItem(index, 'test').subscribe(() => {
+        // TODO: Investigate further
+        /* Sorting because Firefox keys order is inconsistent with `localStorage` and a prefix */
+        expect([key1, key2].sort()).toEqual(keys.sort());
 
-      localStorageService.has(index).subscribe((result) => {
+        done();
+
+      });
+
+    });
+
+    it('getKey() when no items', (done: DoneFn) => {
+
+      localStorageService.keys().subscribe((keys) => {
+
+        expect(keys.length).toBe(0);
+
+        done();
+
+      });
+
+    });
+
+    it('key() on existing', (done: DoneFn) => {
+
+      localStorageService.setItem(key, 'test').pipe(
+        mergeMap(() => localStorageService.has(key))
+      ).subscribe((result) => {
 
         expect(result).toBe(true);
 
@@ -254,86 +346,50 @@ function tests(localStorageService: LocalStorage) {
 
     });
 
-  });
+    it('key() on unexisting', (done: DoneFn) => {
 
-  it('should returns false if a key does not exist', (done: DoneFn) => {
+      localStorageService.has(`nokey${Date.now()}`).subscribe((result) => {
 
-    localStorageService.has('sdcccscsd').subscribe((result) => {
+        expect(result).toBe(false);
 
-      expect(result).toBe(false);
+        done();
 
-      done();
+      });
 
     });
 
-  });
+    it('advanced case: remove only some items', (done: DoneFn) => {
 
-  it('should be able to remove only some items', (done: DoneFn) => {
+      localStorageService.setItem('user_firstname', 'test').pipe(
+        mergeMap(() => localStorageService.setItem('user_lastname', 'test')),
+        mergeMap(() => localStorageService.setItem('app_data1', 'test')),
+        mergeMap(() => localStorageService.setItem('app_data2', 'test')),
+        mergeMap(() => localStorageService.keys()),
+        /* Now we will have an `Observable` emiting multiple values */
+        mergeMap((keys) => from(keys)),
+        filter((key) => key.startsWith('app_')),
+        mergeMap((key) => localStorageService.removeItem(key)),
+      ).subscribe({
+        /* So we need to wait for completion of all actions to check */
+        complete: () => {
 
-    const index1 = 'user_firstname';
-    const index2 = 'user_lastname';
-    const index3 = 'app_data1';
-    const index4 = 'app_data2';
+        localStorageService.size.subscribe((size) => {
 
-    localStorageService.setItem(index1, 'test').subscribe(() => {
+          expect(size).toBe(2);
 
-      localStorageService.setItem(index2, 'test').subscribe(() => {
-
-        localStorageService.setItem(index3, 'test').subscribe(() => {
-
-          localStorageService.setItem(index4, 'test').subscribe(() => {
-
-            localStorageService.keys().pipe(
-              mergeMap((keys) => from(keys)),
-              filter((key) => key.startsWith('app_')),
-              mergeMap((key) => localStorageService.removeItem(key))
-            ).subscribe({ complete: () => {
-
-              localStorageService.size.subscribe((size) => {
-
-                expect(size).toBe(2);
-
-                done();
-
-              });
-
-            } });
-
-          });
+          done();
 
         });
 
+        }
       });
 
     });
 
   });
 
-  it('should allow to use operators', (done: DoneFn) => {
+  describe('JSON schema', () => {
 
-    const index = 'index';
-    const value = 'value';
-
-    localStorageService.setItem(index, value).subscribe(() => {
-
-      localStorageService.getItem<string>(index).pipe(map((data) => data)).subscribe((data) => {
-
-        expect(data).toBe(value);
-
-        done();
-
-      });
-
-    });
-
-  });
-
-  it('should call error callback if data is invalid against JSON schema', (done: DoneFn) => {
-
-    const index = 'index';
-    const value = {
-      unexpected: 'value'
-    };
     const schema: JSONSchema = {
       type: 'object',
       properties: {
@@ -344,198 +400,43 @@ function tests(localStorageService: LocalStorage) {
       required: ['expected']
     };
 
-    localStorageService.setItem(index, value).subscribe(() => {
+    it('valid', (done: DoneFn) => {
 
-      localStorageService.getItem<{ expected: string }>(index, { schema }).subscribe(() => {
+      const value = { expected: 'value' };
 
-        fail();
-
-        done();
-
-      }, (error) => {
-
-        expect(error.message).toBe(`Data stored is not valid against the provided JSON schema. Check your JSON schema, otherwise it means data has been corrupted.`);
-
-        done();
-
-      });
-
-    });
-
-  });
-
-  it('should return the data if JSON schema is valid', (done: DoneFn) => {
-
-    const index = 'index';
-    const value = {
-      expected: 'value'
-    };
-    const schema: JSONSchema = {
-      type: 'object',
-      properties: {
-        expected: {
-          type: 'string'
-        }
-      },
-      required: ['expected']
-    };
-
-    localStorageService.setItem(index, value).subscribe(() => {
-
-      localStorageService.getItem<{ expected: string }>(index, { schema }).subscribe((data) => {
+      localStorageService.setItem(key, value).pipe(
+        mergeMap(() => localStorageService.getItem(key, { schema }))
+      ).subscribe((data) => {
 
         expect(data).toEqual(value);
 
         done();
 
-      }, () => {
-
-        fail();
-
-        done();
-
       });
 
     });
 
-  });
+    it('invalid', (done: DoneFn) => {
 
-  it('should return the data if the data is null (no validation)', (done: DoneFn) => {
+      localStorageService.setItem(key, 'test').pipe(
+        mergeMap(() => localStorageService.getItem(key, { schema }))
+      ).subscribe({ error: (error) => {
 
-    const schema: JSONSchema = {
-      type: 'object',
-      properties: {
-        expected: {
-          type: 'string'
-        }
-      },
-      required: ['expected']
-    };
-
-    localStorageService.getItem<{ expected: string }>('notexisting', { schema }).subscribe((data) => {
-
-      expect((data)).toBeNull();
-
-      done();
-
-    }, () => {
-
-      fail();
-
-      done();
-
-    });
-
-  });
-
-  it('should call complete on setItem', (done: DoneFn) => {
-
-    localStorageService.setItem('index', 'value').subscribe({ complete: () => {
-
-      expect().nothing();
-
-      done();
-
-    } });
-
-  });
-
-  it('should call complete on existing getItem', (done: DoneFn) => {
-
-    const index = 'index';
-    const value = 'value';
-
-    localStorageService.setItem(index, value).subscribe(() => {
-
-      localStorageService.getItem<string>(index).subscribe({ complete: () => {
-
-        expect().nothing();
-
-        done();
-
-      } });
-
-    });
-
-  });
-
-  it('should call complete on unexisting getItem', (done: DoneFn) => {
-
-    localStorageService.getItem<string>('notexisting').subscribe({ complete: () => {
-
-      expect().nothing();
-
-      done();
-
-    } });
-
-  });
-
-  it('should call complete on existing removeItem', (done: DoneFn) => {
-
-    const index = 'index';
-
-    localStorageService.setItem(index, 'value').subscribe(() => {
-
-      localStorageService.removeItem(index).subscribe({ complete: () => {
-
-        expect().nothing();
-
-        done(); } });
-
-    });
-
-  });
-
-  it('should call complete on unexisting removeItem', (done: DoneFn) => {
-
-    localStorageService.removeItem('notexisting').subscribe({ complete: () => {
-
-      expect().nothing();
-
-      done();
-
-    } });
-
-  });
-
-  it('should call complete on clear', (done: DoneFn) => {
-
-    localStorageService.clear().subscribe({ complete: () => {
-
-      expect().nothing();
-
-      done();
-
-    } });
-
-  });
-
-  it('should call complete on length', (done: DoneFn) => {
-
-    localStorageService.size.subscribe({ complete: () => {
-
-      expect().nothing();
-
-      done();
-
-    } });
-
-  });
-
-  it('should call complete when getting existing keys', (done: DoneFn) => {
-
-    localStorageService.setItem('index1', 'value').subscribe(() => {
-
-      localStorageService.setItem('index2', 'value').subscribe(() => {
-
-        localStorageService.keys().subscribe({ complete: () => {
-
-          expect().nothing();
+        expect(error.message).toBe(VALIDATION_ERROR);
 
           done();
 
-        } });
+      } });
+
+    });
+
+    it('null: no validation', (done: DoneFn) => {
+
+      localStorageService.getItem<{ expected: string }>(`noassociateddata${Date.now()}`, { schema }).subscribe(() => {
+
+        expect().nothing();
+
+        done();
 
       });
 
@@ -543,25 +444,83 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
-  it('should call complete when getting no keys', (done: DoneFn) => {
+  describe('complete', () => {
 
-    localStorageService.keys().subscribe({ complete: () => {
+    it('setItem()', (done: DoneFn) => {
 
-      expect().nothing();
+      localStorageService.setItem('index', 'value').subscribe({ complete: () => {
 
-      done();
+        expect().nothing();
 
-    } });
+        done();
 
-  });
+      } });
 
-  it('should call complete when checking existing key', (done: DoneFn) => {
+    });
 
-    const index = 'world';
+    it('getItem()', (done: DoneFn) => {
 
-    localStorageService.setItem(index, 'test').subscribe(() => {
+      localStorageService.getItem(key).subscribe({ complete: () => {
 
-      localStorageService.has(index).subscribe({ complete: () => {
+        expect().nothing();
+
+        done();
+
+      } });
+
+    });
+
+    it('removeItem()', (done: DoneFn) => {
+
+      localStorageService.removeItem(key).subscribe({ complete: () => {
+
+        expect().nothing();
+
+        done(); }
+
+      });
+
+    });
+
+    it('clear()', (done: DoneFn) => {
+
+      localStorageService.clear().subscribe({ complete: () => {
+
+        expect().nothing();
+
+        done();
+
+      } });
+
+    });
+
+    it('size', (done: DoneFn) => {
+
+      localStorageService.size.subscribe({ complete: () => {
+
+        expect().nothing();
+
+        done();
+
+      } });
+
+    });
+
+    it('keys()', (done: DoneFn) => {
+
+      localStorageService.keys().subscribe({ complete: () => {
+
+        expect().nothing();
+
+        done();
+
+      } });
+
+    });
+
+    it('has()', (done: DoneFn) => {
+
+      localStorageService.has(key).subscribe({ complete: () => {
 
         expect().nothing();
 
@@ -573,188 +532,101 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
-  it('should call complete when checking unexisting key', (done: DoneFn) => {
+  describe('compatibility', () => {
 
-    localStorageService.has('sdscsdlkscocoucsnoc').subscribe({ complete: () => {
+    it('Promise', (done: DoneFn) => {
 
-      expect().nothing();
+      const value = 'test';
 
-      done();
-
-    } });
-
-  });
-
-  it('should be OK if user manually used first() to complete', (done: DoneFn) => {
-
-    localStorageService.clear().pipe(first()).subscribe({ complete: () => {
-
-      expect().nothing();
-
-      done();
-
-    } });
-
-  });
-
-  it('should be OK if user manually used take(1) to complete', (done: DoneFn) => {
-
-    localStorageService.clear().pipe(take(1)).subscribe({ complete: () => {
-
-      expect().nothing();
-
-      done();
-
-    } });
-
-  });
-
-  it('should be able to update an existing index', (done: DoneFn) => {
-
-    const index = 'index';
-
-    localStorageService.setItem(index, 'value').subscribe(() => {
-
-      localStorageService.setItem(index, 'updated').subscribe(() => {
-
-        expect().nothing();
-
-        done();
-
-      }, () => {
-        fail();
-      });
+      localStorageService.setItem(key, value).toPromise()
+        .then(() => localStorageService.getItem(key).toPromise())
+        .then((result) => {
+          expect(result).toBe(value);
+          done();
+        });
 
     });
 
-  });
+    it('async / await', async () => {
 
-  it('should work in a Promise-way', (done: DoneFn) => {
+      const value = 'test';
 
-    const index = 'index';
-    const value = 'test';
+      await localStorageService.setItem(key, value).toPromise();
 
-    localStorageService.setItem(index, value).toPromise()
-    .then(() => localStorageService.getItem(index).toPromise())
-    .then((result) => {
+      const result = await localStorageService.getItem(key).toPromise();
+
       expect(result).toBe(value);
-      done();
-    }, () => {
-      fail();
+
     });
 
   });
 
-  it('should work with async / await', async () => {
+  describe('auto-subscribe', () => {
 
-    const index = 'index';
-    const value = 'test';
+    it('setItemSubscribe()', (done: DoneFn) => {
 
-    await localStorageService.setItem(index, value).toPromise();
+      const value = 'test';
 
-    const result = await localStorageService.getItem(index).toPromise();
-
-    expect(result).toBe(value);
-
-  });
-
-  it('should set item and auto-subscribe', (done: DoneFn) => {
-
-    const index = 'index';
-    const value = 'test';
-
-    localStorageService.setItemSubscribe(index, value);
-
-    window.setTimeout(() => {
-
-      localStorageService.getItem<string>(index).subscribe((data) => {
-        expect(data).toBe(value);
-        done();
-      }, () => {
-        fail();
-      });
-
-    }, 50);
-
-  });
-
-  it('should remove item and auto-subscribe', (done: DoneFn) => {
-
-    const index = 'index';
-    const value = 'test';
-
-    localStorageService.setItem(index, value).subscribe(() => {
-
-      localStorageService.removeItemSubscribe(index);
+      localStorageService.setItemSubscribe(key, value);
 
       window.setTimeout(() => {
 
-        localStorageService.getItem<string>(index).subscribe((data) => {
-          expect(data).toBe(null);
+        localStorageService.getItem(key).subscribe((data) => {
+          expect(data).toBe(value);
           done();
-        }, () => {
-          fail();
         });
 
       }, 50);
 
     });
 
-  });
+    it('removeItemSubscribe()', (done: DoneFn) => {
 
-  it('should clear storage and auto-subscribe', (done: DoneFn) => {
+      const value = 'test';
 
-    const index = 'index';
-    const value = 'test';
+      localStorageService.setItem(key, value).subscribe(() => {
 
-    localStorageService.setItem(index, value).subscribe(() => {
+        localStorageService.removeItemSubscribe(key);
 
-      localStorageService.clearSubscribe();
+        window.setTimeout(() => {
 
-      window.setTimeout(() => {
+          localStorageService.getItem(key).subscribe((data) => {
+            expect(data).toBeNull();
+            done();
+          });
 
-        localStorageService.getItem<string>(index).subscribe((data) => {
-          expect(data).toBe(null);
-          done();
-        }, () => {
-          fail();
-        });
-
-      }, 50);
-
-    });
-
-  });
-
-  it('should not cause concurrency issue when not waiting setItem to be done', (done: DoneFn) => {
-
-    const index = 'index';
-    const value1 = 'test1';
-    const value2 = 'test2';
-
-    expect(() => {
-
-      localStorageService.setItem(index, value1).subscribe();
-
-      localStorageService.setItem(index, value2).subscribe(() => {
-
-        localStorageService.getItem(index).subscribe((result) => {
-
-          expect(result).toBe(value2);
-
-          done();
-
-        });
+        }, 50);
 
       });
 
-    }).not.toThrow();
+    });
+
+    it('clearSubscribe()', (done: DoneFn) => {
+
+      const value = 'test';
+
+      localStorageService.setItem(key, value).subscribe(() => {
+
+        localStorageService.clearSubscribe();
+
+        window.setTimeout(() => {
+
+          localStorageService.getItem(key).subscribe((data) => {
+            expect(data).toBe(null);
+            done();
+          });
+
+        }, 50);
+
+      });
+
+    });
 
   });
 
 }
 
-describe('LocalStorage with mock storage', () => {
+describe('Memory', () => {
 
   const localStorageService = new LocalStorage(new MemoryDatabase(), new JSONValidator());
 
@@ -768,7 +640,7 @@ describe('LocalStorage with mock storage', () => {
 
 });
 
-describe('LocalStorage with localStorage', () => {
+describe('localStorage', () => {
 
   const localStorageService = new LocalStorage(new LocalStorageDatabase(), new JSONValidator());
 
@@ -780,19 +652,19 @@ describe('LocalStorage with localStorage', () => {
 
 });
 
-describe('LocalStorage with IndexedDB', () => {
+describe('IndexedDB', () => {
 
   const localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
 
   beforeEach((done: DoneFn) => {
     localStorageService.clear().subscribe(() => {
-      done();
+      clearIndexedDB(done);
     });
   });
 
   tests(localStorageService);
 
-  it('should use IndexedDb (will be pending in Firefox/IE private mode)', (done: DoneFn) => {
+  it('check use of IndexedDb (will be pending in Firefox/IE private mode)', (done: DoneFn) => {
 
     const index = `test${Date.now()}`;
     const value = 'test';
@@ -801,17 +673,17 @@ describe('LocalStorage with IndexedDB', () => {
 
       try {
 
-        const dbOpen = indexedDB.open('ngStorage');
+        const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME);
 
-        dbOpen.addEventListener('success', (openEvent) => {
+        dbOpen.addEventListener('success', () => {
 
-          const database = (openEvent.target as IDBRequest).result as IDBDatabase;
+          const store = dbOpen.result.transaction([DEFAULT_IDB_STORE_NAME], 'readonly').objectStore(DEFAULT_IDB_STORE_NAME);
 
-          const localStorageObject = database.transaction(['localStorage'], 'readonly').objectStore('localStorage');
+          const request = store.get(index);
 
-          localStorageObject.get(index).addEventListener('success', (requestEvent) => {
+          request.addEventListener('success', () => {
 
-            expect((requestEvent.target as IDBRequest).result).toEqual({ value });
+            expect(request.result).toEqual({ value });
 
             done();
 
@@ -837,173 +709,13 @@ describe('LocalStorage with IndexedDB', () => {
 
   });
 
-  function testSetCompatibilityWithNativeAPI(done: DoneFn, value: any) {
-
-    const index = 'test';
-
-    try {
-
-      const dbOpen = indexedDB.open('ngStorage');
-
-      dbOpen.addEventListener('success', (openEvent) => {
-
-        const database = (openEvent.target as IDBRequest).result as IDBDatabase;
-
-        const localStorageObject = database.transaction(['localStorage'], 'readwrite').objectStore('localStorage');
-
-        try {
-
-          localStorageObject.add(value, index).addEventListener('success', () => {
-
-            localStorageService.setItem(index, 'world').subscribe(() => {
-
-              expect().nothing();
-
-              done();
-
-            }, () => {
-
-              /* Cases : Edge/IE because of `undefined` */
-              pending();
-
-            });
-
-          });
-
-        } catch {
-
-          /* Cases : Edge/IE because of `null` */
-          pending();
-
-        }
-
-      });
-
-      dbOpen.addEventListener('error', () => {
-
-        /* Cases : Firefox private mode where `indexedDb` exists but fails */
-        pending();
-
-      });
-
-    } catch {
-
-        /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
-        pending();
-
-    }
-
-  }
-
-  const setTestValues = ['hello', '', 0, false, null, undefined];
-
-  for (const setTestValue of setTestValues) {
-
-    it(`should store a value on an index previously used by another API
-      (will be pending in IE/Firefox private mode and 2 pending in Edge/IE because of null and undefined)`, (done: DoneFn) => {
-
-      testSetCompatibilityWithNativeAPI(done, setTestValue);
-
-    });
-
-  }
-
-  function testGetCompatibilityWithNativeAPI(done: DoneFn, value: any, schema?: JSONSchema) {
-
-    const index = 'test';
-
-    try {
-
-      const dbOpen = indexedDB.open('ngStorage');
-
-      dbOpen.addEventListener('success', (openEvent) => {
-
-        const database = (openEvent.target as IDBRequest).result as IDBDatabase;
-
-        const localStorageObject = database.transaction(['localStorage'], 'readwrite').objectStore('localStorage');
-
-        try {
-
-          localStorageObject.add(value, index).addEventListener('success', () => {
-
-            localStorageService.getItem(index, { schema }).subscribe((result) => {
-
-              expect(result).toEqual((value !== undefined) ? value : null);
-
-              done();
-
-            });
-
-          });
-
-        } catch {
-
-          /* Cases : Edge/IE because of `null` */
-          pending();
-
-        }
-
-      });
-
-      dbOpen.addEventListener('error', () => {
-
-        /* Cases : Firefox private mode where `indexedDb` exists but fails */
-        pending();
-
-      });
-
-    } catch (error) {
-
-        /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
-        pending();
-
-    }
-
-  }
-
-  const getTestValues: [any, JSONSchema | undefined][] = [
-    ['hello', { type: 'string' }],
-    ['', { type: 'string' }],
-    [0, { type: 'number' }],
-    [1, { type: 'number' }],
-    [true, { type: 'boolean' }],
-    [false, { type: 'boolean' }],
-    [[1, 2, 3], { type: 'array', items: { type: 'number' } }],
-    [{ test: 'value' }, { type: 'object', properties: { test: { type: 'string' } } }],
-  ];
-
-  for (const [getTestValue, getTestSchema] of getTestValues) {
-
-    it(`should get a value on an index previously used by another lib API
-      (will be pending in IE/Firefox private mode)`, (done: DoneFn) => {
-
-      testGetCompatibilityWithNativeAPI(done, getTestValue, getTestSchema);
-
-    });
-
-  }
-
-  it(`should get a null value on an index previously used by another lib API
-  (will be pending in IE/Firefox private mode and in Edge/IE because of null)`, (done: DoneFn) => {
-
-    testGetCompatibilityWithNativeAPI(done, null);
-
-  });
-
-  it(`should get a value on an index previously used by another lib API
-  (will be pending in IE/Firefox private mode)`, (done: DoneFn) => {
-
-    testGetCompatibilityWithNativeAPI(done, undefined);
-
-  });
-
 });
 
-describe('LocalStorage with localStorage and a prefix', () => {
+describe('localStorage and a prefix', () => {
 
-  it('should have the wanted prefix', () => {
+  const prefix = 'myapp';
 
-    const prefix = 'myapp';
+  it('check prefix', () => {
 
     class LocalStorageDatabasePrefix extends LocalStorageDatabase {
       getPrefix() {
@@ -1017,7 +729,7 @@ describe('LocalStorage with localStorage and a prefix', () => {
 
   });
 
-  const localStorageService = new LocalStorage(new LocalStorageDatabase('myapp'), new JSONValidator());
+  const localStorageService = new LocalStorage(new LocalStorageDatabase(prefix), new JSONValidator());
 
   beforeEach(() => {
     localStorage.clear();
@@ -1027,11 +739,12 @@ describe('LocalStorage with localStorage and a prefix', () => {
 
 });
 
-describe('LocalStorage with IndexedDB and a prefix', () => {
+describe('IndexedDB and a prefix', () => {
 
-  it('should have the wanted prefix', () => {
+  const prefix = 'myapp';
 
-    const prefix = 'myapp';
+  it('check prefix', () => {
+
     const dbName = 'ngStorage';
 
     class IndexedDBDatabasePrefix extends IndexedDBDatabase {
@@ -1046,9 +759,8 @@ describe('LocalStorage with IndexedDB and a prefix', () => {
 
   });
 
-  it('should have the wanted prefix with custom database and object store names', () => {
+  it('check prefix with custom database and store names', () => {
 
-    const prefix = 'myapp';
     const dbName = 'customDb';
 
     class IndexedDBDatabasePrefix extends IndexedDBDatabase {
@@ -1065,11 +777,11 @@ describe('LocalStorage with IndexedDB and a prefix', () => {
 
   });
 
-  const localStorageService = new LocalStorage(new IndexedDBDatabase('myapp'), new JSONValidator());
+  const localStorageService = new LocalStorage(new IndexedDBDatabase(prefix), new JSONValidator());
 
   beforeEach((done: DoneFn) => {
     localStorageService.clear().subscribe(() => {
-      done();
+      clearIndexedDB(done);
     });
   });
 
@@ -1077,13 +789,16 @@ describe('LocalStorage with IndexedDB and a prefix', () => {
 
 });
 
-describe('LocalStorage with IndexedDB and a custom database and object store names', () => {
+describe('IndexedDB with custom database and store names', () => {
 
-  const localStorageService = new LocalStorage(new IndexedDBDatabase(null, 'dBcustom', 'storeCustom'), new JSONValidator());
+  const dbName = 'dBcustom';
+  const storeName = 'storeCustom';
+
+  const localStorageService = new LocalStorage(new IndexedDBDatabase(null, dbName, storeName), new JSONValidator());
 
   beforeEach((done: DoneFn) => {
     localStorageService.clear().subscribe(() => {
-      done();
+      clearIndexedDB(done);
     });
   });
 
@@ -1091,22 +806,20 @@ describe('LocalStorage with IndexedDB and a custom database and object store nam
 
 });
 
-describe('LocalStorage with automatic storage injection', () => {
+describe('Automatic storage injection', () => {
 
-  it('should store and get the same value', (done: DoneFn) => {
+  it('valid', (done: DoneFn) => {
 
     const localStorageService = TestBed.get(LocalStorage) as LocalStorage;
 
     const index = 'index';
     const value = 'value';
 
-    localStorageService.setItem(index, value).subscribe(() => {
-
-      localStorageService.getItem<string>(index).subscribe((data) => {
-        expect(data).toBe(value);
-        done();
-      });
-
+    localStorageService.setItem(index, value).pipe(
+      mergeMap(() => localStorageService.getItem(index))
+    ).subscribe((data) => {
+      expect(data).toBe(value);
+      done();
     });
 
   });
