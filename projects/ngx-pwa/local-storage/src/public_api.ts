@@ -2,8 +2,6 @@
  * Public API Surface of local-storage
  */
 
-// TODO: Limit exports?
-
 export {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber,
   JSONSchemaNumeric, JSONSchemaString, JSONSchemaArray, JSONSchemaArrayOf, JSONSchemaObject

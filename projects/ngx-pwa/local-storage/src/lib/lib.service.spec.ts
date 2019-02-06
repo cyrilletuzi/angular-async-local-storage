@@ -968,7 +968,6 @@ describe('LocalStorage with IndexedDB', () => {
     [1, { type: 'number' }],
     [true, { type: 'boolean' }],
     [false, { type: 'boolean' }],
-    // TODO: delete cast when TS 3.2 issue is fixed
     [[1, 2, 3], { type: 'array', items: { type: 'number' } }],
     [{ test: 'value' }, { type: 'object', properties: { test: { type: 'string' } } }],
   ];
