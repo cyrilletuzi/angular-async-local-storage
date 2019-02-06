@@ -57,7 +57,7 @@ export interface LocalStorageProvidersConfig {
    * *Use only for interoperability with other APIs or to avoid collision with other libs.*
    * **WARNING: do not change this option in an app already deployed in production, as previously stored data would be lost.**
    */
-  IDBName?: string;
+  IDBDBName?: string;
 
   /**
    * Allows to change the name used for `indexedDB` object store. **Avoid special characters.**
@@ -77,7 +77,7 @@ export function localStorageProviders(config: LocalStorageProvidersConfig): Prov
 
   return [
     config.prefix ? { provide: PREFIX, useValue: config.prefix } : [],
-    config.IDBName ? { provide: IDB_DB_NAME, useValue: config.IDBName } : [],
+    config.IDBDBName ? { provide: IDB_DB_NAME, useValue: config.IDBDBName } : [],
     config.IDBStoreName ? { provide: IDB_STORE_NAME, useValue: config.IDBStoreName } : [],
   ];
 

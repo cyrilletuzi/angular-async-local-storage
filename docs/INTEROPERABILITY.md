@@ -22,7 +22,7 @@ Option 1 (recommended): keep the config of this lib and change the names in the 
 by using the default values exported by the lib:
 
 ```typescript
-import { DEFAULT_INDEXEDDB_NAME, DEFAULT_INDEXEDDB_STORE_NAME } from '@ngx-pwa/local-storage';
+import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME } from '@ngx-pwa/local-storage';
 ```
 
 Option 2: change this lib config, according to your other APIs:
@@ -33,8 +33,8 @@ import { localStorageProviders } from '@ngx-pwa/local-storage';
 @NgModule({
   providers: [
     localStorageProviders({
-      indexedDbName: 'customDbName',
-      indexedDbStoreName: 'customStoreName'
+      IDBDBName: 'customDataBaseName',
+      IDBStoreName: 'customStoreName',
     })
   ]
 })
