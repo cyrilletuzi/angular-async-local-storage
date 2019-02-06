@@ -2,6 +2,8 @@
  * Public API Surface of local-storage
  */
 
+// TODO: Limit exports?
+
 export {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber,
   JSONSchemaNumeric, JSONSchemaString, JSONSchemaArray, JSONSchemaArrayOf, JSONSchemaObject
@@ -14,5 +16,5 @@ export { JSONValidator } from './lib/validation/json-validator';
 export { LSGetItemOptions, LocalStorage } from './lib/lib.service';
 export {
   localStorageProviders, LocalStorageProvidersConfig, LOCAL_STORAGE_PREFIX, PREFIX,
-  DEFAULT_INDEXEDDB_NAME, INDEXEDDB_NAME, DEFAULT_INDEXEDDB_STORE_NAME, INDEXEDDB_STORE_NAME
+  DEFAULT_IDB_DB_NAME, IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, IDB_STORE_NAME
 } from './lib/tokens';

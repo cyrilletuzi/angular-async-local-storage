@@ -4,7 +4,7 @@ import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { LocalStorageDatabase } from './localstorage-database';
-import { PREFIX, INDEXEDDB_NAME, DEFAULT_INDEXEDDB_NAME, INDEXEDDB_STORE_NAME, DEFAULT_INDEXEDDB_STORE_NAME } from '../tokens';
+import { PREFIX, IDB_DB_NAME, DEFAULT_IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME } from '../tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -12,34 +12,34 @@ import { PREFIX, INDEXEDDB_NAME, DEFAULT_INDEXEDDB_NAME, INDEXEDDB_STORE_NAME, D
 export class IndexedDBDatabase implements LocalDatabase {
 
   /**
-   * `indexedDb` database name
+   * `indexedDB` database name
    */
   protected dbName: string;
 
   /**
-   * `indexedDb` object store name
+   * `indexedDB` object store name
    */
   protected storeName: string;
 
   /**
-   * `indexedDb` data path name for local storage (where items' value will be stored)
+   * `indexedDB` data path name for local storage (where items' value will be stored)
    */
   protected readonly dataPath = 'value';
 
   /**
-   * `indexedDb` database connection, wrapped in a RxJS `ReplaySubject` to be able to access the connection
+   * `indexedDB` database connection, wrapped in a RxJS `ReplaySubject` to be able to access the connection
    * even after the connection success event happened
    */
   protected database: ReplaySubject<IDBDatabase>;
 
   /**
-   * `indexedDb` is available but failing in some scenarios (some browsers private mode...),
+   * `indexedDB` is available but failing in some scenarios (some browsers private mode...),
    * so a fallback can be needed.
    */
   protected fallback: LocalDatabase | null = null;
 
   /**
-   * Number of items in our `indexedDb` database and object store
+   * Number of items in our `indexedDB` database and object store
    */
   get size(): Observable<number> {
 
@@ -67,26 +67,26 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   constructor(
     @Optional() @Inject(PREFIX) prefix: string | null = null,
-    @Optional() @Inject(INDEXEDDB_NAME) dbName = DEFAULT_INDEXEDDB_NAME,
-    @Optional() @Inject(INDEXEDDB_STORE_NAME) storeName = DEFAULT_INDEXEDDB_STORE_NAME,
+    @Optional() @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,
+    @Optional() @Inject(IDB_STORE_NAME) storeName = DEFAULT_IDB_STORE_NAME,
   ) {
 
-    /* Initialize indexedDb database name, with prefix if provided by the user */
+    /* Initialize indexedDB database name, with prefix if provided by the user */
     this.dbName = prefix ? `${prefix}_${dbName}` : dbName;
 
-    /* Initialize indexedDb object store name */
+    /* Initialize indexedDB object store name */
     this.storeName = storeName;
 
     /* Creating the RxJS ReplaySubject */
     this.database = new ReplaySubject<IDBDatabase>();
 
-    /* Connect to indexedDb, with prefix if provided by the user */
+    /* Connect to indexedDB, with prefix if provided by the user */
     this.connect(prefix);
 
   }
 
   /**
-   * Gets an item value in our `indexedDb` store
+   * Gets an item value in our `indexedDB` store
    * @param key The item's key
    * @returns The item's value if the key exists, `null` otherwise, wrapped in an RxJS `Observable`
    */
@@ -140,7 +140,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
-   * Sets an item in our `indexedDb` store
+   * Sets an item in our `indexedDB` store
    * @param key The item's key
    * @param data The item's value
    * @returns An RxJS `Observable` to wait the end of the operation
@@ -166,9 +166,9 @@ export class IndexedDBDatabase implements LocalDatabase {
       mergeMap((store) => {
 
         /* Check if the key already exists or not
-         * `getKey()` is better but only available in `indexedDb` v2 (Chrome >= 58, missing in IE/Edge).
+         * `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge).
          * In older browsers, the value is checked instead, but it could lead to an exception
-         * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDb` API).
+         * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
          */
         const request = this.getKeyRequest(store, key);
 
@@ -195,7 +195,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
-   * Deletes an item in our `indexedDb` store
+   * Deletes an item in our `indexedDB` store
    * @param key The item's key
    * @returns An RxJS `Observable` to wait the end of the operation
    */
@@ -224,7 +224,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
-   * Deletes all items from our `indexedDb` objet store
+   * Deletes all items from our `indexedDB` objet store
    * @returns An RxJS `Observable` to wait the end of the operation
    */
   clear(): Observable<boolean> {
@@ -252,7 +252,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
-   * Get all the keys in our `indexedDb` store
+   * Get all the keys in our `indexedDB` store
    * @returns An RxJS `Observable` containing all the keys
    */
   keys(): Observable<string[]> {
@@ -266,7 +266,7 @@ export class IndexedDBDatabase implements LocalDatabase {
     return this.transaction('readonly').pipe(
       mergeMap((store) => {
 
-        /* `getAllKey()` is better but only available in `indexedDb` v2 (Chrome >= 58, missing in IE/Edge) */
+        /* `getAllKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge) */
         if ('getAllKeys' in store) {
 
           /* Request all keys in store */
@@ -301,7 +301,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
-   * Check if a key exists in our `indexedDb` store
+   * Check if a key exists in our `indexedDB` store
    * @returns An RxJS `Observable` telling if the key exists or not
    */
   has(key: string): Observable<boolean> {
@@ -329,14 +329,14 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
-   * Connects to `indexedDb` and creates the object store on first time
+   * Connects to `indexedDB` and creates the object store on first time
    * @param prefix
    */
   protected connect(prefix: string | null = null): void {
 
     let request: IDBOpenDBRequest;
 
-    /* Connect to `indexedDb` */
+    /* Connect to `indexedDB` */
     try {
 
       // TODO: Could be catch earlier when detecting storage support
@@ -375,11 +375,11 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * Open an `indexedDB` transaction and get our store
    * @param mode `readonly` or `readwrite`
-   * @returns An `indexedDb` store, wrapped in an RxJS `Observable`
+   * @returns An `indexedDB` store, wrapped in an RxJS `Observable`
    */
   protected transaction(mode: IDBTransactionMode): Observable<IDBObjectStore> {
 
-    /* From the `indexedDb` connection, open a transaction and get the store */
+    /* From the `indexedDB` connection, open a transaction and get the store */
     return this.database
       .pipe(map((database) => database.transaction([this.storeName], mode).objectStore(this.storeName)));
 
@@ -391,7 +391,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
-   * Listen to an `indexedDb` success error event
+   * Listen to an `indexedDB` success error event
    * @param request Request to listen
    * @returns An RxJS `Observable` listening to the success event
    */
@@ -402,7 +402,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
-   * Listen to an `indexedDb` request error event
+   * Listen to an `indexedDB` request error event
    * @param request Request to listen
    * @returns An RxJS `Observable` listening to the error event and if so, throwing an error
    */
@@ -413,7 +413,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
-   * Listen to an `indexedDb` request success and error event, and map to the wanted value
+   * Listen to an `indexedDB` request success and error event, and map to the wanted value
    * @param request Request to listen
    * @param mapCallback Callback returning the wanted value
    * @returns An RxJS `Observable` listening to request events and mapping to the wanted value
@@ -436,20 +436,20 @@ export class IndexedDBDatabase implements LocalDatabase {
    * Check if the key exists in the store
    * @param store Objet store on which to perform the request
    * @param key Key to check
-   * @returns An `indexedDb` request
+   * @returns An `indexedDB` request
    */
   protected getKeyRequest(store: IDBObjectStore, key: string): IDBRequest {
 
-    /* `getKey()` is better but only available in `indexedDb` v2 (Chrome >= 58, missing in IE/Edge).
+    /* `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge).
      * In older browsers, the value is checked instead, but it could lead to an exception
-     * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDb` API).
+     * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
      */
     return ('getKey' in store) ? store.getKey(key) : (store as IDBObjectStore).get(key);
 
   }
 
   /**
-   * Get all keys from store from a cursor, for older browsers still in `indexedDb` v1
+   * Get all keys from store from a cursor, for older browsers still in `indexedDB` v1
    * @param request Request containing the cursor
    */
   protected getKeysFromCursor(request: IDBRequest<IDBCursorWithValue | null>): Observable<string[]> {
@@ -479,8 +479,8 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
-   * Create store on first use of `indexedDb`
-   * @param request `indexedDb` database opening request
+   * Create store on first use of `indexedDB`
+   * @param request `indexedDB` database opening request
    */
   protected createStore(request: IDBOpenDBRequest): void {
 
