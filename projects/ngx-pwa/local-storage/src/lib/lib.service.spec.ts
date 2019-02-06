@@ -657,9 +657,12 @@ describe('IndexedDB', () => {
   const localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
 
   beforeEach((done: DoneFn) => {
-    localStorageService.clear().subscribe(() => {
-      clearIndexedDB(done);
-    });
+
+    /* Clear `localStorage` for some browsers private mode which fallbacks to `localStorage` */
+    localStorage.clear();
+
+    clearIndexedDB(done);
+
   });
 
   tests(localStorageService);
@@ -778,9 +781,12 @@ describe('IndexedDB and a prefix', () => {
   const localStorageService = new LocalStorage(new IndexedDBDatabase(prefix), new JSONValidator());
 
   beforeEach((done: DoneFn) => {
-    localStorageService.clear().subscribe(() => {
-      clearIndexedDB(done);
-    });
+
+    /* Clear `localStorage` for some browsers private mode which fallbacks to `localStorage` */
+    localStorage.clear();
+
+    clearIndexedDB(done);
+
   });
 
   tests(localStorageService);
@@ -795,9 +801,12 @@ describe('IndexedDB with custom database and store names', () => {
   const localStorageService = new LocalStorage(new IndexedDBDatabase(null, dbName, storeName), new JSONValidator());
 
   beforeEach((done: DoneFn) => {
-    localStorageService.clear().subscribe(() => {
-      clearIndexedDB(done);
-    });
+
+    /* Clear `localStorage` for some browsers private mode which fallbacks to `localStorage` */
+    localStorage.clear();
+
+    clearIndexedDB(done);
+
   });
 
   tests(localStorageService);
