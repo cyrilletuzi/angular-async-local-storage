@@ -5,7 +5,7 @@ import { map, first, take, mergeMap, filter } from 'rxjs/operators';
 import { LocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
 import { LocalStorageDatabase } from './databases/localstorage-database';
-import { MockLocalDatabase } from './databases/mock-local-database';
+import { MemoryDatabase } from './databases/memory-database';
 import { JSONSchema } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
 
@@ -756,7 +756,7 @@ function tests(localStorageService: LocalStorage) {
 
 describe('LocalStorage with mock storage', () => {
 
-  const localStorageService = new LocalStorage(new MockLocalDatabase(), new JSONValidator());
+  const localStorageService = new LocalStorage(new MemoryDatabase(), new JSONValidator());
 
   beforeEach((done: DoneFn) => {
     localStorageService.clear().subscribe(() => {

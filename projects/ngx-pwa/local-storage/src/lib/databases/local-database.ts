@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { IndexedDBDatabase } from './indexeddb-database';
 import { LocalStorageDatabase } from './localstorage-database';
-import { MockLocalDatabase } from './mock-local-database';
+import { MemoryDatabase } from './memory-database';
 import { PREFIX } from '../tokens';
 
 /**
@@ -50,7 +50,7 @@ export function localDatabaseFactory(platformId: Object, prefix: string | null):
      * - Server-side rendering
      * - All other non-browser context
      */
-    return new MockLocalDatabase();
+    return new MemoryDatabase();
 
   }
 

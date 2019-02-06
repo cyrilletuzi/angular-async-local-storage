@@ -6,7 +6,7 @@ import { LocalDatabase } from './local-database';
 @Injectable({
   providedIn: 'root'
 })
-export class MockLocalDatabase implements LocalDatabase {
+export class MemoryDatabase implements LocalDatabase {
 
   /**
    * Memory storage

@@ -2,7 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.0.0-beta.1 (2019-02-05)
+## 8.0.0-beta.2 (2019-02-06)
 
 ### Features
 
@@ -23,8 +23,15 @@ A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.
 - extra properties no longer accepted in `JSONSchema`
 
 ### Non-breaking changes
+
 - `JSONSchemaNumeric` deprecated
-- `LOCAL_STORAGE_PREFIX` deprecated (should not concern you, as you should use `localStorageProviders()`)
+
+### Internal refactoring
+
+Should not concern you as it is internal stuff.
+
+- `LOCAL_STORAGE_PREFIX` deprecated (you should use `localStorageProviders()`)
+- `MockLocalDatabase` renamed `MemoryDatabase`
 
 ## 7.4.1 (2019-01-27)
 
