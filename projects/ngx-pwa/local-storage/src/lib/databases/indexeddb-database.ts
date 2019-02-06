@@ -65,22 +65,28 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   }
 
+  /**
+   * Constructor params are provided by Angular (but can also be passed manually in tests)
+   * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
+   * @param dbName `indexedDB` database name
+   * @param storeName `indexedDB` store name
+   */
   constructor(
     @Optional() @Inject(PREFIX) prefix: string | null = null,
     @Optional() @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,
     @Optional() @Inject(IDB_STORE_NAME) storeName = DEFAULT_IDB_STORE_NAME,
   ) {
 
-    /* Initialize indexedDB database name, with prefix if provided by the user */
+    /* Initialize `indexedDB` database name, with prefix if provided by the user */
     this.dbName = prefix ? `${prefix}_${dbName}` : dbName;
 
-    /* Initialize indexedDB object store name */
+    /* Initialize `indexedDB` store name */
     this.storeName = storeName;
 
     /* Creating the RxJS ReplaySubject */
     this.database = new ReplaySubject<IDBDatabase>();
 
-    /* Connect to indexedDB, with prefix if provided by the user */
+    /* Connect to `indexedDB`, with prefix if provided by the user */
     this.connect(prefix);
 
   }

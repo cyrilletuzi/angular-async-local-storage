@@ -9,13 +9,22 @@ import { PREFIX } from '../tokens';
 })
 export class LocalStorageDatabase implements LocalDatabase {
 
-  /* Initializing native localStorage right now to be able to check its support on class instanciation */
+  /**
+   * Optional user prefix to avoid collision for multiple apps on the same subdomain
+   */
   protected prefix = '';
 
+  /**
+   * Number of items in `localStorage`
+   */
   get size(): Observable<number> {
     return of(localStorage.length);
   }
 
+  /**
+   * Constructor params are provided by Angular (but can also be passed manually in tests)
+   * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
+   */
   constructor(@Optional() @Inject(PREFIX) userPrefix: string | null = null) {
 
     if (userPrefix) {
@@ -25,114 +34,157 @@ export class LocalStorageDatabase implements LocalDatabase {
   }
 
   /**
-   * Gets an item value in local storage
+   * Gets an item value in `localStorage`
    * @param key The item's key
-   * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
+   * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
    */
   getItem<T = any>(key: string): Observable<T | null> {
 
-    const unparsedData = localStorage.getItem(`${this.prefix}${key}`);
+    /* Get raw data */
+    const unparsedData = localStorage.getItem(this.prefixKey(key));
+
     let parsedData: T | null = null;
 
+    /* No need to parse if data is `null` */
     if (unparsedData != null) {
 
+      /* Try to parse */
       try {
-        parsedData = JSON.parse(unparsedData);
-      } catch (error) {
-        return throwError(new Error(`Invalid data in localStorage.`));
+        parsedData = JSON.parse(unparsedData) as T;
+      } catch {
+        return throwError(new Error(`localStorage data is not a valid JSON and cannot be parsed.`));
       }
 
     }
 
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(parsedData);
 
   }
 
   /**
-   * Sets an item in local storage
+   * Store an item in `localStorage`
    * @param key The item's key
-   * @param data The item's value, must NOT be null or undefined
-   * @returns An RxJS Observable to wait the end of the operation
+   * @param data The item's value
+   * @returns A RxJS `Observable` to wait the end of the operation
    */
   setItem(key: string, data: string | number | boolean | object): Observable<boolean> {
 
-    /* Storing undefined in localStorage would then throw when getting and parsing the value */
-    if (data !== undefined) {
+    /* Storing `undefined` or `null` in `localStorage` can cause issues in some browsers and has no sense */
+    if ((data !== undefined) && (data !== null)) {
 
-      localStorage.setItem(`${this.prefix}${key}`, JSON.stringify(data));
+      // TODO: check if stringify could fail on some values (Blob ?)
+      /* Serialize and store */
+      localStorage.setItem(this.prefixKey(key), JSON.stringify(data));
 
     }
 
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(true);
 
   }
 
   /**
-   * Deletes an item in local storage
+   * Deletes an item in `localStorage`
    * @param key The item's key
-   * @returns An RxJS Observable to wait the end of the operation
+   * @returns A RxJS `Observable` to wait the end of the operation
    */
   removeItem(key: string): Observable<boolean> {
 
-    localStorage.removeItem(`${this.prefix}${key}`);
+    localStorage.removeItem(this.prefixKey(key));
 
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(true);
 
   }
 
   /**
-   * Deletes all items from local storage
-   * @returns An RxJS Observable to wait the end of the operation
+   * Deletes all items in `localStorage`
+   * @returns A RxJS `Observable` to wait the end of the operation
    */
   clear(): Observable<boolean> {
 
     localStorage.clear();
 
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(true);
 
   }
 
+  /**
+   * Get all keys in `localStorage`
+   * @returns A RxJS `Observable` containing the list of keys
+   */
   keys(): Observable<string[]> {
 
     const keys: string[] = [];
 
+    /* Iteretate over all the indexes */
     for (let index = 0; index < localStorage.length; index += 1) {
 
-      keys.push(this.getKey(index) as string);
+      /* Cast as we are sure in this case the key is not `null` */
+      keys.push(this.getUnprefixedKey(index) as string);
 
     }
 
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(keys);
 
   }
 
+  /**
+   * Check if a key exists in `localStorage`
+   * @param key The item's key
+   * @returns A RxJS `Observable` telling if the key exists or not
+   */
   has(key: string): Observable<boolean> {
 
+    /* Itérate over all indexes in storage */
     for (let index = 0; index < localStorage.length; index += 1) {
 
-      if (key === this.getKey(index)) {
+      if (key === this.getUnprefixedKey(index)) {
 
+        /* Wrap in a RxJS `Observable` to be consistent with other storages */
         return of(true);
 
       }
 
     }
 
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(false);
 
   }
 
-  protected getKey(index: number): string | null {
+  /**
+   * Get an unprefixed key
+   * @param index Index of the key
+   * @returns The unprefixed key name if exists, `null` otherwise
+   */
+  private getUnprefixedKey(index: number): string | null {
 
+    /* Get the key in storage: may have a prefix */
     const prefixedKey = localStorage.key(index);
 
     if (prefixedKey !== null) {
 
-      return (this.prefix === '') ? prefixedKey : prefixedKey.substr(this.prefix.length);
+      /* If no prefix, the key is already good, otherwrite strip the prefix */
+      return !this.prefix ? prefixedKey : prefixedKey.substr(this.prefix.length);
 
     }
 
     return null;
+
+  }
+
+  /**
+   * Add the prefix to a key
+   * @param key The key name
+   * @returns The prefixed key name
+   */
+  private prefixKey(key: string): string {
+
+    return `${this.prefix}${key}`;
 
   }
 
