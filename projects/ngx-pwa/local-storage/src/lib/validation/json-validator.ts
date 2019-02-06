@@ -66,9 +66,13 @@ export class JSONValidator {
 
     if (schema.pattern) {
 
-      const regularExpression = new RegExp(schema.pattern);
+      let regularExpression: RegExp | null = null;
 
-      if (!regularExpression.test(data)) {
+      try {
+        regularExpression = new RegExp(schema.pattern);
+      } catch {}
+
+      if (regularExpression && !regularExpression.test(data)) {
         return false;
       }
 
