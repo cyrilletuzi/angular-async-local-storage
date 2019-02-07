@@ -165,19 +165,6 @@ to have some extra time to add validation.
 Of course, it should be a temporary solution as this scenario is *not* heavily tested,
 and as you'll miss new features and bug fixes.
 
-### Solution 4: no validation (dirty)
-
-In some special scenarios, like development-only code,
-it could be painful to manage validation.
-
-So version 7 of the lib introduces a new `getUnsafeItem()` method,
-which is the same as the `getItem()` method from previous versions, where validation was optional.
-**You can easily do a search/replace**.
-
-Note this a dirty, unsecure and error-prone solution, **you should *not* use it in production code**,
-and it could be removed in future versions. Also, it could raise warnings when linting,
-as this method as been flagged as deprecated.
-
 ## More documentation
 
 - [Full changelog for v7](../CHANGELOG.md)
