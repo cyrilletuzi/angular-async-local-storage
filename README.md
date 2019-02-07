@@ -81,7 +81,7 @@ as we can't change the `latest` tag (it would break users already on v7).
 ### Upgrading
 
 If you still use the old `angular-async-local-storage` package, or to update to version 6,
-see the [migration guides](./MIGRATION.md).
+see the **[migration guides](./MIGRATION.md).**
 
 ## API
 
