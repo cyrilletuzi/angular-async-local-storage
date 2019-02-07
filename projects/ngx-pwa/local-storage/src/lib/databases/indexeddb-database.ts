@@ -161,6 +161,10 @@ export class IndexedDBDatabase implements LocalDatabase {
         return this.requestEventsAndMapTo(request1, () => request1.result).pipe(
           mergeMap((existingEntry) => {
 
+            /* It is very important the second request is done from the same transaction/store as the previous one,
+             * otherwise it could lead to concurrency failures
+             * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/47 */
+
             /* Add if the item is not existing yet, or update otherwise */
             // TODO: stop wrapping
             const request2 = (existingEntry === undefined) ?
@@ -236,7 +240,6 @@ export class IndexedDBDatabase implements LocalDatabase {
     return this.transaction('readonly').pipe(
       mergeMap((store) => {
 
-        /* `getAllKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge) */
         if ('getAllKeys' in store) {
 
           /* Request all keys in store */
@@ -248,6 +251,9 @@ export class IndexedDBDatabase implements LocalDatabase {
           return this.requestEventsAndMapTo(request, () => request.result as string[]);
 
         } else {
+
+          /* `getAllKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge)
+           * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
 
           /* Open a cursor on the store */
           const request = (store as IDBObjectStore).openCursor();
@@ -431,6 +437,7 @@ export class IndexedDBDatabase implements LocalDatabase {
     /* `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge).
      * In older browsers, the value is checked instead, but it could lead to an exception
      * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
+     * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69
      */
     return ('getKey' in store) ? store.getKey(key) : (store as IDBObjectStore).get(key);
 

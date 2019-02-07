@@ -444,6 +444,8 @@ function tests(localStorageService: LocalStorage) {
 
   });
 
+  /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/25
+   * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/5 */
   describe('complete', () => {
 
     it('setItem()', (done: DoneFn) => {
@@ -667,6 +669,7 @@ describe('IndexedDB', () => {
 
   tests(localStorageService);
 
+  /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
   it('check use of IndexedDb (will be pending in Firefox/IE private mode)', (done: DoneFn) => {
 
     const index = `test${Date.now()}`;

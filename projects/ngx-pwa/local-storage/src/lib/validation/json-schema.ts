@@ -1,3 +1,7 @@
+/* All schemas interfaces must have a required and different `type`,
+ * to create a TypeScript discriminant union type.
+ * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/64 */
+
 /**
  * JSON Schema to describe a boolean value.
  * @ignore Internal type, **do not use**, use `JSONSchema` instead
