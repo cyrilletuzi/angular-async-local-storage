@@ -4,6 +4,24 @@ The migration guide to v7 is quite long as it explains the issue in details,
 so you understand exactly what you are doing. But relax,
 **the real actions required are not so long and are *for your own good***.
 
+## WARNING
+
+Version 7 of this library tried to take a huge step forward by forcing validation, for security and error management.
+Unfortunately, unforeseen issues happened, some very bad as they are beyond our control
+(like [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)).
+
+Version 8 will achieve the goal we tried in v7 the right way. Everything will be clean and a lot easier for you.
+
+Then, **we actually recommend to *not* upgrade to v7 and to wait for v8**,
+to avoid a double painful migration. v8 will be released at the same time as Angular 8, ie. in May 2019.
+
+**Version 6 of the library is compatible with Angular 7.** Bug fixes that happened during v7 have all been backported to v6.
+
+You can install it with:
+```bash
+npm install @ngx-pwa/local-storage@6
+```
+
 ## Previous migrations
 
 If you were using v4 or v5 and skipped v6, you first need to follow

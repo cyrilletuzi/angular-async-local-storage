@@ -48,15 +48,9 @@ Install the same version as your Angular one via [npm](http://npmjs.com):
 # For Angular 8:
 npm install @ngx-pwa/local-storage@next
 
-# For Angular 7 and TypeScript 3.1:
-npm install @ngx-pwa/local-storage@7
-
-# For Angular 6:
+# For Angular 6 and Angular 7:
 npm install @ngx-pwa/local-storage@6
 ```
-
-Note the version 7 of the lib doesn't support TypeScript 3.2 due to a TypeScript regression
-(see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)).
 
 Now you just have to inject the service where you need it:
 
@@ -71,10 +65,21 @@ export class YourService {
 }
 ```
 
-## Upgrading
+Versions 4 & 5 (only) need an additional setup step explained in [the old module guide](./docs/OLD_MODULE.md).
+
+### About version 7
+
+v7 of this lib works but is not recommended due to unforeseen issues.
+For example, v7 doesn't support TypeScript 3.2 due to a TypeScript regression
+(see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)).
+
+v8 has cleaned the mess, but for users still using Angular 7,
+**stay on v6 of this lib as it is compatible with Angular 7 too**.
+
+### Upgrading
 
 If you still use the old `angular-async-local-storage` package, or to update to new versions,
-see the [migration guides](./MIGRATION.md).
+see the **[migration guides](./MIGRATION.md).**
 
 ## API
 
