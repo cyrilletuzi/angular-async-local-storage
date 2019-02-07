@@ -1,5 +1,5 @@
 import { LocalStorage } from './lib.service';
-import { LocalStorageDatabase } from './databases/localstorage-database';
+import { MemoryDatabase } from './databases/memory-database';
 import { JSONValidator } from './validation/json-validator';
 import { JSONSchemaString, JSONSchema, JSONSchemaArrayOf } from './validation/json-schema';
 
@@ -9,7 +9,8 @@ describe('getItem() overloads compilation', () => {
 
   beforeEach(() => {
 
-    localStorageService = new LocalStorage(new LocalStorageDatabase(), new JSONValidator());
+    /* Do compilation tests on memory storage to avoid issues when other storages are not available */
+    localStorageService = new LocalStorage(new MemoryDatabase(), new JSONValidator());
 
   });
 
