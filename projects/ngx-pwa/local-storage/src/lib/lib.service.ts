@@ -90,10 +90,12 @@ export class LocalStorage {
             return throwError(new ValidationError());
           }
 
+          /* Data have been checked, so it's OK to cast */
+          return of(data as T | null);
+
         }
 
-        // TODO: check it'll stay ok
-        /* Cast to unknown (will be overrided if a schema was provided) */
+        /* Cast to unknown as the data wasn't checked */
         return of(data as unknown);
 
       }),

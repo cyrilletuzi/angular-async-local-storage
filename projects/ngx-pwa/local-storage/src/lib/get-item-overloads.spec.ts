@@ -21,8 +21,6 @@ describe('getItem() API v8', () => {
 
     localStorageService.getItem('test').subscribe((_: unknown) => {
 
-      const t: unknown = _;
-
       expect().nothing();
 
       done();
