@@ -788,7 +788,7 @@ describe('IndexedDB and a prefix', () => {
     /* Clear `localStorage` for some browsers private mode which fallbacks to `localStorage` */
     localStorage.clear();
 
-    clearIndexedDB(done);
+    clearIndexedDB(done, `${prefix}_${DEFAULT_IDB_DB_NAME}`);
 
   });
 
@@ -808,7 +808,7 @@ describe('IndexedDB with custom database and store names', () => {
     /* Clear `localStorage` for some browsers private mode which fallbacks to `localStorage` */
     localStorage.clear();
 
-    clearIndexedDB(done);
+    clearIndexedDB(done, dbName, storeName);
 
   });
 
