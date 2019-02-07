@@ -76,7 +76,7 @@ v8 will clean the mess, but until then, as you can see above,
 **stay on v6 as it is compatible with Angular 7 too**.
 
 You have to tell the version on `npm install`,
-as we wan't change the `latest` tag on npm (it would break users already on v7).
+as we can't change the `latest` tag (it would break users already on v7).
 
 ### Upgrading
 
