@@ -2,15 +2,16 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.0.0-beta.2 (2019-02-06)
+## 8.0.0-beta.3 (2019-02-07)
 
 ### Features
 
 - The returned type of `getItem()` is now inferred for basic types (`string`, `number`, `boolean`)
 and arrays of basic types (`string[]`, `number[]`, `boolean[]`).
 - Just use the new `JSONSchema` interface, IntelliSense will adjust itself based on the `type` option.
-- `indexedDb` database and object store names default values are exported and can be changed
+- `indexedDB` database and object store names default values are exported and can be changed
 (see the [interoperability guide](./docs/INTEROPERABILITY.md))
+- `indexedDB` storage will now works in web workers too
 
 ### Breaking changes
 
