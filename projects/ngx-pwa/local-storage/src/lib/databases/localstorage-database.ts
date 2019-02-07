@@ -76,7 +76,6 @@ export class LocalStorageDatabase implements LocalDatabase {
     /* Storing `undefined` or `null` in `localStorage` can cause issues in some browsers and has no sense */
     if ((data !== undefined) && (data !== null)) {
 
-      // TODO: Blob? TypedArray? ArrayBuffer?
       let serializedData: string | null = null;
 
       /* Try to stringify (can fail on circular references) */
