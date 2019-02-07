@@ -67,3 +67,8 @@ you could manage to store `undefined`, but it will then throw exceptions in some
 So **don't store `undefined`**.
 
 Starting with version 8, the lib will prevent you to do that if your are in TypeScript `--strictNullChecks` mode.
+
+## `indexedDB` keys
+
+This lib only `string` keys, while `indexedDB` allows some other types.
+So if using this lib `keys()` method, all keys will be converted to `string`.
