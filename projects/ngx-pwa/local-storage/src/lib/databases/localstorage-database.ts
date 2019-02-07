@@ -77,7 +77,6 @@ export class LocalStorageDatabase implements LocalDatabase {
     if ((data !== undefined) && (data !== null)) {
 
       // TODO: Blob? TypedArray? ArrayBuffer?
-      // TODO: What happen if quota is exceeded?
       let serializedData: string | null = null;
 
       /* Try to stringify (can fail on circular references) */
@@ -87,7 +86,12 @@ export class LocalStorageDatabase implements LocalDatabase {
         return throwError(error as TypeError);
       }
 
-      localStorage.setItem(this.prefixKey(key), serializedData);
+      /* Can fail if storage quota is exceeded */
+      try {
+        localStorage.setItem(this.prefixKey(key), serializedData);
+      } catch (error) {
+        return throwError(error as DOMException);
+      }
 
     }
 

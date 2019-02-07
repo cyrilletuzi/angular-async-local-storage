@@ -310,8 +310,7 @@ function tests(localStorageService: LocalStorage) {
         mergeMap(() => localStorageService.keys()),
       ).subscribe((keys) => {
 
-        // TODO: Investigate further
-        /* Sorting because Firefox keys order is inconsistent with `localStorage` and a prefix */
+        /* Sorting because keys order is not standard in `localStorage` (in Firefox especially) */
         expect([key1, key2].sort()).toEqual(keys.sort());
 
         done();

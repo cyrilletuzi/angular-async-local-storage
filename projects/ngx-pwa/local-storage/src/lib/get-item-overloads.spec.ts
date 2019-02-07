@@ -618,7 +618,6 @@ describe('getItem() API v7', () => {
 
   it('schema with unsupported options', (done) => {
 
-    // TODO: check this in TS >= 3.3 as it seems weird unknown properties are allowed
     localStorageService.getItem('test', { schema: {
       type: 'object',
       properties: {
