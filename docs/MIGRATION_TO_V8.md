@@ -8,13 +8,15 @@ It follows a regression in TypeScript 3.2 (see [#64](https://github.com/cyrillet
 The worst part was the TS team support: the regression would be solved only in TypeScript 3.4.
 As a consequence, decision was made to refactor `JSONSchema` to not be dependent on unreliable edgy TypeScript behavior anymore.
 
-The good part: the changes also allowed some simplications for you. :)
+The good part: the changes also allowed a lot of simplications for you. :)
 
 ## Previous migrations
 
-If you were using previous versions and skipped v6 or v7, you may need to start by:
-- [the migration guide to version 6](./MIGRATION_TO_V6.md),
-- [the migration guide to version 7](./MIGRATION_TO_V7.md).
+If you were using previous versions and skipped v6, do [the migration guide to version 6](./MIGRATION_TO_V6.md) first.
+
+[Migration to version 7](./MIGRATION_TO_V7.md) is not required,
+as the only breaking change was to require a JSON schema for validation,
+which has been refactored in v8 to be a lot easier, as explained below.
 
 ## How to migrate?
 
