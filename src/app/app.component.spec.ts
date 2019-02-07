@@ -22,7 +22,7 @@ describe('AppComponent', () => {
 
     fixture.detectChanges();
 
-    window.setTimeout(() => {
+    setTimeout(() => {
 
       fixture.detectChanges();
 

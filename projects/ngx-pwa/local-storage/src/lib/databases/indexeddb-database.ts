@@ -312,6 +312,7 @@ export class IndexedDBDatabase implements LocalDatabase {
      * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/42 */
     try {
 
+      /* Do NOT explicit `window` here, as `indexedDB` could be used from a web worker too */
       request = indexedDB.open(this.dbName);
 
     } catch {

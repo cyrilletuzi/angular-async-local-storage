@@ -571,7 +571,7 @@ function tests(localStorageService: LocalStorage) {
 
       localStorageService.setItemSubscribe(key, value);
 
-      window.setTimeout(() => {
+      setTimeout(() => {
 
         localStorageService.getItem(key).subscribe((data) => {
           expect(data).toBe(value);
@@ -590,7 +590,7 @@ function tests(localStorageService: LocalStorage) {
 
         localStorageService.removeItemSubscribe(key);
 
-        window.setTimeout(() => {
+        setTimeout(() => {
 
           localStorageService.getItem(key).subscribe((data) => {
             expect(data).toBeNull();
@@ -611,7 +611,7 @@ function tests(localStorageService: LocalStorage) {
 
         localStorageService.clearSubscribe();
 
-        window.setTimeout(() => {
+        setTimeout(() => {
 
           localStorageService.getItem(key).subscribe((data) => {
             expect(data).toBe(null);

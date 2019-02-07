@@ -1,5 +1,5 @@
 import { Injectable, PLATFORM_ID, Optional } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, isPlatformWorkerApp, isPlatformWorkerUi } from '@angular/common';
 import { Observable } from 'rxjs';
 
 import { IndexedDBDatabase } from './indexeddb-database';
@@ -15,30 +15,27 @@ import { PREFIX } from '../tokens';
  */
 export function localDatabaseFactory(platformId: Object, prefix: string | null): LocalDatabase {
 
-  // TODO: investigate about webworker context
-
-  if (isPlatformBrowser(platformId)
-  && ('indexedDB' in window)
-  && (window.indexedDB !== undefined)
-  && (window.indexedDB !== null)) {
+  // Do not explicit `window` here, as the global object is not the same in web workers
+  if ((isPlatformBrowser(platformId) || isPlatformWorkerApp(platformId) || isPlatformWorkerUi(platformId))
+  && (indexedDB !== undefined) && (indexedDB !== null) && ('open' in indexedDB)) {
 
     /* Check:
      * - if we are in a browser context (issue: server-side rendering)
      * - if `indexedDB` exists (issue: IE9)
      * - it could exist but be `undefined` or `null` (issue: IE / Edge private mode)
+     * - it could exists but not having a working API
      * Will be the case for:
      * - IE10+ and all other browsers in normal mode
      * - Chromium / Safari private mode, but in this case, data will be swiped when the user leaves the app */
     return new IndexedDBDatabase(prefix);
 
   } else if (isPlatformBrowser(platformId)
-  && ('localStorage' in window)
-  && (window.localStorage !== undefined)
-  && (window.localStorage !== null)) {
+  && (localStorage !== undefined) && (localStorage !== null) && ('getItem' in localStorage)) {
 
     /* Check:
      * - if we are in a browser context (issue: server-side rendering)
      * - if `localStorage` exists (to be sure)
+     * - it could exists but not having a working API
      * Will be the case for:
      * - IE9
      * - Safari cross-origin iframes, detected later in `IndexedDBDatabase.connect()`
