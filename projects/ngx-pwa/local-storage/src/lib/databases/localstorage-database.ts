@@ -76,10 +76,18 @@ export class LocalStorageDatabase implements LocalDatabase {
     /* Storing `undefined` or `null` in `localStorage` can cause issues in some browsers and has no sense */
     if ((data !== undefined) && (data !== null)) {
 
-      // TODO: check if stringify could fail on some values (Blob? TypedArray? ArrayBuffer?)
+      // TODO: Blob? TypedArray? ArrayBuffer?
       // TODO: What happen if quota is exceeded?
-      /* Serialize and store */
-      localStorage.setItem(this.prefixKey(key), JSON.stringify(data));
+      let serializedData: string | null = null;
+
+      /* Try to stringify (can fail on circular references) */
+      try {
+        serializedData = JSON.stringify(data);
+      } catch (error) {
+        return throwError(error as TypeError);
+      }
+
+      localStorage.setItem(this.prefixKey(key), serializedData);
 
     }
 
