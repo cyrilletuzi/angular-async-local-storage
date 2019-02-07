@@ -1,7 +1,7 @@
 import { LocalStorage } from './lib.service';
 import { MemoryDatabase } from './databases/memory-database';
 import { JSONValidator } from './validation/json-validator';
-import { JSONSchemaString, JSONSchema, JSONSchemaArrayOf } from './validation/json-schema';
+import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from './validation/json-schema';
 
 describe('getItem() overloads compilation', () => {
 
@@ -28,7 +28,7 @@ describe('getItem() overloads compilation', () => {
 
   it('no schema / cast', (done) => {
 
-    localStorageService.getItem<string>('test').subscribe((_) => {
+    localStorageService.getItem<number>('test').subscribe((_) => {
 
       expect().nothing();
 
@@ -40,7 +40,7 @@ describe('getItem() overloads compilation', () => {
 
   it('literal basic schema / no cast', (done) => {
 
-    localStorageService.getItem('test', { schema: { type: 'string' } }).subscribe((_) => {
+    localStorageService.getItem('test', { schema: { type: 'number' } }).subscribe((_) => {
 
       expect().nothing();
 
@@ -52,7 +52,7 @@ describe('getItem() overloads compilation', () => {
 
   it('literal basic schema / cast', (done) => {
 
-    localStorageService.getItem<string>('test', { schema: { type: 'string' } }).subscribe((_) => {
+    localStorageService.getItem<number>('test', { schema: { type: 'number' } }).subscribe((_) => {
 
       expect().nothing();
 
@@ -64,7 +64,7 @@ describe('getItem() overloads compilation', () => {
 
   it('literal schema with options', (done) => {
 
-    localStorageService.getItem('test', { schema: { type: 'string', maxLength: 10 } }).subscribe((_) => {
+    localStorageService.getItem('test', { schema: { type: 'number', maximum: 10 } }).subscribe((_) => {
 
       expect().nothing();
 
@@ -76,7 +76,7 @@ describe('getItem() overloads compilation', () => {
 
   it('prepared schema with general interface', (done) => {
 
-    const schema: JSONSchema = { type: 'string' };
+    const schema: JSONSchema = { type: 'number' };
 
     localStorageService.getItem('test', { schema }).subscribe((_) => {
 
@@ -90,7 +90,7 @@ describe('getItem() overloads compilation', () => {
 
   it('prepared schema with specific interface', (done) => {
 
-    const schema: JSONSchemaString = { type: 'string' };
+    const schema: JSONSchemaNumber = { type: 'number' };
 
     localStorageService.getItem('test', { schema }).subscribe((_) => {
 
@@ -212,9 +212,9 @@ describe('getItem() overloads compilation', () => {
 
   it('array with extra options', (done) => {
 
-    const schema: JSONSchemaArrayOf<JSONSchemaString> = {
+    const schema: JSONSchemaArrayOf<JSONSchemaNumber> = {
       type: 'array',
-      items: { type: 'string' },
+      items: { type: 'number' },
       maxItems: 5
     };
 
@@ -252,7 +252,23 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('objects / no cast', (done) => {
+  it('objects / cast / no schema', (done) => {
+
+    interface Test {
+      test: string;
+    }
+
+    localStorageService.getItem<Test>('test').subscribe((_) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('objects / no cast / schema', (done) => {
 
     localStorageService.getItem('test', { schema: {
       type: 'object',
@@ -269,7 +285,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('objects / cast', (done) => {
+  it('objects / cast / schema', (done) => {
 
     interface Test {
       test: string;
