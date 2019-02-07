@@ -16,7 +16,7 @@ describe('AppComponent', () => {
     }).compileComponents();
   }));
 
-  it('should render a value stored and retrieved from local storage', (done: DoneFn) => {
+  it('should render a value stored and retrieved from local storage', (done) => {
 
     const fixture = TestBed.createComponent(AppComponent);
 

@@ -246,9 +246,8 @@ export class IndexedDBDatabase implements LocalDatabase {
           const request = store.getAllKeys();
 
           /* Manage success and error events, and map to result
-           * Cast to `string[]` instead of `IDBValidKey[]` as the user must not be concerned about specific implementations */
-          // TODO: check if all keys can be considered as string
-          return this.requestEventsAndMapTo(request, () => request.result as string[]);
+           * This lib only allows string keys, but user could have added other types of keys from outside */
+          return this.requestEventsAndMapTo(request, () => request.result.map((key) => key.toString())) ;
 
         } else {
 
@@ -460,12 +459,16 @@ export class IndexedDBDatabase implements LocalDatabase {
       map(() => request.result),
       /* Iterate on the cursor */
       tap((cursor) =>  {
+
         if (cursor) {
-          /* Add the key to the list and cast to `string` as the user must not be concerned about specific implementations */
-          // TODO: check if all keys can be considered as string
-          keys.push(cursor.key as string);
+
+          /* This lib only allows string keys, but user could have added other types of keys from outside */
+          keys.push(cursor.key.toString());
+
           cursor.continue();
+
         }
+
       }),
       /* Wait until the iteration is over */
       filter((cursor) => !cursor),

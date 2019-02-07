@@ -14,7 +14,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('no schema / no cast', (done: DoneFn) => {
+  it('no schema / no cast', (done) => {
 
     localStorageService.getItem('test').subscribe((_) => {
 
@@ -26,7 +26,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('no schema / cast', (done: DoneFn) => {
+  it('no schema / cast', (done) => {
 
     localStorageService.getItem<string>('test').subscribe((_) => {
 
@@ -38,7 +38,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('literal basic schema / no cast', (done: DoneFn) => {
+  it('literal basic schema / no cast', (done) => {
 
     localStorageService.getItem('test', { schema: { type: 'string' } }).subscribe((_) => {
 
@@ -50,7 +50,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('literal basic schema / cast', (done: DoneFn) => {
+  it('literal basic schema / cast', (done) => {
 
     localStorageService.getItem<string>('test', { schema: { type: 'string' } }).subscribe((_) => {
 
@@ -62,7 +62,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('literal schema with options', (done: DoneFn) => {
+  it('literal schema with options', (done) => {
 
     localStorageService.getItem('test', { schema: { type: 'string', maxLength: 10 } }).subscribe((_) => {
 
@@ -74,7 +74,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('prepared schema with general interface', (done: DoneFn) => {
+  it('prepared schema with general interface', (done) => {
 
     const schema: JSONSchema = { type: 'string' };
 
@@ -88,7 +88,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('prepared schema with specific interface', (done: DoneFn) => {
+  it('prepared schema with specific interface', (done) => {
 
     const schema: JSONSchemaString = { type: 'string' };
 
@@ -102,7 +102,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('string', (done: DoneFn) => {
+  it('string', (done) => {
 
     localStorageService.getItem('test', { schema: { type: 'string' } }).subscribe((_) => {
 
@@ -114,7 +114,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('number', (done: DoneFn) => {
+  it('number', (done) => {
 
     localStorageService.getItem('test', { schema: { type: 'number' } }).subscribe((_) => {
 
@@ -126,7 +126,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('integer', (done: DoneFn) => {
+  it('integer', (done) => {
 
     localStorageService.getItem('test', { schema: { type: 'integer' } }).subscribe((_) => {
 
@@ -138,7 +138,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('boolean', (done: DoneFn) => {
+  it('boolean', (done) => {
 
     localStorageService.getItem('test', { schema: { type: 'boolean' } }).subscribe((_) => {
 
@@ -150,7 +150,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('array of strings', (done: DoneFn) => {
+  it('array of strings', (done) => {
 
     localStorageService.getItem('test', { schema: {
       type: 'array',
@@ -165,7 +165,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('array of numbers', (done: DoneFn) => {
+  it('array of numbers', (done) => {
 
     localStorageService.getItem('test', { schema: {
       type: 'array',
@@ -180,7 +180,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('array of integers', (done: DoneFn) => {
+  it('array of integers', (done) => {
 
     localStorageService.getItem('test', { schema: {
       type: 'array',
@@ -195,7 +195,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('array of booleans', (done: DoneFn) => {
+  it('array of booleans', (done) => {
 
     localStorageService.getItem('test', { schema: {
       type: 'array',
@@ -210,7 +210,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('array with extra options', (done: DoneFn) => {
+  it('array with extra options', (done) => {
 
     const schema: JSONSchemaArrayOf<JSONSchemaString> = {
       type: 'array',
@@ -228,7 +228,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('array of objects', (done: DoneFn) => {
+  it('array of objects', (done) => {
 
     interface Test {
       test: string;
@@ -252,7 +252,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('objects / no cast', (done: DoneFn) => {
+  it('objects / no cast', (done) => {
 
     localStorageService.getItem('test', { schema: {
       type: 'object',
@@ -269,7 +269,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('objects / cast', (done: DoneFn) => {
+  it('objects / cast', (done) => {
 
     interface Test {
       test: string;
@@ -290,7 +290,7 @@ describe('getItem() overloads compilation', () => {
 
   });
 
-  it('schema with unsupported options', (done: DoneFn) => {
+  it('schema with unsupported options', (done) => {
 
     // TODO: check this in TS >= 3.3 as it seems weird unknown properties are allowed
     localStorageService.getItem('test', { schema: {

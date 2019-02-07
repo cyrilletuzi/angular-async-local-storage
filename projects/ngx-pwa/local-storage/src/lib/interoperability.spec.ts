@@ -116,7 +116,7 @@ describe('Interoperability', () => {
 
   const localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
 
-  beforeEach((done: DoneFn) => {
+  beforeEach((done) => {
     clearIndexedDB(done);
   });
 
@@ -125,7 +125,7 @@ describe('Interoperability', () => {
   for (const setTestValue of setTestValues) {
 
     it(`setItem() after external API
-      (will be pending in IE/Firefox private mode and 2 pending in Edge/IE because of null and undefined)`, (done: DoneFn) => {
+      (will be pending in IE/Firefox private mode and 2 pending in Edge/IE because of null and undefined)`, (done) => {
 
       testSetCompatibilityWithNativeAPI(localStorageService, done, setTestValue);
 
@@ -147,7 +147,7 @@ describe('Interoperability', () => {
   for (const [getTestValue, getTestSchema] of getTestValues) {
 
     it(`getItem() after external API
-      (will be pending in IE/Firefox private mode)`, (done: DoneFn) => {
+      (will be pending in IE/Firefox private mode)`, (done) => {
 
       testGetCompatibilityWithNativeAPI(localStorageService, done, getTestValue, getTestSchema);
 
@@ -156,16 +156,57 @@ describe('Interoperability', () => {
   }
 
   it(`getItem() on null after external API
-  (will be pending in IE/Firefox private mode and in Edge/IE)`, (done: DoneFn) => {
+  (will be pending in IE/Firefox private mode and in Edge/IE)`, (done) => {
 
     testGetCompatibilityWithNativeAPI(localStorageService, done, null);
 
   });
 
   it(`getItem() on undefined null after external API
-  (will be pending in IE/Firefox private mode)`, (done: DoneFn) => {
+  (will be pending in IE/Firefox private mode)`, (done) => {
 
     testGetCompatibilityWithNativeAPI(localStorageService, done, undefined);
+
+  });
+
+  it('keys() should ignore non-string keys', (done) => {
+
+    const key = 1;
+
+    try {
+
+      const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME);
+
+      dbOpen.addEventListener('success', () => {
+
+        const store = dbOpen.result.transaction([DEFAULT_IDB_STORE_NAME], 'readwrite').objectStore(DEFAULT_IDB_STORE_NAME);
+
+        store.add('test', key).addEventListener('success', () => {
+
+          localStorageService.keys().subscribe((keys) => {
+            for (const keyItem of keys) {
+              expect(typeof keyItem).toBe('string');
+            }
+            done();
+          });
+
+        });
+
+      });
+
+      dbOpen.addEventListener('error', () => {
+
+        /* Cases : Firefox private mode where `indexedDb` exists but fails */
+        pending();
+
+      });
+
+    } catch (error) {
+
+        /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
+        pending();
+
+    }
 
   });
 
