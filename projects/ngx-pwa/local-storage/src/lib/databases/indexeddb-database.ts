@@ -377,6 +377,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   private transaction(mode: IDBTransactionMode): Observable<IDBObjectStore> {
 
+    // TODO: could the store be missing?
     /* From the `indexedDB` connection, open a transaction and get the store */
     return this.database
       .pipe(map((database) => database.transaction([this.storeName], mode).objectStore(this.storeName)));
