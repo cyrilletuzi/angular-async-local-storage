@@ -231,12 +231,10 @@ export class LocalStorage {
    */
   private catchIDBBroken<T>(operationCallback: () => Observable<T>): OperatorFunction<T, any> {
 
-    // TODO: check if it could be something other than Error
-    return catchError((error: Error) => {
+    return catchError((error) => {
 
-      // TODO: would be better to check error instanceof, search why the specific exception is lost
-      /* Check if `indexedDB` is broken based on error message */
-      if (error.message === IDB_BROKEN_ERROR) {
+      /* Check if `indexedDB` is broken based on error message (the specific error class seems to be lost in the process) */
+      if ((error !== undefined) && (error !== null) && (error.message === IDB_BROKEN_ERROR)) {
 
         /* Fallback to `localStorage` */
         this.database = new LocalStorageDatabase(this.prefix);

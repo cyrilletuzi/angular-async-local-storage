@@ -316,7 +316,6 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     } catch {
 
-      // TODO: see if try/catch can be managed in provider factory
       this.database.error(new IDBBrokenError());
 
       return;
@@ -402,8 +401,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   private errorEvent(request: IDBRequest): Observable<never> {
 
-    // TODO: check the error has still the same structure as before (now it's a DOMException)
-    return fromEvent(request, 'error').pipe(mergeMap(() => throwError(request.error)));
+    return fromEvent(request, 'error').pipe(mergeMap(() => throwError(request.error as DOMException)));
 
   }
 

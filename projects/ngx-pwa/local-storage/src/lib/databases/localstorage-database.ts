@@ -55,8 +55,7 @@ export class LocalStorageDatabase implements LocalDatabase {
       try {
         parsedData = JSON.parse(unparsedData) as T;
       } catch (error) {
-        // TODO: check it's still the same structure as previous error
-        return throwError(error);
+        return throwError(error as SyntaxError);
       }
 
     }
