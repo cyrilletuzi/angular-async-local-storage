@@ -2,7 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.0.0-beta.3 (2019-02-07)
+## 8.0.0-beta.4 (2019-02-08)
 
 **A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.**
 
@@ -23,6 +23,7 @@ and arrays of basic types (`string[]`, `number[]`, `boolean[]`)
 - `JSONSchemaNull` removed
 - `items` in arrays schemas no longer accepts an array of JSON schemas
 - extra properties no longer accepted in `JSONSchema`
+- `getUnsafeItem()` is removed (was already deprecated in v7)
 
 ### Non-breaking changes
 

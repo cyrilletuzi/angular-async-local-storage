@@ -104,23 +104,6 @@ export class LocalStorage {
   }
 
   /**
-   * Get an item value in storage *without* any validation
-   * It is a convenience method for development only: **do not use it in production code**,
-   * as it can cause security issues and errors.
-   * @ignore Use the `.getItem()` method instead.
-   * @deprecated May be removed in future versions.
-   * @param key The item's key
-   * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
-   */
-  getUnsafeItem<T = any>(key: string): Observable<T | null> {
-
-    return this.database.getItem<T>(key)
-      /* Catch if `indexedDb` is broken */
-      .pipe(this.catchIDBBroken(() => this.database.getItem<T>(key)));
-
-  }
-
-  /**
    * Set an item in storage
    * @param key The item's key
    * @param data The item's value
