@@ -32,55 +32,55 @@ as you'll see the more complex it is, the more complex is validation too.
 ### Boolean
 
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'boolean' } })
+this.localStorage.getItem('test', { type: 'boolean' })
 ```
 
 ### Integer
 
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'integer' } })
+this.localStorage.getItem('test', { type: 'integer' })
 ```
 
 ### Number
 
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'number' } })
+this.localStorage.getItem('test', { type: 'number' })
 ```
 
 ### String
 
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'string' } })
+this.localStorage.getItem('test', { type: 'string' })
 ```
 
 ### Arrays
 
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.localStorage.getItem('test', {
   type: 'array',
   items: { type: 'boolean' }
-} })
+})
 ```
 
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.localStorage.getItem('test', {
   type: 'array',
   items: { type: 'integer' }
-} })
+})
 ```
 
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.localStorage.getItem('test', {
   type: 'array',
   items: { type: 'number' }
-} })
+})
 ```
 
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.localStorage.getItem('test', {
   type: 'array',
   items: { type: 'string' }
-} })
+})
 ```
 
 What's expected in `items` is another JSON schema.
@@ -107,7 +107,7 @@ const schema: JSONSchema = {
   required: ['firstName', 'lastName']
 };
 
-this.localStorage.getItem<User>('test', { schema })
+this.localStorage.getItem<User>('test', schema)
 ```
 
 What's expected for each property is another JSON schema.
@@ -148,10 +148,10 @@ The lib can't check that.
 
 For example:
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.localStorage.getItem('test', {
   type: 'number',
   maximum: 5
-} })
+})
 ```
 
 ### Options for strings
@@ -164,10 +164,10 @@ this.localStorage.getItem('test', { schema: {
 
 For example:
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.localStorage.getItem('test', {
   type: 'string',
   maxLength: 10
-} })
+})
 ```
 
 ### Options for arrays
@@ -178,11 +178,11 @@ this.localStorage.getItem('test', { schema: {
 
 For example:
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.localStorage.getItem('test', {
   type: 'array',
   items: { type: 'string' },
   maxItems: 5
-} })
+})
 ```
 
 ## How to validate nested types
@@ -210,7 +210,7 @@ const schema: JSONSchema = {
   }
 };
 
-this.localStorage.getItem<User[]>('test', { schema })
+this.localStorage.getItem<User[]>('test', schema)
 ```
 
 ## Errors vs. `null`
@@ -218,7 +218,7 @@ this.localStorage.getItem<User[]>('test', { schema })
 If validation fails, it'll go in the error callback:
 
 ```typescript
-this.localStorage.getItem('existing', { schema: { type: 'string' } })
+this.localStorage.getItem('existing', { type: 'string' })
 .subscribe((result) => {
   // Called if data is valid or null
 }, (error) => {
@@ -229,7 +229,7 @@ this.localStorage.getItem('existing', { schema: { type: 'string' } })
 But as usual (like when you do a database request), not finding an item is not an error. It succeeds but returns `null`.
 
 ```typescript
-this.localStorage.getItem('notExisting', { schema: { type: 'string' } })
+this.localStorage.getItem('notExisting', { type: 'string' })
 .subscribe((result) => {
   result; // null
 }, (error) => {
@@ -262,30 +262,5 @@ are *not* available in this lib:
 - `anyOf`
 - `oneOf`
 - array for `type`
-
-## ES6 shortcut
-
-In EcmaScript >= 6, this:
-
-```typescript
-const schema: JSONSchemaBoolean = { type: 'boolean' };
-
-this.localStorage.getItem<boolean>('test', { schema });
-```
-
-is a shortcut for this:
-```typescript
-const schema: JSONSchemaBoolean = { type: 'boolean' };
-
-this.localStorage.getItem<boolean>('test', { schema: schema });
-```
-
-which works only if the property and the variable have the same name.
-So if your variable has another name, you can't use the shortcut:
-```typescript
-const customSchema: JSONSchemaBoolean = { type: 'boolean' };
-
-this.localStorage.getItem<boolean>('test', { schema: customSchema });
-```
 
 [Back to general documentation](../README.md)

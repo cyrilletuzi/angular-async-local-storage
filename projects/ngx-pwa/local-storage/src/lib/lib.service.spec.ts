@@ -400,43 +400,93 @@ function tests(localStorageService: LocalStorage) {
       required: ['expected']
     };
 
-    it('valid', (done) => {
+    describe('API v8', () => {
 
-      const value = { expected: 'value' };
+      it('valid', (done) => {
 
-      localStorageService.setItem(key, value).pipe(
-        mergeMap(() => localStorageService.getItem(key, { schema }))
-      ).subscribe((data) => {
+        const value = { expected: 'value' };
 
-        expect(data).toEqual(value);
+        localStorageService.setItem(key, value).pipe(
+          mergeMap(() => localStorageService.getItem(key, schema))
+        ).subscribe((data) => {
 
-        done();
+          expect(data).toEqual(value);
+
+          done();
+
+        });
+
+      });
+
+      it('invalid', (done) => {
+
+        localStorageService.setItem(key, 'test').pipe(
+          mergeMap(() => localStorageService.getItem(key, schema))
+        ).subscribe({ error: (error) => {
+
+          expect(error.message).toBe(VALIDATION_ERROR);
+
+            done();
+
+        } });
+
+      });
+
+      it('null: no validation', (done) => {
+
+        localStorageService.getItem<{ expected: string }>(`noassociateddata${Date.now()}`, schema).subscribe(() => {
+
+          expect().nothing();
+
+          done();
+
+        });
 
       });
 
     });
 
-    it('invalid', (done) => {
+    describe('API v7', () => {
 
-      localStorageService.setItem(key, 'test').pipe(
-        mergeMap(() => localStorageService.getItem(key, { schema }))
-      ).subscribe({ error: (error) => {
+      it('valid', (done) => {
 
-        expect(error.message).toBe(VALIDATION_ERROR);
+        const value = { expected: 'value' };
+
+        localStorageService.setItem(key, value).pipe(
+          mergeMap(() => localStorageService.getItem(key, { schema }))
+        ).subscribe((data) => {
+
+          expect(data).toEqual(value);
 
           done();
 
-      } });
+        });
 
-    });
+      });
 
-    it('null: no validation', (done) => {
+      it('invalid', (done) => {
 
-      localStorageService.getItem<{ expected: string }>(`noassociateddata${Date.now()}`, { schema }).subscribe(() => {
+        localStorageService.setItem(key, 'test').pipe(
+          mergeMap(() => localStorageService.getItem(key, { schema }))
+        ).subscribe({ error: (error) => {
 
-        expect().nothing();
+          expect(error.message).toBe(VALIDATION_ERROR);
 
-        done();
+            done();
+
+        } });
+
+      });
+
+      it('null: no validation', (done) => {
+
+        localStorageService.getItem<{ expected: string }>(`noassociateddata${Date.now()}`, { schema }).subscribe(() => {
+
+          expect().nothing();
+
+          done();
+
+        });
 
       });
 

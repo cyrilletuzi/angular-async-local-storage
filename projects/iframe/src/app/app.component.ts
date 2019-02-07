@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
       }
     };
 
-    this.data$ = this.localStorage.setItem(key, { title: this.title }).pipe(switchMap(() => this.localStorage.getItem(key, { schema })));
+    this.data$ = this.localStorage.setItem(key, { title: this.title }).pipe(switchMap(() => this.localStorage.getItem(key, schema)));
 
   }
 

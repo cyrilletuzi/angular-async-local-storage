@@ -3,7 +3,10 @@ import { MemoryDatabase } from './databases/memory-database';
 import { JSONValidator } from './validation/json-validator';
 import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from './validation/json-schema';
 
-describe('getItem() overloads compilation', () => {
+/* For now, `unknown` and `any` cases must be checked manually as any type can be converted to them. */
+// TODO: Find a way to automate this.
+
+describe('getItem() API v8', () => {
 
   let localStorageService: LocalStorage;
 
@@ -16,7 +19,9 @@ describe('getItem() overloads compilation', () => {
 
   it('no schema / no cast', (done) => {
 
-    localStorageService.getItem('test').subscribe((_) => {
+    localStorageService.getItem('test').subscribe((_: unknown) => {
+
+      const t: unknown = _;
 
       expect().nothing();
 
@@ -28,7 +33,7 @@ describe('getItem() overloads compilation', () => {
 
   it('no schema / cast', (done) => {
 
-    localStorageService.getItem<number>('test').subscribe((_) => {
+    localStorageService.getItem<number>('test').subscribe((_: unknown) => {
 
       expect().nothing();
 
@@ -40,7 +45,7 @@ describe('getItem() overloads compilation', () => {
 
   it('literal basic schema / no cast', (done) => {
 
-    localStorageService.getItem('test', { schema: { type: 'number' } }).subscribe((_) => {
+    localStorageService.getItem('test', { type: 'number' }).subscribe((_: number | null) => {
 
       expect().nothing();
 
@@ -52,7 +57,7 @@ describe('getItem() overloads compilation', () => {
 
   it('literal basic schema / cast', (done) => {
 
-    localStorageService.getItem<number>('test', { schema: { type: 'number' } }).subscribe((_) => {
+    localStorageService.getItem<number>('test', { type: 'number' }).subscribe((_: number | null) => {
 
       expect().nothing();
 
@@ -64,7 +69,7 @@ describe('getItem() overloads compilation', () => {
 
   it('literal schema with options', (done) => {
 
-    localStorageService.getItem('test', { schema: { type: 'number', maximum: 10 } }).subscribe((_) => {
+    localStorageService.getItem('test', { type: 'number', maximum: 10 }).subscribe((_: number | null) => {
 
       expect().nothing();
 
@@ -78,7 +83,7 @@ describe('getItem() overloads compilation', () => {
 
     const schema: JSONSchema = { type: 'number' };
 
-    localStorageService.getItem('test', { schema }).subscribe((_) => {
+    localStorageService.getItem('test', schema).subscribe((_: number | null) => {
 
       expect().nothing();
 
@@ -92,7 +97,7 @@ describe('getItem() overloads compilation', () => {
 
     const schema: JSONSchemaNumber = { type: 'number' };
 
-    localStorageService.getItem('test', { schema }).subscribe((_) => {
+    localStorageService.getItem('test', schema).subscribe((_: number | null) => {
 
       expect().nothing();
 
@@ -104,7 +109,7 @@ describe('getItem() overloads compilation', () => {
 
   it('string', (done) => {
 
-    localStorageService.getItem('test', { schema: { type: 'string' } }).subscribe((_) => {
+    localStorageService.getItem('test', { type: 'string' }).subscribe((_: string | null) => {
 
       expect().nothing();
 
@@ -116,7 +121,7 @@ describe('getItem() overloads compilation', () => {
 
   it('number', (done) => {
 
-    localStorageService.getItem('test', { schema: { type: 'number' } }).subscribe((_) => {
+    localStorageService.getItem('test', { type: 'number' }).subscribe((_: number | null) => {
 
       expect().nothing();
 
@@ -128,7 +133,7 @@ describe('getItem() overloads compilation', () => {
 
   it('integer', (done) => {
 
-    localStorageService.getItem('test', { schema: { type: 'integer' } }).subscribe((_) => {
+    localStorageService.getItem('test', { type: 'integer' }).subscribe((_: number | null) => {
 
       expect().nothing();
 
@@ -140,7 +145,7 @@ describe('getItem() overloads compilation', () => {
 
   it('boolean', (done) => {
 
-    localStorageService.getItem('test', { schema: { type: 'boolean' } }).subscribe((_) => {
+    localStorageService.getItem('test', { type: 'boolean' }).subscribe((_: boolean | null) => {
 
       expect().nothing();
 
@@ -152,10 +157,10 @@ describe('getItem() overloads compilation', () => {
 
   it('array of strings', (done) => {
 
-    localStorageService.getItem('test', { schema: {
+    localStorageService.getItem('test', {
       type: 'array',
       items: { type: 'string' }
-    } }).subscribe((_) => {
+    }).subscribe((_: string[] | null) => {
 
       expect().nothing();
 
@@ -167,10 +172,10 @@ describe('getItem() overloads compilation', () => {
 
   it('array of numbers', (done) => {
 
-    localStorageService.getItem('test', { schema: {
+    localStorageService.getItem('test', {
       type: 'array',
       items: { type: 'number' }
-    } }).subscribe((_) => {
+    }).subscribe((_: number[] | null) => {
 
       expect().nothing();
 
@@ -182,10 +187,10 @@ describe('getItem() overloads compilation', () => {
 
   it('array of integers', (done) => {
 
-    localStorageService.getItem('test', { schema: {
+    localStorageService.getItem('test', {
       type: 'array',
       items: { type: 'integer' }
-    } }).subscribe((_) => {
+    }).subscribe((_: number[] | null) => {
 
       expect().nothing();
 
@@ -197,10 +202,10 @@ describe('getItem() overloads compilation', () => {
 
   it('array of booleans', (done) => {
 
-    localStorageService.getItem('test', { schema: {
+    localStorageService.getItem('test', {
       type: 'array',
       items: { type: 'boolean' }
-    } }).subscribe((_) => {
+    }).subscribe((_: boolean[] | null) => {
 
       expect().nothing();
 
@@ -218,7 +223,312 @@ describe('getItem() overloads compilation', () => {
       maxItems: 5
     };
 
-    localStorageService.getItem('test', { schema }).subscribe((_) => {
+    localStorageService.getItem('test', schema).subscribe((_: number[] | null) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('array of objects', (done) => {
+
+    interface Test {
+      test: string;
+    }
+
+    localStorageService.getItem<Test[]>('test', {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          test: { type: 'string' }
+        }
+      }
+    }).subscribe((_: Test[] | null) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('objects / cast / no schema', (done) => {
+
+    interface Test {
+      test: string;
+    }
+
+    localStorageService.getItem<Test>('test').subscribe((_: unknown) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('objects / no cast / schema', (done) => {
+
+    localStorageService.getItem('test', {
+      type: 'object',
+      properties: {
+        test: { type: 'string' }
+      }
+    }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('objects / cast / schema', (done) => {
+
+    interface Test {
+      test: string;
+    }
+
+    localStorageService.getItem<Test>('test', {
+      type: 'object',
+      properties: {
+        test: { type: 'string' }
+      }
+    }).subscribe((_: Test | null) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+});
+
+describe('getItem() API v7', () => {
+
+  let localStorageService: LocalStorage;
+
+  beforeEach(() => {
+
+    /* Do compilation tests on memory storage to avoid issues when other storages are not available */
+    localStorageService = new LocalStorage(new MemoryDatabase(), new JSONValidator());
+
+  });
+
+  it('no schema / no cast', (done) => {
+
+    localStorageService.getItem('test').subscribe((_: unknown) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('no schema / cast', (done) => {
+
+    localStorageService.getItem<number>('test').subscribe((_: unknown) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('literal basic schema / no cast', (done) => {
+
+    localStorageService.getItem('test', { schema: { type: 'number' } }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('literal basic schema / cast', (done) => {
+
+    localStorageService.getItem<number>('test', { schema: { type: 'number' } }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('literal schema with options', (done) => {
+
+    localStorageService.getItem('test', { schema: { type: 'number', maximum: 10 } }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('prepared schema with general interface', (done) => {
+
+    const schema: JSONSchema = { type: 'number' };
+
+    localStorageService.getItem('test', { schema }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('prepared schema with specific interface', (done) => {
+
+    const schema: JSONSchemaNumber = { type: 'number' };
+
+    localStorageService.getItem('test', { schema }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('string', (done) => {
+
+    localStorageService.getItem('test', { schema: { type: 'string' } }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('number', (done) => {
+
+    localStorageService.getItem('test', { schema: { type: 'number' } }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('integer', (done) => {
+
+    localStorageService.getItem('test', { schema: { type: 'integer' } }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('boolean', (done) => {
+
+    localStorageService.getItem('test', { schema: { type: 'boolean' } }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('array of strings', (done) => {
+
+    localStorageService.getItem('test', { schema: {
+      type: 'array',
+      items: { type: 'string' }
+    } }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('array of numbers', (done) => {
+
+    localStorageService.getItem('test', { schema: {
+      type: 'array',
+      items: { type: 'number' }
+    } }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('array of integers', (done) => {
+
+    localStorageService.getItem('test', { schema: {
+      type: 'array',
+      items: { type: 'integer' }
+    } }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('array of booleans', (done) => {
+
+    localStorageService.getItem('test', { schema: {
+      type: 'array',
+      items: { type: 'boolean' }
+    } }).subscribe((_: any) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('array with extra options', (done) => {
+
+    const schema: JSONSchemaArrayOf<JSONSchemaNumber> = {
+      type: 'array',
+      items: { type: 'number' },
+      maxItems: 5
+    };
+
+    localStorageService.getItem('test', { schema }).subscribe((_: any) => {
 
       expect().nothing();
 
@@ -242,7 +552,7 @@ describe('getItem() overloads compilation', () => {
           test: { type: 'string' }
         }
       }
-    } }).subscribe((_) => {
+    } }).subscribe((_: Test[] |  null) => {
 
       expect().nothing();
 
@@ -258,7 +568,7 @@ describe('getItem() overloads compilation', () => {
       test: string;
     }
 
-    localStorageService.getItem<Test>('test').subscribe((_) => {
+    localStorageService.getItem<Test>('test').subscribe((_: unknown) => {
 
       expect().nothing();
 
@@ -275,7 +585,7 @@ describe('getItem() overloads compilation', () => {
       properties: {
         test: { type: 'string' }
       }
-    } }).subscribe((_) => {
+    } }).subscribe((_: any) => {
 
       expect().nothing();
 
@@ -296,7 +606,7 @@ describe('getItem() overloads compilation', () => {
       properties: {
         test: { type: 'string' }
       }
-    } }).subscribe((_) => {
+    } }).subscribe((_: Test | null) => {
 
       expect().nothing();
 
@@ -315,7 +625,7 @@ describe('getItem() overloads compilation', () => {
         test: { type: 'string' }
       },
       ddd: 'ddd'
-    } }).subscribe((_) => {
+    } }).subscribe((_: any) => {
 
       expect().nothing();
 

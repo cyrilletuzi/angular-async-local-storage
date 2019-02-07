@@ -3,22 +3,27 @@ import { Observable, throwError, of, OperatorFunction } from 'rxjs';
 import { mergeMap, catchError } from 'rxjs/operators';
 
 import { LocalDatabase } from './databases/local-database';
+import { LocalStorageDatabase } from './databases/localstorage-database';
+import { JSONValidator } from './validation/json-validator';
 import {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger,
   JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf
 } from './validation/json-schema';
-import { JSONValidator } from './validation/json-validator';
 import { IDB_BROKEN_ERROR, ValidationError } from './exceptions';
-import { LocalStorageDatabase } from './databases/localstorage-database';
 import { PREFIX } from './tokens';
 
+/**
+ * @deprecated Will be removed in v9
+ */
 export interface LSGetItemOptions {
+
   /**
    * Subset of the JSON Schema standard.
    * Types are enforced to validate everything: each value **must** have a `type`.
    * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
    */
   schema?: JSONSchema | null;
+
 }
 
 @Injectable({
@@ -34,13 +39,6 @@ export class LocalStorage {
     return this.database.size;
 
   }
-
-  /**
-   * Default options for `getItem()`
-   */
-  private readonly getItemOptionsDefault: LSGetItemOptions = {
-    schema: null,
-  };
 
   /**
    * Constructor params are provided by Angular (but can also be passed manually in tests)
@@ -61,21 +59,15 @@ export class LocalStorage {
    * @param key The item's key
    * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
    */
-  getItem<T = string>(key: string, options: LSGetItemOptions &
-    { schema: JSONSchemaString }): Observable<string | null>;
-  getItem<T = number>(key: string, options: LSGetItemOptions &
-    { schema: JSONSchemaInteger | JSONSchemaNumber }): Observable<number | null>;
-  getItem<T = boolean>(key: string, options: LSGetItemOptions &
-    { schema: JSONSchemaBoolean }): Observable<boolean | null>;
-  getItem<T = string[]>(key: string, options: LSGetItemOptions &
-    { schema: JSONSchemaArrayOf<JSONSchemaString> }): Observable<string[] | null>;
-  getItem<T = number[]>(key: string, options: LSGetItemOptions &
-    { schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber> }): Observable<number[] | null>;
-  getItem<T = boolean[]>(key: string, options: LSGetItemOptions &
-    { schema: JSONSchemaArrayOf<JSONSchemaBoolean> }): Observable<boolean[] | null>;
-  getItem<T = any>(key: string, options: LSGetItemOptions & { schema: JSONSchema }): Observable<T | null>;
-  getItem<T = any>(key: string, options?: LSGetItemOptions): Observable<unknown>;
-  getItem<T = any>(key: string, options = this.getItemOptionsDefault) {
+  getItem<T = string>(key: string, schema: JSONSchemaString): Observable<string | null>;
+  getItem<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | null>;
+  getItem<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | null>;
+  getItem<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | null>;
+  getItem<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | null>;
+  getItem<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | null>;
+  getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema }): Observable<T | null>;
+  getItem<T = unknown>(key: string, schema?: null): Observable<unknown>;
+  getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema } | null = null) {
 
     /* Get the data in storage */
     return this.database.getItem<T>(key).pipe(
@@ -88,10 +80,13 @@ export class LocalStorage {
           /* No need to validate if the data is `null` */
           return of(null);
 
-        } else if (options.schema) {
+        } else if (schema) {
+
+          /* Backward compatibility with version <= 7 */
+          const schemaFinal: JSONSchema = ('schema' in schema) ? schema.schema : schema;
 
           /* Validate data against a JSON schema if provied */
-          if (!this.jsonValidator.validate(data, options.schema)) {
+          if (!this.jsonValidator.validate(data, schemaFinal)) {
             return throwError(new ValidationError());
           }
 
