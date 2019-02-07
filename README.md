@@ -127,13 +127,10 @@ If you tried to store `undefined`, you'll get `null` too, as some storages don't
 
 Don't forget it's client-side storage: **always check the data**, as it could have been forged or deleted.
 
-Starting with *version 5*, you can use a [JSON Schema](http://json-schema.org/) to validate the data.
-
-**Starting with *version 7*, validation is now required.**
-A [migration guide](./docs/MIGRATION_TO_V7.md) is available.
+You can use a [JSON Schema](http://json-schema.org/) to validate the data. **Starting with *version 7*, validation is now required.**
 
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'string' } })
+this.localStorage.getItem('test', { type: 'string' })
 .subscribe((user) => {
   // Called if data is valid or null
 }, (error) => {

@@ -4,18 +4,19 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 
 ## 8.0.0-beta.3 (2019-02-07)
 
+**A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.**
+
 ### Features
 
+- The schema used for validation can (and should) be passed directly as the second argument fo `getItem()`
 - The returned type of `getItem()` is now inferred for basic types (`string`, `number`, `boolean`)
-and arrays of basic types (`string[]`, `number[]`, `boolean[]`).
-- Just use the new `JSONSchema` interface, IntelliSense will adjust itself based on the `type` option.
+and arrays of basic types (`string[]`, `number[]`, `boolean[]`)
+- Just use the new `JSONSchema` interface, IntelliSense will adjust itself based on the `type` option
 - `indexedDB` database and object store names default values are exported and can be changed
 (see the [interoperability guide](./docs/INTEROPERABILITY.md))
 - `indexedDB` storage will now works in web workers too
 
 ### Breaking changes
-
-A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.
 
 - `type` now required for array, object, const and enums validation schemas
 - `setItem()` and `setItemSubscribe()` no longer accept `null` or `undefined` when in `--strictNullChecks`
@@ -26,6 +27,7 @@ A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.
 ### Non-breaking changes
 
 - `JSONSchemaNumeric` deprecated
+- `LSGetItemsOptions` deprecated (not necessary anymore)
 
 ### Reduced public API
 

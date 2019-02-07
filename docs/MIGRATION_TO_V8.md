@@ -24,6 +24,7 @@ npm install @ngx-pwa/local-storage@next
 ```
 
 2. Start your project: problems will be seen at compilation.
+Or you could search for `getItem` as most breaking changes are about its options.
 
 ## The bad part: breaking changes
 
@@ -41,12 +42,17 @@ Also, `JSONSchemaNull` is removed.
 
 Before v8, `type` was optional:
 ```typescript
-this.localStorage.getItem('test', { schema: { items: { type: 'string' } } })
+this.localStorage.getItem('test', { schema: {
+  items: { type: 'string' }
+} })
 ```
 
 Since v8:
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'array', items: { type: 'string' } } })
+this.localStorage.getItem('test', {
+  type: 'array',
+  items: { type: 'string' }
+})
 ```
 
 Also, `items` no longer accepts an array of JSON schemas, meaning arrays with multiple types
@@ -58,16 +64,21 @@ are no longer possible (and it's better for consistency, use an object if you mi
 
 Before v8, `type` was optional:
 ```typescript
-this.localStorage.getItem('test', { schema: { properties: {
-  test: { type: 'string' }
-} } })
+this.localStorage.getItem('test', { schema: {
+  properties: {
+    test: { type: 'string' }
+  }
+} })
 ```
 
 Since v8:
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'object', properties: {
-  test: { type: 'string' }
-} } })
+this.localStorage.getItem('test', {
+  type: 'object',
+  properties: {
+    test: { type: 'string' }
+  }
+})
 ```
 
 ### Validation of constants
@@ -82,7 +93,7 @@ this.localStorage.getItem('test', { schema: { const: 'value' } })
 
 Since v8:
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'string', const: 'value' } })
+this.localStorage.getItem('test', { type: 'string', const: 'value' })
 ```
 
 Also, `JSONSchemaConst` interface is removed.
@@ -99,7 +110,7 @@ this.localStorage.getItem('test', { schema: { enum: ['value 1', 'value 2'] } })
 
 Since v8:
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'string', enum: ['value 1', 'value 2'] } })
+this.localStorage.getItem('test', { type: 'string', enum: ['value 1', 'value 2'] })
 ```
 
 It also means enums of different types are no longer possible (and it's better for consistency).
@@ -119,15 +130,28 @@ While not recommended, you can still force it:
 this.localStorage.getItem('test', { schema: someSchema as any })
 ```
 
-
 ## The good part: simplication changes
 
-The following changes are not required. Previous code will still work,
-but **for new code, follow these new guidelines**.
+The following changes are not required but strongly recommended.
+**Previous code will still work**, but *for new code, follow these new guidelines*.
+
+### Easier API for `getItem()`
+
+`getItem()` API has been simplified: the secong argument is now directly the schema for validation.
+
+Before v8:
+```typescript
+this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
+```
+
+Since v8:
+```typescript
+this.localStorage.getItem('test', { type: 'string' })
+```
 
 ### Cast now inferred!
 
-The returned type of `getItem()` is now inferred for basic types (`string`, `number`, `boolean`)
+The previous change allows that the returned type of `getItem()` is now inferred for basic types (`string`, `number`, `boolean`)
 and arrays of basic types (`string[]`, `number[]`, `boolean[]`).
 
 Before v8:
@@ -143,21 +167,21 @@ this.localStorage.getItem<string>('test', { schema: { type: 'string' } }).subscr
 
 Since v8:
 ```typescript
-this.localStorage.getItem('test', { schema: { type: 'string' } }).subscribe((data) => {
+this.localStorage.getItem('test', { type: 'string' }).subscribe((data) => {
   data; // string :D
 });
 ```
 
-Cast is still needed for objects. Follow the [validation guide](./VALIDATION.md).
+Cast is still needed for objects. Follow the new [validation guide](./VALIDATION.md).
 
 ### Use the generic `JSONSchema`
 
-Now the `JSONSchema` interface has been refactored, just use this one,
-and avoid the specific ones (`JSONSchemaString`, `JSONSchemaBoolean` and so on).
+Now the `JSONSchema` interface has been refactored, just use this one.
 IntelliSense will adjust itself based on the `type` option.
+The specific interfaces (`JSONSchemaString`, `JSONSchemaBoolean` and so on) are still there but useless.
 
 `JSONSchemaNumeric` still works but is deprecated in favor of `JSONSchemaNumber` or `JSONSchemaInteger`
-(but again, just use `JSONSchema`)
+(but again, just use `JSONSchema`).
 
 ## More documentation
 

@@ -77,7 +77,9 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
         store.add(value, index).addEventListener('success', () => {
 
-          localStorageService.getItem(index, { schema }).subscribe((result) => {
+          const request = schema ? localStorageService.getItem(index, schema) : localStorageService.getItem(index);
+
+          request.subscribe((result) => {
 
             expect(result).toEqual((value !== undefined) ? value : null);
 
