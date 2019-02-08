@@ -14,13 +14,20 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 
 See the new [validation guide](./docs/VALIDATION.md).
 
+### Full review
+
+This lib started as a little project and is now the first Angular library used for local storage.
+It was time to do a full review and refactoring, which results in:
+
+- Better error management (see [README](./README.md#errors))
+- Better documentation
+- Better overall code (= easier to contribute)
+
 ### Other features
 
 - `indexedDB` database and object store names default values are exported and can be changed
 (see the [interoperability guide](./docs/INTEROPERABILITY.md))
 - `indexedDB` storage will now works in web workers too
-- Better error management (see [README](./README.md#errors))
-- Better documentation
 
 ### Breaking changes
 
