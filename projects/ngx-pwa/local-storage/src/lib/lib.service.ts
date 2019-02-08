@@ -49,7 +49,7 @@ export class LocalStorage {
   constructor(
     private database: LocalDatabase,
     private jsonValidator: JSONValidator,
-    @Optional() @Inject(PREFIX) protected prefix: string | null = null,
+    @Inject(PREFIX) private prefix: string | null = null,
   ) {}
 
   /**

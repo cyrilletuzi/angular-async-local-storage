@@ -738,7 +738,7 @@ describe('IndexedDB', () => {
 
           request.addEventListener('success', () => {
 
-            expect(request.result).toEqual({ value });
+            expect(request.result).toEqual(value);
 
             done();
 
@@ -766,21 +766,32 @@ describe('IndexedDB', () => {
 
 });
 
+describe('IndexedDB with compatibilityPriorToV8', () => {
+
+  const localStorageService = new LocalStorage(new IndexedDBDatabase(null, undefined, undefined, true), new JSONValidator());
+
+  beforeEach((done) => {
+
+    /* Clear `localStorage` for some browsers private mode which fallbacks to `localStorage` */
+    localStorage.clear();
+
+    clearIndexedDB(done);
+
+  });
+
+  tests(localStorageService);
+
+});
+
 describe('localStorage and a prefix', () => {
 
   const prefix = 'myapp';
 
   it('check prefix', () => {
 
-    class LocalStorageDatabasePrefix extends LocalStorageDatabase {
-      getPrefix() {
-        return this.prefix;
-      }
-    }
+    const localStorageServicePrefix = new LocalStorageDatabase(prefix);
 
-    const localStorageServicePrefix = new LocalStorageDatabasePrefix(prefix);
-
-    expect(localStorageServicePrefix.getPrefix()).toBe(`${prefix}_`);
+    expect(localStorageServicePrefix['prefix']).toBe(`${prefix}_`);
 
   });
 
@@ -800,15 +811,9 @@ describe('IndexedDB and a prefix', () => {
 
   it('check prefix', () => {
 
-    class IndexedDBDatabasePrefix extends IndexedDBDatabase {
-      getDbBame() {
-        return this.dbName;
-      }
-    }
+    const indexedDBService = new IndexedDBDatabase(prefix);
 
-    const indexedDBService = new IndexedDBDatabasePrefix(prefix);
-
-    expect(indexedDBService.getDbBame()).toBe(`${prefix}_${DEFAULT_IDB_DB_NAME}`);
+    expect(indexedDBService['dbName']).toBe(`${prefix}_${DEFAULT_IDB_DB_NAME}`);
 
   });
 
@@ -816,17 +821,9 @@ describe('IndexedDB and a prefix', () => {
 
     const dbName = 'customDb';
 
-    class IndexedDBDatabasePrefix extends IndexedDBDatabase {
+    const indexedDBService = new IndexedDBDatabase(prefix, dbName);
 
-      getDbBame() {
-        return this.dbName;
-      }
-
-    }
-
-    const indexedDBService = new IndexedDBDatabasePrefix(prefix, dbName);
-
-    expect(indexedDBService.getDbBame()).toBe(`${prefix}_${dbName}`);
+    expect(indexedDBService['dbName']).toBe(`${prefix}_${dbName}`);
 
   });
 

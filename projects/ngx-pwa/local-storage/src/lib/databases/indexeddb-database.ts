@@ -1,9 +1,9 @@
-import { Injectable, Optional, Inject } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
 import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
-import { PREFIX, IDB_DB_NAME, DEFAULT_IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME } from '../tokens';
+import { PREFIX, IDB_DB_NAME, DEFAULT_IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, COMPATIBILITY_PRIOR_TO_V8 } from '../tokens';
 import { IDBBrokenError } from '../exceptions';
 
 @Injectable({
@@ -14,17 +14,22 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * `indexedDB` database name
    */
-  protected dbName: string;
+  private readonly dbName: string;
 
   /**
    * `indexedDB` object store name
    */
-  protected storeName: string;
+  private readonly storeName: string;
 
   /**
    * `indexedDB` data path name for local storage (where items' value will be stored)
    */
   private readonly dataPath = 'value';
+
+  /**
+   * Flag to keep storing behavior prior to version 8.
+   */
+  private readonly compatibilityPriorToV8: boolean;
 
   /**
    * `indexedDB` database connection, wrapped in a RxJS `ReplaySubject` to be able to access the connection
@@ -59,11 +64,13 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
    * @param dbName `indexedDB` database name
    * @param storeName `indexedDB` store name
+   * @param compatibilityPriorToV8 Flag to keep storing behavior prior to version 8
    */
   constructor(
-    @Optional() @Inject(PREFIX) prefix: string | null = null,
-    @Optional() @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,
-    @Optional() @Inject(IDB_STORE_NAME) storeName = DEFAULT_IDB_STORE_NAME,
+    @Inject(PREFIX) prefix: string | null = null,
+    @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,
+    @Inject(IDB_STORE_NAME) storeName = DEFAULT_IDB_STORE_NAME,
+    @Inject(COMPATIBILITY_PRIOR_TO_V8) compatibilityPriorToV8 = false,
   ) {
 
     /* Initialize `indexedDB` database name, with prefix if provided by the user */
@@ -71,6 +78,8 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Initialize `indexedDB` store name */
     this.storeName = storeName;
+
+    this.compatibilityPriorToV8 = compatibilityPriorToV8;
 
     /* Creating the RxJS ReplaySubject */
     this.database = new ReplaySubject<IDBDatabase>();
@@ -97,23 +106,19 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Manage success and error events, and get the result */
         return this.requestEventsAndMapTo(request, () => {
 
-          /* Currently, the lib is wrapping the value in a `{ value: ... }` object, so test this case */
-          // TODO: add a check to see if the object has only one key
-          // TODO: stop wrapping
-          if ((request.result !== undefined)
+          if (!this.compatibilityPriorToV8 && (request.result !== undefined) && (request.result !== null)) {
+
+            /* Cast to the wanted type */
+            return request.result as T;
+
+          } else if (this.compatibilityPriorToV8
+          && (request.result !== undefined)
           && (request.result !== null)
-          && (typeof request.result === 'object')
-          && (this.dataPath in request.result)
           && (request.result[this.dataPath] !== undefined)
           && (request.result[this.dataPath] !== null)) {
 
-            /* If so, unwrap the value and cast it to the wanted type */
+            /* Prior to v8, the value was wrapped in an `{ value: ...}` object */
             return (request.result[this.dataPath] as T);
-
-          } else if ((request.result !== undefined) && (request.result !== null)) {
-
-            /* Otherwise, return the value directly, casted to the wanted type */
-            return request.result as T;
 
           }
 
@@ -165,11 +170,13 @@ export class IndexedDBDatabase implements LocalDatabase {
              * otherwise it could lead to concurrency failures
              * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/47 */
 
+             /* Prior to v8, data was wrapped in a `{ value: ... }` object */
+            const dataToStore = !this.compatibilityPriorToV8 ? data : { [this.dataPath]: data };
+
             /* Add if the item is not existing yet, or update otherwise */
-            // TODO: stop wrapping
             const request2 = (existingEntry === undefined) ?
-              store.add({ [this.dataPath]: data }, key) :
-              store.put({ [this.dataPath]: data }, key);
+              store.add(dataToStore, key) :
+              store.put(dataToStore, key);
 
             /* Manage success and error events, and map to `true` */
             return this.requestEventsAndMapTo(request2, () => true);
