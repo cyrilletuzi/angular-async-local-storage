@@ -6,15 +6,20 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 
 **A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.**
 
-### Features
+### Feature: validation is much easier!
 
-- The schema used for validation can (and should) be passed directly as the second argument fo `getItem()`
-- The returned type of `getItem()` is now inferred for basic types (`string`, `number`, `boolean`)
-and arrays of basic types (`string[]`, `number[]`, `boolean[]`)
+- The schema used for validation can (and should) be passed directly as the second argument of `getItem()`
+- The returned type of `getItem()` is now inferred for basic types (`string`, `number`, `boolean`) and arrays of basic types (`string[]`, `number[]`, `boolean[]`)
 - Just use the new `JSONSchema` interface, IntelliSense will adjust itself based on the `type` option
+
+See the new [validation guide](./docs/VALIDATION.md).
+
+### Other features
+
 - `indexedDB` database and object store names default values are exported and can be changed
 (see the [interoperability guide](./docs/INTEROPERABILITY.md))
 - `indexedDB` storage will now works in web workers too
+- Better error management (see [README](./README.md#errors))
 
 ### Breaking changes
 
