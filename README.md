@@ -128,6 +128,12 @@ this.localStorage.getItem('notexisting').subscribe((data) => {
 
 If you tried to store `undefined`, you'll get `null` too, as some storages don't allow `undefined`.
 
+Note you'll only get *one* value: the `Observable` is here for asynchronicity but is not meant to
+emit again when the stored data is changed. And it's normal: if app data change, it's the role of your app
+to keep track of it, not of this lib. See [#16](https://github.com/cyrilletuzi/angular-async-local-storage/issues/16) 
+for more context and [#4](https://github.com/cyrilletuzi/angular-async-local-storage/issues/4)
+for an example. 
+
 ### Checking data
 
 Don't forget it's client-side storage: **always check the data**, as it could have been forged or deleted.
@@ -163,6 +169,30 @@ this.localStorage.clearSubscribe();
 - you don't need to manage the error callback (with these methods, errors will silently fail),
 - you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
 
+### Errors
+
+As usual, you should catch any potential error:
+
+```typescript
+this.localStorage.setItem('color', 'red').subscribe(() => {
+  // Done
+}, (error) => {
+  // Error
+});
+```
+
+Could happen to anyone:
+- `.setItem()`: storage is full (`DOMException` with name `'QuotaExceededError`)
+- `.setItem()` when in `localStorage` fallback: error in JSON serialization because of circular references (`TypeError`)
+
+Should only happen if data was corrupted or modified from outside of the lib:
+- `.getItem()`: data invalid against your JSON schema (`ValidationError` from this lib)
+- `.getItem()` when in `localStorage` fallback: error in JSON unserialization (`SyntaxError`)
+- any method when in `indexedDB`: database store has been deleted (`DOMException` with name `'NotFoundError'`)
+
+Other errors are supposed to be catched or avoided by the lib,
+so if you were to run into an unlisted error, please file an issue.
+
 ### `Map`-like operations
 
 Starting *with version >= 7.4*, in addition to the classic `localStorage`-like API,
@@ -177,24 +207,6 @@ See the [documentation](./docs/MAP_OPERATIONS.md) for more info and some recipes
 
 If you have multiple apps on the same *sub*domain *and* you don't want to share data between them,
 see the [prefix guide](./docs/PREFIX.md).
-
-### Other notes
-
-- Errors are unlikely to happen, but in an app, it's better to catch any potential error:
-
-```typescript
-this.localStorage.setItem('color', 'red').subscribe(() => {
-  // Done
-}, () => {
-  // Error
-});
-```
-
-- When reading data, you'll only get one value: the observable is here for asynchronicity but is not meant to
-emit again when the stored data is changed. And it's normal: if app data change, it's the role of your app
-to keep track of it, not of this lib. See [#16](https://github.com/cyrilletuzi/angular-async-local-storage/issues/16) 
-for more context and [#4](https://github.com/cyrilletuzi/angular-async-local-storage/issues/4)
-for an example. 
 
 ## Angular support
 

@@ -386,6 +386,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         try {
           store = database.transaction([this.storeName], mode).objectStore(this.storeName);
         } catch (error) {
+          // TODO: Try to reopen and recreate the store?
           return throwError(error as DOMException);
         }
 
