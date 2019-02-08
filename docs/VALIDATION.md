@@ -14,8 +14,6 @@ It can cause obvious **security issues**, but also **errors** and thus crashes (
 
 Then, **any data coming from client-side storage should be checked before used**.
 
-It was allowed since v5 of the lib, and is **now required since v7**.
-
 ## Why JSON schemas?
 
 [JSON Schema](https://json-schema.org/) is a standard to describe the structure of a JSON data.
