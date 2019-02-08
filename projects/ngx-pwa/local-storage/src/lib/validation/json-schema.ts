@@ -4,7 +4,6 @@
 
 /**
  * JSON Schema to describe a boolean value.
- * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaBoolean {
 
@@ -22,7 +21,6 @@ export interface JSONSchemaBoolean {
 
 /**
  * JSON Schema to describe a number value.
- * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaNumber {
 
@@ -71,7 +69,6 @@ export interface JSONSchemaNumber {
 
 /**
  * JSON Schema to describe an integer value.
- * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaInteger {
 
@@ -120,7 +117,6 @@ export interface JSONSchemaInteger {
 
 /**
  * JSON Schema to describe a string value.
- * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaString {
 
@@ -161,7 +157,6 @@ export interface JSONSchemaString {
 
 /**
  * JSON schema to describe an array of values.
- * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaArray {
 
@@ -200,7 +195,6 @@ export interface JSONSchemaArray {
  * - array of numbers: `JSONSchemaArrayOf<JSONSchemaNumber>`,
  * - array of integers: `JSONSchemaArrayOf<JSONSchemaInteger>`,
  * - array of strings: `JSONSchemaArrayOf<JSONSchemaString>`.
- * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaArrayOf<T extends JSONSchemaBoolean | JSONSchemaNumber | JSONSchemaInteger | JSONSchemaString> {
 
@@ -235,7 +229,6 @@ export interface JSONSchemaArrayOf<T extends JSONSchemaBoolean | JSONSchemaNumbe
 
 /**
  * JSON schema to describe an object.
- * @ignore Internal type, **do not use**, use `JSONSchema` instead
  */
 export interface JSONSchemaObject {
 
@@ -260,7 +253,8 @@ export interface JSONSchemaObject {
 }
 
 /**
- * @deprecated Available for backward-compatibility only, **do not use**, use `JSONSchema` instead.
+ * @deprecated Deprecated in favor of `JSONSchemaNumber` or `JSONSchemaInteger`
+ * Available for backward-compatibility only, **do not use**.
  * May be removed in v9.
  */
 export type JSONSchemaNumeric = JSONSchemaNumber | JSONSchemaInteger;
