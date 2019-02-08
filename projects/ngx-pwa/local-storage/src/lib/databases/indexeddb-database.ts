@@ -135,7 +135,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns An RxJS `Observable` to wait the end of the operation
    */
-  setItem(key: string, data: string | number | boolean | object): Observable<boolean> {
+  setItem(key: string, data: any): Observable<boolean> {
 
     /* Storing `null` or `undefined` is known to cause issues in some browsers.
      * So it's useless, not storing anything in this case */

@@ -71,7 +71,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-  setItem(key: string, data: string | number | boolean | object): Observable<boolean> {
+  setItem(key: string, data: any): Observable<boolean> {
 
     /* Storing `undefined` or `null` in `localStorage` can cause issues in some browsers and has no sense */
     if ((data !== undefined) && (data !== null)) {

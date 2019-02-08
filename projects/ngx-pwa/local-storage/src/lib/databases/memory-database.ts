@@ -44,9 +44,14 @@ export class MemoryDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-   setItem(key: string, data: string | number | boolean | object): Observable<boolean> {
+   setItem(key: string, data: any): Observable<boolean> {
 
-    this.memoryStorage.set(key, data);
+    /* Storing `undefined` or `null` in `localStorage` is useless */
+    if ((data !== undefined) && (data !== null)) {
+
+      this.memoryStorage.set(key, data);
+
+    }
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(true);

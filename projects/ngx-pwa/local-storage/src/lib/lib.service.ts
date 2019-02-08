@@ -109,7 +109,7 @@ export class LocalStorage {
    * @param data The item's value
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-  setItem(key: string, data: string | number | boolean | object): Observable<boolean> {
+  setItem(key: string, data: any): Observable<boolean> {
 
     return this.database.setItem(key, data)
       /* Catch if `indexedDb` is broken */
