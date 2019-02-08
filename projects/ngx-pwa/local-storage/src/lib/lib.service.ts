@@ -54,7 +54,10 @@ export class LocalStorage {
 
   /**
    * Get an item value in storage.
-   * The signature has many overloads due to validation, please refer to the documentation.
+   * The signature has many overloads due to validation, **please refer to the documentation.**
+   * Note you must pass the schema directly as the second argument.
+   * Passing the schema in an object `{ schema }` is deprecated and only here for backward compatibility:
+   * it may be removed in v9.
    * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
    * @param key The item's key
    * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
