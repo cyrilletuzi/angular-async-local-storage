@@ -33,6 +33,8 @@ Or you could search for `getItem` as most breaking changes are about its options
 
 **The following changes may require action from you**.
 
+The main change is to add `type` to all your JSON schemas.
+
 ### Validation of arrays
 
 **`type` option is now required.**
