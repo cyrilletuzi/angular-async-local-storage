@@ -15,8 +15,9 @@ The good part: the changes also allowed a lot of simplications for you. :)
 If you were using previous versions and skipped v6, do [the migration guide to version 6](./MIGRATION_TO_V6.md) first.
 
 [Migration to version 7](./MIGRATION_TO_V7.md) is not required,
-as the only breaking change was to require a JSON schema for validation,
-which has been refactored in v8 to be a lot easier, as explained below.
+as it is replaced by the new and easier validation syntax explained below,
+but be aware that since v7, **validation is now required in `getItem()`**.
+A full [validation guide](./VALIDATION.md) is available.
 
 ## How to migrate?
 
@@ -31,12 +32,6 @@ Or you could search for `getItem` as most breaking changes are about its options
 ## The bad part: breaking changes
 
 **The following changes may require action from you**.
-
-### `null` and `undefined`
-
-Users with TypeScript `--strictNullChecks` option can't no longer use `null` or `undefined` as a value in `setItem()` and `setItemSubscribe()`. Who would do that anyway?
-
-Also, `JSONSchemaNull` is removed.
 
 ### Validation of arrays
 
@@ -135,7 +130,7 @@ this.localStorage.getItem('test', { schema: someSchema as any })
 ## The good part: simplication changes
 
 The following changes are not required but strongly recommended.
-**Previous code will still work**, but *for new code, follow these new guidelines*.
+**Previous code will still work** for now, but *for new code, follow these new guidelines*.
 
 ### Easier API for `getItem()`
 
@@ -150,6 +145,8 @@ Since v8:
 ```typescript
 this.localStorage.getItem('test', { type: 'string' })
 ```
+
+The previous API may be removed in v9.
 
 ### Cast now inferred!
 
@@ -180,10 +177,12 @@ Cast is still needed for objects. Follow the new [validation guide](./VALIDATION
 
 Now the `JSONSchema` interface has been refactored, just use this one.
 IntelliSense will adjust itself based on the `type` option.
-The specific interfaces (`JSONSchemaString`, `JSONSchemaBoolean` and so on) are still there but useless.
+The specific interfaces (`JSONSchemaString`, `JSONSchemaBoolean` and so on) are still there but are useless.
 
 `JSONSchemaNumeric` still works but is deprecated in favor of `JSONSchemaNumber` or `JSONSchemaInteger`
-(but again, just use `JSONSchema`).
+(but again, just use `JSONSchema`). Will be removed in v9.
+
+Also, `JSONSchemaNull` is removed.
 
 ## More documentation
 

@@ -18,17 +18,16 @@ and arrays of basic types (`string[]`, `number[]`, `boolean[]`)
 
 ### Breaking changes
 
-- `type` now required for array, object, const and enums validation schemas
-- `setItem()` and `setItemSubscribe()` no longer accept `null` or `undefined` when in `--strictNullChecks`
+- `type` now required for array, object, const and enum validation schemas
 - `JSONSchemaNull` removed
 - `items` in arrays schemas no longer accepts an array of JSON schemas
 - extra properties no longer accepted in `JSONSchema`
 - `getUnsafeItem()` is removed (was already deprecated in v7)
 
-### Non-breaking changes
+### Future breaking changes
 
-- `JSONSchemaNumeric` deprecated
-- `LSGetItemsOptions` deprecated (not necessary anymore)
+- `JSONSchemaNumeric` deprecated (will be removed in v9)
+- `LSGetItemsOptions` deprecated (not necessary anymore, will be removed in v9)
 
 ### Reduced public API
 
