@@ -184,7 +184,7 @@ The specific interfaces (`JSONSchemaString`, `JSONSchemaBoolean` and so on) are 
 `JSONSchemaNumeric` still works but is deprecated in favor of `JSONSchemaNumber` or `JSONSchemaInteger`
 (but again, just use `JSONSchema`). Will be removed in v9.
 
-Also, `JSONSchemaNull` is removed.
+Also, `JSONSchemaNull` is removed (it was useless, as if the data is `null`, validation doesn't occur).
 
 ## More documentation
 
