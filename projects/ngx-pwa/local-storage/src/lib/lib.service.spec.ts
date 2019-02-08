@@ -146,7 +146,7 @@ function tests(localStorageService: LocalStorage) {
 
       const value = null;
 
-      localStorageService.setItem(key, value as any).pipe(
+      localStorageService.setItem(key, value).pipe(
         mergeMap(() => localStorageService.getItem(key))
       ).subscribe((result) => {
 
@@ -162,7 +162,7 @@ function tests(localStorageService: LocalStorage) {
 
       const value = undefined;
 
-      localStorageService.setItem(key, value as any).pipe(
+      localStorageService.setItem(key, value).pipe(
         mergeMap(() => localStorageService.getItem(key))
       ).subscribe((result) => {
 
