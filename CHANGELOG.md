@@ -20,6 +20,7 @@ See the new [validation guide](./docs/VALIDATION.md).
 (see the [interoperability guide](./docs/INTEROPERABILITY.md))
 - `indexedDB` storage will now works in web workers too
 - Better error management (see [README](./README.md#errors))
+- Better documentation
 
 ### Breaking changes
 

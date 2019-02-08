@@ -126,12 +126,12 @@ But before v8, extra properties in the schema were accepted even if not supporte
 
 While not recommended, you can still force it:
 ```typescript
-this.localStorage.getItem('test', { schema: someSchema as any })
+this.localStorage.getItem('test', schema as any)
 ```
 
 ## The good part: simplication changes
 
-The following changes are not required but strongly recommended.
+The following changes are not required but recommended.
 **Previous code will still work** for now, but *for new code, follow these new guidelines*.
 
 ### Easier API for `getItem()`
@@ -148,7 +148,7 @@ Since v8:
 this.localStorage.getItem('test', { type: 'string' })
 ```
 
-The previous API may be removed in v9.
+The previous API may be removed in v9. So this change is strongly recommended, but you have time.
 
 ### Cast now inferred!
 

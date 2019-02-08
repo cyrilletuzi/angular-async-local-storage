@@ -14,7 +14,7 @@ It can cause obvious **security issues**, but also **errors** and thus crashes (
 
 Then, **any data coming from client-side storage should be checked before used**.
 
-It was allowed since v5 of the lib, and is **now required since v7** (see the [migration guide](./MIGRATION_TO_V7.md)).
+It was allowed since v5 of the lib, and is **now required since v7**.
 
 ## Why JSON schemas?
 
@@ -114,15 +114,15 @@ What's expected for each property is another JSON schema.
 
 ### Why a schema *and* a cast?
 
-You may ask why we have to define a TypeScript cast with `getItem<User>()` *and* a JSON schema with `{ schema }`.
+You may ask why we have to define a TypeScript cast with `getItem<User>()` *and* a JSON schema with `schema`.
 
 It's because they happen at different steps:
 - a cast (`getItem<User>()`) just says "TypeScript, trust me, I'm telling you it will be a `User`", but it only happens at *compilation* time (it won't be checked at runtime)
-- the JSON schema (`{ schema }`) will be used at *runtime* when getting data in local storage for real.
+- the JSON schema (`schema`) will be used at *runtime* when getting data in local storage for real.
 
 So they each serve a different purpose:
-- casting allow you to retrieve the data if the good type instead of `any`
-- the schema allow the lib to validate the data at 
+- casting allows you to retrieve the data with the good type instead of `any`
+- the schema allows the lib to validate the data at runtime
 
 For previous basic types, as they are static, we can infer automatically.
 But as objects properties are dynamic, we can't do the same for objects.

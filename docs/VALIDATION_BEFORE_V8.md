@@ -14,7 +14,7 @@ It can cause obvious **security issues**, but also **errors** and thus crashes (
 
 Then, **any data coming from client-side storage should be checked before used**.
 
-It was allowed since v5 of the lib, and is **now required since v7** (see the [migration guide](./MIGRATION_TO_V7.md)).
+It was allowed since v5 of the lib, and is **now required since v7**.
 
 ## Why JSON schemas?
 
