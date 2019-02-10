@@ -82,7 +82,7 @@ export class IndexedDBDatabase implements LocalDatabase {
     this.compatibilityPriorToV8 = compatibilityPriorToV8;
 
     /* Creating the RxJS ReplaySubject */
-    this.database = new ReplaySubject<IDBDatabase>();
+    this.database = new ReplaySubject<IDBDatabase>(1);
 
     /* Connect to `indexedDB`, with prefix if provided by the user */
     this.connect();
