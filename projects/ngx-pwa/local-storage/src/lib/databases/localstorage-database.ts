@@ -28,9 +28,9 @@ export class LocalStorageDatabase implements LocalDatabase {
    * Constructor params are provided by Angular (but can also be passed manually in tests)
    * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
    */
-  constructor(@Inject(PREFIX) userPrefix = '') {
+  constructor(@Inject(PREFIX) prefix = '') {
 
-    this.prefix = userPrefix ? `${userPrefix}_` : '';
+    this.prefix = prefix ? `${prefix}_` : '';
 
   }
 
