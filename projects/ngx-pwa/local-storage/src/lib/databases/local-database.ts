@@ -1,4 +1,4 @@
-import { Injectable, PLATFORM_ID, Optional } from '@angular/core';
+import { Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser, isPlatformWorkerApp, isPlatformWorkerUi } from '@angular/common';
 import { Observable } from 'rxjs';
 
@@ -13,7 +13,7 @@ import { PREFIX } from '../tokens';
  * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
  * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/BROWSERS_SUPPORT.md
  */
-export function localDatabaseFactory(platformId: Object, prefix: string | null): LocalDatabase {
+export function localDatabaseFactory(platformId: Object, prefix: string): LocalDatabase {
 
   // Do not explicit `window` here, as the global object is not the same in web workers
   if ((isPlatformBrowser(platformId) || isPlatformWorkerApp(platformId) || isPlatformWorkerUi(platformId))
@@ -63,7 +63,7 @@ export function localDatabaseFactory(platformId: Object, prefix: string | null):
   useFactory: localDatabaseFactory,
   deps: [
     PLATFORM_ID,
-    [new Optional(), PREFIX]
+    PREFIX
   ]
 })
 export abstract class LocalDatabase {

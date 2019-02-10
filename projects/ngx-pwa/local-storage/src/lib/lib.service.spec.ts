@@ -768,7 +768,7 @@ describe('IndexedDB', () => {
 
 describe('IndexedDB with compatibilityPriorToV8', () => {
 
-  const localStorageService = new LocalStorage(new IndexedDBDatabase(null, undefined, undefined, true), new JSONValidator());
+  const localStorageService = new LocalStorage(new IndexedDBDatabase(undefined, undefined, undefined, true), new JSONValidator());
 
   beforeEach((done) => {
 
@@ -847,7 +847,7 @@ describe('IndexedDB with custom database and store names', () => {
   const dbName = 'dBcustom';
   const storeName = 'storeCustom';
 
-  const localStorageService = new LocalStorage(new IndexedDBDatabase(null, dbName, storeName), new JSONValidator());
+  const localStorageService = new LocalStorage(new IndexedDBDatabase(undefined, dbName, storeName), new JSONValidator());
 
   beforeEach((done) => {
 

@@ -1,4 +1,4 @@
-import { Injectable, Optional, Inject } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable, throwError, of, OperatorFunction } from 'rxjs';
 import { mergeMap, catchError } from 'rxjs/operators';
 
@@ -49,7 +49,7 @@ export class LocalStorage {
   constructor(
     private database: LocalDatabase,
     private jsonValidator: JSONValidator,
-    @Inject(PREFIX) private prefix: string | null = null,
+    @Inject(PREFIX) private prefix = '',
   ) {}
 
   /**

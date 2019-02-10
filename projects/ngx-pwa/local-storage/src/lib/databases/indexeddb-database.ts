@@ -67,7 +67,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param compatibilityPriorToV8 Flag to keep storing behavior prior to version 8
    */
   constructor(
-    @Inject(PREFIX) prefix: string | null = null,
+    @Inject(PREFIX) prefix = '',
     @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,
     @Inject(IDB_STORE_NAME) storeName = DEFAULT_IDB_STORE_NAME,
     @Inject(COMPATIBILITY_PRIOR_TO_V8) compatibilityPriorToV8 = false,
