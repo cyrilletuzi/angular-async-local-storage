@@ -12,7 +12,7 @@ export class LocalStorageDatabase implements LocalDatabase {
   /**
    * Optional user prefix to avoid collision for multiple apps on the same subdomain
    */
-  private prefix = '';
+  private readonly prefix: string;
 
   /**
    * Number of items in `localStorage`
@@ -30,9 +30,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   constructor(@Inject(PREFIX) userPrefix = '') {
 
-    if (userPrefix) {
-      this.prefix = `${userPrefix}_`;
-    }
+    this.prefix = userPrefix ? `${userPrefix}_` : '';
 
   }
 
