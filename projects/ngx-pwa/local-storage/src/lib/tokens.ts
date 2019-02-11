@@ -36,6 +36,7 @@ export const IDB_STORE_NAME = new InjectionToken<string>('localStorageIDBStoreNa
   factory: () => DEFAULT_IDB_STORE_NAME
 });
 
+// TODO: revert to true by default if ng update is not possible
 /**
  * Token to keep storing behavior prior to version 8.
  */
