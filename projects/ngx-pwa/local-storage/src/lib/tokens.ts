@@ -1,11 +1,17 @@
 import { InjectionToken, Provider } from '@angular/core';
 
 /**
+ * Default prefix.
+ * *Use only to avoid conflict in multiple apps on the same subdomain.*
+ */
+export const DEFAULT_PREFIX = '';
+
+/**
  * Token to provide a prefix to avoid collision when multiple apps on the same subdomain.
  */
 export const PREFIX = new InjectionToken<string>('localStoragePrefix', {
   providedIn: 'root',
-  factory: () => ''
+  factory: () => DEFAULT_PREFIX
 });
 
 /**
@@ -38,11 +44,16 @@ export const IDB_STORE_NAME = new InjectionToken<string>('localStorageIDBStoreNa
 
 // TODO: revert to true by default if ng update is not possible
 /**
+ * Default compatibility mode.
+ */
+export const DEFAULT_COMPATIBILITY_PRIOR_TO_V8 = false;
+
+/**
  * Token to keep storing behavior prior to version 8.
  */
 export const COMPATIBILITY_PRIOR_TO_V8 = new InjectionToken<boolean>('localStorageCompatibilityPriorToV8', {
   providedIn: 'root',
-  factory: () => false
+  factory: () => DEFAULT_COMPATIBILITY_PRIOR_TO_V8
 });
 
 export interface LocalStorageProvidersConfig {

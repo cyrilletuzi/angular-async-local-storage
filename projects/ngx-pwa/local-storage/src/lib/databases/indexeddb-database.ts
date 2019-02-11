@@ -3,7 +3,10 @@ import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs
 import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
-import { PREFIX, IDB_DB_NAME, DEFAULT_IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, COMPATIBILITY_PRIOR_TO_V8 } from '../tokens';
+import {
+  PREFIX, IDB_DB_NAME, DEFAULT_IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME,
+  COMPATIBILITY_PRIOR_TO_V8, DEFAULT_PREFIX, DEFAULT_COMPATIBILITY_PRIOR_TO_V8
+} from '../tokens';
 import { IDBBrokenError } from '../exceptions';
 
 @Injectable({
@@ -68,10 +71,10 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param compatibilityPriorToV8 Flag to keep storing behavior prior to version 8
    */
   constructor(
-    @Inject(PREFIX) prefix = '',
+    @Inject(PREFIX) prefix = DEFAULT_PREFIX,
     @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,
     @Inject(IDB_STORE_NAME) storeName = DEFAULT_IDB_STORE_NAME,
-    @Inject(COMPATIBILITY_PRIOR_TO_V8) compatibilityPriorToV8 = false,
+    @Inject(COMPATIBILITY_PRIOR_TO_V8) compatibilityPriorToV8 = DEFAULT_COMPATIBILITY_PRIOR_TO_V8,
   ) {
 
     /* Initialize `indexedDB` database name, with prefix if provided by the user */
