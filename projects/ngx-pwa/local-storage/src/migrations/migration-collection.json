@@ -1,0 +1,9 @@
+{
+  "schematics": {
+    "migration-01": {
+      "description": "Upgrade to version 8",
+      "version": "7",
+      "factory": "./update-8"
+    }
+  }
+}
