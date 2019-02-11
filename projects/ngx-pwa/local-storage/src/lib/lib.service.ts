@@ -70,7 +70,7 @@ export class LocalStorage {
   getItem<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | null>;
   getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema }): Observable<T | null>;
   getItem<T = unknown>(key: string, schema?: null): Observable<unknown>;
-  getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema } | null = null) {
+  getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema } | null | undefined = null) {
 
     /* Get the data in storage */
     return this.database.getItem<T>(key).pipe(
