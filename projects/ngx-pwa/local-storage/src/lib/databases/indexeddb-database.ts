@@ -62,7 +62,6 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   }
 
-  // TODO: revert compatibilityPriorToV8 to true by default if ng update is not possible
   /**
    * Constructor params are provided by Angular (but can also be passed manually in tests)
    * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
