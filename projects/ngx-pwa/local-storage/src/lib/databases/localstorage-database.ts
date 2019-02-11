@@ -1,8 +1,8 @@
-import { Injectable, Optional, Inject } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 
 import { LocalDatabase } from './local-database';
-import { PREFIX } from '../tokens';
+import { PREFIX, DEFAULT_PREFIX } from '../tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class LocalStorageDatabase implements LocalDatabase {
   /**
    * Optional user prefix to avoid collision for multiple apps on the same subdomain
    */
-  protected prefix = '';
+  private readonly prefix: string;
 
   /**
    * Number of items in `localStorage`
@@ -28,11 +28,10 @@ export class LocalStorageDatabase implements LocalDatabase {
    * Constructor params are provided by Angular (but can also be passed manually in tests)
    * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
    */
-  constructor(@Optional() @Inject(PREFIX) userPrefix: string | null = null) {
+  constructor(@Inject(PREFIX) prefix = DEFAULT_PREFIX) {
 
-    if (userPrefix) {
-      this.prefix = `${userPrefix}_`;
-    }
+    /* Add `_` after prefix only if not empty */
+    this.prefix = prefix ? `${prefix}_` : prefix;
 
   }
 
