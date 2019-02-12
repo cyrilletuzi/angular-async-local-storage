@@ -1,24 +1,33 @@
 # Interoperability
 
 In the vast majority of cases, you'll manage *independent* apps (ie. each having its own data),
-and each using only one local storage API (e.g. a native API *or* this lib, but not both).
+and each using only one local storage API (e.g. a native API *or* this lib, but not both at the same time in one app).
 
 In some special cases, it could happen:
 - you share the same data between multiple apps on the same subdomain,
-but not all are built with the same framework, so each one will use a different local storage API
+but not all apps are built with the same framework, so each one will use a different local storage API
 (e.g. an Angular app using this lib and a non-Angular app using `localForage` lib)
-- even if it's not recommended, you could also mix several APIs inside the same app
-(e.g. mixing native `localStorage` *and* this lib).
+- while **not recommended**, you could also mix several APIs inside the same app
+(e.g. mixing native `indexedDB` *and* this lib).
 
-Interoperability can be achieved since v7.3.0 of this lib, given some limitations and adaptations.
+If you're in one of these cases, *please read this guide carefully*,
+as there are important things to do and to be aware to achieve interoperability.
 
-## `indexedDb` database and object store names
+## Requirements
+
+Interoperability can be achieved:
+- **since v8 of this lib**,
+- **only for apps that haven't been deployed in production yet**,
+as v8 changed the storage system to achieve interoperability:
+  - it won't work on data stored with this lib before v8, as it still uses the old storage system for backward compatibility,
+  - changing configuration on the go would mean to **lose all previously stored data**.
+
+## `indexedDB` database and object store names
 
 When storing in `indexedDb`, names are used for the database and the object store,
 so you will need that all APIs use the same names.
-**The following options are available since version >= 8.**
 
-Option 1 (recommended): keep the config of this lib and change the names in the other APIs,
+Option 1: keep the config of this lib and change the names in the other APIs,
 by using the default values exported by the lib:
 
 ```typescript
@@ -45,16 +54,19 @@ Note:
 - it is an initialization step, so as mentioned in the example, **it must be done in `AppModule`**,
 - **avoid special characters.**
 
-## Wrapping of values
+## `indexedDB` store
 
-For legacy reasons, when storing in `indexedDb`, this lib currently wraps the value in this structure: `{ value: ... }`.
+In `indexedDB`, creating a store is only possible inside the `upgradeneeded` event,
+which only happens when opening the database for the first time,
+or when the version change (but this case doesn't happen in this lib).
 
-So if you usesvthe native `indexedDb` API directly, you need:
-- to follow the same structure,
-- to **not** store literally `{ value: ... }` as a real value, as the lib won't be able to know
-if it's a raw value or the wrapping; instead, store `{ value: { value: ... } }`.
+**If this step is missing, then all `indexedDB` operations in the lib will fail as the store will be missing.**
 
-Unwrapping is considered in [#67](https://github.com/cyrilletuzi/angular-async-local-storage/issues/67).
+Then, you need to ensure:
+- you use the same database `version` as the lib (none or `1`),
+- the store is created by:
+  - by letting this lib to be initialized first (beware of concurrency issues),
+  - or if another API is going first, it needs to take care of the creation of the store (with the same name).
 
 ## Limitation with `undefined`
 
@@ -66,9 +78,7 @@ you could manage to store `undefined`, but it will then throw exceptions in some
 
 So **don't store `undefined`**.
 
-Starting with version 8, the lib will prevent you to do that if your are in TypeScript `--strictNullChecks` mode.
-
 ## `indexedDB` keys
 
-This lib only `string` keys, while `indexedDB` allows some other types.
+This lib only allows `string` keys, while `indexedDB` allows some other key types.
 So if using this lib `keys()` method, all keys will be converted to `string`.

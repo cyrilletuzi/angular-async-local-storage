@@ -3,7 +3,10 @@ import { LocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
 import { JSONValidator } from './validation/json-validator';
 import { JSONSchema } from './validation/json-schema';
-import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME } from './tokens';
+import { DEFAULT_IDB_STORE_NAME } from './tokens';
+
+/* Unique name to be sure `indexedDB` `upgradeneeded` event is triggered */
+const dbName = `interopStore${Date.now()}`;
 
 function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, done: DoneFn, value: any) {
 
@@ -11,7 +14,18 @@ function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
   try {
 
-    const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME);
+    const dbOpen = indexedDB.open(dbName);
+
+    dbOpen.addEventListener('upgradeneeded', () => {
+
+      if (!dbOpen.result.objectStoreNames.contains(DEFAULT_IDB_STORE_NAME)) {
+
+        /* Create the object store */
+        dbOpen.result.createObjectStore(DEFAULT_IDB_STORE_NAME);
+
+      }
+
+    });
 
     dbOpen.addEventListener('success', () => {
 
@@ -67,7 +81,18 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
   try {
 
-    const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME);
+    const dbOpen = indexedDB.open(dbName);
+
+    dbOpen.addEventListener('upgradeneeded', () => {
+
+      if (!dbOpen.result.objectStoreNames.contains(DEFAULT_IDB_STORE_NAME)) {
+
+        /* Create the object store */
+        dbOpen.result.createObjectStore(DEFAULT_IDB_STORE_NAME);
+
+      }
+
+    });
 
     dbOpen.addEventListener('success', () => {
 
@@ -116,10 +141,10 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
 describe('Interoperability', () => {
 
-  const localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
+  const localStorageService = new LocalStorage(new IndexedDBDatabase(undefined, dbName), new JSONValidator());
 
   beforeEach((done) => {
-    clearIndexedDB(done);
+    clearIndexedDB(done, dbName);
   });
 
   const setTestValues = ['hello', '', 0, false, null, undefined];
@@ -171,13 +196,24 @@ describe('Interoperability', () => {
 
   });
 
-  it('keys() should ignore non-string keys', (done) => {
+  it('keys() should return strings only', (done) => {
 
     const key = 1;
 
     try {
 
-      const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME);
+      const dbOpen = indexedDB.open(dbName);
+
+      dbOpen.addEventListener('upgradeneeded', () => {
+
+        if (!dbOpen.result.objectStoreNames.contains(DEFAULT_IDB_STORE_NAME)) {
+
+          /* Create the object store */
+          dbOpen.result.createObjectStore(DEFAULT_IDB_STORE_NAME);
+
+        }
+
+      });
 
       dbOpen.addEventListener('success', () => {
 

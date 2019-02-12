@@ -9,7 +9,7 @@ import { MemoryDatabase } from './databases/memory-database';
 import { JSONSchema } from './validation/json-schema';
 import { JSONValidator } from './validation/json-validator';
 import { VALIDATION_ERROR } from './exceptions';
-import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME } from './tokens';
+import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8 } from './tokens';
 import { clearIndexedDB } from './testing/indexeddb';
 
 function tests(localStorageService: LocalStorage) {
@@ -705,7 +705,8 @@ describe('localStorage', () => {
 
 describe('IndexedDB', () => {
 
-  const localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
+  const indexedDBService = new IndexedDBDatabase();
+  const localStorageService = new LocalStorage(indexedDBService, new JSONValidator());
 
   beforeEach((done) => {
 
@@ -764,50 +765,168 @@ describe('IndexedDB', () => {
 
   });
 
+  it('check store name', (done) => {
+
+    localStorageService.getItem('test').subscribe(() => {
+
+      expect(indexedDBService['storeName']).toBe(DEFAULT_IDB_STORE_NAME);
+
+      done();
+
+    });
+
+  });
+
+  // it('should recreate the store if deleted', (done) => {
+
+  //   /* Unique name to be sure `indexedDB` `upgradeneeded` event is triggered */
+  //   const dbName = `deleteDB${Date.now()}`;
+
+  //   const indexedDBServiceDelete = new IndexedDBDatabase(undefined, dbName);
+
+  //   const localStorageServiceDelete = new LocalStorage(indexedDBServiceDelete, new JSONValidator());
+
+  //   try {
+
+  //     const dbOpen = indexedDB.open(dbName, 2);
+
+  //     dbOpen.addEventListener('upgradeneeded', () => {
+
+  //       if (dbOpen.result.objectStoreNames.contains(DEFAULT_IDB_STORE_NAME)) {
+
+  //         dbOpen.result.deleteObjectStore(DEFAULT_IDB_STORE_NAME);
+
+  //       }
+
+  //     });
+
+  //     dbOpen.addEventListener('success', () => {
+
+  //       localStorageServiceDelete.setItem('test', () => {
+
+  //         expect().nothing();
+
+  //         done();
+
+  //       });
+
+  //     });
+
+  //     dbOpen.addEventListener('error', () => {
+
+  //       /* Cases : Firefox private mode where `indexedDb` exists but fails */
+  //       pending();
+
+  //     });
+
+
+  //   } catch {
+
+  //     /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
+  //     pending();
+
+  //   }
+
+
+
+  // });
+
 });
 
-describe('IndexedDB with compatibilityPriorToV8', () => {
+describe('IndexedDB with store prior to v7', () => {
 
-  const localStorageService = new LocalStorage(new IndexedDBDatabase(undefined, undefined, undefined, true), new JSONValidator());
+  /* Unique name to be sure `indexedDB` `upgradeneeded` event is triggered */
+  const dbName = `ngStore${Date.now()}`;
 
-  beforeEach((done) => {
+  it('(will be pending in Firefox/IE private mode)', (done) => {
 
-    /* Clear `localStorage` for some browsers private mode which fallbacks to `localStorage` */
-    localStorage.clear();
+    const index1 = `test1${Date.now()}`;
+    const value1 = 'test1';
+    const index2 = `test2${Date.now()}`;
+    const value2 = 'test2';
 
-    clearIndexedDB(done);
+    try {
+
+      const dbOpen = indexedDB.open(dbName);
+
+      dbOpen.addEventListener('upgradeneeded', () => {
+
+        if (!dbOpen.result.objectStoreNames.contains(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8)) {
+
+          /* Create the object store */
+          dbOpen.result.createObjectStore(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
+
+        }
+
+      });
+
+      dbOpen.addEventListener('success', () => {
+
+        const indexedDBService = new IndexedDBDatabase(undefined, dbName);
+
+        const localStorageService = new LocalStorage(indexedDBService, new JSONValidator());
+
+        const store1 = dbOpen.result.transaction([DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8], 'readwrite')
+          .objectStore(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
+
+        const request1 = store1.add({ value: value1 }, index1);
+
+        request1.addEventListener('success', () => {
+
+          localStorageService.getItem(index1).subscribe((result) => {
+
+            /* Check detection of old store has gone well */
+            expect(indexedDBService['storeName']).toBe(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
+
+            /* Via the lib, data should be unwrapped */
+            expect(result).toBe(value1);
+
+            localStorageService.setItem(index2, value2).subscribe(() => {
+
+              const store2 = dbOpen.result.transaction([DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8], 'readonly')
+                .objectStore(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
+
+              const request2 = store2.get(index2);
+
+              request2.addEventListener('success', () => {
+
+                /* Via direct `indexedDB`, data should be wrapped */
+                expect(request2.result).toEqual({ value: value2 });
+
+                done();
+
+              });
+
+            });
+
+          });
+
+        });
+
+      });
+
+      dbOpen.addEventListener('error', () => {
+
+        /* Cases : Firefox private mode where `indexedDb` exists but fails */
+        pending();
+
+      });
+
+    } catch {
+
+      /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
+      pending();
+
+    }
 
   });
-
-  tests(localStorageService);
-
-});
-
-describe('localStorage and a prefix', () => {
-
-  const prefix = 'myapp';
-
-  it('check prefix', () => {
-
-    const localStorageServicePrefix = new LocalStorageDatabase(prefix);
-
-    expect(localStorageServicePrefix['prefix']).toBe(`${prefix}_`);
-
-  });
-
-  const localStorageService = new LocalStorage(new LocalStorageDatabase(prefix), new JSONValidator());
-
-  beforeEach(() => {
-    localStorage.clear();
-  });
-
-  tests(localStorageService);
 
 });
 
 describe('IndexedDB and a prefix', () => {
 
-  const prefix = 'myapp';
+  /* Unique name to be sure `indexedDB` `upgradeneeded` event is triggered */
+  const prefix = `myapp${Date.now()}`;
 
   it('check prefix', () => {
 
@@ -817,9 +936,10 @@ describe('IndexedDB and a prefix', () => {
 
   });
 
-  it('check prefix with custom database and store names', () => {
+  it('check prefix with custom database name', () => {
 
-    const dbName = 'customDb';
+    /* Unique name to be sure `indexedDB` `upgradeneeded` event is triggered */
+    const dbName = `customDb${Date.now()}`;
 
     const indexedDBService = new IndexedDBDatabase(prefix, dbName);
 
@@ -844,10 +964,12 @@ describe('IndexedDB and a prefix', () => {
 
 describe('IndexedDB with custom database and store names', () => {
 
-  const dbName = 'dBcustom';
-  const storeName = 'storeCustom';
+  /* Unique names to be sure `indexedDB` `upgradeneeded` event is triggered */
+  const dbName = `dbCustom${Date.now()}`;
+  const storeName = `storeCustom${Date.now()}`;
 
-  const localStorageService = new LocalStorage(new IndexedDBDatabase(undefined, dbName, storeName), new JSONValidator());
+  const indexedDBService = new IndexedDBDatabase(undefined, dbName, storeName);
+  const localStorageService = new LocalStorage(indexedDBService, new JSONValidator());
 
   beforeEach((done) => {
 
@@ -855,6 +977,18 @@ describe('IndexedDB with custom database and store names', () => {
     localStorage.clear();
 
     clearIndexedDB(done, dbName, storeName);
+
+  });
+
+  it('check store name', (done) => {
+
+    localStorageService.getItem('test').subscribe(() => {
+
+      expect(indexedDBService['storeName']).toBe(storeName);
+
+      done();
+
+    });
 
   });
 

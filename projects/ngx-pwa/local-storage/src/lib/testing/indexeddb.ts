@@ -1,5 +1,11 @@
 import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME } from '../tokens';
 
+/**
+ * Helper to clear all data in an `indexedDB` store
+ * @param done Jasmine helper to explicit when the operation has ended
+ * @param dbName Database name
+ * @param storeName Store name
+ */
 export function clearIndexedDB(done: DoneFn, dbName = DEFAULT_IDB_DB_NAME, storeName = DEFAULT_IDB_STORE_NAME) {
 
   try {
@@ -25,9 +31,9 @@ export function clearIndexedDB(done: DoneFn, dbName = DEFAULT_IDB_DB_NAME, store
 
     });
 
-  } catch (error) {
+  } catch {
 
-      /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
+      /* Cases: IE private mode where `indexedDb` will exist but not its `open()` method */
       done();
 
   }
