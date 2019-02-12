@@ -1,7 +1,6 @@
-import { clearIndexedDB } from './testing/indexeddb';
+import { clearStorage, closeAndDeleteDatabase } from './testing/cleaning';
 import { LocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
-import { JSONValidator } from './validation/json-validator';
 import { JSONSchema } from './validation/json-schema';
 import { DEFAULT_IDB_STORE_NAME } from './tokens';
 
@@ -39,6 +38,8 @@ function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
             expect().nothing();
 
+            dbOpen.result.close();
+
             done();
 
           }, () => {
@@ -60,6 +61,8 @@ function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
     });
 
     dbOpen.addEventListener('error', () => {
+
+      dbOpen.result.close();
 
       /* Cases : Firefox private mode where `indexedDb` exists but fails */
       pending();
@@ -108,6 +111,8 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
             expect(result).toEqual((value !== undefined) ? value : null);
 
+            dbOpen.result.close();
+
             done();
 
           });
@@ -125,6 +130,8 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
     dbOpen.addEventListener('error', () => {
 
+      dbOpen.result.close();
+
       /* Cases : Firefox private mode where `indexedDb` exists but fails */
       pending();
 
@@ -141,10 +148,18 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
 describe('Interoperability', () => {
 
-  const localStorageService = new LocalStorage(new IndexedDBDatabase(undefined, dbName), new JSONValidator());
+  let localStorageService: LocalStorage;
+
+  beforeAll(() => {
+    localStorageService = new LocalStorage(new IndexedDBDatabase(dbName));
+  });
 
   beforeEach((done) => {
-    clearIndexedDB(done, dbName);
+    clearStorage(done, localStorageService);
+  });
+
+  afterAll((done) => {
+    closeAndDeleteDatabase(done, localStorageService);
   });
 
   const setTestValues = ['hello', '', 0, false, null, undefined];
@@ -225,6 +240,7 @@ describe('Interoperability', () => {
             for (const keyItem of keys) {
               expect(typeof keyItem).toBe('string');
             }
+            dbOpen.result.close();
             done();
           });
 
@@ -233,6 +249,8 @@ describe('Interoperability', () => {
       });
 
       dbOpen.addEventListener('error', () => {
+
+        dbOpen.result.close();
 
         /* Cases : Firefox private mode where `indexedDb` exists but fails */
         pending();

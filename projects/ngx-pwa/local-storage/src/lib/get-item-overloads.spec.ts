@@ -1,6 +1,5 @@
 import { LocalStorage } from './lib.service';
 import { MemoryDatabase } from './databases/memory-database';
-import { JSONValidator } from './validation/json-validator';
 import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from './validation/json-schema';
 
 /* For now, `unknown` and `any` cases must be checked manually as any type can be converted to them. */
@@ -13,7 +12,7 @@ describe('getItem() API v8', () => {
   beforeEach(() => {
 
     /* Do compilation tests on memory storage to avoid issues when other storages are not available */
-    localStorageService = new LocalStorage(new MemoryDatabase(), new JSONValidator());
+    localStorageService = new LocalStorage(new MemoryDatabase());
 
   });
 
@@ -311,14 +310,14 @@ describe('getItem() API v8', () => {
 
 });
 
-describe('getItem() API v7', () => {
+describe('getItem() API prior to v8', () => {
 
   let localStorageService: LocalStorage;
 
   beforeEach(() => {
 
     /* Do compilation tests on memory storage to avoid issues when other storages are not available */
-    localStorageService = new LocalStorage(new MemoryDatabase(), new JSONValidator());
+    localStorageService = new LocalStorage(new MemoryDatabase());
 
   });
 

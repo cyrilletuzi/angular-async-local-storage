@@ -1,22 +1,24 @@
 import { InjectionToken, Provider } from '@angular/core';
 
 /**
- * Default prefix.
- * *Use only to avoid conflict in multiple apps on the same subdomain.*
+ * Token to provide a prefix to avoid collision when multiple apps on the same subdomain.
+ * @deprecated Use options of `localStorageProviders()` instead. Will be removed in v9.
  */
-export const DEFAULT_PREFIX = '';
+export const LOCAL_STORAGE_PREFIX = new InjectionToken<string>('localStoragePrefix', {
+  providedIn: 'root',
+  factory: () => ''
+});
 
 /**
- * Token to provide a prefix to avoid collision when multiple apps on the same subdomain.
+ * Token to provide a prefix to `localStorage` keys.
  */
-export const PREFIX = new InjectionToken<string>('localStoragePrefix', {
+export const LS_PREFIX = new InjectionToken<string>('localStoragePrefix', {
   providedIn: 'root',
-  factory: () => DEFAULT_PREFIX
+  factory: () => ''
 });
 
 /**
  * Default name used for `indexedDB` database.
- * *Use only for interoperability with other APIs.*
  */
 export const DEFAULT_IDB_DB_NAME = 'ngStorage';
 
@@ -30,13 +32,12 @@ export const IDB_DB_NAME = new InjectionToken<string>('localStorageIDBDBName', {
 
 /**
  * Default name used for `indexedDB` object store.
- * *Use only for interoperability with other APIs.*
  */
 export const DEFAULT_IDB_STORE_NAME = 'storage';
 
 /**
  * Default name used for `indexedDB` object store prior to v8.
- * **For backward compatibility only.**
+ * @deprecated **For backward compatibility only.** May be removed in future versions.
  */
 export const DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8 = 'localStorage';
 
@@ -52,22 +53,29 @@ export const IDB_STORE_NAME = new InjectionToken<string | null>('localStorageIDB
 export interface LocalStorageProvidersConfig {
 
   /**
-   * Optional prefix to avoid collision when there are *multiple apps on the same subdomain*
-   * (makes no sense in other scenarios). **Avoid special characters.**
+   * Prefix to avoid collision when there are *multiple apps on the same subdomain*.
    * **WARNING: do not change this option in an app already deployed in production, as previously stored data would be lost.**
+   * @deprecated Use `LSPrefix` and `IDBDBName` options instead. Will be removed in v9.
    */
   prefix?: string;
 
   /**
-   * Allows to change the name used for `indexedDB` database. **Avoid special characters.**
-   * *Use only for interoperability with other APIs or to avoid collision with other libs.*
+   * Allows to add a prefix before `localStorage` keys.
+   * *Use only* for interoperability with other APIs or to avoid collision for multiple apps on the same subdomain.
+   * **WARNING: do not change this option in an app already deployed in production, as previously stored data would be lost.**
+   */
+  LSPrefix?: string;
+
+  /**
+   * Allows to change the name used for `indexedDB` database.
+   * *Use only* for interoperability with other APIs or to avoid collision for multiple apps on the same subdomain.
    * **WARNING: do not change this option in an app already deployed in production, as previously stored data would be lost.**
    */
   IDBDBName?: string;
 
   /**
-   * Allows to change the name used for `indexedDB` object store. **Avoid special characters.**
-   * *Use only for interoperability with other APIs or to avoid collision with other libs.*
+   * Allows to change the name used for `indexedDB` object store.
+   * *Use only* for interoperability with other APIs.
    * **WARNING: do not change this option in an app already deployed in production, as previously stored data would be lost.**
    */
   IDBStoreName?: string;
@@ -82,7 +90,9 @@ export interface LocalStorageProvidersConfig {
 export function localStorageProviders(config: LocalStorageProvidersConfig): Provider[] {
 
   return [
-    config.prefix ? { provide: PREFIX, useValue: config.prefix } : [],
+    // tslint:disable-next-line: deprecation
+    config.prefix ? { provide: LOCAL_STORAGE_PREFIX, useValue: config.prefix } : [],
+    config.LSPrefix ? { provide: LS_PREFIX, useValue: config.LSPrefix } : [],
     config.IDBDBName ? { provide: IDB_DB_NAME, useValue: config.IDBDBName } : [],
     config.IDBStoreName ? { provide: IDB_STORE_NAME, useValue: config.IDBStoreName } : [],
   ];

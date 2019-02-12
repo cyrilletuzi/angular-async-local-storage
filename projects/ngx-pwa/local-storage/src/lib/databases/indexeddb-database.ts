@@ -4,8 +4,8 @@ import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import {
-  PREFIX, IDB_DB_NAME, IDB_STORE_NAME,
-  DEFAULT_PREFIX, DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8
+  IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8,
+  LOCAL_STORAGE_PREFIX, DEFAULT_IDB_DB_NAME
 } from '../tokens';
 import { IDBBrokenError } from '../exceptions';
 
@@ -64,18 +64,19 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   /**
    * Constructor params are provided by Angular (but can also be passed manually in tests)
-   * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
    * @param dbName `indexedDB` database name
    * @param storeName `indexedDB` store name
+   * @param oldPrefix Prefix to avoid collision for multiple apps on the same subdomain
    */
   constructor(
-    @Inject(PREFIX) prefix = DEFAULT_PREFIX,
     @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,
     @Inject(IDB_STORE_NAME) storeName: string | null = null,
+    // tslint:disable-next-line: deprecation
+    @Inject(LOCAL_STORAGE_PREFIX) oldPrefix = '',
   ) {
 
     /* Initialize `indexedDB` database name, with prefix if provided by the user */
-    this.dbName = prefix ? `${prefix}_${dbName}` : dbName;
+    this.dbName = oldPrefix ? `${oldPrefix}_${dbName}` : dbName;
 
     /* Initialize `indexedDB` store name */
     this.storeName = storeName;
@@ -411,7 +412,9 @@ export class IndexedDBDatabase implements LocalDatabase {
             } catch {
 
               /* Or try with the default store name for version < 8 */
+              // tslint:disable-next-line: deprecation
               store = database.transaction([DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8], mode).objectStore(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
+              // tslint:disable-next-line: deprecation
               this.storeName = DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8;
               this.isStorePriorToV8 = true;
 
