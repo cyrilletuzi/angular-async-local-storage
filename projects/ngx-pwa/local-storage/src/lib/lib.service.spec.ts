@@ -19,16 +19,21 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
   describe(description, () => {
 
     beforeAll(() => {
+      /* Via a factory as the class should be instancied only now, not before, otherwise tests could overlap */
       localStorageService = localStorageServiceFactory();
     });
 
     beforeEach((done) => {
-      localStorageService.clear().subscribe(() => {});
-      localStorage.clear();
+      /* Clear data to avoid tests overlap */
       clearStorage(done, localStorageService);
     });
 
     afterAll((done) => {
+      /* Now that `indexedDB` store name can be customized, it's important:
+       * - to delete the database after each tests group,
+       * so the next tests group to will trigger the `indexedDB` `upgradeneeded` event,
+       * as it's where the store is created
+       * - to be able to delete the database, all connections to it must be closed */
       closeAndDeleteDatabase(done, localStorageService);
     });
 
@@ -744,11 +749,18 @@ describe('specials', () => {
 
           });
 
+          request.addEventListener('error', () => {
+
+            dbOpen.result.close();
+
+            /* This case is not supposed to happen */
+            fail();
+
+          });
+
         });
 
         dbOpen.addEventListener('error', () => {
-
-          dbOpen.result.close();
 
           /* Cases : Firefox private mode where `indexedDb` exists but fails */
           pending();
@@ -766,15 +778,53 @@ describe('specials', () => {
 
   });
 
-  it('indexedDB default store name', (done) => {
+  it('indexedDB default store name (will be pending in Firefox private mode)', (done) => {
 
     const localStorageService = new LocalStorage(new IndexedDBDatabase());
 
+    /* Do a request first as a first transaction is needed to set the store name */
     localStorageService.getItem('test').subscribe(() => {
 
-      expect((localStorageService['database'] as IndexedDBDatabase)['storeName']).toBe(DEFAULT_IDB_STORE_NAME);
+      if (localStorageService['database'] instanceof IndexedDBDatabase) {
 
-      closeAndDeleteDatabase(done, localStorageService);
+        expect(localStorageService['database']['storeName']).toBe(DEFAULT_IDB_STORE_NAME);
+
+        closeAndDeleteDatabase(done, localStorageService);
+
+      } else {
+
+        /* Cases: Firefox private mode */
+        pending();
+
+      }
+
+    });
+
+  });
+
+  it('indexedDB custom store name (will be pending in Firefox private mode)', (done) => {
+
+    /* Unique names to be sure `indexedDB` `upgradeneeded` event is triggered */
+  const dbName = `dbCustom${Date.now()}`;
+  const storeName = `storeCustom${Date.now()}`;
+
+    const localStorageService = new LocalStorage(new IndexedDBDatabase(dbName, storeName));
+
+    /* Do a request first as a first transaction is needed to set the store name */
+    localStorageService.getItem('test').subscribe(() => {
+
+      if (localStorageService['database'] instanceof IndexedDBDatabase) {
+
+        expect(localStorageService['database']['storeName']).toBe(storeName);
+
+        closeAndDeleteDatabase(done, localStorageService);
+
+      } else {
+
+        /* Cases: Firefox private mode */
+        pending();
+
+      }
 
     });
 
@@ -849,17 +899,33 @@ describe('specials', () => {
 
               });
 
+              request2.addEventListener('error', () => {
+
+                dbOpen.result.close();
+
+                /* This case is not supposed to happen */
+                fail();
+
+              });
+
             });
 
           });
 
         });
 
+        request1.addEventListener('error', () => {
+
+          dbOpen.result.close();
+
+          /* This case is not supposed to happen */
+          fail();
+
+        });
+
       });
 
       dbOpen.addEventListener('error', () => {
-
-        dbOpen.result.close();
 
         /* Cases : Firefox private mode where `indexedDb` exists but fails */
         pending();
@@ -875,31 +941,27 @@ describe('specials', () => {
 
   });
 
-  it('indexedDB old prefix', (done) => {
+  it('indexedDB old prefix (will be pending in Firefox private mode)', (done) => {
 
     /* Unique name to be sure `indexedDB` `upgradeneeded` event is triggered */
     const prefix = `myapp${Date.now()}`;
     const localStorageService = new LocalStorage(new IndexedDBDatabase(undefined, undefined, prefix));
 
-    expect((localStorageService['database'] as IndexedDBDatabase)['dbName']).toBe(`${prefix}_${DEFAULT_IDB_DB_NAME}`);
-
-    closeAndDeleteDatabase(done, localStorageService);
-
-  });
-
-  it('indexedDB custom store name', (done) => {
-
-    /* Unique names to be sure `indexedDB` `upgradeneeded` event is triggered */
-  const dbName = `dbCustom${Date.now()}`;
-  const storeName = `storeCustom${Date.now()}`;
-
-    const localStorageService = new LocalStorage(new IndexedDBDatabase(dbName, storeName));
-
+    /* Do a request first to allow localStorage fallback if needed */
     localStorageService.getItem('test').subscribe(() => {
 
-      expect((localStorageService['database'] as IndexedDBDatabase)['storeName']).toBe(storeName);
+      if (localStorageService['database'] instanceof IndexedDBDatabase) {
 
-      done();
+        expect(localStorageService['database']['dbName']).toBe(`${prefix}_${DEFAULT_IDB_DB_NAME}`);
+
+        closeAndDeleteDatabase(done, localStorageService);
+
+      } else {
+
+        /* Cases: Firefox private mode */
+        pending();
+
+      }
 
     });
 

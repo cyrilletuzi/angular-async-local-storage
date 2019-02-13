@@ -1,10 +1,11 @@
 import { LocalStorage } from '../lib.service';
 import { IndexedDBDatabase } from '../databases/indexeddb-database';
 import { LocalStorageDatabase } from '../databases/localstorage-database';
+import { MemoryDatabase } from '../databases/memory-database';
 
 /**
- * Helper to clear all data in storage
- * @param done Jasmine helper to explicit when the operation has ended
+ * Helper to clear all data in storage to avoid tests overlap
+ * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param localStorageService Service
  */
 export function clearStorage(done: DoneFn, localStorageService: LocalStorage) {
@@ -19,37 +20,56 @@ export function clearStorage(done: DoneFn, localStorageService: LocalStorage) {
 
       dbOpen.addEventListener('success', () => {
 
-        const storeName = indexedDBService['storeName'] as string;
+        const storeName = indexedDBService['storeName'];
 
-        const store = dbOpen.result.transaction([storeName], 'readwrite').objectStore(storeName);
+        /* May be `null` if no requests were made */
+        if (storeName) {
 
-        store.clear().addEventListener('success', () => {
+          const store = dbOpen.result.transaction([storeName], 'readwrite').objectStore(storeName);
+
+          const request = store.clear();
+
+          request.addEventListener('success', () => {
+
+            dbOpen.result.close();
+
+            done();
+
+          });
+
+          request.addEventListener('error', () => {
+
+            dbOpen.result.close();
+
+            done();
+
+          });
+
+        } else {
 
           dbOpen.result.close();
 
           done();
 
-        });
+        }
 
       });
 
       dbOpen.addEventListener('error', () => {
 
-        dbOpen.result.close();
-
+        /* Cases : Firefox private mode where `indexedDb` exists but fails */
         localStorage.clear();
 
-        /* Cases : Firefox private mode where `indexedDb` exists but fails */
         done();
 
       });
 
     } catch {
 
-        localStorage.clear();
+      /* Cases: IE private mode where `indexedDb` will exist but not its `open()` method */
+      localStorage.clear();
 
-        /* Cases: IE private mode where `indexedDb` will exist but not its `open()` method */
-        done();
+      done();
 
     }
 
@@ -59,33 +79,51 @@ export function clearStorage(done: DoneFn, localStorageService: LocalStorage) {
 
     done();
 
+  } else if (localStorageService['database'] instanceof MemoryDatabase) {
+
+    localStorageService['database']['memoryStorage'].clear();
+
+    done();
+
   } else {
 
-    localStorageService.clear().subscribe(() => {
-
-      done();
-
-    });
+    done();
 
   }
 
 }
 
+/**
+ * Now that `indexedDB` store name can be customized, it's important:
+ * - to delete the database after each tests group,
+ * so the next tests group to will trigger the `indexedDB` `upgradeneeded` event,
+ * as it's where the store is created
+ * - to be able to delete the database, all connections to it must be closed
+ * @param doneJasmine helper to explicit when the operation has ended to avoid tests overlap
+ * @param localStorageService Service
+ */
 export function closeAndDeleteDatabase(done: DoneFn, localStorageService: LocalStorage) {
 
-  /* Avoid errors when in `localStorage` fallback */
+  /* Only `indexedDB` is concerned */
   if (localStorageService['database'] instanceof IndexedDBDatabase) {
 
     const indexedDBService = localStorageService['database'];
 
     indexedDBService['database'].subscribe((database) => {
 
+      /* Close the database connection */
       database.close();
 
+      /* Delete database */
       const deletingDb = indexedDB.deleteDatabase(indexedDBService['dbName']);
 
       deletingDb.addEventListener('success', done);
       deletingDb.addEventListener('error', done);
+
+    }, () => {
+
+      /* Will happen in Firefox private mode if no requests have been done yet */
+      done();
 
     });
 
