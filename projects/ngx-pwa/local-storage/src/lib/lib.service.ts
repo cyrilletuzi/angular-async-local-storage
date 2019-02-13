@@ -10,7 +10,7 @@ import {
   JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf
 } from './validation/json-schema';
 import { IDB_BROKEN_ERROR, ValidationError } from './exceptions';
-import { PREFIX } from './tokens';
+import { LOCAL_STORAGE_PREFIX, LS_PREFIX } from './tokens';
 
 /**
  * @deprecated Will be removed in v9
@@ -44,12 +44,15 @@ export class LocalStorage {
    * Constructor params are provided by Angular (but can also be passed manually in tests)
    * @param database Storage to use
    * @param jsonValidator Validator service
-   * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
+   * @param LSPrefix Prefix for `localStorage` keys to avoid collision for multiple apps on the same subdomain or for interoperability
+   * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain or for interoperability
    */
   constructor(
     private database: LocalDatabase,
-    private jsonValidator: JSONValidator,
-    @Inject(PREFIX) private prefix = '',
+    private jsonValidator: JSONValidator = new JSONValidator(),
+    @Inject(LS_PREFIX) private LSPrefix = '',
+    // tslint:disable-next-line: deprecation
+    @Inject(LOCAL_STORAGE_PREFIX) private oldPrefix = '',
   ) {}
 
   /**
@@ -220,7 +223,7 @@ export class LocalStorage {
       if ((error !== undefined) && (error !== null) && (error.message === IDB_BROKEN_ERROR)) {
 
         /* Fallback to `localStorage` */
-        this.database = new LocalStorageDatabase(this.prefix);
+        this.database = new LocalStorageDatabase(this.LSPrefix, this.oldPrefix);
 
         /* Redo the operation */
         return operationCallback();

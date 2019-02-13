@@ -4,8 +4,8 @@ import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import {
-  PREFIX, IDB_DB_NAME, DEFAULT_IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME,
-  COMPATIBILITY_PRIOR_TO_V8, DEFAULT_PREFIX, DEFAULT_COMPATIBILITY_PRIOR_TO_V8
+  IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8,
+  LOCAL_STORAGE_PREFIX, DEFAULT_IDB_DB_NAME
 } from '../tokens';
 import { IDBBrokenError } from '../exceptions';
 
@@ -22,7 +22,7 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * `indexedDB` object store name
    */
-  private readonly storeName: string;
+  private storeName: string | null = null;
 
   /**
    * `indexedDB` data path name for local storage (where items' value will be stored)
@@ -30,15 +30,15 @@ export class IndexedDBDatabase implements LocalDatabase {
   private readonly dataPath = 'value';
 
   /**
-   * Flag to keep storing behavior prior to version 8.
-   */
-  private readonly compatibilityPriorToV8: boolean;
-
-  /**
    * `indexedDB` database connection, wrapped in a RxJS `ReplaySubject` to be able to access the connection
    * even after the connection success event happened
    */
   private database: ReplaySubject<IDBDatabase>;
+
+  /**
+   * Flag to remember if we are using the new or old object store
+   */
+  private isStorePriorToV8 = false;
 
   /**
    * Number of items in our `indexedDB` database and object store
@@ -64,25 +64,22 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   /**
    * Constructor params are provided by Angular (but can also be passed manually in tests)
-   * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
    * @param dbName `indexedDB` database name
    * @param storeName `indexedDB` store name
-   * @param compatibilityPriorToV8 Flag to keep storing behavior prior to version 8
+   * @param oldPrefix Prefix to avoid collision for multiple apps on the same subdomain
    */
   constructor(
-    @Inject(PREFIX) prefix = DEFAULT_PREFIX,
     @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,
-    @Inject(IDB_STORE_NAME) storeName = DEFAULT_IDB_STORE_NAME,
-    @Inject(COMPATIBILITY_PRIOR_TO_V8) compatibilityPriorToV8 = DEFAULT_COMPATIBILITY_PRIOR_TO_V8,
+    @Inject(IDB_STORE_NAME) storeName: string | null = null,
+    // tslint:disable-next-line: deprecation
+    @Inject(LOCAL_STORAGE_PREFIX) oldPrefix = '',
   ) {
 
     /* Initialize `indexedDB` database name, with prefix if provided by the user */
-    this.dbName = prefix ? `${prefix}_${dbName}` : dbName;
+    this.dbName = oldPrefix ? `${oldPrefix}_${dbName}` : dbName;
 
     /* Initialize `indexedDB` store name */
     this.storeName = storeName;
-
-    this.compatibilityPriorToV8 = compatibilityPriorToV8;
 
     /* Creating the RxJS ReplaySubject */
     this.database = new ReplaySubject<IDBDatabase>(1);
@@ -109,19 +106,19 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Manage success and error events, and get the result */
         return this.requestEventsAndMapTo(request, () => {
 
-          if (!this.compatibilityPriorToV8 && (request.result !== undefined) && (request.result !== null)) {
+          if ((request.result !== undefined) && (request.result !== null)) {
 
-            /* Cast to the wanted type */
-            return request.result as T;
+            if (!this.isStorePriorToV8) {
 
-          } else if (this.compatibilityPriorToV8
-          && (request.result !== undefined)
-          && (request.result !== null)
-          && (request.result[this.dataPath] !== undefined)
-          && (request.result[this.dataPath] !== null)) {
+                /* Cast to the wanted type */
+                return request.result as T;
 
-            /* Prior to v8, the value was wrapped in an `{ value: ...}` object */
-            return (request.result[this.dataPath] as T);
+            } else if ((request.result[this.dataPath] !== undefined) && (request.result[this.dataPath] !== null)) {
+
+              /* Prior to v8, the value was wrapped in an `{ value: ...}` object */
+              return (request.result[this.dataPath] as T);
+
+            }
 
           }
 
@@ -174,7 +171,7 @@ export class IndexedDBDatabase implements LocalDatabase {
              * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/47 */
 
              /* Prior to v8, data was wrapped in a `{ value: ... }` object */
-            const dataToStore = !this.compatibilityPriorToV8 ? data : { [this.dataPath]: data };
+            const dataToStore = !this.isStorePriorToV8 ? data : { [this.dataPath]: data };
 
             /* Add if the item is not existing yet, or update otherwise */
             const request2 = (existingEntry === undefined) ?
@@ -367,13 +364,18 @@ export class IndexedDBDatabase implements LocalDatabase {
       .pipe(first())
       .subscribe(() => {
 
+        /* Use custom store name if requested, otherwise use the default */
+        const storeName = this.storeName || DEFAULT_IDB_STORE_NAME;
+
         /* Check if the store already exists, to avoid error */
-        if (!request.result.objectStoreNames.contains(this.storeName)) {
+        if (!request.result.objectStoreNames.contains(storeName)) {
 
           /* Create the object store */
-          request.result.createObjectStore(this.storeName);
+          request.result.createObjectStore(storeName);
 
         }
+
+        this.storeName = storeName;
 
       });
 
@@ -392,12 +394,39 @@ export class IndexedDBDatabase implements LocalDatabase {
 
         let store: IDBObjectStore;
 
-        /* The store could have been deleted from outside */
         try {
-          store = database.transaction([this.storeName], mode).objectStore(this.storeName);
+
+          /* If the store name has already been set or detected, use it */
+          if (this.storeName) {
+
+            store = database.transaction([this.storeName], mode).objectStore(this.storeName);
+
+          } else {
+
+            try {
+
+              /* Otherwise try with the default store name for version >= 8 */
+              store = database.transaction([DEFAULT_IDB_STORE_NAME], mode).objectStore(DEFAULT_IDB_STORE_NAME);
+              this.storeName = DEFAULT_IDB_STORE_NAME;
+
+            } catch {
+
+              /* Or try with the default store name for version < 8 */
+              // tslint:disable-next-line: deprecation
+              store = database.transaction([DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8], mode).objectStore(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
+              // tslint:disable-next-line: deprecation
+              this.storeName = DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8;
+              this.isStorePriorToV8 = true;
+
+            }
+
+          }
+
         } catch (error) {
-          // TODO: Try to reopen and recreate the store?
-          return throwError(error as DOMException);
+
+            /* The store could have been deleted from outside */
+            return throwError(error as DOMException);
+
         }
 
         return of(store);

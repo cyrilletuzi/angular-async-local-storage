@@ -5,15 +5,19 @@ import { Observable } from 'rxjs';
 import { IndexedDBDatabase } from './indexeddb-database';
 import { LocalStorageDatabase } from './localstorage-database';
 import { MemoryDatabase } from './memory-database';
-import { PREFIX } from '../tokens';
+import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX } from '../tokens';
 
 /**
  * Factory to create a storage according to browser support
  * @param platformId Context about the platform (`browser`, `server`...)
- * @param prefix Optional user prefix to avoid collision for multiple apps on the same subdomain
+ * @param LSPrefix Prefix for `localStorage` keys to avoid collision for multiple apps on the same subdomain
+ * @param IDBDBName `indexedDB` database name
+ * @param IDBstoreName `indexedDB` storeName name
+ * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain
  * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/BROWSERS_SUPPORT.md
  */
-export function localDatabaseFactory(platformId: Object, prefix: string): LocalDatabase {
+export function localDatabaseFactory(
+  platformId: Object, LSPrefix: string, IDBDBName: string, IDBstoreName: string, oldPrefix: string): LocalDatabase {
 
   // Do not explicit `window` here, as the global object is not the same in web workers
   if ((isPlatformBrowser(platformId) || isPlatformWorkerApp(platformId) || isPlatformWorkerUi(platformId))
@@ -27,7 +31,7 @@ export function localDatabaseFactory(platformId: Object, prefix: string): LocalD
      * Will be the case for:
      * - IE10+ and all other browsers in normal mode
      * - Chromium / Safari private mode, but in this case, data will be swiped when the user leaves the app */
-    return new IndexedDBDatabase(prefix);
+    return new IndexedDBDatabase(IDBDBName, IDBstoreName, oldPrefix);
 
   } else if (isPlatformBrowser(platformId)
   && (localStorage !== undefined) && (localStorage !== null) && ('getItem' in localStorage)) {
@@ -44,7 +48,7 @@ export function localDatabaseFactory(platformId: Object, prefix: string): LocalD
      * For Firefox, can only be detected later in `IndexedDBDatabase.connect()`
      * @see https://bugzilla.mozilla.org/show_bug.cgi?id=781982
      */
-    return new LocalStorageDatabase(prefix);
+    return new LocalStorageDatabase(LSPrefix, oldPrefix);
 
   } else {
 
@@ -63,7 +67,11 @@ export function localDatabaseFactory(platformId: Object, prefix: string): LocalD
   useFactory: localDatabaseFactory,
   deps: [
     PLATFORM_ID,
-    PREFIX
+    LS_PREFIX,
+    IDB_DB_NAME,
+    IDB_STORE_NAME,
+    // tslint:disable-next-line: deprecation
+    LOCAL_STORAGE_PREFIX,
   ]
 })
 export abstract class LocalDatabase {

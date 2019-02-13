@@ -1,17 +1,34 @@
-import { clearIndexedDB } from './testing/indexeddb';
+import { clearStorage, closeAndDeleteDatabase } from './testing/cleaning';
 import { LocalStorage } from './lib.service';
 import { IndexedDBDatabase } from './databases/indexeddb-database';
-import { JSONValidator } from './validation/json-validator';
 import { JSONSchema } from './validation/json-schema';
-import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME } from './tokens';
+import { DEFAULT_IDB_STORE_NAME } from './tokens';
 
+const dbName = `interopStore${Date.now()}`;
+const index = 'test';
+
+/**
+ * Set a value with native `indexedDB` API and try to override it with the lib
+ * @param localStorageService Service
+ * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
+ * @param value Value to store
+ */
 function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, done: DoneFn, value: any) {
-
-  const index = 'test';
 
   try {
 
-    const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME);
+    const dbOpen = indexedDB.open(dbName);
+
+    dbOpen.addEventListener('upgradeneeded', () => {
+
+      if (!dbOpen.result.objectStoreNames.contains(DEFAULT_IDB_STORE_NAME)) {
+
+        /* Create the object store */
+        dbOpen.result.createObjectStore(DEFAULT_IDB_STORE_NAME);
+
+      }
+
+    });
 
     dbOpen.addEventListener('success', () => {
 
@@ -19,15 +36,21 @@ function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
       try {
 
-        store.add(value, index).addEventListener('success', () => {
+        const request = store.add(value, index);
+
+        request.addEventListener('success', () => {
 
           localStorageService.setItem(index, 'world').subscribe(() => {
 
             expect().nothing();
 
+            dbOpen.result.close();
+
             done();
 
           }, () => {
+
+            dbOpen.result.close();
 
             /* Cases : Edge/IE because of `undefined` */
             pending();
@@ -36,7 +59,18 @@ function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
         });
 
+        request.addEventListener('error', () => {
+
+          dbOpen.result.close();
+
+          /* This case is not supposed to happen */
+          fail();
+
+        });
+
       } catch {
+
+        dbOpen.result.close();
 
         /* Cases : Edge/IE because of `null` */
         pending();
@@ -61,13 +95,28 @@ function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
 }
 
+/**
+ * Set a value with native `indexedDB` API and try to get it with the lib
+ * @param localStorageService Service
+ * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
+ * @param value Value to set and get
+ */
 function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, done: DoneFn, value: any, schema?: JSONSchema) {
-
-  const index = 'test';
 
   try {
 
-    const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME);
+    const dbOpen = indexedDB.open(dbName);
+
+    dbOpen.addEventListener('upgradeneeded', () => {
+
+      if (!dbOpen.result.objectStoreNames.contains(DEFAULT_IDB_STORE_NAME)) {
+
+        /* Create the object store */
+        dbOpen.result.createObjectStore(DEFAULT_IDB_STORE_NAME);
+
+      }
+
+    });
 
     dbOpen.addEventListener('success', () => {
 
@@ -75,13 +124,19 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
       try {
 
-        store.add(value, index).addEventListener('success', () => {
+        const request = store.add(value, index);
 
-          const request = schema ? localStorageService.getItem(index, schema) : localStorageService.getItem(index);
+        request.addEventListener('success', () => {
 
-          request.subscribe((result) => {
+          // TODO: Investigate schema param not working without the test
+          const request2 = schema ? localStorageService.getItem(index, schema) : localStorageService.getItem(index);
 
+          request2.subscribe((result) => {
+
+            /* Transform `undefined` to `null` to align with the lib behavior */
             expect(result).toEqual((value !== undefined) ? value : null);
+
+            dbOpen.result.close();
 
             done();
 
@@ -89,7 +144,18 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
         });
 
+        request.addEventListener('error', () => {
+
+          dbOpen.result.close();
+
+          /* This case is not supposed to happen */
+          fail();
+
+        });
+
       } catch {
+
+        dbOpen.result.close();
 
         /* Cases : Edge/IE because of `null` */
         pending();
@@ -105,10 +171,10 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
     });
 
-  } catch (error) {
+  } catch {
 
-      /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
-      pending();
+    /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
+    pending();
 
   }
 
@@ -116,10 +182,24 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
 describe('Interoperability', () => {
 
-  const localStorageService = new LocalStorage(new IndexedDBDatabase(), new JSONValidator());
+  let localStorageService: LocalStorage;
+
+  beforeAll(() => {
+    localStorageService = new LocalStorage(new IndexedDBDatabase(dbName));
+  });
 
   beforeEach((done) => {
-    clearIndexedDB(done);
+    /* Clear data to avoid tests overlap */
+    clearStorage(done, localStorageService);
+  });
+
+  afterAll((done) => {
+    /* Now that `indexedDB` store name can be customized, it's important:
+     * - to delete the database after each tests group,
+     * so the next tests group to will trigger the `indexedDB` `upgradeneeded` event,
+     * as it's where the store is created
+     * - to be able to delete the database, all connections to it must be closed */
+    closeAndDeleteDatabase(done, localStorageService);
   });
 
   const setTestValues = ['hello', '', 0, false, null, undefined];
@@ -144,12 +224,14 @@ describe('Interoperability', () => {
     [false, { type: 'boolean' }],
     [[1, 2, 3], { type: 'array', items: { type: 'number' } }],
     [{ test: 'value' }, { type: 'object', properties: { test: { type: 'string' } } }],
+    [null, undefined],
+    [undefined, undefined],
   ];
 
   for (const [getTestValue, getTestSchema] of getTestValues) {
 
     it(`getItem() after external API
-      (will be pending in IE/Firefox private mode)`, (done) => {
+      (will be pending in IE/Firefox private mode and in Edge/IE because of null)`, (done) => {
 
       testGetCompatibilityWithNativeAPI(localStorageService, done, getTestValue, getTestSchema);
 
@@ -157,40 +239,52 @@ describe('Interoperability', () => {
 
   }
 
-  it(`getItem() on null after external API
-  (will be pending in IE/Firefox private mode and in Edge/IE)`, (done) => {
-
-    testGetCompatibilityWithNativeAPI(localStorageService, done, null);
-
-  });
-
-  it(`getItem() on undefined null after external API
-  (will be pending in IE/Firefox private mode)`, (done) => {
-
-    testGetCompatibilityWithNativeAPI(localStorageService, done, undefined);
-
-  });
-
-  it('keys() should ignore non-string keys', (done) => {
+  it('keys() should return strings only (will be pending in IE/Firefox private mode)', (done) => {
 
     const key = 1;
 
     try {
 
-      const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME);
+      const dbOpen = indexedDB.open(dbName);
+
+      dbOpen.addEventListener('upgradeneeded', () => {
+
+        if (!dbOpen.result.objectStoreNames.contains(DEFAULT_IDB_STORE_NAME)) {
+
+          /* Create the object store */
+          dbOpen.result.createObjectStore(DEFAULT_IDB_STORE_NAME);
+
+        }
+
+      });
 
       dbOpen.addEventListener('success', () => {
 
         const store = dbOpen.result.transaction([DEFAULT_IDB_STORE_NAME], 'readwrite').objectStore(DEFAULT_IDB_STORE_NAME);
 
-        store.add('test', key).addEventListener('success', () => {
+        const request = store.add('test', key);
+
+        request.addEventListener('success', () => {
 
           localStorageService.keys().subscribe((keys) => {
+
             for (const keyItem of keys) {
               expect(typeof keyItem).toBe('string');
             }
+
+            dbOpen.result.close();
             done();
+
           });
+
+        });
+
+        request.addEventListener('error', () => {
+
+          dbOpen.result.close();
+
+          /* This case is not supposed to happen */
+          fail();
 
         });
 

@@ -280,6 +280,134 @@
           }
         }
       }
+    },
+    "localforage": {
+      "root": "projects/localforage/",
+      "sourceRoot": "projects/localforage/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/localforage",
+            "index": "projects/localforage/src/index.html",
+            "main": "projects/localforage/src/main.ts",
+            "polyfills": "projects/localforage/src/polyfills.ts",
+            "tsConfig": "projects/localforage/tsconfig.app.json",
+            "assets": [
+              "projects/localforage/src/favicon.ico",
+              "projects/localforage/src/assets"
+            ],
+            "styles": [
+              "projects/localforage/src/styles.css"
+            ],
+            "scripts": [],
+            "es5BrowserSupport": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/localforage/src/environments/environment.ts",
+                  "with": "projects/localforage/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "localforage:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "localforage:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "localforage:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/localforage/src/test.ts",
+            "polyfills": "projects/localforage/src/polyfills.ts",
+            "tsConfig": "projects/localforage/tsconfig.spec.json",
+            "karmaConfig": "projects/localforage/karma.conf.js",
+            "styles": [
+              "projects/localforage/src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "projects/localforage/src/favicon.ico",
+              "projects/localforage/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/localforage/tsconfig.app.json",
+              "projects/localforage/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "localforage-e2e": {
+      "root": "projects/localforage-e2e/",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/localforage-e2e/protractor.conf.js",
+            "devServerTarget": "localforage:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "localforage:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/localforage-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "angular-async-local-storage"

@@ -203,10 +203,10 @@ this lib also provides some `Map`-like methods for advanced operations:
 
 See the [documentation](./docs/MAP_OPERATIONS.md) for more info and some recipes.
 
-### Prefix
+### Collision
 
 If you have multiple apps on the same *sub*domain *and* you don't want to share data between them,
-see the [prefix guide](./docs/PREFIX.md).
+see the [prefix guide](./docs/COLLISION.md).
 
 ## Angular support
 
@@ -230,7 +230,7 @@ See [the browsers support guide](./docs/BROWSERS_SUPPORT.md) for more details an
 
 ## Interoperability
 
-For interoperability when mixing this lib with direct usage of native APIs or other libs
+For interoperability when mixing this lib with direct usage of native APIs or other libs like `localforage`
 (which doesn't make sense in most of cases),
 see the [interoperability documentation](./docs/INTEROPERABILITY.md).
 
