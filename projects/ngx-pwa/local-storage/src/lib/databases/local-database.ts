@@ -19,6 +19,7 @@ import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX } from '..
 export function localDatabaseFactory(
   platformId: Object, LSPrefix: string, IDBDBName: string, IDBstoreName: string, oldPrefix: string): LocalDatabase {
 
+  // TODO: test in web workers (announced for CLI v8)
   // Do not explicit `window` here, as the global object is not the same in web workers
   if ((isPlatformBrowser(platformId) || isPlatformWorkerApp(platformId) || isPlatformWorkerUi(platformId))
   && (indexedDB !== undefined) && (indexedDB !== null) && ('open' in indexedDB)) {

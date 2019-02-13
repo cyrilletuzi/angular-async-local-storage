@@ -411,6 +411,8 @@ export class IndexedDBDatabase implements LocalDatabase {
 
             } catch {
 
+              // TODO: test with previous versions of the lib to check no data is lost
+              // TODO: explicit option to keep old behavior?
               /* Or try with the default store name for version < 8 */
               // tslint:disable-next-line: deprecation
               store = database.transaction([DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8], mode).objectStore(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
