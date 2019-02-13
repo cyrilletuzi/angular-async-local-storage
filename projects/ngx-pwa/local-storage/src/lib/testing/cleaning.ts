@@ -117,8 +117,9 @@ export function closeAndDeleteDatabase(done: DoneFn, localStorageService: LocalS
       /* Delete database */
       const deletingDb = indexedDB.deleteDatabase(indexedDBService['dbName']);
 
-      deletingDb.addEventListener('success', done);
-      deletingDb.addEventListener('error', done);
+      /* Use an arrow function for done, otherwise it causes an issue in IE */
+      deletingDb.addEventListener('success', () => { done(); });
+      deletingDb.addEventListener('error', () => { done(); });
 
     }, () => {
 
