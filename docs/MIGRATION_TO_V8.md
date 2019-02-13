@@ -35,6 +35,19 @@ Or you could search for `getItem` as most breaking changes are about its options
 
 The main change is to add `type` to all your JSON schemas.
 
+### New `indexedDB` store
+
+To allow interoperability, the internal `indexedDB` storing system has changed.
+It is not a breaking change as the lib do it in a backward-compatible way:
+- when `indexedDB` storage is empty (new app users or data swiped), the new storage is used,
+- when `indexedDB` old storage is here, the lib stays on this one.
+
+So it should not concern you, but as it is very sensitive change, we recommend
+**to test previously stored data is not lost before deploying in production**.
+
+It's internal stuff, but it also means there is a transition phase where some of the users of your app
+will be on the new storage, and others will be on the old one.
+
 ### Validation of arrays
 
 **`type` option is now required.**
@@ -116,7 +129,7 @@ It also means enums of different types are no longer possible (and it's better f
 
 Also, `JSONSchemaEnum` interface is removed.
 
-## Additional properties in schemas
+### Additional properties in schemas
 
 The `schema` option of `getItem()` now only accepts our own `JSONSchema` interface,
 which is a subset of the JSON Schema standard.
@@ -128,6 +141,43 @@ While not recommended, you can still force it:
 ```typescript
 this.localStorage.getItem('test', schema as any)
 ```
+
+### Prefix and collision
+
+If you were using a prefix because you have multiple apps on the same subdomain,
+configuration has changed to allow interoperability.
+The old one still works for now but is deprecated and will be removed in v9.
+
+Before v8:
+```typescript
+import { localStorageProviders, LOCAL_STORAGE_PREFIX } from '@ngx-pwa/local-storage';
+
+@NgModule({
+  providers: [
+    localStorageProviders({ prefix: 'myapp' }),
+    // or
+    { provide: LOCAL_STORAGE_PREFIX, useValue: 'myapp' },
+  ]
+})
+export class AppModule {}
+```
+
+Since v8:
+```typescript
+import { localStorageProviders } from '@ngx-pwa/local-storage';
+
+@NgModule({
+  providers: [
+    localStorageProviders({
+      LSPrefix: 'myapp_', // Note the underscore
+      IDBDBName: 'myapp_ngStorage',
+    }),
+  ]
+})
+export class AppModule {}
+```
+
+**Be very careful while changing this, as an error could mean the loss of all previously stored data.**
 
 ## The good part: simplication changes
 
