@@ -231,7 +231,7 @@ describe('Interoperability', () => {
   for (const [getTestValue, getTestSchema] of getTestValues) {
 
     it(`getItem() after external API
-      (will be pending in IE/Firefox private mode and in Edge/IE because of null/undefined)`, (done) => {
+      (will be pending in IE/Firefox private mode and in Edge/IE because of null)`, (done) => {
 
       testGetCompatibilityWithNativeAPI(localStorageService, done, getTestValue, getTestSchema);
 
