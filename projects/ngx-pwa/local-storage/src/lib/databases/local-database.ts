@@ -17,7 +17,7 @@ import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX } from '..
  * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/BROWSERS_SUPPORT.md
  */
 export function localDatabaseFactory(
-  platformId: Object, LSPrefix: string, IDBDBName: string, IDBstoreName: string, oldPrefix: string) : LocalDatabase {
+  platformId: Object, LSPrefix: string, IDBDBName: string, IDBstoreName: string, oldPrefix: string): LocalDatabase {
 
   // Do not explicit `window` here, as the global object is not the same in web workers
   if ((isPlatformBrowser(platformId) || isPlatformWorkerApp(platformId) || isPlatformWorkerUi(platformId))
