@@ -2,6 +2,12 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 8.0.0-beta.x
+
+v8 development is tracked in [#76](https://github.com/cyrilletuzi/angular-async-local-storage/pull/76).
+
+This will be an important release so **beta testers are very welcomed.**
+
 ## 7.4.1 (2019-01-27)
 
 ### Documentation
