@@ -22,7 +22,13 @@ as v8 changed the storage system to achieve interoperability:
   - it won't work on data stored with this lib before v8, as it still uses the old storage system for backward compatibility,
   - changing configuration on the go would mean to **lose all previously stored data**.
 
-## `indexedDB` database and object store names
+## Configuration
+
+Note:
+- it is an initialization step, so as mentioned in the examples below, **it must be done in `AppModule`**,
+- **never change these options in an app already deployed in production, as all previously stored data would be lost**.
+
+### `indexedDB` database and object store names
 
 When storing in `indexedDb`, names are used for the database and the object store,
 so you will need that all APIs use the same names.
@@ -50,11 +56,47 @@ import { localStorageProviders } from '@ngx-pwa/local-storage';
 export class AppModule {}
 ```
 
-Note:
-- it is an initialization step, so as mentioned in the example, **it must be done in `AppModule`**,
-- **avoid special characters.**
+### `localStorage` prefix
 
-## `indexedDB` store
+In some cases, `indexedDB` is not available, and libs fallback to `localStorage`.
+Some libs prefixes `localStorage` keys. This lib doesn't by default,
+but you can add a prefix:
+
+```typescript
+import { localStorageProviders } from '@ngx-pwa/local-storage';
+
+@NgModule({
+  providers: [
+    localStorageProviders({
+      LSPrefix: 'myapp_',
+    })
+  ]
+})
+export class AppModule {}
+```
+
+### Example with `localforage`
+
+Interoperability with `localforage` lib can be achieved with this config:
+
+```typescript
+import { localStorageProviders } from '@ngx-pwa/local-storage';
+
+@NgModule({
+  providers: [
+    localStorageProviders({
+      LSPrefix: 'localforage/',
+      IDBDBName: 'localforage',
+      IDBStoreName: 'keyvaluepairs',
+    })
+  ]
+})
+export class AppModule {}
+```
+
+## Warnings
+
+### `indexedDB` store
 
 In `indexedDB`, creating a store is only possible inside the `upgradeneeded` event,
 which only happens when opening the database for the first time,
@@ -68,9 +110,9 @@ Then, you need to ensure:
   - by letting this lib to be initialized first (beware of concurrency issues),
   - or if another API is going first, it needs to take care of the creation of the store (with the same name).
 
-## Limitation with `undefined`
+### Limitation with `undefined`
 
-Most librairies (like this one and `localForage`) will prevent you to store `undefined`,
+Most librairies (like this one and `localforage`) will prevent you to store `undefined`,
 by always returning `null` instead of `undefined`, due to technical issues in the native APIs.
 
 But if you use the native APIs (`localStorage` and `indexedDb`) directly,
@@ -78,7 +120,7 @@ you could manage to store `undefined`, but it will then throw exceptions in some
 
 So **don't store `undefined`**.
 
-## `indexedDB` keys
+### `indexedDB` keys
 
 This lib only allows `string` keys, while `indexedDB` allows some other key types.
 So if using this lib `keys()` method, all keys will be converted to `string`.

@@ -27,6 +27,8 @@ import { localStorageProviders } from '@ngx-pwa/local-storage';
 export class AppModule {}
 ```
 
-Note: it is an initialization step, so as mentioned in the example, **it must be done in `AppModule`**
+Note:
+- it is an initialization step, so as mentioned in the example, **it must be done in `AppModule`**,
+- **never change these options in an app already deployed in production, as all previously stored data would be lost**.
 
 [Back to general documentation](../README.md)

@@ -230,7 +230,7 @@ See [the browsers support guide](./docs/BROWSERS_SUPPORT.md) for more details an
 
 ## Interoperability
 
-For interoperability when mixing this lib with direct usage of native APIs or other libs
+For interoperability when mixing this lib with direct usage of native APIs or other libs like `localforage`
 (which doesn't make sense in most of cases),
 see the [interoperability documentation](./docs/INTEROPERABILITY.md).
 
