@@ -2,7 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.0.0-beta.4 (2019-02-08)
+## 8.0.0-beta.4 (2019-02-13)
 
 **A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.**
 
@@ -41,12 +41,12 @@ It was time to do a full review and refactoring, which results in:
 
 - `JSONSchemaNumeric` deprecated (will be removed in v9)
 - `LSGetItemsOptions` deprecated (not necessary anymore, will be removed in v9)
+- `LOCAL_STORAGE_PREFIX` and `prefix` option of `localStorageProviders()` deprecated (will be removed in v9))
 
 ### Reduced public API
 
 Should not concern you as it was internal stuff.
 
-- `LOCAL_STORAGE_PREFIX` renamed and not exported anymore (you should already use `localStorageProviders()`, see [prefix guide](./docs/PREFIX.md))
 - `IndexedDBDatabase`, `LocalStorageDatabase` and `JSONValidator` not exported anymore
 - `MockLocalDatabase` renamed and not exported anymore
 

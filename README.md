@@ -203,10 +203,10 @@ this lib also provides some `Map`-like methods for advanced operations:
 
 See the [documentation](./docs/MAP_OPERATIONS.md) for more info and some recipes.
 
-### Prefix
+### Collision
 
 If you have multiple apps on the same *sub*domain *and* you don't want to share data between them,
-see the [prefix guide](./docs/PREFIX.md).
+see the [prefix guide](./docs/COLLISION.md).
 
 ## Angular support
 
