@@ -3,7 +3,7 @@ import { MemoryDatabase } from './databases/memory-database';
 import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from './validation/json-schema';
 
 /* For now, `unknown` and `any` cases must be checked manually as any type can be converted to them. */
-// TODO: Find a way to automate this.
+// TODO: Find a way to automate this: https://github.com/dsherret/conditional-type-checks
 
 describe('getItem() API v8', () => {
 
