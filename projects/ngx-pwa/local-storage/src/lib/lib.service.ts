@@ -182,7 +182,10 @@ export class LocalStorage {
    */
   setItemSubscribe(key: string, data: string | number | boolean | object): void {
 
-    this.setItem(key, data).subscribe(() => {}, () => {});
+    this.setItem(key, data).subscribe({
+      next: () => {},
+      error: () => {},
+    });
 
   }
 
@@ -195,7 +198,10 @@ export class LocalStorage {
    */
    removeItemSubscribe(key: string): void {
 
-    this.removeItem(key).subscribe(() => {}, () => {});
+    this.removeItem(key).subscribe({
+      next: () => {},
+      error: () => {},
+    });
 
   }
 
@@ -207,7 +213,10 @@ export class LocalStorage {
    */
   clearSubscribe(): void {
 
-    this.clear().subscribe(() => {}, () => {});
+    this.clear().subscribe({
+      next: () => {},
+      error: () => {},
+    });
 
   }
 

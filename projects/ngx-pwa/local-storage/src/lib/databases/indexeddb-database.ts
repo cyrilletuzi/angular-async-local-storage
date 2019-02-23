@@ -336,18 +336,17 @@ export class IndexedDBDatabase implements LocalDatabase {
     race([this.successEvent(request), this.errorEvent(request)])
       /* The observable will complete */
       .pipe(first())
-      .subscribe(() => {
-
-        /* Register the database connection in the `ReplaySubject` for further access */
-        this.database.next(request.result);
-
-      }, () => {
-
-        /* Firefox private mode issue: fallback storage if IndexedDb connection is failing
-         * @see https://bugzilla.mozilla.org/show_bug.cgi?id=781982
-         * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/26 */
-         this.database.error(new IDBBrokenError());
-
+      .subscribe({
+        next: () => {
+          /* Register the database connection in the `ReplaySubject` for further access */
+          this.database.next(request.result);
+        },
+        error: () => {
+          /* Firefox private mode issue: fallback storage if IndexedDb connection is failing
+          * @see https://bugzilla.mozilla.org/show_bug.cgi?id=781982
+          * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/26 */
+          this.database.error(new IDBBrokenError());
+        },
       });
 
   }
@@ -362,21 +361,19 @@ export class IndexedDBDatabase implements LocalDatabase {
     fromEvent(request, 'upgradeneeded')
       /* The observable will complete */
       .pipe(first())
-      .subscribe(() => {
+      .subscribe({
+        next: () => {
+          /* Use custom store name if requested, otherwise use the default */
+          const storeName = this.storeName || DEFAULT_IDB_STORE_NAME;
 
-        /* Use custom store name if requested, otherwise use the default */
-        const storeName = this.storeName || DEFAULT_IDB_STORE_NAME;
+          /* Check if the store already exists, to avoid error */
+          if (!request.result.objectStoreNames.contains(storeName)) {
+            /* Create the object store */
+            request.result.createObjectStore(storeName);
+          }
 
-        /* Check if the store already exists, to avoid error */
-        if (!request.result.objectStoreNames.contains(storeName)) {
-
-          /* Create the object store */
-          request.result.createObjectStore(storeName);
-
+          this.storeName = storeName;
         }
-
-        this.storeName = storeName;
-
       });
 
   }

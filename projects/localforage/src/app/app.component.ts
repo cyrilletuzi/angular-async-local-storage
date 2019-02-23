@@ -20,9 +20,9 @@ export class AppComponent implements OnInit {
 
     localForage.setItem(key, value).then(() => {
 
-      this.localStorage.getItem(key, { type: 'string' }).subscribe((result) => {
+      this.localStorage.getItem(key, { type: 'string' }).subscribe({ next: (result) => {
         this.title = result || 'not ok';
-      });
+      } });
 
     });
 
