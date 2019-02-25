@@ -163,8 +163,9 @@ export interface JSONSchemaObject {
 
 /**
  * Subset of the JSON Schema.
- * Types are enforced to validate everything: each value MUST have a ONE of either `type`.
+ * Types are enforced to validate everything: each value MUST have a `type`.
  * Not all validation features are supported: just follow the interface.
+ * Avoid extra properties: it won't be possible anymore in v8.
  */
 export type JSONSchema = (JSONSchemaConst | JSONSchemaEnum |
   JSONSchemaBoolean | JSONSchemaNull | JSONSchemaString | JSONSchemaNumeric |
