@@ -50,16 +50,17 @@ Should not concern you as it was internal stuff.
 - `IndexedDBDatabase`, `LocalStorageDatabase` and `JSONValidator` not exported anymore
 - `MockLocalDatabase` renamed and not exported anymore
 
-## 7.4.1 (2019-01-27)
+## 7.4.1 (2019-01-27) / 5.3.6 and 6.2.3 and 7.4.2 (2019-02-25)
 
 ### Documentation
 
-- No code change, only changes in JSON Schema interfaces documentation to prepare changes in v8:
-  - explicit `type: 'array'` when validating arrays
-  - explicit `type: 'object'` when validating objects
-  - prefer the generic `JSONSchema` interface
-  - avoid constants and enums validation (for now)
-  - avoid `null` (forever)
+- No code change, only changes in documentation to prepare changes in v8 by recommending to:
+  - explicit `type` in every JSON schema, especially `type: 'array'` and `type: 'object'` which were optional but will be required in v8
+  - prefer the generic `JSONSchema` interface (v7 only)
+  - avoid constants and enums validation (v7 only)
+  - avoid `null` in JSON schemas
+  - avoid adding unsupported extra properties in JSON schemas
+  - use `localStorageProviders()` for configuration instead of `LOCAL_STORAGE_PREFIX`
 
 ## 7.4.0 (2019-01-12)
 
