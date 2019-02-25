@@ -7,9 +7,9 @@
     "startIframe": "ng serve iframe --port 8080",
     "build": "ng build @ngx-pwa/local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage",
     "test": "ng test @ngx-pwa/local-storage",
-    "test:demo": "ng test angular-async-local-storage",
+    "test:demo": "ng test demo",
     "test:interoperability": "ng e2e localforage-e2e",
-    "testAll": "ng test @ngx-pwa/local-storage --watch false && ng test angular-async-local-storage --watch false && ng e2e localforage-e2e",
+    "testAll": "ng test @ngx-pwa/local-storage --watch false && ng test demo --watch false && ng e2e localforage-e2e",
     "lint": "ng lint",
     "publish": "npm run lint && npm run build && npm run testAll && npm publish dist/ngx-pwa/local-storage --access public --tag next"
   },

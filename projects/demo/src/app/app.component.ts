@@ -12,7 +12,6 @@ interface Data {
   template: `
     <h1>{{(data$ | async)?.title}}</h1>
     <iframe src="http://localhost:8080"></iframe>
-    <router-outlet></router-outlet>
   `
 })
 export class AppComponent implements OnInit {
