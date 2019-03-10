@@ -54,3 +54,10 @@ jobs: # a collection of steps
       - run: # run tests
           name: test
           command: ./node_modules/.bin/ng test @ngx-pwa/local-storage --watch false
+workflows:
+  version: 2
+  lint_and_build_and_test:
+    jobs:
+      - lint
+      - build
+      - test
