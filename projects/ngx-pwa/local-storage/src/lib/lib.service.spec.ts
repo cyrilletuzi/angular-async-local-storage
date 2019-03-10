@@ -321,6 +321,28 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
       });
 
+      it('length', (done) => {
+
+        localStorageService.length.pipe(
+          tap((length) => { expect(length).toBe(0); }),
+          mergeMap(() => localStorageService.setItem(key, 'test')),
+          mergeMap(() => localStorageService.length),
+          tap((length) => { expect(length).toBe(1); }),
+          mergeMap(() => localStorageService.setItem('', 'test')),
+          mergeMap(() => localStorageService.length),
+          tap((length) => { expect(length).toBe(2); }),
+          mergeMap(() => localStorageService.removeItem(key)),
+          mergeMap(() => localStorageService.length),
+          tap((length) => { expect(length).toBe(1); }),
+          mergeMap(() => localStorageService.clear()),
+          mergeMap(() => localStorageService.length),
+          tap((length) => { expect(length).toBe(0); }),
+        ).subscribe(() => {
+          done();
+        });
+
+      });
+
       it('keys()', (done) => {
 
         const key1 = 'index1';
@@ -569,6 +591,18 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
       it('size', (done) => {
 
         localStorageService.size.subscribe({ complete: () => {
+
+          expect().nothing();
+
+          done();
+
+        } });
+
+      });
+
+      it('length', (done) => {
+
+        localStorageService.length.subscribe({ complete: () => {
 
           expect().nothing();
 

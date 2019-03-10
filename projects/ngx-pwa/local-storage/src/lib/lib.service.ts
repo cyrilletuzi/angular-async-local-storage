@@ -41,6 +41,16 @@ export class LocalStorage {
   }
 
   /**
+   * Number of items in storage
+   * Alias of `.size`
+   */
+  get length(): Observable<number> {
+
+    return this.size;
+
+  }
+
+  /**
    * Constructor params are provided by Angular (but can also be passed manually in tests)
    * @param database Storage to use
    * @param jsonValidator Validator service
