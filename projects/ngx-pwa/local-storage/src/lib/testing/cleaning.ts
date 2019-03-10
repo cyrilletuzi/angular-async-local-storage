@@ -109,23 +109,26 @@ export function closeAndDeleteDatabase(done: DoneFn, localStorageService: LocalS
 
     const indexedDBService = localStorageService['database'];
 
-    indexedDBService['database'].subscribe((database) => {
+    indexedDBService['database'].subscribe({
+      next: (database) => {
 
-      /* Close the database connection */
-      database.close();
+        /* Close the database connection */
+        database.close();
 
-      /* Delete database */
-      const deletingDb = indexedDB.deleteDatabase(indexedDBService['dbName']);
+        /* Delete database */
+        const deletingDb = indexedDB.deleteDatabase(indexedDBService['dbName']);
 
-      /* Use an arrow function for done, otherwise it causes an issue in IE */
-      deletingDb.addEventListener('success', () => { done(); });
-      deletingDb.addEventListener('error', () => { done(); });
+        /* Use an arrow function for done, otherwise it causes an issue in IE */
+        deletingDb.addEventListener('success', () => { done(); });
+        deletingDb.addEventListener('error', () => { done(); });
 
-    }, () => {
+      },
+      error: () => {
 
-      /* Will happen in Firefox private mode if no requests have been done yet */
-      done();
+        /* Will happen in Firefox private mode if no requests have been done yet */
+        done();
 
+      }
     });
 
   } else {

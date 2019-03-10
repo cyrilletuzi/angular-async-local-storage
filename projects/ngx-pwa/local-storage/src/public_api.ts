@@ -3,7 +3,6 @@
  */
 
 // TODO: Review public/private API before stable release
-// Investigate about RxJS v6.4 `.subscribe()` signatures deprecations in docs
 
 export {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber,

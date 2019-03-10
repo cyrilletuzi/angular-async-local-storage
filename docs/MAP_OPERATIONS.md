@@ -80,12 +80,13 @@ this.localStorageService.keys().pipe(
   /* Remove the item for each key */
   mergeMap((key) => localStorageService.removeItem(key))
 
-).subscribe({ complete: () => {
+).subscribe({
+  complete: () => {
 
-  /* Note we don't act in the classic success callback as it will be trigerred for each key,
-   * while we want to act only when all the operations are done */
+    /* Note we don't act in the classic success callback as it will be trigerred for each key,
+    * while we want to act only when all the operations are done */
+    console.log('Done!');
 
-  console.log('Done!');
-
-} });
+  }
+});
 ```

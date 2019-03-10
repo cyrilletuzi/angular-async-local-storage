@@ -40,20 +40,24 @@ function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
         request.addEventListener('success', () => {
 
-          localStorageService.setItem(index, 'world').subscribe(() => {
+          localStorageService.setItem(index, 'world').subscribe({
+            next: () => {
 
-            expect().nothing();
+              expect().nothing();
 
-            dbOpen.result.close();
+              dbOpen.result.close();
 
-            done();
+              done();
 
-          }, () => {
+            },
+            error: () => {
 
-            dbOpen.result.close();
+              dbOpen.result.close();
 
-            /* Cases : Edge/IE because of `undefined` */
-            pending();
+              /* Cases : Edge/IE because of `undefined` */
+              pending();
+
+            },
 
           });
 

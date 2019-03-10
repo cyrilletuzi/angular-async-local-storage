@@ -542,35 +542,41 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
       it('setItem()', (done) => {
 
-        localStorageService.setItem('index', 'value').subscribe({ complete: () => {
+        localStorageService.setItem('index', 'value').subscribe({
+          complete: () => {
 
-          expect().nothing();
+            expect().nothing();
 
-          done();
+            done();
 
-        } });
+          }
+        });
 
       });
 
       it('getItem()', (done) => {
 
-        localStorageService.getItem(key).subscribe({ complete: () => {
+        localStorageService.getItem(key).subscribe({
+          complete: () => {
 
-          expect().nothing();
+            expect().nothing();
 
-          done();
+            done();
 
-        } });
+          }
+        });
 
       });
 
       it('removeItem()', (done) => {
 
-        localStorageService.removeItem(key).subscribe({ complete: () => {
+        localStorageService.removeItem(key).subscribe({
+          complete: () => {
 
-          expect().nothing();
+            expect().nothing();
 
-          done(); }
+            done();
+          }
 
         });
 
@@ -578,61 +584,71 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
       it('clear()', (done) => {
 
-        localStorageService.clear().subscribe({ complete: () => {
+        localStorageService.clear().subscribe({
+          complete: () => {
 
-          expect().nothing();
+            expect().nothing();
 
-          done();
+            done();
 
-        } });
+          }
+        });
 
       });
 
       it('size', (done) => {
 
-        localStorageService.size.subscribe({ complete: () => {
+        localStorageService.size.subscribe({
+          complete: () => {
 
-          expect().nothing();
+            expect().nothing();
 
-          done();
+            done();
 
-        } });
+          }
+        });
 
       });
 
       it('length', (done) => {
 
-        localStorageService.length.subscribe({ complete: () => {
+        localStorageService.length.subscribe({
+          complete: () => {
 
-          expect().nothing();
+            expect().nothing();
 
-          done();
+            done();
 
-        } });
+          }
+        });
 
       });
 
       it('keys()', (done) => {
 
-        localStorageService.keys().subscribe({ complete: () => {
+        localStorageService.keys().subscribe({
+          complete: () => {
 
-          expect().nothing();
+            expect().nothing();
 
-          done();
+            done();
 
-        } });
+          }
+        });
 
       });
 
       it('has()', (done) => {
 
-        localStorageService.has(key).subscribe({ complete: () => {
+        localStorageService.has(key).subscribe({
+          complete: () => {
 
-          expect().nothing();
+            expect().nothing();
 
-          done();
+            done();
 
-        } });
+          }
+        });
 
       });
 

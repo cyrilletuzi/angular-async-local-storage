@@ -99,13 +99,11 @@ You can store any value, without worrying about stringifying.
 ### Deleting data
 
 To delete one item:
-
 ```typescript
 this.localStorage.removeItem('user').subscribe(() => {});
 ```
 
 To delete all items:
-
 ```typescript
 this.localStorage.clear().subscribe(() => {});
 ```
@@ -119,7 +117,6 @@ this.localStorage.getItem<User>('user').subscribe((user) => {
 ```
 
 Not finding an item is not an error, it succeeds but returns `null`.
-
 ```typescript
 this.localStorage.getItem('notexisting').subscribe((data) => {
   data; // null
@@ -138,14 +135,13 @@ for an example.
 
 Don't forget it's client-side storage: **always check the data**, as it could have been forged or deleted.
 
-You can use a [JSON Schema](http://json-schema.org/) to validate the data. **Starting with *version 7*, validation is now required.**
+You can use a [JSON Schema](http://json-schema.org/) to validate the data.
 
 ```typescript
 this.localStorage.getItem('test', { type: 'string' })
-.subscribe((user) => {
-  // Called if data is valid or null
-}, (error) => {
-  // Called if data is invalid
+.subscribe({
+  next: (user) => { /* Called if data is valid or `null` */ },
+  error: (error) => { /* Called if data is invalid */ },
 });
 ```
 
@@ -171,23 +167,33 @@ this.localStorage.clearSubscribe();
 
 ### Errors
 
-As usual, you should catch any potential error:
-
+As usual, it's better to catch any potential error:
 ```typescript
-this.localStorage.setItem('color', 'red').subscribe(() => {
-  // Done
-}, (error) => {
-  // Error
+this.localStorage.setItem('color', 'red').subscribe({
+  next: () => {},
+  error: (error) => {},
 });
+```
+
+For read operations, you can also manage errors by providing a default value:
+```typescript
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+this.localStorage.getItem('color').pipe(
+  catchError(() => of('red'))
+).subscribe((result) => {});
 ```
 
 Could happen to anyone:
 - `.setItem()`: storage is full (`DOMException` with name `'QuotaExceededError`)
-- `.setItem()` when in `localStorage` fallback: error in JSON serialization because of circular references (`TypeError`)
+
+Could only happen when in `localStorage` fallback:
+- `.setItem()`: error in JSON serialization because of circular references (`TypeError`)
+- `.getItem()`: error in JSON unserialization (`SyntaxError`)
 
 Should only happen if data was corrupted or modified from outside of the lib:
 - `.getItem()`: data invalid against your JSON schema (`ValidationError` from this lib)
-- `.getItem()` when in `localStorage` fallback: error in JSON unserialization (`SyntaxError`)
 - any method when in `indexedDB`: database store has been deleted (`DOMException` with name `'NotFoundError'`)
 
 Other errors are supposed to be catched or avoided by the lib,

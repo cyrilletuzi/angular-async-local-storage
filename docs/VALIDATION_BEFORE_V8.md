@@ -216,10 +216,9 @@ If validation fails, it'll go in the error callback:
 
 ```typescript
 this.localStorage.getItem<string>('existing', { schema: { type: 'string' } })
-.subscribe((result) => {
-  // Called if data is valid or null
-}, (error) => {
-  // Called if data is invalid
+.subscribe({
+  next: (result) => { /* Called if data is valid or null */ },
+  error: (error) => { /* Called if data is invalid */ },
 });
 ```
 
@@ -227,10 +226,9 @@ But as usual (like when you do a database request), not finding an item is not a
 
 ```typescript
 this.localStorage.getItem<string>('notExisting', { schema: { type: 'string' } })
-.subscribe((result) => {
-  result; // null
-}, (error) => {
-  // Not called
+.subscribe({
+  next: (result) => { result; /* null */ },
+  error: (error) => { /* Not called */ },
 });
 ```
 
