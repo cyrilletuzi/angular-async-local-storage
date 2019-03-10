@@ -17,4 +17,4 @@ jobs: # a collection of steps
             - ./node_modules
       - run: # run tests
           name: test
-          command: ng test @ngx-pwa/local-storage --watch false
+          command: ./node_modules/.bin/ng test @ngx-pwa/local-storage --watch false
