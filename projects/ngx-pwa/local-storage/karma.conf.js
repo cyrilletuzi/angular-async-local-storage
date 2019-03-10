@@ -48,13 +48,13 @@ module.exports = function (config) {
         flags: ['-private']
       }
     },
-    /* Quick tests */
-    // browsers: ['Chrome'],
+    /* Default tests (for CircleCI) */
+    browsers: ['Chrome', 'Firefox'],
     /* Tests on Mac
      * There is currently an issue with karma and Safari 12,
      * needing to explicitly click "open" to launch the tests
      */
-    browsers: ['Chrome', 'Firefox', 'Safari'],
+    // browsers: ['Chrome', 'Firefox', 'Safari'],
     /* Tests on Mac in private modes */
     // browsers: ['Chrome_private', 'Firefox_private', 'SafariPrivate'],
     /* Tests on Windows */

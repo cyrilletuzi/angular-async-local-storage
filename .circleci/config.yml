@@ -1,0 +1,20 @@
+version: 2 # use CircleCI 2.0
+jobs: # a collection of steps
+  build: # runs not using Workflows must have a `build` job as entry point
+    docker: # run the steps with Docker
+      - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
+    steps: # a collection of executable commands
+      - checkout
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: install-npm-wee
+          command: npm install
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run: # run tests
+          name: test
+          command: ./node_modules/.bin/ng test @ngx-pwa/local-storage --watch false
