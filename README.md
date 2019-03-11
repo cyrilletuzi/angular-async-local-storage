@@ -45,10 +45,10 @@ to be homogeneous with other Angular modules.
 Install the same version as your Angular one via [npm](http://npmjs.com):
 
 ```bash
-# For Angular 8:
+# For Angular 7 & 8:
 npm install @ngx-pwa/local-storage@next
 
-# For Angular 6 and Angular 7:
+# For Angular 6:
 npm install @ngx-pwa/local-storage@6
 ```
 
@@ -66,15 +66,6 @@ export class YourService {
 ```
 
 Versions 4 & 5 (only) need an additional setup step explained in [the old module guide](./docs/OLD_MODULE.md).
-
-### About version 7
-
-v7 of this lib works but is not recommended due to unforeseen issues.
-For example, v7 doesn't support TypeScript 3.2 due to a TypeScript regression
-(see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)).
-
-v8 has cleaned the mess, but for users still using Angular 7,
-**stay on v6 of this lib as it is compatible with Angular 7 too**.
 
 ### Upgrading
 
@@ -216,11 +207,8 @@ see the [prefix guide](./docs/COLLISION.md).
 
 ## Angular support
 
-This lib major version is aligned to the major version of Angular. Meaning for Angular 6 you need version 6,
-for Angular 7 you need version 7, for Angular 8 you need version 8, and so on.
-
 We follow [Angular LTS support](https://angular.io/guide/releases),
-meaning we support Angular 6 minimum, until November 2019.
+meaning we support Angular >= 6, until November 2019.
 
 This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler).
 
