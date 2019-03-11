@@ -3,15 +3,15 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "startIframe": "ng serve iframe --port 8080",
+    "start": "ng serve demo",
+    "start:iframe": "ng serve iframe --port 8080",
     "build": "ng build @ngx-pwa/local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage",
-    "test": "ng test @ngx-pwa/local-storage",
-    "test:demo": "ng test demo",
+    "test": "npm run test:specs && npm run build && npm run test:demo && npm run test:interoperability",
+    "test:specs": "ng test @ngx-pwa/local-storage --watch false",
+    "test:demo": "ng e2e demo-e2e",
     "test:interoperability": "ng e2e localforage-e2e",
-    "testAll": "ng test @ngx-pwa/local-storage --watch false && ng test demo --watch false && ng e2e localforage-e2e",
     "lint": "ng lint",
-    "publish": "npm run lint && npm run build && npm run testAll && npm publish dist/ngx-pwa/local-storage --access public --tag next"
+    "publish": "npm run lint && npm test && npm run build && npm publish dist/ngx-pwa/local-storage --access public --tag next"
   },
   "private": true,
   "dependencies": {
