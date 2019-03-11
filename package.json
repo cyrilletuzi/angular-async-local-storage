@@ -11,7 +11,9 @@
     "test:demo": "ng e2e demo-e2e",
     "test:interoperability": "ng e2e localforage-e2e",
     "lint": "ng lint",
-    "publish": "npm run lint && npm test && npm run build && npm publish dist/ngx-pwa/local-storage --access public --tag next"
+    "publish": "npm run lint && npm test && npm run build && npm publish dist/ngx-pwa/local-storage --access public --tag next",
+    "ci:ng7ts31": "npm install @angular/{common,compiler,core,platform-browser,platform-browser-dynamic,router,cli,compiler-cli}@7 @angular-devkit/{build-angular,build-ng-packagr}@0.13 typescript@3.1",
+    "ci:ng7ts32": "npm run ci:ng7ts31 && npm install typescript@3.2"
   },
   "private": true,
   "dependencies": {

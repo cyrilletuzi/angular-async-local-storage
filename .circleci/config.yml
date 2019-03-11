@@ -25,20 +25,60 @@ jobs: # a collection of steps
       - checkout
       - restore_cache: # special step to restore the dependency cache
           # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+          key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: install-npm-wee
           command: npm install
       - save_cache: # special step to save the dependency cache
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+          key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
       - run: # run tests
           name: test
           command: npm test
+  ng7ts31:
+    docker: # run the steps with Docker
+      - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
+    steps: # a collection of executable commands
+      - checkout
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm-wee
+          command: npm install
+      - run:
+          name: downgrade
+          command: npm run ci:ng7ts31
+      - run: # run tests
+          name: test
+          command: npm test
+  ng7ts32:
+    docker: # run the steps with Docker
+      - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
+    steps: # a collection of executable commands
+      - checkout
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm-wee
+          command: npm install
+      - run:
+          name: downgrade
+          command: npm run ci:ng7ts32
+      - run: # run tests
+          name: test
+          command: npm test
 workflows:
   version: 2
-  lint_and_build_and_test:
+  lint_and_test:
     jobs:
       - lint
       - test
+  test_ng7ts31:
+    jobs:
+      - ng7ts31
+  test_ng7ts32:
+    jobs:
+      - ng7ts32
