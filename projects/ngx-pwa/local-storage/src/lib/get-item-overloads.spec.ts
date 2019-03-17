@@ -1,6 +1,7 @@
 import { LocalStorage } from './lib.service';
 import { MemoryDatabase } from './databases/memory-database';
 import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from './validation/json-schema';
+import { map } from 'rxjs/operators';
 
 /* For now, `unknown` and `any` cases must be checked manually as any type can be converted to them. */
 // TODO: Find a way to automate this: https://github.com/dsherret/conditional-type-checks
@@ -299,6 +300,46 @@ describe('getItem() API v8', () => {
         test: { type: 'string' }
       }
     }).subscribe((_: Test | null) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('Map', (done) => {
+
+    localStorageService.getItem<[string, number][]>('test', {
+      type: 'array',
+      items: {
+        type: 'array',
+        items: [
+          { type: 'string' },
+          { type: 'number' },
+        ],
+      },
+    }).pipe(
+      map((result) => new Map(result))
+    ).subscribe((_: Map<string, number>) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('Set', (done) => {
+
+    localStorageService.getItem('test', {
+      type: 'array',
+      items: { type: 'string' },
+    }).pipe(
+      map((result) => new Set(result))
+    ).subscribe((_: Set<string>) => {
 
       expect().nothing();
 

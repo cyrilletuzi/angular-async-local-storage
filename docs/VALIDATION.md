@@ -129,6 +129,11 @@ this.localStorage.getItem<User>('test', schema)
 
 What's expected for each property is another JSON schema.
 
+### Special objects
+
+For special structures like `Map`, `Set` or `Blob`,
+see the [serialization guide](./SERIALIZATION.md).
+
 ### Why a schema *and* a cast?
 
 You may ask why we have to define a TypeScript cast with `getItem<User>()` *and* a JSON schema with `schema`.
