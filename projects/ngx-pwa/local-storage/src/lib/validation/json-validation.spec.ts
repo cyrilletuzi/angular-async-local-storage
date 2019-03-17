@@ -534,6 +534,42 @@ describe(`JSONValidator`, () => {
 
     });
 
+    describe('tuple', ()  => {
+
+      it(`valid`, () => {
+
+        const test = jsonValidator.validate(['test1', 1], { type: 'array', items: [{ type: 'string' }, { type: 'number' }] });
+
+        expect(test).toBe(true);
+
+      });
+
+      it(`invalid`, () => {
+
+        const test = jsonValidator.validate(['test1', 'test'], { type: 'array', items: [{ type: 'string' }, { type: 'number' }] });
+
+        expect(test).toBe(false);
+
+      });
+
+      it(`special case: greater length`, () => {
+
+        const test = jsonValidator.validate(['test1', 1, 2], { type: 'array', items: [{ type: 'string' }, { type: 'number' }] });
+
+        expect(test).toBe(false);
+
+      });
+
+      it(`special case: lower length`, () => {
+
+        const test = jsonValidator.validate(['test1'], { type: 'array', items: [{ type: 'string' }, { type: 'number' }] });
+
+        expect(test).toBe(false);
+
+      });
+
+    });
+
     describe('arrays items', ()  => {
 
       it(`valid`, () => {

@@ -56,32 +56,51 @@ this.localStorage.getItem('test', { type: 'string' })
 ```typescript
 this.localStorage.getItem('test', {
   type: 'array',
-  items: { type: 'boolean' }
+  items: { type: 'boolean' },
 })
 ```
 
 ```typescript
 this.localStorage.getItem('test', {
   type: 'array',
-  items: { type: 'integer' }
+  items: { type: 'integer' },
 })
 ```
 
 ```typescript
 this.localStorage.getItem('test', {
   type: 'array',
-  items: { type: 'number' }
+  items: { type: 'number' },
 })
 ```
 
 ```typescript
 this.localStorage.getItem('test', {
   type: 'array',
-  items: { type: 'string' }
+  items: { type: 'string' },
 })
 ```
 
 What's expected in `items` is another JSON schema.
+
+## Tuples
+
+In most cases, an array is for a list with values of the *same type*.
+In special cases, it can be useful to use arrays with values of different types.
+It's called tuples in TypeScript. For example: `['test', 1]`
+
+```typescript
+this.localStorage.getItem('test', {
+  type: 'array',
+  items: [
+    { type: 'string' },
+    { type: 'number' },
+  ],
+})
+```
+
+Note a tuple has a fixed length: the number of values in the array and the number of schemas provided in `items`
+must be exactly the same, otherwise the validation fails.
 
 ## How to validate objects
 

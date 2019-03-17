@@ -33,7 +33,6 @@ It was time to do a full review and refactoring, which results in:
 
 - **`type` now required for array, object, const and enum validation schemas**
 - `JSONSchemaNull` removed (useless, `null` doesn't require any validation)
-- `items` in arrays schemas no longer accepts an array of JSON schemas
 - `JSONSchema` no longer accepts extra properties
 - `getUnsafeItem()` is removed (was already deprecated in v7)
 
