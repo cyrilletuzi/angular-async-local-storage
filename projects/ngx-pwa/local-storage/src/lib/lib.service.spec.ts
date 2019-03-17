@@ -165,10 +165,9 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
       it('null', (done) => {
 
-        const value = null;
-
-        localStorageService.setItem(key, value).pipe(
-          mergeMap(() => localStorageService.getItem(key))
+        localStorageService.setItem(key, 'test').pipe(
+          mergeMap(() => localStorageService.setItem(key, null)),
+          mergeMap(() => localStorageService.getItem(key)),
         ).subscribe((result) => {
 
           expect(result).toBeNull();
@@ -181,10 +180,9 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
       it('undefined', (done) => {
 
-        const value = undefined;
-
-        localStorageService.setItem(key, value).pipe(
-          mergeMap(() => localStorageService.getItem(key))
+        localStorageService.setItem(key, 'test').pipe(
+          mergeMap(() => localStorageService.setItem(key, undefined)),
+          mergeMap(() => localStorageService.getItem(key)),
         ).subscribe((result) => {
 
           expect(result).toBeNull();

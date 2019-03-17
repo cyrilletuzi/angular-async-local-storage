@@ -142,13 +142,9 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   setItem(key: string, data: any): Observable<boolean> {
 
-    /* Storing `null` or `undefined` is known to cause issues in some browsers.
-     * So it's useless, not storing anything in this case */
+    /* Storing `undefined` or `null` in `localStorage` can cause issues in some browsers so removing item instead */
     if ((data === undefined) || (data === null)) {
-
-      /* Trigger success */
-      return of(true);
-
+      return this.removeItem(key);
     }
 
     /* Open a transaction in write mode */
