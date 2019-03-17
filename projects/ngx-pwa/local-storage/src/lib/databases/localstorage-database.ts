@@ -77,25 +77,25 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   setItem(key: string, data: any): Observable<boolean> {
 
-    /* Storing `undefined` or `null` in `localStorage` can cause issues in some browsers and has no sense */
-    if ((data !== undefined) && (data !== null)) {
+    /* Storing `undefined` or `null` in `localStorage` can cause issues in some browsers so removing item instead */
+    if ((data === undefined) || (data === null)) {
+      return this.removeItem(key);
+    }
 
-      let serializedData: string | null = null;
+    let serializedData: string | null = null;
 
-      /* Try to stringify (can fail on circular references) */
-      try {
-        serializedData = JSON.stringify(data);
-      } catch (error) {
-        return throwError(error as TypeError);
-      }
+    /* Try to stringify (can fail on circular references) */
+    try {
+      serializedData = JSON.stringify(data);
+    } catch (error) {
+      return throwError(error as TypeError);
+    }
 
-      /* Can fail if storage quota is exceeded */
-      try {
-        localStorage.setItem(this.prefixKey(key), serializedData);
-      } catch (error) {
-        return throwError(error as DOMException);
-      }
-
+    /* Can fail if storage quota is exceeded */
+    try {
+      localStorage.setItem(this.prefixKey(key), serializedData);
+    } catch (error) {
+      return throwError(error as DOMException);
     }
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */

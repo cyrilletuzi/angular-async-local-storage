@@ -28,6 +28,7 @@ It was time to do a full review and refactoring, which results in:
 - `indexedDB` database and object store names default values are exported and can be changed
 (see the [interoperability guide](./docs/INTEROPERABILITY.md))
 - `indexedDB` storage will now works in web workers too
+- When trying to store `null` or `undefined`, `removeItem()` instead of just bypassing (meaning the old value was kept)
 
 ### Breaking changes
 

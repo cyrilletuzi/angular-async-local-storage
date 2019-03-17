@@ -87,6 +87,8 @@ this.localStorage.setItem('user', user).subscribe(() => {});
 
 You can store any value, without worrying about stringifying.
 
+Storing `null` or `undefined` can cause issues in some browsers, so the item will be removed instead.
+
 ### Deleting data
 
 To delete one item:

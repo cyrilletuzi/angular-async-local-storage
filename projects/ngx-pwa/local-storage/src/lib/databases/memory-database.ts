@@ -46,12 +46,12 @@ export class MemoryDatabase implements LocalDatabase {
    */
    setItem(key: string, data: any): Observable<boolean> {
 
-    /* Storing `undefined` or `null` in `localStorage` is useless */
-    if ((data !== undefined) && (data !== null)) {
-
-      this.memoryStorage.set(key, data);
-
+    /* Storing `undefined` or `null` in `localStorage` is useless, so removing item instead */
+    if ((data === undefined) || (data === null)) {
+      return this.removeItem(key);
     }
+
+    this.memoryStorage.set(key, data);
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(true);
