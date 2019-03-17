@@ -85,9 +85,11 @@ let user: User = { firstName: 'Henri', lastName: 'Bergson' };
 this.localStorage.setItem('user', user).subscribe(() => {});
 ```
 
-You can store any value, without worrying about stringifying.
-
-Storing `null` or `undefined` can cause issues in some browsers, so the item will be removed instead.
+You can store any value, without worrying about serializing. But note that:
+- storing `null` or `undefined` can cause issues in some browsers, so the item will be removed instead,
+- you should stick to JSON data, ie. primitive types, arrays and literal objects.
+`Map`, `Set`, `Blob` and other special structures can cause issues in some scenarios.
+See the [serialization guide](./docs/SERIALIZATION.md) for more details.
 
 ### Deleting data
 
@@ -142,11 +144,9 @@ See the [full validation guide](./docs/VALIDATION.md) to see how to validate all
 
 ### Subscription
 
-You *DO NOT* need to unsubscribe: the observable autocompletes (like in the `HttpClient` service).
+You *DO NOT* need to unsubscribe: the `Observable` autocompletes (like in the `HttpClient` service).
 
 But you *DO* need to subscribe, even if you don't have something specific to do after writing in local storage (because it's how RxJS Observables work).
-
-Since *version 5.2*, you can use these methods to auto-subscribe:
 
 ```typescript
 this.localStorage.setItemSubscribe('user', user);
