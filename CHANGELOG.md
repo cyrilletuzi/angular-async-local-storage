@@ -2,7 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.0.0-beta.5 (2019-03-13)
+## 8.0.0-beta.5 (2019-03-11)
 
 **A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.**
 
