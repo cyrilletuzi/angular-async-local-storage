@@ -166,9 +166,9 @@ export interface JSONSchemaArray {
   type: 'array';
 
   /**
-   * Schema for the values of an array.
+   * Schema for the values of an array, or array of schemas for a tuple.
    */
-  items: JSONSchema;
+  items: JSONSchema | JSONSchema[];
 
   /**
    * Check if an array length is lower or equal to this value.

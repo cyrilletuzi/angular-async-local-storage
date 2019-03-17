@@ -67,9 +67,6 @@ this.localStorage.getItem('test', {
 })
 ```
 
-Also, `items` no longer accepts an array of JSON schemas, meaning arrays with multiple types
-are no longer possible (and it's better for consistency, use an object if you mix types in a list).
-
 ### Validation of objects
 
 **`type` option is now required.**

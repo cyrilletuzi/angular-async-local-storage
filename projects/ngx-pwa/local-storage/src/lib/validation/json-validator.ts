@@ -41,6 +41,7 @@ export class JSONValidator {
    * Validate a string
    * @param data Data to validate
    * @param schema Schema describing the string
+   * @returns If data is valid: `true`, if it is invalid: `false`
    */
   private validateString(data: any, schema: JSONSchemaString): boolean {
 
@@ -86,6 +87,7 @@ export class JSONValidator {
    * Validate a number or an integer
    * @param data Data to validate
    * @param schema Schema describing the number or integer
+   * @returns If data is valid: `true`, if it is invalid: `false`
    */
   private validateNumber(data: any, schema: JSONSchemaNumber | JSONSchemaInteger): boolean {
 
@@ -136,6 +138,7 @@ export class JSONValidator {
    * Validate a boolean
    * @param data Data to validate
    * @param schema Schema describing the boolean
+   * @returns If data is valid: `true`, if it is invalid: `false`
    */
   private validateBoolean(data: any, schema: JSONSchemaBoolean): boolean {
 
@@ -155,6 +158,7 @@ export class JSONValidator {
    * Validate an array
    * @param data Data to validate
    * @param schema Schema describing the array
+   * @returns If data is valid: `true`, if it is invalid: `false`
    */
   private validateArray(data: any[], schema: JSONSchemaArray): boolean {
 
@@ -181,6 +185,13 @@ export class JSONValidator {
 
     }
 
+    /* Specific test for tuples */
+    if (Array.isArray(schema.items)) {
+
+      return this.validateTuple(data, schema.items);
+
+    }
+
     /* Validate all the values in array */
     for (const value of data) {
 
@@ -195,9 +206,37 @@ export class JSONValidator {
   }
 
   /**
+   * Validate a tuple (array with fixed length and multiple types)
+   * @param data Data to validate
+   * @param schemas Schemas describing the tuple
+   * @returns If data is valid: `true`, if it is invalid: `false`
+   */
+  private validateTuple(data: any[], schemas: JSONSchema[]): boolean {
+
+    /* Tuples have a fixed length */
+    if (data.length !== schemas.length) {
+
+      return false;
+
+    }
+
+    for (let i = 0; i < schemas.length; i += 1) {
+
+      if (!this.validate(data[i], schemas[i])) {
+        return false;
+      }
+
+    }
+
+    return true;
+
+  }
+
+  /**
    * Validate an object
    * @param data Data to validate
    * @param schema JSON schema describing the object
+   * @returns If data is valid: `true`, if it is invalid: `false`
    */
   private validateObject(data: { [k: string]: any; }, schema: JSONSchemaObject): boolean {
 
@@ -248,6 +287,7 @@ export class JSONValidator {
    * Validate a constant
    * @param data Data ta validate
    * @param schema JSON schema describing the constant
+   * @returns If data is valid: `true`, if it is invalid: `false`
    */
   private validateConst(data: any, schema: JSONSchemaBoolean | JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
 
@@ -263,6 +303,7 @@ export class JSONValidator {
    * Validate an enum
    * @param data Data ta validate
    * @param schema JSON schema describing the enum
+   * @returns If data is valid: `true`, if it is invalid: `false`
    */
   private validateEnum(data: any, schema: JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
 
