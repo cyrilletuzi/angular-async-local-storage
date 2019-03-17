@@ -2,9 +2,13 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.0.0-beta.5 (2019-03-11)
+## 8.0.0-beta.6 (2019-03-17)
 
 **A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.**
+
+v8 works with:
+- Angular 8 and TypeScript 3.2,
+- Angular 7 and TypeScript 3.1 or 3.2
 
 ### Feature: validation is much easier!
 
