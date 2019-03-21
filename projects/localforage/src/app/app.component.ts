@@ -4,7 +4,10 @@ import { LocalStorage } from '@ngx-pwa/local-storage';
 
 @Component({
   selector: 'app-root',
-  template: `<h1>{{title}}</h1>`,
+  template: `
+    <h1>{{title}}</h1>
+    <router-outlet></router-outlet>
+  `,
   styles: ['']
 })
 export class AppComponent implements OnInit {

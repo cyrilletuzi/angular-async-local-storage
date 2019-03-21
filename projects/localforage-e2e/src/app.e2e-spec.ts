@@ -12,4 +12,16 @@ describe('interoperability', () => {
 
   });
 
+  it('lazy loading', async () => {
+
+    await browser.get('/');
+
+    await browser.get('/lazy');
+
+    const text = await $('#lazy').getText();
+
+    expect(text).toBe('hello world');
+
+  });
+
 });
