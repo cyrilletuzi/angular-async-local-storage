@@ -183,54 +183,6 @@ export class LocalStorage {
   }
 
   /**
-   * Set an item in storage, and auto-subscribe
-   * @param key The item's key
-   * @param data The item's value
-   * **WARNING: should be avoided in most cases, use this method only if these conditions are fulfilled:**
-   * - you don't need to manage the error callback (errors will silently fail),
-   * - you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
-   */
-  setItemSubscribe(key: string, data: string | number | boolean | object): void {
-
-    this.setItem(key, data).subscribe({
-      next: () => {},
-      error: () => {},
-    });
-
-  }
-
-  /**
-   * Delete an item in storage, and auto-subscribe
-   * @param key The item's key
-   * **WARNING: should be avoided in most cases, use this method only if these conditions are fulfilled:**
-   * - you don't need to manage the error callback (errors will silently fail),
-   * - you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
-   */
-   removeItemSubscribe(key: string): void {
-
-    this.removeItem(key).subscribe({
-      next: () => {},
-      error: () => {},
-    });
-
-  }
-
-  /**
-   * Delete all items in storage, and auto-subscribe
-   * **WARNING: should be avoided in most cases, use this method only if these conditions are fulfilled:**
-   * - you don't need to manage the error callback (errors will silently fail),
-   * - you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
-   */
-  clearSubscribe(): void {
-
-    this.clear().subscribe({
-      next: () => {},
-      error: () => {},
-    });
-
-  }
-
-  /**
    * RxJS operator to catch if `indexedDB` is broken
    * @param operationCallback Callback with the operation to redo
    */
