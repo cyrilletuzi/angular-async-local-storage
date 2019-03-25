@@ -146,17 +146,7 @@ See the [full validation guide](./docs/VALIDATION.md) to see how to validate all
 
 You *DO NOT* need to unsubscribe: the `Observable` autocompletes (like in the `HttpClient` service).
 
-But you *DO* need to subscribe, even if you don't have something specific to do after writing in local storage (because it's how RxJS Observables work).
-
-```typescript
-this.localStorage.setItemSubscribe('user', user);
-this.localStorage.removeItemSubscribe('user');
-this.localStorage.clearSubscribe();
-```
-
-*Use these methods **only** if these conditions are fulfilled:*
-- you don't need to manage the error callback (with these methods, errors will silently fail),
-- you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
+But **you *DO* need to subscribe**, even if you don't have something specific to do after writing in local storage (because it's how RxJS Observables work).
 
 ### Errors
 
