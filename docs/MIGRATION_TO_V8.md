@@ -29,13 +29,7 @@ npm install @ngx-pwa/local-storage@next
 2. Start your project: problems will be seen at compilation.
 Or you could search for `getItem` as most breaking changes are about its options.
 
-## The bad part: breaking changes
-
-**The following changes may require action from you**.
-
-The main change is to add `type` to all your JSON schemas.
-
-### New `indexedDB` store
+## New `indexedDB` store
 
 To allow interoperability, the internal `indexedDB` storing system has changed.
 It is not a breaking change as the lib do it in a backward-compatible way:
@@ -47,6 +41,12 @@ So it should not concern you, but as it is very sensitive change, we recommend
 
 It's internal stuff, but it also means there is a transition phase where some of the users of your app
 will be on the new storage, and others will be on the old one.
+
+## The bad part: breaking changes
+
+**The following changes may require action from you**.
+
+The main change is to add `type` to all your JSON schemas.
 
 ### Validation of arrays
 
@@ -126,55 +126,31 @@ It also means enums of different types are no longer possible (and it's better f
 
 Also, `JSONSchemaEnum` interface is removed.
 
+### `JSONSchemaNull` removed
+
+`JSONSchemaNull` is removed (it was useless, as if the data is `null`, validation doesn't occur).
+
 ### Additional properties in schemas
 
 The `schema` option of `getItem()` now only accepts our own `JSONSchema` interface,
 which is a subset of the JSON Schema standard.
 
 This lib has always discarded some features of the standard, as it uses the schemas for a specific purpose (validation).
-But before v8, extra properties in the schema were accepted even if not supported. It is no longer possible since v8.
+But before v8, extra properties in the schema were accepted even if not supported.
+It is no longer possible since v8 due to TypeScript limitations.
 
 While not recommended, you can still force it:
 ```typescript
 this.localStorage.getItem('test', schema as any)
 ```
 
-### Prefix and collision
+### `xSubscribe()` methods removed
 
-If you were using a prefix because you have multiple apps on the same subdomain,
-configuration has changed to allow interoperability.
-The old one still works for now but is deprecated and will be removed in v9.
+Auto-subscription methods were added for simplicity, but they were risky shortcuts because:
+- potential errors are not managed,
+- it can cause concurrency issues, especially given the average RxJS knowledge.
 
-Before v8:
-```typescript
-import { localStorageProviders, LOCAL_STORAGE_PREFIX } from '@ngx-pwa/local-storage';
-
-@NgModule({
-  providers: [
-    localStorageProviders({ prefix: 'myapp' }),
-    // or
-    { provide: LOCAL_STORAGE_PREFIX, useValue: 'myapp' },
-  ]
-})
-export class AppModule {}
-```
-
-Since v8:
-```typescript
-import { localStorageProviders } from '@ngx-pwa/local-storage';
-
-@NgModule({
-  providers: [
-    localStorageProviders({
-      LSPrefix: 'myapp_', // Note the underscore
-      IDBDBName: 'myapp_ngStorage',
-    }),
-  ]
-})
-export class AppModule {}
-```
-
-**Be very careful while changing this, as an error could mean the loss of all previously stored data.**
+So `setItemSubscribe()`, `removeItemSubscribe()` and `clearSubscribe()` are removed: subscribe manually.
 
 ## The good part: simplication changes
 
@@ -222,6 +198,12 @@ this.localStorage.getItem('test', { type: 'string' }).subscribe((data) => {
 
 Cast is still needed for objects. Follow the new [validation guide](./VALIDATION.md).
 
+## Deprecations
+
+Version 8 is a fresh new start, where everything has been cleaned. But as the previous changes already require quite some work,
+**the following features still work in v8 but are deprecated**. They will be removed in v9.
+So there's no hurry, but as soon as you have some time, do the following changes too.
+
 ### Use the generic `JSONSchema`
 
 Now the `JSONSchema` interface has been refactored, just use this one.
@@ -229,9 +211,43 @@ IntelliSense will adjust itself based on the `type` option.
 The specific interfaces (`JSONSchemaString`, `JSONSchemaBoolean` and so on) are still there but are useless.
 
 `JSONSchemaNumeric` still works but is deprecated in favor of `JSONSchemaNumber` or `JSONSchemaInteger`
-(but again, just use `JSONSchema`). Will be removed in v9.
+(but again, just use `JSONSchema`).
 
-Also, `JSONSchemaNull` is removed (it was useless, as if the data is `null`, validation doesn't occur).
+### Prefix and collision
+
+If you were using a prefix because you have multiple apps on the same subdomain,
+configuration has changed to allow interoperability.
+
+Before v8:
+```typescript
+import { localStorageProviders, LOCAL_STORAGE_PREFIX } from '@ngx-pwa/local-storage';
+
+@NgModule({
+  providers: [
+    localStorageProviders({ prefix: 'myapp' }),
+    // or
+    { provide: LOCAL_STORAGE_PREFIX, useValue: 'myapp' },
+  ]
+})
+export class AppModule {}
+```
+
+Since v8:
+```typescript
+import { localStorageProviders } from '@ngx-pwa/local-storage';
+
+@NgModule({
+  providers: [
+    localStorageProviders({
+      LSPrefix: 'myapp_', // Note the underscore
+      IDBDBName: 'myapp_ngStorage',
+    }),
+  ]
+})
+export class AppModule {}
+```
+
+**Be very careful while changing this, as an error could mean the loss of all previously stored data.**
 
 ## More documentation
 
