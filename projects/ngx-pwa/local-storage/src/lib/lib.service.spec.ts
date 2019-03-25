@@ -681,69 +681,6 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
     });
 
-    describe('auto-subscribe', () => {
-
-      it('setItemSubscribe()', (done) => {
-
-        const value = 'test';
-
-        localStorageService.setItemSubscribe(key, value);
-
-        setTimeout(() => {
-
-          localStorageService.getItem(key).subscribe((data) => {
-            expect(data).toBe(value);
-            done();
-          });
-
-        }, 50);
-
-      });
-
-      it('removeItemSubscribe()', (done) => {
-
-        const value = 'test';
-
-        localStorageService.setItem(key, value).subscribe(() => {
-
-          localStorageService.removeItemSubscribe(key);
-
-          setTimeout(() => {
-
-            localStorageService.getItem(key).subscribe((data) => {
-              expect(data).toBeNull();
-              done();
-            });
-
-          }, 50);
-
-        });
-
-      });
-
-      it('clearSubscribe()', (done) => {
-
-        const value = 'test';
-
-        localStorageService.setItem(key, value).subscribe(() => {
-
-          localStorageService.clearSubscribe();
-
-          setTimeout(() => {
-
-            localStorageService.getItem(key).subscribe((data) => {
-              expect(data).toBe(null);
-              done();
-            });
-
-          }, 50);
-
-        });
-
-      });
-
-    });
-
   });
 
 }

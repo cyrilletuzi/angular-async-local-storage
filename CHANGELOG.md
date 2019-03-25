@@ -179,8 +179,6 @@ Validation of data is now required when using `getItem()`:
 
 - New JSON Schema validation options supported (see [#18](https://github.com/cyrilletuzi/angular-async-local-storage/issues/18) for the full list).
 
-- `setItemSubscribe()`, `removeItemSubscribe()`, `clearSubscribe()` methods for auto-subscription
-
 - `localStorageProviders({ prefix: 'myapp' })` to avoid collision in multiple apps on same subdomain 
 
 ### Breaking changes
@@ -251,12 +249,6 @@ If you want to keep your previous data, double the prefix, for example: `localSt
 ### Feature
 
 - `localStorageProviders({ prefix: 'myapp' })` to avoid collision in multiple apps on same subdomain
-
-## 5.2.0 (2018-04-08)
-
-### Feature
-
-- `setItemSubscribe()`, `removeItemSubscribe()`, `clearSubscribe()` methods for auto-subscription
 
 ## 5.1.1 (2018-04-07)
 
