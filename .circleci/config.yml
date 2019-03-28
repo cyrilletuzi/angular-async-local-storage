@@ -5,6 +5,9 @@ jobs: # a collection of steps
       - image: circleci/node:10 # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: install-npm-wee
           command: npm install
@@ -20,6 +23,9 @@ jobs: # a collection of steps
       - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: install-npm-wee
           command: npm install
@@ -35,6 +41,9 @@ jobs: # a collection of steps
       - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: install-npm-wee
           command: npm install
@@ -49,6 +58,9 @@ jobs: # a collection of steps
       - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: install-npm-wee
           command: npm install
