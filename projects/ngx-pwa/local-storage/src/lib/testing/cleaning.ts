@@ -10,16 +10,20 @@ import { MemoryDatabase } from '../databases/memory-database';
  */
 export function clearStorage(done: DoneFn, localStorageService: LocalStorage) {
 
+  // tslint:disable-next-line: no-string-literal
   if (localStorageService['database'] instanceof IndexedDBDatabase) {
 
+    // tslint:disable-next-line: no-string-literal
     const indexedDBService = localStorageService['database'];
 
     try {
 
+      // tslint:disable-next-line: no-string-literal
       const dbOpen = indexedDB.open(indexedDBService['dbName']);
 
       dbOpen.addEventListener('success', () => {
 
+        // tslint:disable-next-line: no-string-literal
         const storeName = indexedDBService['storeName'];
 
         /* May be `null` if no requests were made */
@@ -73,14 +77,17 @@ export function clearStorage(done: DoneFn, localStorageService: LocalStorage) {
 
     }
 
+  // tslint:disable-next-line: no-string-literal
   } else if (localStorageService['database'] instanceof LocalStorageDatabase) {
 
     localStorage.clear();
 
     done();
 
+  // tslint:disable-next-line: no-string-literal
   } else if (localStorageService['database'] instanceof MemoryDatabase) {
 
+    // tslint:disable-next-line: no-string-literal
     localStorageService['database']['memoryStorage'].clear();
 
     done();
@@ -105,10 +112,13 @@ export function clearStorage(done: DoneFn, localStorageService: LocalStorage) {
 export function closeAndDeleteDatabase(done: DoneFn, localStorageService: LocalStorage) {
 
   /* Only `indexedDB` is concerned */
+  // tslint:disable-next-line: no-string-literal
   if (localStorageService['database'] instanceof IndexedDBDatabase) {
 
+    // tslint:disable-next-line: no-string-literal
     const indexedDBService = localStorageService['database'];
 
+    // tslint:disable-next-line: no-string-literal
     indexedDBService['database'].subscribe({
       next: (database) => {
 
@@ -116,6 +126,7 @@ export function closeAndDeleteDatabase(done: DoneFn, localStorageService: LocalS
         database.close();
 
         /* Delete database */
+        // tslint:disable-next-line: no-string-literal
         const deletingDb = indexedDB.deleteDatabase(indexedDBService['dbName']);
 
         /* Use an arrow function for done, otherwise it causes an issue in IE */

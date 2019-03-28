@@ -303,7 +303,6 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   /**
    * Connects to `indexedDB` and creates the object store on first time
-   * @param prefix
    */
   private connect(): void {
 

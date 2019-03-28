@@ -466,7 +466,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
             expect(error.message).toBe(VALIDATION_ERROR);
 
-              done();
+            done();
 
           } });
 
@@ -512,7 +512,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
             expect(error.message).toBe(VALIDATION_ERROR);
 
-              done();
+            done();
 
           } });
 
@@ -770,8 +770,10 @@ describe('specials', () => {
     /* Do a request first as a first transaction is needed to set the store name */
     localStorageService.getItem('test').subscribe(() => {
 
+      // tslint:disable-next-line: no-string-literal
       if (localStorageService['database'] instanceof IndexedDBDatabase) {
 
+        // tslint:disable-next-line: no-string-literal
         expect(localStorageService['database']['storeName']).toBe(DEFAULT_IDB_STORE_NAME);
 
         closeAndDeleteDatabase(done, localStorageService);
@@ -790,16 +792,18 @@ describe('specials', () => {
   it('indexedDB custom store name (will be pending in Firefox private mode)', (done) => {
 
     /* Unique names to be sure `indexedDB` `upgradeneeded` event is triggered */
-  const dbName = `dbCustom${Date.now()}`;
-  const storeName = `storeCustom${Date.now()}`;
+    const dbName = `dbCustom${Date.now()}`;
+    const storeName = `storeCustom${Date.now()}`;
 
     const localStorageService = new LocalStorage(new IndexedDBDatabase(dbName, storeName));
 
     /* Do a request first as a first transaction is needed to set the store name */
     localStorageService.getItem('test').subscribe(() => {
 
+      // tslint:disable-next-line: no-string-literal
       if (localStorageService['database'] instanceof IndexedDBDatabase) {
 
+        // tslint:disable-next-line: no-string-literal
         expect(localStorageService['database']['storeName']).toBe(storeName);
 
         closeAndDeleteDatabase(done, localStorageService);
@@ -858,7 +862,7 @@ describe('specials', () => {
           localStorageService.getItem(index1).subscribe((result) => {
 
             /* Check detection of old store has gone well */
-            // tslint:disable-next-line: deprecation
+            // tslint:disable-next-line: deprecation no-string-literal
             expect((localStorageService['database'] as IndexedDBDatabase)['storeName']).toBe(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
 
             /* Via the lib, data should be unwrapped */
@@ -935,8 +939,10 @@ describe('specials', () => {
     /* Do a request first to allow localStorage fallback if needed */
     localStorageService.getItem('test').subscribe(() => {
 
+      // tslint:disable-next-line: no-string-literal
       if (localStorageService['database'] instanceof IndexedDBDatabase) {
 
+        // tslint:disable-next-line: no-string-literal
         expect(localStorageService['database']['dbName']).toBe(`${prefix}_${DEFAULT_IDB_DB_NAME}`);
 
         closeAndDeleteDatabase(done, localStorageService);
@@ -958,6 +964,7 @@ describe('specials', () => {
 
     const localStorageService = new LocalStorage(new LocalStorageDatabase(prefix));
 
+    // tslint:disable-next-line: no-string-literal
     expect((localStorageService['database'] as LocalStorageDatabase)['prefix']).toBe(prefix);
 
   });
@@ -968,6 +975,7 @@ describe('specials', () => {
 
     const localStorageService = new LocalStorage(new LocalStorageDatabase(undefined, prefix));
 
+    // tslint:disable-next-line: no-string-literal
     expect((localStorageService['database'] as LocalStorageDatabase)['prefix']).toBe(`${prefix}_`);
 
   });
