@@ -6,7 +6,7 @@
     "start": "ng serve demo",
     "start:iframe": "ng serve iframe --port 8080",
     "build": "ng build @ngx-pwa/local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage",
-    "test": "npm run test:specs && npm run build && npm run test:demo && npm run test:interoperability",
+    "test": "npm run test:specs && npm run build && webdriver-manager update && npm run test:demo && npm run test:interoperability",
     "test:specs": "ng test @ngx-pwa/local-storage --watch false",
     "test:demo": "ng e2e demo-e2e",
     "test:interoperability": "ng e2e localforage-e2e",
