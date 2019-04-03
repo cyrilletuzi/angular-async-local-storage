@@ -2,9 +2,16 @@ import { browser, $ } from 'protractor';
 
 describe('public api', () => {
 
-  beforeAll(async () => {
+  beforeAll((done) => {
 
-    await browser.get('/');
+    browser.get('/').then(() => {
+
+      /* Wait for a few seconds as operations are asynchronous */
+      setTimeout(() => {
+        done();
+      }, 2000);
+
+    });
 
   });
 
@@ -44,7 +51,7 @@ describe('public api', () => {
 
     const data = Number.parseInt(await $('#size').getText(), 10);
 
-    expect(data).not.toBeNaN();
+    expect(data).toBeGreaterThan(1);
 
   });
 
@@ -52,15 +59,15 @@ describe('public api', () => {
 
     const data = Number.parseInt(await $('#length').getText(), 10);
 
-    expect(data).not.toBeNaN();
+    expect(data).toBeGreaterThan(1);
 
   });
 
   it('keys()', async () => {
 
-    const data = await $('#keys').getText();
+    const data = (await $('#keys').getText()).split(',');
 
-    expect(data).not.toBe('');
+    expect(data.length).toBeGreaterThan(1);
 
   });
 
@@ -69,6 +76,14 @@ describe('public api', () => {
     const data = await $('#has').getAttribute('hidden');
 
     expect(data).toBe('true');
+
+  });
+
+  it('service', async () => {
+
+    const data = await $('#service').getText();
+
+    expect(data).toBe('service');
 
   });
 
