@@ -982,8 +982,9 @@ describe('specials', () => {
 
   it('automatic storage injection', (done) => {
 
-    // TODO: check new API types
-    const localStorageService = TestBed.get<LocalStorage>(LocalStorage) as LocalStorage;
+    // TODO: check new API types  and backward compitiliby with v7
+    // tslint:disable-next-line: deprecation
+    const localStorageService = TestBed.get(LocalStorage) as LocalStorage;
 
     const index = 'index';
     const value = `value${Date.now()}`;
