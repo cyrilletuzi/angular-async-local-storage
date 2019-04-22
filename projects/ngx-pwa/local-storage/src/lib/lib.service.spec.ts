@@ -982,7 +982,8 @@ describe('specials', () => {
 
   it('automatic storage injection', (done) => {
 
-    const localStorageService = TestBed.get(LocalStorage) as LocalStorage;
+    // TODO: check new API types
+    const localStorageService = TestBed.get<LocalStorage>(LocalStorage) as LocalStorage;
 
     const index = 'index';
     const value = `value${Date.now()}`;
