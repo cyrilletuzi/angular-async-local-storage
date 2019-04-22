@@ -3,11 +3,11 @@ import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs
 import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
+import { IDBBrokenError } from './exceptions';
 import {
   IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8,
   LOCAL_STORAGE_PREFIX, DEFAULT_IDB_DB_NAME
 } from '../tokens';
-import { IDBBrokenError } from '../exceptions';
 
 @Injectable({
   providedIn: 'root'
@@ -92,9 +92,9 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * Gets an item value in our `indexedDB` store
    * @param key The item's key
-   * @returns The item's value if the key exists, `null` otherwise, wrapped in an RxJS `Observable`
+   * @returns The item's value if the key exists, `undefined` otherwise, wrapped in an RxJS `Observable`
    */
-  getItem<T = any>(key: string): Observable<T | null> {
+  get<T = any>(key: string): Observable<T | undefined> {
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
@@ -123,7 +123,7 @@ export class IndexedDBDatabase implements LocalDatabase {
           }
 
           /* Return `null` if the value is `null` or `undefined` */
-          return null;
+          return undefined;
 
         });
 
@@ -140,11 +140,11 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns An RxJS `Observable` to wait the end of the operation
    */
-  setItem(key: string, data: any): Observable<boolean> {
+  set(key: string, data: any): Observable<undefined> {
 
-    /* Storing `undefined` or `null` in `localStorage` can cause issues in some browsers so removing item instead */
+    /* Storing `undefined` or `null` in `indexedDb` can cause issues in some browsers so removing item instead */
     if ((data === undefined) || (data === null)) {
-      return this.removeItem(key);
+      return this.delete(key);
     }
 
     /* Open a transaction in write mode */
@@ -175,7 +175,7 @@ export class IndexedDBDatabase implements LocalDatabase {
               store.put(dataToStore, key);
 
             /* Manage success and error events, and map to `true` */
-            return this.requestEventsAndMapTo(request2, () => true);
+            return this.requestEventsAndMapTo(request2, () => undefined);
 
           }),
         );
@@ -191,7 +191,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns An RxJS `Observable` to wait the end of the operation
    */
-  removeItem(key: string): Observable<boolean> {
+  delete(key: string): Observable<undefined> {
 
     /* Open a transaction in write mode */
     return this.transaction('readwrite').pipe(
@@ -201,7 +201,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         const request = store.delete(key);
 
         /* Manage success and error events, and map to `true` */
-        return this.requestEventsAndMapTo(request, () => true);
+        return this.requestEventsAndMapTo(request, () => undefined);
 
       }),
       /* The observable will complete after the first value */
@@ -214,7 +214,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * Deletes all items from our `indexedDB` objet store
    * @returns An RxJS `Observable` to wait the end of the operation
    */
-  clear(): Observable<boolean> {
+  clear(): Observable<undefined> {
 
     /* Open a transaction in write mode */
     return this.transaction('readwrite').pipe(
@@ -224,7 +224,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         const request = store.clear();
 
         /* Manage success and error events, and map to `true` */
-        return this.requestEventsAndMapTo(request, () => true);
+        return this.requestEventsAndMapTo(request, () => undefined);
 
       }),
       /* The observable will complete */

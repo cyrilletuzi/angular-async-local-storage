@@ -1,8 +1,8 @@
-import { clearStorage, closeAndDeleteDatabase } from './testing/cleaning';
-import { LocalStorage } from './lib.service';
-import { IndexedDBDatabase } from './databases/indexeddb-database';
-import { JSONSchema } from './validation/json-schema';
-import { DEFAULT_IDB_STORE_NAME } from './tokens';
+import { clearStorage, closeAndDeleteDatabase } from './cleaning';
+import { LocalStorage } from '../storages';
+import { IndexedDBDatabase } from '../databases';
+import { JSONSchema } from '../validation';
+import { DEFAULT_IDB_STORE_NAME } from '../tokens';
 
 const dbName = `interopStore${Date.now()}`;
 const index = 'test';

@@ -43,14 +43,14 @@ export class LocalStorageDatabase implements LocalDatabase {
   /**
    * Gets an item value in `localStorage`
    * @param key The item's key
-   * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
+   * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
    */
-  getItem<T = any>(key: string): Observable<T | null> {
+  get<T = any>(key: string): Observable<T | undefined> {
 
     /* Get raw data */
     const unparsedData = localStorage.getItem(this.prefixKey(key));
 
-    let parsedData: T | null = null;
+    let parsedData: T | undefined;
 
     /* No need to parse if data is `null` or `undefined` */
     if ((unparsedData !== undefined) && (unparsedData !== null)) {
@@ -75,11 +75,11 @@ export class LocalStorageDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-  setItem(key: string, data: any): Observable<boolean> {
+  set(key: string, data: any): Observable<undefined> {
 
     /* Storing `undefined` or `null` in `localStorage` can cause issues in some browsers so removing item instead */
     if ((data === undefined) || (data === null)) {
-      return this.removeItem(key);
+      return this.delete(key);
     }
 
     let serializedData: string | null = null;
@@ -99,7 +99,7 @@ export class LocalStorageDatabase implements LocalDatabase {
     }
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(true);
+    return of(undefined);
 
   }
 
@@ -108,12 +108,12 @@ export class LocalStorageDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-  removeItem(key: string): Observable<boolean> {
+  delete(key: string): Observable<undefined> {
 
     localStorage.removeItem(this.prefixKey(key));
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(true);
+    return of(undefined);
 
   }
 
@@ -121,12 +121,12 @@ export class LocalStorageDatabase implements LocalDatabase {
    * Deletes all items in `localStorage`
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-  clear(): Observable<boolean> {
+  clear(): Observable<undefined> {
 
     localStorage.clear();
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(true);
+    return of(undefined);
 
   }
 

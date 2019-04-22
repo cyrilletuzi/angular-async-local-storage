@@ -1,20 +1,18 @@
-import { LocalStorage } from '../lib.service';
-import { IndexedDBDatabase } from '../databases/indexeddb-database';
-import { LocalStorageDatabase } from '../databases/localstorage-database';
-import { MemoryDatabase } from '../databases/memory-database';
+import { StorageCommon } from '../storages';
+import { IndexedDBDatabase, LocalStorageDatabase, MemoryDatabase } from '../databases';
 
 /**
  * Helper to clear all data in storage to avoid tests overlap
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
- * @param localStorageService Service
+ * @param storageService Service
  */
-export function clearStorage(done: DoneFn, localStorageService: LocalStorage) {
+export function clearStorage(done: DoneFn, storageService: StorageCommon) {
 
   // tslint:disable-next-line: no-string-literal
-  if (localStorageService['database'] instanceof IndexedDBDatabase) {
+  if (storageService['database'] instanceof IndexedDBDatabase) {
 
     // tslint:disable-next-line: no-string-literal
-    const indexedDBService = localStorageService['database'];
+    const indexedDBService = storageService['database'];
 
     try {
 
@@ -78,17 +76,17 @@ export function clearStorage(done: DoneFn, localStorageService: LocalStorage) {
     }
 
   // tslint:disable-next-line: no-string-literal
-  } else if (localStorageService['database'] instanceof LocalStorageDatabase) {
+  } else if (storageService['database'] instanceof LocalStorageDatabase) {
 
     localStorage.clear();
 
     done();
 
   // tslint:disable-next-line: no-string-literal
-  } else if (localStorageService['database'] instanceof MemoryDatabase) {
+  } else if (storageService['database'] instanceof MemoryDatabase) {
 
     // tslint:disable-next-line: no-string-literal
-    localStorageService['database']['memoryStorage'].clear();
+    storageService['database']['memoryStorage'].clear();
 
     done();
 
@@ -107,16 +105,16 @@ export function clearStorage(done: DoneFn, localStorageService: LocalStorage) {
  * as it's where the store is created
  * - to be able to delete the database, all connections to it must be closed
  * @param doneJasmine helper to explicit when the operation has ended to avoid tests overlap
- * @param localStorageService Service
+ * @param storageService Service
  */
-export function closeAndDeleteDatabase(done: DoneFn, localStorageService: LocalStorage) {
+export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageCommon) {
 
   /* Only `indexedDB` is concerned */
   // tslint:disable-next-line: no-string-literal
-  if (localStorageService['database'] instanceof IndexedDBDatabase) {
+  if (storageService['database'] instanceof IndexedDBDatabase) {
 
     // tslint:disable-next-line: no-string-literal
-    const indexedDBService = localStorageService['database'];
+    const indexedDBService = storageService['database'];
 
     // tslint:disable-next-line: no-string-literal
     indexedDBService['database'].subscribe({

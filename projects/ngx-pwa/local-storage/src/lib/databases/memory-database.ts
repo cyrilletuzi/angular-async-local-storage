@@ -28,13 +28,13 @@ export class MemoryDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
    */
-   getItem<T = any>(key: string): Observable<T | null> {
+   get<T = any>(key: string): Observable<T |undefined> {
 
-    const rawData = this.memoryStorage.get(key) as T | null;
+    const rawData = this.memoryStorage.get(key) as T | undefined;
 
     /* If data is `undefined`, returns `null` instead for the API to be consistent.
      * Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of((rawData !== undefined) ? rawData : null);
+    return of(rawData);
 
   }
 
@@ -44,17 +44,17 @@ export class MemoryDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-   setItem(key: string, data: any): Observable<boolean> {
+   set(key: string, data: any): Observable<undefined> {
 
     /* Storing `undefined` or `null` in `localStorage` is useless, so removing item instead */
     if ((data === undefined) || (data === null)) {
-      return this.removeItem(key);
+      return this.delete(key);
     }
 
     this.memoryStorage.set(key, data);
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(true);
+    return of(undefined);
 
   }
 
@@ -63,12 +63,12 @@ export class MemoryDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-   removeItem(key: string): Observable<boolean> {
+   delete(key: string): Observable<undefined> {
 
     this.memoryStorage.delete(key);
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(true);
+    return of(undefined);
 
   }
 
@@ -76,12 +76,12 @@ export class MemoryDatabase implements LocalDatabase {
    * Deletes all items in memory
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-   clear(): Observable<boolean> {
+   clear(): Observable<undefined> {
 
     this.memoryStorage.clear();
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(true);
+    return of(undefined);
 
   }
 

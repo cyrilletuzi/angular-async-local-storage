@@ -2,14 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { from } from 'rxjs';
 import { mergeMap, filter, tap } from 'rxjs/operators';
 
-import { LocalStorage } from './lib.service';
-import { IndexedDBDatabase } from './databases/indexeddb-database';
-import { LocalStorageDatabase } from './databases/localstorage-database';
-import { MemoryDatabase } from './databases/memory-database';
-import { JSONSchema } from './validation/json-schema';
-import { VALIDATION_ERROR } from './exceptions';
-import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8 } from './tokens';
-import { clearStorage, closeAndDeleteDatabase } from './testing/cleaning';
+import { LocalStorage } from './local-storage.service';
+import { IndexedDBDatabase, LocalStorageDatabase, MemoryDatabase } from '../databases';
+import { JSONSchema, VALIDATION_ERROR } from '../validation';
+import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8 } from '../tokens';
+import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
 
 function tests(description: string, localStorageServiceFactory: () => LocalStorage) {
 
@@ -297,28 +294,6 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
     describe('Map-like API', () => {
 
-      it('size', (done) => {
-
-        localStorageService.size.pipe(
-          tap((length) => { expect(length).toBe(0); }),
-          mergeMap(() => localStorageService.setItem(key, 'test')),
-          mergeMap(() => localStorageService.size),
-          tap((length) => { expect(length).toBe(1); }),
-          mergeMap(() => localStorageService.setItem('', 'test')),
-          mergeMap(() => localStorageService.size),
-          tap((length) => { expect(length).toBe(2); }),
-          mergeMap(() => localStorageService.removeItem(key)),
-          mergeMap(() => localStorageService.size),
-          tap((length) => { expect(length).toBe(1); }),
-          mergeMap(() => localStorageService.clear()),
-          mergeMap(() => localStorageService.size),
-          tap((length) => { expect(length).toBe(0); }),
-        ).subscribe(() => {
-          done();
-        });
-
-      });
-
       it('length', (done) => {
 
         localStorageService.length.pipe(
@@ -348,6 +323,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
         localStorageService.setItem(key1, 'test').pipe(
           mergeMap(() => localStorageService.setItem(key2, 'test')),
+          // tslint:disable-next-line: deprecation
           mergeMap(() => localStorageService.keys()),
         ).subscribe((keys) => {
 
@@ -362,6 +338,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
       it('getKey() when no items', (done) => {
 
+        // tslint:disable-next-line: deprecation
         localStorageService.keys().subscribe((keys) => {
 
           expect(keys.length).toBe(0);
@@ -375,6 +352,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
       it('key() on existing', (done) => {
 
         localStorageService.setItem(key, 'test').pipe(
+          // tslint:disable-next-line: deprecation
           mergeMap(() => localStorageService.has(key))
         ).subscribe((result) => {
 
@@ -388,6 +366,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
       it('key() on unexisting', (done) => {
 
+        // tslint:disable-next-line: deprecation
         localStorageService.has(`nokey${Date.now()}`).subscribe((result) => {
 
           expect(result).toBe(false);
@@ -404,6 +383,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
           mergeMap(() => localStorageService.setItem('user_lastname', 'test')),
           mergeMap(() => localStorageService.setItem('app_data1', 'test')),
           mergeMap(() => localStorageService.setItem('app_data2', 'test')),
+          // tslint:disable-next-line: deprecation
           mergeMap(() => localStorageService.keys()),
           /* Now we will have an `Observable` emiting multiple values */
           mergeMap((keys) => from(keys)),
@@ -413,7 +393,8 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
           /* So we need to wait for completion of all actions to check */
           complete: () => {
 
-          localStorageService.size.subscribe((size) => {
+
+          localStorageService.length.subscribe((size) => {
 
             expect(size).toBe(2);
 
@@ -594,20 +575,6 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
       });
 
-      it('size', (done) => {
-
-        localStorageService.size.subscribe({
-          complete: () => {
-
-            expect().nothing();
-
-            done();
-
-          }
-        });
-
-      });
-
       it('length', (done) => {
 
         localStorageService.length.subscribe({
@@ -624,6 +591,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
       it('keys()', (done) => {
 
+        // tslint:disable-next-line: deprecation
         localStorageService.keys().subscribe({
           complete: () => {
 
@@ -638,6 +606,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
       it('has()', (done) => {
 
+        // tslint:disable-next-line: deprecation
         localStorageService.has(key).subscribe({
           complete: () => {
 

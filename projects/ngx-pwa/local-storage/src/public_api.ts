@@ -6,12 +6,12 @@
 
 export {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber,
-  JSONSchemaNumeric, JSONSchemaString, JSONSchemaArray, JSONSchemaArrayOf, JSONSchemaObject
-} from './lib/validation/json-schema';
-export { LocalDatabase } from './lib/databases/local-database';
-export { LocalStorage, LSGetItemOptions } from './lib/lib.service';
+  JSONSchemaNumeric, JSONSchemaString, JSONSchemaArray, JSONSchemaArrayOf, JSONSchemaObject,
+  VALIDATION_ERROR, ValidationError
+} from './lib/validation';
+export { LocalDatabase } from './lib/databases';
+export { LocalStorage, LSGetItemOptions } from './lib/storages';
 export {
   localStorageProviders, LocalStorageProvidersConfig,
   DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, LOCAL_STORAGE_PREFIX
 } from './lib/tokens';
-export { VALIDATION_ERROR, ValidationError } from './lib/exceptions';

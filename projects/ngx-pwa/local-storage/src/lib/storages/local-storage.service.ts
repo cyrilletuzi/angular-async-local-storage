@@ -1,16 +1,12 @@
-import { Injectable, Inject } from '@angular/core';
-import { Observable, throwError, of, OperatorFunction } from 'rxjs';
-import { mergeMap, catchError } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Observable, throwError, of } from 'rxjs';
+import { mergeMap, mapTo } from 'rxjs/operators';
 
-import { LocalDatabase } from './databases/local-database';
-import { LocalStorageDatabase } from './databases/localstorage-database';
-import { JSONValidator } from './validation/json-validator';
+import { StorageCommon } from './storage-common';
 import {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger,
-  JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf
-} from './validation/json-schema';
-import { IDB_BROKEN_ERROR, ValidationError } from './exceptions';
-import { LOCAL_STORAGE_PREFIX, LS_PREFIX } from './tokens';
+  JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf, ValidationError
+} from '../validation';
 
 /**
  * @deprecated Will be removed in v9
@@ -29,41 +25,26 @@ export interface LSGetItemOptions {
 @Injectable({
   providedIn: 'root'
 })
-export class LocalStorage {
+export class LocalStorage extends StorageCommon {
+
+  /**
+   * Number of items in storage
+   * @deprecated Use `.length`, or use `.size` via the new `StorageMap` service. Will be removed in v9.
+   */
+  get size(): Observable<number> {
+
+    return this.length;
+
+  }
 
   /**
    * Number of items in storage
    */
-  get size(): Observable<number> {
+  get length(): Observable<number> {
 
     return this.database.size;
 
   }
-
-  /**
-   * Number of items in storage
-   * Alias of `.size`
-   */
-  get length(): Observable<number> {
-
-    return this.size;
-
-  }
-
-  /**
-   * Constructor params are provided by Angular (but can also be passed manually in tests)
-   * @param database Storage to use
-   * @param jsonValidator Validator service
-   * @param LSPrefix Prefix for `localStorage` keys to avoid collision for multiple apps on the same subdomain or for interoperability
-   * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain or for interoperability
-   */
-  constructor(
-    private database: LocalDatabase,
-    private jsonValidator: JSONValidator = new JSONValidator(),
-    @Inject(LS_PREFIX) private LSPrefix = '',
-    // tslint:disable-next-line: deprecation
-    @Inject(LOCAL_STORAGE_PREFIX) private oldPrefix = '',
-  ) {}
 
   /**
    * Get an item value in storage.
@@ -86,12 +67,12 @@ export class LocalStorage {
   getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema } | null | undefined = null) {
 
     /* Get the data in storage */
-    return this.database.getItem<T>(key).pipe(
+    return this.database.get<T>(key).pipe(
       /* Check if `indexedDb` is broken */
-      this.catchIDBBroken(() => this.database.getItem<T>(key)),
+      this.catchIDBBroken(() => this.database.get<T>(key)),
       mergeMap((data) => {
 
-        if (data === null) {
+        if (data === undefined || data === null) {
 
           /* No need to validate if the data is `null` */
           return of(null);
@@ -127,9 +108,12 @@ export class LocalStorage {
    */
   setItem(key: string, data: any): Observable<boolean> {
 
-    return this.database.setItem(key, data)
+    return this.database.set(key, data).pipe(
       /* Catch if `indexedDb` is broken */
-      .pipe(this.catchIDBBroken(() => this.database.setItem(key, data)));
+      this.catchIDBBroken(() => this.database.set(key, data)),
+      /* Backward compatibility with v7, this value will never be used */
+      mapTo(true),
+    );
 
   }
 
@@ -140,9 +124,12 @@ export class LocalStorage {
    */
   removeItem(key: string): Observable<boolean> {
 
-    return this.database.removeItem(key)
+    return this.database.delete(key).pipe(
       /* Catch if `indexedDb` is broken */
-      .pipe(this.catchIDBBroken(() => this.database.removeItem(key)));
+      this.catchIDBBroken(() => this.database.delete(key)),
+      /* Backward compatibility with v7, this value will never be used */
+      mapTo(true),
+    );
 
   }
 
@@ -152,15 +139,19 @@ export class LocalStorage {
    */
   clear(): Observable<boolean> {
 
-    return this.database.clear()
+    return this.database.clear().pipe(
       /* Catch if `indexedDb` is broken */
-      .pipe(this.catchIDBBroken(() => this.database.clear()));
+      this.catchIDBBroken(() => this.database.clear()),
+      /* Backward compatibility with v7, this value will never be used */
+      mapTo(true),
+    );
 
   }
 
   /**
    * Get all keys stored in storage
    * @returns A list of the keys wrapped in a RxJS `Observable`
+   * @deprecated Moved to `StorageMap` service. Will be removed in v9.
    */
   keys(): Observable<string[]> {
 
@@ -173,40 +164,13 @@ export class LocalStorage {
   /**
    * Tells if a key exists in storage
    * @returns A RxJS `Observable` telling if the key exists
+   * @deprecated Moved to `StorageMap` service. Will be removed in v9.
    */
   has(key: string): Observable<boolean> {
 
     return this.database.has(key)
       /* Catch if `indexedDb` is broken */
       .pipe(this.catchIDBBroken(() => this.database.has(key)));
-
-  }
-
-  /**
-   * RxJS operator to catch if `indexedDB` is broken
-   * @param operationCallback Callback with the operation to redo
-   */
-  private catchIDBBroken<T>(operationCallback: () => Observable<T>): OperatorFunction<T, any> {
-
-    return catchError((error) => {
-
-      /* Check if `indexedDB` is broken based on error message (the specific error class seems to be lost in the process) */
-      if ((error !== undefined) && (error !== null) && (error.message === IDB_BROKEN_ERROR)) {
-
-        /* Fallback to `localStorage` */
-        this.database = new LocalStorageDatabase(this.LSPrefix, this.oldPrefix);
-
-        /* Redo the operation */
-        return operationCallback();
-
-      } else {
-
-        /* Otherwise, rethrow the error */
-        return throwError(error);
-
-      }
-
-    });
 
   }
 

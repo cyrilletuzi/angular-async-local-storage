@@ -1,7 +1,8 @@
-import { LocalStorage } from './lib.service';
-import { MemoryDatabase } from './databases/memory-database';
-import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from './validation/json-schema';
 import { map } from 'rxjs/operators';
+
+import { LocalStorage } from './local-storage.service';
+import { MemoryDatabase } from '../databases';
+import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from '../validation';
 
 /* For now, `unknown` and `any` cases must be checked manually as any type can be converted to them. */
 // TODO: Find a way to automate this: https://github.com/dsherret/conditional-type-checks
