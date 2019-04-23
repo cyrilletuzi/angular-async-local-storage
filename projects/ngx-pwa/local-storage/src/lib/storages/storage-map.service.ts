@@ -113,7 +113,7 @@ export class StorageMap extends StorageCommon {
    * Get all keys stored in storage
    * @returns A list of the keys wrapped in a RxJS `Observable`
    */
-  keys(): Observable<string[]> {
+  keys(): Observable<string> {
 
     return this.database.keys()
       /* Catch if `indexedDb` is broken */

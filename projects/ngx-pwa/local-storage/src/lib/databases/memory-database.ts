@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 
 import { LocalDatabase } from './local-database';
 
@@ -87,15 +87,12 @@ export class MemoryDatabase implements LocalDatabase {
 
   /**
    * Get all keys in memory
-   * @returns List of all keys, wrapped in a RxJS `Observable`
+   * @returns A RxJS `Observable` iterating on keys
    */
-  keys(): Observable<string[]> {
+  keys(): Observable<string> {
 
-    /* Transform to a classic array for the API to be consistent */
-    const keys = Array.from(this.memoryStorage.keys());
-
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(keys);
+    /* Create an `Observable` from keys */
+    return from(this.memoryStorage.keys());
 
   }
 

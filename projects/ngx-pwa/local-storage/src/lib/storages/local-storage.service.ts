@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
-import { mergeMap, mapTo } from 'rxjs/operators';
+import { mergeMap, mapTo, toArray } from 'rxjs/operators';
 
 import { StorageCommon } from './storage-common';
 import {
@@ -152,12 +152,17 @@ export class LocalStorage extends StorageCommon {
    * Get all keys stored in storage
    * @returns A list of the keys wrapped in a RxJS `Observable`
    * @deprecated Moved to `StorageMap` service. Will be removed in v9.
+   * Note that while this method was giving you all keys at once in an array,
+   * the new `keys()` method in `StorageMap` service will *iterate* on each key.
    */
   keys(): Observable<string[]> {
 
-    return this.database.keys()
+    return this.database.keys().pipe(
       /* Catch if `indexedDb` is broken */
-      .pipe(this.catchIDBBroken(() => this.database.keys()));
+      this.catchIDBBroken(() => this.database.keys()),
+      /* Backward compatibility with v7: transform interative `Observable` to a single array value */
+      toArray(),
+    );
 
   }
 

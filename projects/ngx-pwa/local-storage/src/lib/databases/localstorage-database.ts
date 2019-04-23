@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, asyncScheduler } from 'rxjs';
+import { observeOn } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { LOCAL_STORAGE_PREFIX, LS_PREFIX } from '../tokens';
@@ -133,22 +134,27 @@ export class LocalStorageDatabase implements LocalDatabase {
   /**
    * Get all keys in `localStorage`
    * Note the order of the keys may be inconsistent in Firefox
-   * @returns A RxJS `Observable` containing the list of keys
+   * @returns A RxJS `Observable` iterating on keys
    */
-  keys(): Observable<string[]> {
+  keys(): Observable<string> {
 
-    const keys: string[] = [];
+    /* Create an `Observable` from keys */
+    return new Observable<string>((subscriber) => {
 
-    /* Iteretate over all the indexes */
-    for (let index = 0; index < localStorage.length; index += 1) {
+      /* Iteretate over all the indexes */
+      for (let index = 0; index < localStorage.length; index += 1) {
 
-      /* Cast as we are sure in this case the key is not `null` */
-      keys.push(this.getUnprefixedKey(index) as string);
+        /* Cast as we are sure in this case the key is not `null` */
+        subscriber.next(this.getUnprefixedKey(index) as string);
 
-    }
+      }
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(keys);
+      subscriber.complete();
+
+    }).pipe(
+      /* Required to work like other databases which are asynchronous */
+      observeOn(asyncScheduler),
+    );
 
   }
 

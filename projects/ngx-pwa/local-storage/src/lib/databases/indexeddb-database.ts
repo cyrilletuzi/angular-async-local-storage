@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
-import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
+import { map, mergeMap, first, takeWhile, tap } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { IDBBrokenError } from './exceptions';
@@ -205,7 +205,7 @@ export class IndexedDBDatabase implements LocalDatabase {
 
       }),
       /* The observable will complete after the first value */
-      first()
+      first(),
     );
 
   }
@@ -235,45 +235,43 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   /**
    * Get all the keys in our `indexedDB` store
-   * @returns An RxJS `Observable` containing all the keys
+   * @returns An RxJS `Observable` iterating on each key
    */
-  keys(): Observable<string[]> {
+  keys(): Observable<string> {
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
+      /* `first()` is used as the final operator in other methods to complete the `Observable`
+       * (as it all starts from a `ReplaySubject` which never ends),
+       * but as this method is iterating over multiple values, `first()` **must** be used here */
+      first(),
       mergeMap((store) => {
 
-        if ('getAllKeys' in store) {
+        /* Note: a previous version of the API used `getAllKey()`,
+         * but it's only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge)
+         * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
 
-          /* Request all keys in store */
-          const request = store.getAllKeys();
+        /* Open a cursor on the store */
+        const request = (store as IDBObjectStore).openCursor();
 
-          /* Manage success and error events, and map to result
-           * This lib only allows string keys, but user could have added other types of keys from outside */
-          return this.requestEventsAndMapTo(request, () => request.result.map((key) => key.toString())) ;
+        /* Listen to success event */
+        const success$ = this.successEvent(request).pipe(
+          /* Stop the `Observable` when the cursor is `null` */
+          takeWhile(() => (request.result !== null)),
+          /* This lib only allows string keys, but user could have added other types of keys from outside
+           * It's OK to cast as the cursor as been tested in the previous operator */
+          map(() => (request.result as IDBCursorWithValue).key.toString()),
+          /* Iterate on the cursor */
+          tap(() => { (request.result as IDBCursorWithValue).continue(); }),
+        );
 
-        } else {
+        /* Listen to error event and if so, throw an error */
+        const error$ = this.errorEvent(request);
 
-          /* `getAllKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge)
-           * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
-
-          /* Open a cursor on the store */
-          const request = (store as IDBObjectStore).openCursor();
-
-          /* Listen to success event */
-          const success$ = this.getKeysFromCursor(request);
-
-          /* Listen to error event and if so, throw an error */
-          const error$ = this.errorEvent(request);
-
-          /* Choose the first event to occur */
-          return race([success$, error$]);
-
-        }
+        /* Choose the first event to occur */
+        return race([success$, error$]);
 
       }),
-      /* The observable will complete */
-      first(),
     );
 
   }
@@ -485,40 +483,6 @@ export class IndexedDBDatabase implements LocalDatabase {
      * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69
      */
     return ('getKey' in store) ? store.getKey(key) : (store as IDBObjectStore).get(key);
-
-  }
-
-  /**
-   * Get all keys from store from a cursor, for older browsers still in `indexedDB` v1
-   * @param request Request containing the cursor
-   */
-  private getKeysFromCursor(request: IDBRequest<IDBCursorWithValue | null>): Observable<string[]> {
-
-    /* Keys will be stored here */
-    const keys: string[] = [];
-
-    /* Listen to success event */
-    return this.successEvent(request).pipe(
-      /* Map to the result */
-      map(() => request.result),
-      /* Iterate on the cursor */
-      tap((cursor) =>  {
-
-        if (cursor) {
-
-          /* This lib only allows string keys, but user could have added other types of keys from outside */
-          keys.push(cursor.key.toString());
-
-          cursor.continue();
-
-        }
-
-      }),
-      /* Wait until the iteration is over */
-      filter((cursor) => !cursor),
-      /* Map to the retrieved keys */
-      map(() => keys)
-    );
 
   }
 
