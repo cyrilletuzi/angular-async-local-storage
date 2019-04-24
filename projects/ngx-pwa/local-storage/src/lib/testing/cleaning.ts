@@ -1,4 +1,4 @@
-import { StorageCommon } from '../storages';
+import { StorageMap } from '../storages';
 import { IndexedDBDatabase, LocalStorageDatabase, MemoryDatabase } from '../databases';
 
 /**
@@ -6,7 +6,7 @@ import { IndexedDBDatabase, LocalStorageDatabase, MemoryDatabase } from '../data
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param storageService Service
  */
-export function clearStorage(done: DoneFn, storageService: StorageCommon) {
+export function clearStorage(done: DoneFn, storageService: StorageMap) {
 
   // tslint:disable-next-line: no-string-literal
   if (storageService['database'] instanceof IndexedDBDatabase) {
@@ -107,7 +107,7 @@ export function clearStorage(done: DoneFn, storageService: StorageCommon) {
  * @param doneJasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param storageService Service
  */
-export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageCommon) {
+export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap) {
 
   /* Only `indexedDB` is concerned */
   // tslint:disable-next-line: no-string-literal

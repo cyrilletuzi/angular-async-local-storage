@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError, of } from 'rxjs';
-import { mergeMap, mapTo, toArray } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { mapTo, toArray, map } from 'rxjs/operators';
 
-import { StorageCommon } from './storage-common';
-import {
-  JSONSchema, JSONSchemaBoolean, JSONSchemaInteger,
-  JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf, ValidationError
-} from '../validation';
+import { StorageMap } from './storage-map.service';
+import { JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf } from '../validation';
 
 /**
  * @deprecated Will be removed in v9
@@ -25,7 +22,7 @@ export interface LSGetItemOptions {
 @Injectable({
   providedIn: 'root'
 })
-export class LocalStorage extends StorageCommon {
+export class LocalStorage {
 
   /**
    * Number of items in storage
@@ -42,9 +39,12 @@ export class LocalStorage extends StorageCommon {
    */
   get length(): Observable<number> {
 
-    return this.database.size;
+    return this.storageMap.size;
 
   }
+
+  /* Use the `StorageMap` service to avoid code duplication */
+  constructor(private storageMap: StorageMap) {}
 
   /**
    * Get an item value in storage.
@@ -66,37 +66,24 @@ export class LocalStorage extends StorageCommon {
   getItem<T = unknown>(key: string, schema?: null): Observable<unknown>;
   getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema } | null | undefined = null) {
 
-    /* Get the data in storage */
-    return this.database.get<T>(key).pipe(
-      /* Check if `indexedDb` is broken */
-      this.catchIDBBroken(() => this.database.get<T>(key)),
-      mergeMap((data) => {
+    if (schema) {
 
-        /* No need to validate if the data is empty */
-        if ((data === undefined) || (data === null)) {
+      /* Backward compatibility with version <= 7 */
+      const schemaFinal: JSONSchema = ('schema' in schema) ? schema.schema : schema;
 
-          return of(null);
+      return this.storageMap.get<T>(key, schemaFinal).pipe(
+        /* Transform `undefined` into `null` to align with `localStorage` API */
+        map((value) => (value !== undefined) ? value : null),
+      );
 
-        } else if (schema) {
+    } else {
 
-          /* Backward compatibility with version <= 7 */
-          const schemaFinal: JSONSchema = ('schema' in schema) ? schema.schema : schema;
+      return this.storageMap.get(key).pipe(
+        /* Transform `undefined` into `null` to align with `localStorage` API */
+        map((value) => (value !== undefined) ? value : null),
+      );
 
-          /* Validate data against a JSON schema if provied */
-          if (!this.jsonValidator.validate(data, schemaFinal)) {
-            return throwError(new ValidationError());
-          }
-
-          /* Data have been checked, so it's OK to cast */
-          return of(data as T | null);
-
-        }
-
-        /* Cast to unknown as the data wasn't checked */
-        return of(data as unknown);
-
-      }),
-    );
+    }
 
   }
 
@@ -108,16 +95,8 @@ export class LocalStorage extends StorageCommon {
    */
   setItem(key: string, data: any): Observable<boolean> {
 
-    /* Storing `undefined` or `null` is useless and can cause issues in `indexedDb` in some browsers,
-     * so removing item instead for all storages to have a consistent API */
-    if ((data === undefined) || (data === null)) {
-      return this.removeItem(key);
-    }
-
-    return this.database.set(key, data).pipe(
-      /* Catch if `indexedDb` is broken */
-      this.catchIDBBroken(() => this.database.set(key, data)),
-      /* Backward compatibility with v7, this value will never be used */
+    return this.storageMap.set(key, data).pipe(
+      /* Transform `undefined` into `true` for backward compatibility with v7 */
       mapTo(true),
     );
 
@@ -130,10 +109,8 @@ export class LocalStorage extends StorageCommon {
    */
   removeItem(key: string): Observable<boolean> {
 
-    return this.database.delete(key).pipe(
-      /* Catch if `indexedDb` is broken */
-      this.catchIDBBroken(() => this.database.delete(key)),
-      /* Backward compatibility with v7, this value will never be used */
+    return this.storageMap.delete(key).pipe(
+      /* Transform `undefined` into `true` for backward compatibility with v7 */
       mapTo(true),
     );
 
@@ -145,10 +122,8 @@ export class LocalStorage extends StorageCommon {
    */
   clear(): Observable<boolean> {
 
-    return this.database.clear().pipe(
-      /* Catch if `indexedDb` is broken */
-      this.catchIDBBroken(() => this.database.clear()),
-      /* Backward compatibility with v7, this value will never be used */
+    return this.storageMap.clear().pipe(
+      /* Transform `undefined` into `true` for backward compatibility with v7 */
       mapTo(true),
     );
 
@@ -163,10 +138,8 @@ export class LocalStorage extends StorageCommon {
    */
   keys(): Observable<string[]> {
 
-    return this.database.keys().pipe(
-      /* Catch if `indexedDb` is broken */
-      this.catchIDBBroken(() => this.database.keys()),
-      /* Backward compatibility with v7: transform interative `Observable` to a single array value */
+    return this.storageMap.keys().pipe(
+      /* Backward compatibility with v7: transform iterating `Observable` to a single array value */
       toArray(),
     );
 
@@ -179,9 +152,7 @@ export class LocalStorage extends StorageCommon {
    */
   has(key: string): Observable<boolean> {
 
-    return this.database.has(key)
-      /* Catch if `indexedDb` is broken */
-      .pipe(this.catchIDBBroken(() => this.database.has(key)));
+    return this.storageMap.has(key);
 
   }
 
