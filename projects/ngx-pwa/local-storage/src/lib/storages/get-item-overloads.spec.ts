@@ -1,7 +1,9 @@
-import { LocalStorage } from './lib.service';
-import { MemoryDatabase } from './databases/memory-database';
-import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from './validation/json-schema';
 import { map } from 'rxjs/operators';
+
+import { LocalStorage } from './local-storage.service';
+import { StorageMap } from './storage-map.service';
+import { MemoryDatabase } from '../databases';
+import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from '../validation';
 
 /* For now, `unknown` and `any` cases must be checked manually as any type can be converted to them. */
 // TODO: Find a way to automate this: https://github.com/dsherret/conditional-type-checks
@@ -13,7 +15,7 @@ describe('getItem() API v8', () => {
   beforeEach(() => {
 
     /* Do compilation tests on memory storage to avoid issues when other storages are not available */
-    localStorageService = new LocalStorage(new MemoryDatabase());
+    localStorageService = new LocalStorage(new StorageMap(new MemoryDatabase()));
 
   });
 
@@ -358,7 +360,7 @@ describe('getItem() API prior to v8', () => {
   beforeEach(() => {
 
     /* Do compilation tests on memory storage to avoid issues when other storages are not available */
-    localStorageService = new LocalStorage(new MemoryDatabase());
+    localStorageService = new LocalStorage(new StorageMap(new MemoryDatabase()));
 
   });
 

@@ -2,8 +2,18 @@
 
 ## Version
 
-This is the up to date guide about validation for version >= 8.
-The old guide for validation in versions < 8 is available [here](./VALIDATION_BEFORE_V8.md).
+**This is the up to date guide about validation for versions >= 8 of this lib.**
+The old guide for validation in versions < 8 is available [here](./VALIDATION_BEFORE_V8.md),
+but is not recommended as there was breaking changes in v8.
+
+## Examples
+
+The examples will use the new `StorageMap` service.
+But everything in this guide can be done in the same way with the `LocalStorage` service:
+- `this.storageMap.get()` is the same as `this.localStorage.getItem()`
+- `this.storageMap.set()` is the same as `this.localStorage.setItem()`
+- `this.storageMap.delete()` is the same as `this.localStorage.removeItem()`
+- `this.storageMap.clear()` is the same as `this.localStorage.clear()`
 
 ## Why validation?
 
@@ -20,7 +30,7 @@ Then, **any data coming from client-side storage should be checked before used**
 You can see this as an equivalent to the DTD in XML, the Doctype in HTML or interfaces in TypeScript.
 
 It can have many uses (it's why you have autocompletion in some JSON files in Visual Studio Code).
-**In this lib, JSON schemas are used to validate the data retrieved from local storage.**
+**In this lib, JSON schemas are used to validate the data retrieved from client-side storage.**
 
 ## How to validate simple data
 
@@ -30,52 +40,52 @@ as you'll see the more complex it is, the more complex is validation too.
 ### Boolean
 
 ```typescript
-this.localStorage.getItem('test', { type: 'boolean' })
+this.storageMap.get('test', { type: 'boolean' })
 ```
 
 ### Integer
 
 ```typescript
-this.localStorage.getItem('test', { type: 'integer' })
+this.storageMap.get('test', { type: 'integer' })
 ```
 
 ### Number
 
 ```typescript
-this.localStorage.getItem('test', { type: 'number' })
+this.storageMap.get('test', { type: 'number' })
 ```
 
 ### String
 
 ```typescript
-this.localStorage.getItem('test', { type: 'string' })
+this.storageMap.get('test', { type: 'string' })
 ```
 
 ### Arrays
 
 ```typescript
-this.localStorage.getItem('test', {
+this.storageMap.get('test', {
   type: 'array',
   items: { type: 'boolean' },
 })
 ```
 
 ```typescript
-this.localStorage.getItem('test', {
+this.storageMap.get('test', {
   type: 'array',
   items: { type: 'integer' },
 })
 ```
 
 ```typescript
-this.localStorage.getItem('test', {
+this.storageMap.get('test', {
   type: 'array',
   items: { type: 'number' },
 })
 ```
 
 ```typescript
-this.localStorage.getItem('test', {
+this.storageMap.get('test', {
   type: 'array',
   items: { type: 'string' },
 })
@@ -90,7 +100,7 @@ In special cases, it can be useful to use arrays with values of different types.
 It's called tuples in TypeScript. For example: `['test', 1]`
 
 ```typescript
-this.localStorage.getItem('test', {
+this.storageMap.get('test', {
   type: 'array',
   items: [
     { type: 'string' },
@@ -124,7 +134,7 @@ const schema: JSONSchema = {
   required: ['firstName', 'lastName']
 };
 
-this.localStorage.getItem<User>('test', schema)
+this.storageMap.get<User>('test', schema)
 ```
 
 What's expected for each property is another JSON schema.
@@ -136,10 +146,10 @@ see the [serialization guide](./SERIALIZATION.md).
 
 ### Why a schema *and* a cast?
 
-You may ask why we have to define a TypeScript cast with `getItem<User>()` *and* a JSON schema with `schema`.
+You may ask why we have to define a TypeScript cast with `get<User>()` *and* a JSON schema with `schema`.
 
 It's because they happen at different steps:
-- a cast (`getItem<User>()`) just says "TypeScript, trust me, I'm telling you it will be a `User`", but it only happens at *compilation* time (it won't be checked at runtime)
+- a cast (`get<User>()`) just says "TypeScript, trust me, I'm telling you it will be a `User`", but it only happens at *compilation* time (it won't be checked at runtime)
 - the JSON schema (`schema`) will be used at *runtime* when getting data in local storage for real.
 
 So they each serve a different purpose:
@@ -170,7 +180,7 @@ The lib can't check that.
 
 For example:
 ```typescript
-this.localStorage.getItem('test', {
+this.storageMap.get('test', {
   type: 'number',
   maximum: 5
 })
@@ -186,7 +196,7 @@ this.localStorage.getItem('test', {
 
 For example:
 ```typescript
-this.localStorage.getItem('test', {
+this.storageMap.get('test', {
   type: 'string',
   maxLength: 10
 })
@@ -200,7 +210,7 @@ this.localStorage.getItem('test', {
 
 For example:
 ```typescript
-this.localStorage.getItem('test', {
+this.storageMap.get('test', {
   type: 'array',
   items: { type: 'string' },
   maxItems: 5
@@ -232,23 +242,34 @@ const schema: JSONSchema = {
   }
 };
 
-this.localStorage.getItem<User[]>('test', schema)
+this.storageMap.get<User[]>('test', schema)
 ```
 
-## Errors vs. `null`
+## Errors vs. `undefined` / `null`
 
 If validation fails, it'll go in the error callback:
 
 ```typescript
-this.localStorage.getItem('existing', { type: 'string' })
+this.storageMap.get('existing', { type: 'string' })
 .subscribe({
-  next: (result) => { /* Called if data is valid or null */ },
+  next: (result) => { /* Called if data is valid or null or undefined */ },
   error: (error) => { /* Called if data is invalid */ },
 });
 ```
 
-But as usual (like when you do a database request), not finding an item is not an error. It succeeds but returns `null`.
+But as usual (like when you do a database request), not finding an item is not an error.
+It succeeds but returns:
 
+- `undefined` with `StorageMap`
+```typescript
+this.storageMap.get('notExisting', { type: 'string' })
+.subscribe({
+  next: (result) => { result; /* undefined */ },
+  error: (error) => { /* Not called */ },
+});
+```
+
+- `null` with `LocalStorage`
 ```typescript
 this.localStorage.getItem('notExisting', { type: 'string' })
 .subscribe({

@@ -1,17 +1,18 @@
 # Interoperability
 
 In the vast majority of cases, you'll manage *independent* apps (ie. each having its own data),
-and each using only one local storage API (e.g. a native API *or* this lib, but not both at the same time in one app).
+and each using only one client-side storage API
+(e.g. a native API *or* this lib, but not both at the same time in one app).
 
 In some special cases, it could happen:
 - you share the same data between multiple apps on the same subdomain,
-but not all apps are built with the same framework, so each one will use a different local storage API
-(e.g. an Angular app using this lib and a non-Angular app using `localForage` lib)
+but not all apps are built with the same framework, so each one will use a different client-side storage API
+(e.g. an Angular app using this lib and a non-Angular app using the `localForage` lib)
 - while **not recommended**, you could also mix several APIs inside the same app
 (e.g. mixing native `indexedDB` *and* this lib).
 
 If you're in one of these cases, *please read this guide carefully*,
-as there are important things to do and to be aware to achieve interoperability.
+as there are important things to do and to be aware of to achieve interoperability.
 
 ## Requirements
 
@@ -20,7 +21,7 @@ Interoperability can be achieved:
 - **only for apps that haven't been deployed in production yet**,
 as v8 changed the storage system to achieve interoperability:
   - it won't work on data stored with this lib before v8, as it still uses the old storage system for backward compatibility,
-  - changing configuration on the go would mean to **lose all previously stored data**.
+  - changing configuration on the fly would mean to **lose all previously stored data**.
 
 ## Configuration
 
@@ -30,7 +31,7 @@ Note:
 
 ### `indexedDB` database and object store names
 
-When storing in `indexedDb`, names are used for the database and the object store,
+When storing in `indexedDB`, names are used for the database and the object store,
 so you will need that all APIs use the same names.
 
 Option 1: keep the config of this lib and change the names in the other APIs,
@@ -58,7 +59,8 @@ export class AppModule {}
 
 ### `localStorage` prefix
 
-In some cases, `indexedDB` is not available, and libs fallback to `localStorage`.
+In some cases (see the [browser support guide](./BROWSERS_SUPPORT)),
+`indexedDB` is not available, and libs fallback to `localStorage`.
 Some libs prefixes `localStorage` keys. This lib doesn't by default,
 but you can add a prefix:
 
@@ -106,16 +108,16 @@ or when the version change (but this case doesn't happen in this lib).
 
 Then, you need to ensure:
 - you use the same database `version` as the lib (none or `1`),
-- the store is created by:
+- the store is created:
   - by letting this lib to be initialized first (beware of concurrency issues),
   - or if another API is going first, it needs to take care of the creation of the store (with the same name).
 
 ### Limitation with `undefined`
 
 Most librairies (like this one and `localforage`) will prevent you to store `undefined`,
-by always returning `null` instead of `undefined`, due to technical issues in the native APIs.
+due to technical issues in the native APIs.
 
-But if you use the native APIs (`localStorage` and `indexedDb`) directly,
+But if you use the native APIs (`localStorage` and `indexedDB`) directly,
 you could manage to store `undefined`, but it will then throw exceptions in some cases.
 
 So **don't store `undefined`**.
@@ -123,4 +125,6 @@ So **don't store `undefined`**.
 ### `indexedDB` keys
 
 This lib only allows `string` keys, while `indexedDB` allows some other key types.
-So if using this lib `keys()` method, all keys will be converted to `string`.
+So if you use this lib `keys()` method, all keys will be converted to a `string`.
+
+[Back to general documentation](../README.md)

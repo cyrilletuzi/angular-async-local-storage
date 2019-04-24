@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 
 import { LocalDatabase } from './local-database';
 
@@ -26,15 +26,14 @@ export class MemoryDatabase implements LocalDatabase {
   /**
    * Gets an item value in memory
    * @param key The item's key
-   * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
+   * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
    */
-   getItem<T = any>(key: string): Observable<T | null> {
+   get<T = any>(key: string): Observable<T | undefined> {
 
-    const rawData = this.memoryStorage.get(key) as T | null;
+    const rawData = this.memoryStorage.get(key) as T | undefined;
 
-    /* If data is `undefined`, returns `null` instead for the API to be consistent.
-     * Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of((rawData !== undefined) ? rawData : null);
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
+    return of(rawData);
 
   }
 
@@ -44,17 +43,12 @@ export class MemoryDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-   setItem(key: string, data: any): Observable<boolean> {
-
-    /* Storing `undefined` or `null` in `localStorage` is useless, so removing item instead */
-    if ((data === undefined) || (data === null)) {
-      return this.removeItem(key);
-    }
+   set(key: string, data: any): Observable<undefined> {
 
     this.memoryStorage.set(key, data);
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(true);
+    return of(undefined);
 
   }
 
@@ -63,12 +57,12 @@ export class MemoryDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-   removeItem(key: string): Observable<boolean> {
+   delete(key: string): Observable<undefined> {
 
     this.memoryStorage.delete(key);
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(true);
+    return of(undefined);
 
   }
 
@@ -76,26 +70,23 @@ export class MemoryDatabase implements LocalDatabase {
    * Deletes all items in memory
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-   clear(): Observable<boolean> {
+   clear(): Observable<undefined> {
 
     this.memoryStorage.clear();
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(true);
+    return of(undefined);
 
   }
 
   /**
    * Get all keys in memory
-   * @returns List of all keys, wrapped in a RxJS `Observable`
+   * @returns A RxJS `Observable` iterating on keys
    */
-  keys(): Observable<string[]> {
+  keys(): Observable<string> {
 
-    /* Transform to a classic array for the API to be consistent */
-    const keys = Array.from(this.memoryStorage.keys());
-
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(keys);
+    /* Create an `Observable` from keys */
+    return from(this.memoryStorage.keys());
 
   }
 

@@ -1,13 +1,13 @@
 import { Injectable, Inject } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
-import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
+import { map, mergeMap, first, takeWhile, tap } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
+import { IDBBrokenError } from './exceptions';
 import {
   IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8,
   LOCAL_STORAGE_PREFIX, DEFAULT_IDB_DB_NAME
 } from '../tokens';
-import { IDBBrokenError } from '../exceptions';
 
 @Injectable({
   providedIn: 'root'
@@ -92,9 +92,9 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * Gets an item value in our `indexedDB` store
    * @param key The item's key
-   * @returns The item's value if the key exists, `null` otherwise, wrapped in an RxJS `Observable`
+   * @returns The item's value if the key exists, `undefined` otherwise, wrapped in an RxJS `Observable`
    */
-  getItem<T = any>(key: string): Observable<T | null> {
+  get<T = any>(key: string): Observable<T | undefined> {
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
@@ -122,8 +122,8 @@ export class IndexedDBDatabase implements LocalDatabase {
 
           }
 
-          /* Return `null` if the value is `null` or `undefined` */
-          return null;
+          /* Return `undefined` if the value is empty */
+          return undefined;
 
         });
 
@@ -140,11 +140,11 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns An RxJS `Observable` to wait the end of the operation
    */
-  setItem(key: string, data: any): Observable<boolean> {
+  set(key: string, data: any): Observable<undefined> {
 
-    /* Storing `undefined` or `null` in `localStorage` can cause issues in some browsers so removing item instead */
-    if ((data === undefined) || (data === null)) {
-      return this.removeItem(key);
+    /* Storing `undefined` in `indexedDb` can cause issues in some browsers so removing item instead */
+    if (data === undefined) {
+      return this.delete(key);
     }
 
     /* Open a transaction in write mode */
@@ -175,7 +175,7 @@ export class IndexedDBDatabase implements LocalDatabase {
               store.put(dataToStore, key);
 
             /* Manage success and error events, and map to `true` */
-            return this.requestEventsAndMapTo(request2, () => true);
+            return this.requestEventsAndMapTo(request2, () => undefined);
 
           }),
         );
@@ -191,7 +191,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns An RxJS `Observable` to wait the end of the operation
    */
-  removeItem(key: string): Observable<boolean> {
+  delete(key: string): Observable<undefined> {
 
     /* Open a transaction in write mode */
     return this.transaction('readwrite').pipe(
@@ -201,11 +201,11 @@ export class IndexedDBDatabase implements LocalDatabase {
         const request = store.delete(key);
 
         /* Manage success and error events, and map to `true` */
-        return this.requestEventsAndMapTo(request, () => true);
+        return this.requestEventsAndMapTo(request, () => undefined);
 
       }),
       /* The observable will complete after the first value */
-      first()
+      first(),
     );
 
   }
@@ -214,7 +214,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * Deletes all items from our `indexedDB` objet store
    * @returns An RxJS `Observable` to wait the end of the operation
    */
-  clear(): Observable<boolean> {
+  clear(): Observable<undefined> {
 
     /* Open a transaction in write mode */
     return this.transaction('readwrite').pipe(
@@ -224,7 +224,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         const request = store.clear();
 
         /* Manage success and error events, and map to `true` */
-        return this.requestEventsAndMapTo(request, () => true);
+        return this.requestEventsAndMapTo(request, () => undefined);
 
       }),
       /* The observable will complete */
@@ -235,45 +235,43 @@ export class IndexedDBDatabase implements LocalDatabase {
 
   /**
    * Get all the keys in our `indexedDB` store
-   * @returns An RxJS `Observable` containing all the keys
+   * @returns An RxJS `Observable` iterating on each key
    */
-  keys(): Observable<string[]> {
+  keys(): Observable<string> {
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
+      /* `first()` is used as the final operator in other methods to complete the `Observable`
+       * (as it all starts from a `ReplaySubject` which never ends),
+       * but as this method is iterating over multiple values, `first()` **must** be used here */
+      first(),
       mergeMap((store) => {
 
-        if ('getAllKeys' in store) {
+        /* Note: a previous version of the API used `getAllKey()`,
+         * but it's only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge)
+         * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
 
-          /* Request all keys in store */
-          const request = store.getAllKeys();
+        /* Open a cursor on the store */
+        const request = (store as IDBObjectStore).openCursor();
 
-          /* Manage success and error events, and map to result
-           * This lib only allows string keys, but user could have added other types of keys from outside */
-          return this.requestEventsAndMapTo(request, () => request.result.map((key) => key.toString())) ;
+        /* Listen to success event */
+        const success$ = this.successEvent(request).pipe(
+          /* Stop the `Observable` when the cursor is `null` */
+          takeWhile(() => (request.result !== null)),
+          /* This lib only allows string keys, but user could have added other types of keys from outside
+           * It's OK to cast as the cursor as been tested in the previous operator */
+          map(() => (request.result as IDBCursorWithValue).key.toString()),
+          /* Iterate on the cursor */
+          tap(() => { (request.result as IDBCursorWithValue).continue(); }),
+        );
 
-        } else {
+        /* Listen to error event and if so, throw an error */
+        const error$ = this.errorEvent(request);
 
-          /* `getAllKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge)
-           * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
-
-          /* Open a cursor on the store */
-          const request = (store as IDBObjectStore).openCursor();
-
-          /* Listen to success event */
-          const success$ = this.getKeysFromCursor(request);
-
-          /* Listen to error event and if so, throw an error */
-          const error$ = this.errorEvent(request);
-
-          /* Choose the first event to occur */
-          return race([success$, error$]);
-
-        }
+        /* Choose the first event to occur */
+        return race([success$, error$]);
 
       }),
-      /* The observable will complete */
-      first(),
     );
 
   }
@@ -485,40 +483,6 @@ export class IndexedDBDatabase implements LocalDatabase {
      * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69
      */
     return ('getKey' in store) ? store.getKey(key) : (store as IDBObjectStore).get(key);
-
-  }
-
-  /**
-   * Get all keys from store from a cursor, for older browsers still in `indexedDB` v1
-   * @param request Request containing the cursor
-   */
-  private getKeysFromCursor(request: IDBRequest<IDBCursorWithValue | null>): Observable<string[]> {
-
-    /* Keys will be stored here */
-    const keys: string[] = [];
-
-    /* Listen to success event */
-    return this.successEvent(request).pipe(
-      /* Map to the result */
-      map(() => request.result),
-      /* Iterate on the cursor */
-      tap((cursor) =>  {
-
-        if (cursor) {
-
-          /* This lib only allows string keys, but user could have added other types of keys from outside */
-          keys.push(cursor.key.toString());
-
-          cursor.continue();
-
-        }
-
-      }),
-      /* Wait until the iteration is over */
-      filter((cursor) => !cursor),
-      /* Map to the retrieved keys */
-      map(() => keys)
-    );
 
   }
 

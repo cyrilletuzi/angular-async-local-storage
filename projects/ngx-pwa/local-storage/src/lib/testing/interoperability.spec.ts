@@ -1,8 +1,8 @@
-import { clearStorage, closeAndDeleteDatabase } from './testing/cleaning';
-import { LocalStorage } from './lib.service';
-import { IndexedDBDatabase } from './databases/indexeddb-database';
-import { JSONSchema } from './validation/json-schema';
-import { DEFAULT_IDB_STORE_NAME } from './tokens';
+import { clearStorage, closeAndDeleteDatabase } from './cleaning';
+import { StorageMap } from '../storages';
+import { IndexedDBDatabase } from '../databases';
+import { JSONSchema } from '../validation';
+import { DEFAULT_IDB_STORE_NAME } from '../tokens';
 
 const dbName = `interopStore${Date.now()}`;
 const index = 'test';
@@ -13,7 +13,7 @@ const index = 'test';
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param value Value to store
  */
-function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, done: DoneFn, value: any) {
+function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: DoneFn, value: any) {
 
   try {
 
@@ -40,7 +40,7 @@ function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
         request.addEventListener('success', () => {
 
-          localStorageService.setItem(index, 'world').subscribe({
+          localStorageService.set(index, 'world').subscribe({
             next: () => {
 
               expect().nothing();
@@ -105,7 +105,7 @@ function testSetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param value Value to set and get
  */
-function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, done: DoneFn, value: any, schema?: JSONSchema) {
+function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: DoneFn, value: any, schema?: JSONSchema) {
 
   try {
 
@@ -133,12 +133,12 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
         request.addEventListener('success', () => {
 
           // TODO: Investigate schema param not working without the test
-          const request2 = schema ? localStorageService.getItem(index, schema) : localStorageService.getItem(index);
+          const request2 = schema ? localStorageService.get(index, schema) : localStorageService.get(index);
 
           request2.subscribe((result) => {
 
-            /* Transform `undefined` to `null` to align with the lib behavior */
-            expect(result).toEqual((value !== undefined) ? value : null);
+            /* Transform `null` to `undefined` to align with the lib behavior */
+            expect(result).toEqual((value !== null) ? (value) : undefined);
 
             dbOpen.result.close();
 
@@ -186,10 +186,10 @@ function testGetCompatibilityWithNativeAPI(localStorageService: LocalStorage, do
 
 describe('Interoperability', () => {
 
-  let localStorageService: LocalStorage;
+  let localStorageService: StorageMap;
 
   beforeAll(() => {
-    localStorageService = new LocalStorage(new IndexedDBDatabase(dbName));
+    localStorageService = new StorageMap(new IndexedDBDatabase(dbName));
   });
 
   beforeEach((done) => {
@@ -270,15 +270,14 @@ describe('Interoperability', () => {
 
         request.addEventListener('success', () => {
 
-          localStorageService.keys().subscribe((keys) => {
-
-            for (const keyItem of keys) {
+          localStorageService.keys().subscribe({
+            next: (keyItem) => {
               expect(typeof keyItem).toBe('string');
+            },
+            complete: () => {
+              dbOpen.result.close();
+              done();
             }
-
-            dbOpen.result.close();
-            done();
-
           });
 
         });

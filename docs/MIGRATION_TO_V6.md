@@ -17,7 +17,7 @@ You can easily and quickly migrate by doing **a global search/replace of**:
 
 In most cases, you're probably only using the first one.
 
-## No more NgModule
+## No more `NgModule`
 
 `LocalStorageModule` is no longer needed and so it is removed.
 Services are provided directly when injected in Angular >=6.

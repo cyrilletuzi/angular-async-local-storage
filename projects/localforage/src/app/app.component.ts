@@ -1,6 +1,6 @@
 import * as localForage from 'localforage';
 import { Component, OnInit } from '@angular/core';
-import { LocalStorage } from '@ngx-pwa/local-storage';
+import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
 
   title = 'not ok';
 
-  constructor(private localStorage: LocalStorage) {}
+  constructor(private storageMap: StorageMap) {}
 
   ngOnInit() {
 
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
 
     localForage.setItem(key, value).then(() => {
 
-      this.localStorage.getItem(key, { type: 'string' }).subscribe((result) => {
+      this.storageMap.get(key, { type: 'string' }).subscribe((result) => {
         this.title = result || 'not ok';
       });
 
