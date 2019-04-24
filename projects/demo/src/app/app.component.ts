@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { LocalStorage, JSONSchema } from '@ngx-pwa/local-storage';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError, mergeMap, toArray } from 'rxjs/operators';
+import { LocalStorage, StorageMap, JSONSchema } from '@ngx-pwa/local-storage';
+
 import { DataService } from './data.service';
 
 interface Data {
@@ -15,7 +16,6 @@ interface Data {
     <p id="schema-error">{{schemaError$ | async}}</p>
     <p id="remove-item">{{removeItem$ | async}}</p>
     <p id="clear">{{clear}}</p>
-    <p id="size">{{size$ | async}}</p>
     <p id="length">{{length$ | async}}</p>
     <p id="keys">{{keys$ | async | json}}</p>
     <p id="has" [hidden]="has$ | async">Should not be seen</p>
@@ -33,9 +33,9 @@ export class AppComponent implements OnInit {
   length$!: Observable<number>;
   keys$!: Observable<string[]>;
   has$!: Observable<boolean>;
-  service$!: Observable<string | null>;
+  service$!: Observable<string | undefined>;
 
-  constructor(private localStorage: LocalStorage, private dataService: DataService) {}
+  constructor(private localStorage: LocalStorage, private storageMap: StorageMap, private dataService: DataService) {}
 
   ngOnInit() {
 
@@ -71,22 +71,18 @@ export class AppComponent implements OnInit {
         mergeMap(() => this.localStorage.getItem('removeItem', { type: 'string' })),
       );
 
-      this.size$ = this.localStorage.setItem('size1', 'test').pipe(
-        mergeMap(() => this.localStorage.setItem('size2', 'test')),
-        mergeMap(() => this.localStorage.size),
-      );
-
       this.length$ = this.localStorage.setItem('size1', 'test').pipe(
         mergeMap(() => this.localStorage.setItem('size2', 'test')),
         mergeMap(() => this.localStorage.length),
       );
 
-      this.keys$ = this.localStorage.setItem('keys', 'test').pipe(
-        mergeMap(() => this.localStorage.keys()),
+      this.keys$ = this.storageMap.set('keys', 'test').pipe(
+        mergeMap(() => this.storageMap.keys()),
+        toArray(),
       );
 
       this.has$ = this.localStorage.setItem('has', 'test').pipe(
-        mergeMap(() => this.localStorage.has('has')),
+        mergeMap(() => this.storageMap.has('has')),
       );
 
       this.service$ = this.dataService.data$;

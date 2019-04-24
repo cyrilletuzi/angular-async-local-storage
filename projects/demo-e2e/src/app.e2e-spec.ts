@@ -47,14 +47,6 @@ describe('public api', () => {
 
   });
 
-  it('size()', async () => {
-
-    const data = Number.parseInt(await $('#size').getText(), 10);
-
-    expect(data).toBeGreaterThan(1);
-
-  });
-
   it('length', async () => {
 
     const data = Number.parseInt(await $('#length').getText(), 10);
