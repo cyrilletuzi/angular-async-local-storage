@@ -159,14 +159,6 @@ While not recommended, you can still force it:
 this.localStorage.getItem('test', schema as any)
 ```
 
-### `xSubscribe()` methods removed
-
-Auto-subscription methods were added for simplicity, but they were risky shortcuts because:
-- potential errors are not managed,
-- it can cause concurrency issues, especially given the average RxJS knowledge.
-
-So `setItemSubscribe()`, `removeItemSubscribe()` and `clearSubscribe()` are removed: subscribe manually.
-
 ## Feature: new `StorageMap` service
 
 In addition to the `LocalStorage` service, a new `StorageMap` service has been added:
@@ -320,6 +312,15 @@ The specific interfaces (`JSONSchemaString`, `JSONSchemaBoolean` and so on) are 
 
 `JSONSchemaNumeric` still works but is deprecated in favor of `JSONSchemaNumber` or `JSONSchemaInteger`
 (but again, just use `JSONSchema`).
+
+### `xSubscribe()` methods
+
+Auto-subscription methods were added for simplicity, but they were risky shortcuts because:
+- potential errors are not managed,
+- it can cause concurrency issues, especially given the average RxJS knowledge.
+
+So `setItemSubscribe()`, `removeItemSubscribe()` and `clearSubscribe()` are deprecated:
+subscribe manually. Will be removed in v9.
 
 ### Prefix and collision
 
