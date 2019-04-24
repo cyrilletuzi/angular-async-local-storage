@@ -6,8 +6,8 @@ so you understand exactly what you are doing. But relax,
 
 ## WARNING
 
-Version 7 of this library tried to take a huge step forward by forcing validation, for security and error management.
-Unfortunately, unforeseen issues happened, some very bad as they are beyond our control
+Version 7 of this library tried to take a huge step forward by enforcing validation, for security and error management.
+Unfortunately, unforeseen issues happened, some very bad as they were beyond our control
 (like [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)).
 
 Version 8 achieves the goal we tried in v7 the right way. Everything has been cleaned and things are a lot easier for you.

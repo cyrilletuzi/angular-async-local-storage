@@ -2,7 +2,7 @@
 
 ## Version
 
-This is an outdated guide for validation in versions < 8.
+**This is an outdated guide for validation in versions < 8 of this lib.**
 The up to date guide about validation for version >= 8 is available [here](./VALIDATION.md).
 
 ## Why validation?

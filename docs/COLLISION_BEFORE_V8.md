@@ -6,8 +6,8 @@ you need to add a prefix.
 
 ## Version
 
-This is an outdated guide for prefix in versions < 8.
-The up to date guide about prefix for version >= 8 is available [here](./COLLISION.md).
+**This is an outdated guide about collision in versions < 8 of this lib.**
+The up to date guide about collision for versions >= 8 is available [here](./COLLISION.md).
 
 ## Configuration
 
