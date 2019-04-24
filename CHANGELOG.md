@@ -2,13 +2,17 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.0.0-beta.7 (2019-03-21)
+## 8.0.0-beta.8 (2019-04-24)
 
 **A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.**
 
 v8 works with:
-- Angular 8 and TypeScript 3.3,
+- Angular 8 and TypeScript 3.4,
 - Angular 7 and TypeScript 3.1 or 3.2
+
+### Feature: new `StorageMap` service
+
+See the [general documentation](./README.md).
 
 ### Feature: validation is much easier!
 
@@ -43,9 +47,11 @@ It was time to do a full review and refactoring, which results in:
 
 ### Future breaking changes
 
+- `.has()`, `.keys()` and `.size` are deprecated in `LocalStorage`. They will be removed in v9. They moved to the new `StorageMap` service.
 - `JSONSchemaNumeric` deprecated (will be removed in v9)
 - `LSGetItemsOptions` deprecated (not necessary anymore, will be removed in v9)
 - `LOCAL_STORAGE_PREFIX` and `prefix` option of `localStorageProviders()` deprecated (will be removed in v9))
+- `setItemSubscribe()`, `removeItemSubscribe()` and `clearSubscribe()` deprecated (will be removed in v9)
 
 ### Reduced public API
 
@@ -72,6 +78,8 @@ Should not concern you as it was internal stuff.
 
 - `has()` and `keys()` now work in Edge/IE too
 (fixes [#69](https://github.com/cyrilletuzi/angular-async-local-storage/issues/69))
+
+Do *not* use: it's deprecated in v8.
 
 ## 7.3.0 (2019-01-03)
 
@@ -105,6 +113,8 @@ Should not concern you as it was internal stuff.
 
 In v7.2, `has()` and `keys()` were not supported in Internet Explorer and Edge. Update to v7.4.
 
+Do *not* use: it's deprecated in v8.
+
 See [documentation](./docs/MAP_OPERATIONS.md).
 
 ### Breaking change (from v7.1 only)
@@ -133,7 +143,7 @@ These releases have been **deprecated** due to a critical regression.
   - `JSONSchemaConst`
   - `JSONSchemaEnum`
   - `JSONSchemaString`
-  - `JSONSchemaNumeric`
+  - `JSONSchemaNumeric` (deprecated in v8)
   - `JSONSchemaBoolean`
   - `JSONSchemaArray`
   - `JSONSchemaObject`
