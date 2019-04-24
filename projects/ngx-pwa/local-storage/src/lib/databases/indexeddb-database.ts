@@ -122,7 +122,7 @@ export class IndexedDBDatabase implements LocalDatabase {
 
           }
 
-          /* Return `null` if the value is `null` or `undefined` */
+          /* Return `undefined` if the value is empty */
           return undefined;
 
         });
@@ -142,8 +142,8 @@ export class IndexedDBDatabase implements LocalDatabase {
    */
   set(key: string, data: any): Observable<undefined> {
 
-    /* Storing `undefined` or `null` in `indexedDb` can cause issues in some browsers so removing item instead */
-    if ((data === undefined) || (data === null)) {
+    /* Storing `undefined` in `indexedDb` can cause issues in some browsers so removing item instead */
+    if (data === undefined) {
       return this.delete(key);
     }
 

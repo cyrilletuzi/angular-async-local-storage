@@ -26,14 +26,13 @@ export class MemoryDatabase implements LocalDatabase {
   /**
    * Gets an item value in memory
    * @param key The item's key
-   * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
+   * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
    */
-   get<T = any>(key: string): Observable<T |undefined> {
+   get<T = any>(key: string): Observable<T | undefined> {
 
     const rawData = this.memoryStorage.get(key) as T | undefined;
 
-    /* If data is `undefined`, returns `null` instead for the API to be consistent.
-     * Wrap in a RxJS `Observable` to be consistent with other storages */
+    /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(rawData);
 
   }
@@ -45,11 +44,6 @@ export class MemoryDatabase implements LocalDatabase {
    * @returns A RxJS `Observable` to wait the end of the operation
    */
    set(key: string, data: any): Observable<undefined> {
-
-    /* Storing `undefined` or `null` in `localStorage` is useless, so removing item instead */
-    if ((data === undefined) || (data === null)) {
-      return this.delete(key);
-    }
 
     this.memoryStorage.set(key, data);
 

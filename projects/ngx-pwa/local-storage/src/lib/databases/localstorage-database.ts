@@ -78,11 +78,6 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   set(key: string, data: any): Observable<undefined> {
 
-    /* Storing `undefined` or `null` in `localStorage` can cause issues in some browsers so removing item instead */
-    if ((data === undefined) || (data === null)) {
-      return this.delete(key);
-    }
-
     let serializedData: string | null = null;
 
     /* Try to stringify (can fail on circular references) */

@@ -45,9 +45,9 @@ export class StorageMap extends StorageCommon {
       this.catchIDBBroken(() => this.database.get<T>(key)),
       mergeMap((data) => {
 
-        if (data === undefined || data === null) {
+        /* No need to validate if the data is empty */
+        if ((data === undefined) || (data === null)) {
 
-          /* No need to validate if the data is `undefined` */
           return of(undefined);
 
         } else if (schema) {
@@ -77,6 +77,12 @@ export class StorageMap extends StorageCommon {
    * @returns A RxJS `Observable` to wait the end of the operation
    */
   set(key: string, data: any): Observable<undefined> {
+
+    /* Storing `undefined` or `null` is useless and can cause issues in `indexedDb` in some browsers,
+     * so removing item instead for all storages to have a consistent API */
+    if ((data === undefined) || (data === null)) {
+      return this.delete(key);
+    }
 
     return this.database.set(key, data)
       /* Catch if `indexedDb` is broken */
