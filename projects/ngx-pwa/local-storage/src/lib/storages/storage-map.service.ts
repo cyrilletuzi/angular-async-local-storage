@@ -188,7 +188,7 @@ export class StorageMap {
   watch<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
   watch<T = any>(key: string, schema: JSONSchema): Observable<T | undefined>;
   watch<T = unknown>(key: string, schema?: null | undefined): Observable<unknown>;
-  watch<T = any>(key: string, schema: JSONSchema | null | undefined = null)  {
+  watch<T = any>(key: string, schema: JSONSchema | null | undefined = null) {
 
     /* Check if there is already a notifier and cast according to schema */
     let notifier = this.notifiers.get(key) as ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>;
@@ -197,6 +197,9 @@ export class StorageMap {
 
       /* Create a notifier and cast according to schema */
       notifier = new ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>(1);
+
+      /* Memorize the notifier */
+      this.notifiers.set(key, notifier);
 
       /* Get the current item value */
       (schema ? this.get<T>(key, schema) : this.get(key)).subscribe({
