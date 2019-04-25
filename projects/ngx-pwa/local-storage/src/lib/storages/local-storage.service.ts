@@ -54,6 +54,7 @@ export class LocalStorage {
    * it may be removed in v9.
    * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
    * @param key The item's key
+   * @param schema Optional JSON schema to validate the initial value
    * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
    */
   getItem<T = string>(key: string, schema: JSONSchemaString): Observable<string | null>;

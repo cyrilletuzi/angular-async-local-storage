@@ -45,6 +45,7 @@ export class StorageMap {
    * The signature has many overloads due to validation, **please refer to the documentation.**
    * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
    * @param key The item's key
+   * @param schema Optional JSON schema to validate the value
    * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
    */
   get<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
@@ -176,6 +177,7 @@ export class StorageMap {
    * The signature has many overloads due to validation, **please refer to the documentation.**
    * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
    * @param key The item's key to watch
+   * @param schema Optional JSON schema to validate the initial value
    * @returns An infinite `Observable` giving the current value
    */
   watch<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
@@ -184,21 +186,27 @@ export class StorageMap {
   watch<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
   watch<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
   watch<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
-  watch<T = any>(key: string, schema: JSONSchema): Observable<T | undefined> {
+  watch<T = any>(key: string, schema: JSONSchema): Observable<T | undefined>;
+  watch<T = unknown>(key: string, schema?: null | undefined): Observable<unknown>;
+  watch<T = any>(key: string, schema: JSONSchema | null | undefined = null)  {
 
-    let notifier = this.notifiers.get(key) as ReplaySubject<T | undefined>;
+    /* Check if there is already a notifier and cast according to schema */
+    let notifier = this.notifiers.get(key) as ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>;
 
     if (!notifier) {
 
-      notifier = new ReplaySubject<T | undefined>(1);
+      /* Create a notifier and cast according to schema */
+      notifier = new ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>(1);
 
-      this.get<T>(key, schema).subscribe({
+      /* Get the current item value */
+      (schema ? this.get<T>(key, schema) : this.get(key)).subscribe({
         next: (result) => notifier.next(result),
         error: (error) => notifier.error(error),
       });
 
     }
 
+    /* Only the public API of the `Observable` should be returned */
     return notifier.asObservable();
 
   }
