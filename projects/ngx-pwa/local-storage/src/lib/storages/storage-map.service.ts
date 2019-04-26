@@ -86,6 +86,7 @@ export class StorageMap {
 
   }
 
+  // TODO: schema in set() too? doc with environment?
   /**
    * Set an item in storage
    * @param key The item's key

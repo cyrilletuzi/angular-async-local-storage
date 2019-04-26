@@ -251,6 +251,7 @@ export class IndexedDBDatabase implements LocalDatabase {
          * but it's only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge)
          * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
 
+        // TODO: Use `.openKeyCursor()` from indexedDB v2 (keep old behavior for old browsers)
         /* Open a cursor on the store */
         const request = (store as IDBObjectStore).openCursor();
 

@@ -3,6 +3,7 @@
  */
 
 // TODO: Review public/private API before stable release
+// TODO: Go back to minimal RxJS version and add a CI with last version
 
 export {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber,
