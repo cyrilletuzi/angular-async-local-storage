@@ -45,7 +45,7 @@ to be homogeneous with other Angular modules.
 Install the right version according to your Angular one via [`npm`](http://npmjs.com):
 
 ```bash
-# For Angular 7 & 8:
+# For Angular 7 & 8 and RxJS >= 6.4:
 npm install @ngx-pwa/local-storage@next
 
 # For Angular 6:

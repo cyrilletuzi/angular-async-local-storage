@@ -8,7 +8,7 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 
 v8 works with:
 - Angular 8 and TypeScript 3.4,
-- Angular 7 and TypeScript 3.1 or 3.2
+- Angular 7 and TypeScript 3.1 or 3.2 and RxJS >= 6.4
 
 ### Feature: new `StorageMap` service
 
