@@ -247,13 +247,10 @@ export class IndexedDBDatabase implements LocalDatabase {
       first(),
       mergeMap((store) => {
 
-        /* Note: a previous version of the API used `getAllKey()`,
-         * but it's only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge)
-         * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
-
-        // TODO: Use `.openKeyCursor()` from indexedDB v2 (keep old behavior for old browsers)
-        /* Open a cursor on the store */
-        const request = (store as IDBObjectStore).openCursor();
+        /* Open a cursor on the store
+         * `.openKeyCursor()` is better for performance, but only available in indexedDB v2 (missing in IE/Edge)
+         * Avoid issues like https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
+        const request = ('openKeyCursor' in store) ? store.openKeyCursor() : (store as IDBObjectStore).openCursor();
 
         /* Listen to success event */
         const success$ = this.successEvent(request).pipe(
@@ -261,9 +258,9 @@ export class IndexedDBDatabase implements LocalDatabase {
           takeWhile(() => (request.result !== null)),
           /* This lib only allows string keys, but user could have added other types of keys from outside
            * It's OK to cast as the cursor as been tested in the previous operator */
-          map(() => (request.result as IDBCursorWithValue).key.toString()),
+          map(() => (request.result as IDBCursor).key.toString()),
           /* Iterate on the cursor */
-          tap(() => { (request.result as IDBCursorWithValue).continue(); }),
+          tap(() => { (request.result as IDBCursor).continue(); }),
         );
 
         /* Listen to error event and if so, throw an error */
