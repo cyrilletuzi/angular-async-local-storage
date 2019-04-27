@@ -53,8 +53,8 @@ export class StorageMap {
   get<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
   get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
   get<T = any>(key: string, schema: JSONSchema): Observable<T | undefined>;
-  get<T = unknown>(key: string, schema?: null | undefined): Observable<unknown>;
-  get<T = any>(key: string, schema: JSONSchema | null | undefined = null) {
+  get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
+  get<T = any>(key: string, schema?: JSONSchema) {
 
     /* Get the data in storage */
     return this.database.get<T>(key).pipe(

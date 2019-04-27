@@ -64,8 +64,8 @@ export class LocalStorage {
   getItem<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | null>;
   getItem<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | null>;
   getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema }): Observable<T | null>;
-  getItem<T = unknown>(key: string, schema?: null): Observable<unknown>;
-  getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema } | null | undefined = null) {
+  getItem<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
+  getItem<T = any>(key: string, schema?: JSONSchema | { schema: JSONSchema } | undefined) {
 
     if (schema) {
 
