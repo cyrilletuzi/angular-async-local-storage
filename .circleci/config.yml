@@ -35,7 +35,7 @@ jobs: # a collection of steps
             - ./node_modules
       - run: # run tests
           name: test
-          command: npm test
+          command: npm test && npm run test:ivy
   ng7ts31:
     docker: # run the steps with Docker
       - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run

@@ -411,6 +411,122 @@
           }
         }
       }
+    },
+    "ivy": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "inlineTemplate": true
+        }
+      },
+      "root": "projects/ivy",
+      "sourceRoot": "projects/ivy/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/ivy",
+            "index": "projects/ivy/src/index.html",
+            "main": "projects/ivy/src/main.ts",
+            "polyfills": "projects/ivy/src/polyfills.ts",
+            "tsConfig": "projects/ivy/tsconfig.app.json",
+            "assets": [
+              "projects/ivy/src/favicon.ico",
+              "projects/ivy/src/assets"
+            ],
+            "styles": [
+              "projects/ivy/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/ivy/src/environments/environment.ts",
+                  "with": "projects/ivy/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ivy:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ivy:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ivy:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ivy/src/test.ts",
+            "polyfills": "projects/ivy/src/polyfills.ts",
+            "tsConfig": "projects/ivy/tsconfig.spec.json",
+            "karmaConfig": "projects/ivy/karma.conf.js",
+            "assets": [
+              "projects/ivy/src/favicon.ico",
+              "projects/ivy/src/assets"
+            ],
+            "styles": [
+              "projects/ivy/src/styles.css"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ivy/tsconfig.app.json",
+              "projects/ivy/tsconfig.spec.json",
+              "projects/ivy/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/ivy/e2e/protractor.conf.js",
+            "devServerTarget": "ivy:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ivy:serve:production"
+            }
+          }
+        }
+      }
     }
   },
   "defaultProject": "@ngx-pwa/local-storage"
