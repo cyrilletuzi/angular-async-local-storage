@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "@ngx-pwa/local-storage": {
+    "ngx-pwa-local-storage": {
       "root": "projects/ngx-pwa/local-storage",
       "sourceRoot": "projects/ngx-pwa/local-storage/src",
       "projectType": "library",
@@ -495,5 +495,5 @@
       }
     }
   },
-  "defaultProject": "@ngx-pwa/local-storage"
+  "defaultProject": "ngx-pwa-local-storage"
 }
