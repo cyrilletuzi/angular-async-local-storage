@@ -54,7 +54,7 @@ export class LocalStorage {
    * it may be removed in v9.
    * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
    * @param key The item's key
-   * @param schema Optional JSON schema to validate the initial value
+   * @param schema Optional JSON schema to validate the data
    * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
    */
   getItem<T = string>(key: string, schema: JSONSchemaString): Observable<string | null>;
@@ -64,8 +64,8 @@ export class LocalStorage {
   getItem<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | null>;
   getItem<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | null>;
   getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema }): Observable<T | null>;
-  getItem<T = unknown>(key: string, schema?: null): Observable<unknown>;
-  getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema } | null | undefined = null) {
+  getItem<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
+  getItem<T = any>(key: string, schema?: JSONSchema | { schema: JSONSchema } | undefined) {
 
     if (schema) {
 
@@ -92,11 +92,12 @@ export class LocalStorage {
    * Set an item in storage
    * @param key The item's key
    * @param data The item's value
+   * @param schema Optional JSON schema to validate the data
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-  setItem(key: string, data: any): Observable<boolean> {
+  setItem(key: string, data: any, schema?: JSONSchema): Observable<boolean> {
 
-    return this.storageMap.set(key, data).pipe(
+    return this.storageMap.set(key, data, schema).pipe(
       /* Transform `undefined` into `true` for backward compatibility with v7 */
       mapTo(true),
     );

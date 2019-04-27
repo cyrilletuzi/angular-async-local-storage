@@ -3,6 +3,7 @@
  */
 
 // TODO: Review public/private API before stable release
+// TODO: Test with Bazel
 
 export {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber,

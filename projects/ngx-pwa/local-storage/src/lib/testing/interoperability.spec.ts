@@ -132,8 +132,7 @@ function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
         request.addEventListener('success', () => {
 
-          // TODO: Investigate schema param not working without the test
-          const request2 = schema ? localStorageService.get(index, schema) : localStorageService.get(index);
+          const request2 = localStorageService.get(index, schema);
 
           request2.subscribe((result) => {
 

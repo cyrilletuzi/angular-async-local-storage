@@ -2,13 +2,13 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.0.0-beta.9 (2019-04-24)
+## 8.0.0-beta.10 (2019-04-26)
 
 **A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.**
 
 v8 works with:
 - Angular 8 and TypeScript 3.4,
-- Angular 7 and TypeScript 3.1 or 3.2
+- Angular 7 and TypeScript 3.1 or 3.2 and RxJS >= 6.4
 
 ### Feature: new `StorageMap` service
 

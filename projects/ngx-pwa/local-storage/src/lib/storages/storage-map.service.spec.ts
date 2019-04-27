@@ -505,7 +505,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         const value = { expected: 'value' };
 
-        localStorageService.set(key, value).pipe(
+        localStorageService.set(key, value, schema).pipe(
           mergeMap(() => localStorageService.get(key, schema))
         ).subscribe((data) => {
 
@@ -517,10 +517,24 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       });
 
-      it('invalid', (done) => {
+      it('invalid in get()', (done) => {
 
         localStorageService.set(key, 'test').pipe(
           mergeMap(() => localStorageService.get(key, schema))
+        ).subscribe({ error: (error) => {
+
+          expect(error.message).toBe(VALIDATION_ERROR);
+
+          done();
+
+        } });
+
+      });
+
+      it('invalid in set()', (done) => {
+
+        localStorageService.set(key, 'test', schema).pipe(
+          mergeMap(() => localStorageService.get(key, { type: 'string' }))
         ).subscribe({ error: (error) => {
 
           expect(error.message).toBe(VALIDATION_ERROR);
