@@ -4,7 +4,6 @@
 
 // TODO: Review public/private API before stable release
 // TODO: Test with Bazel
-// TODO: Test with Ivy
 
 export {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber,
