@@ -43,6 +43,7 @@ export class StorageMap {
    * The signature has many overloads due to validation, **please refer to the documentation.**
    * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
    * @param key The item's key
+   * @param schema Optional JSON schema to validate the data
    * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
    */
   get<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
@@ -68,7 +69,7 @@ export class StorageMap {
 
         } else if (schema) {
 
-          /* Validate data against a JSON schema if provied */
+          /* Validate data against a JSON schema if provided */
           if (!this.jsonValidator.validate(data, schema)) {
             return throwError(new ValidationError());
           }
@@ -86,19 +87,24 @@ export class StorageMap {
 
   }
 
-  // TODO: schema in set() too? doc with environment?
   /**
    * Set an item in storage
    * @param key The item's key
    * @param data The item's value
+   * @param schema Optional JSON schema to validate the data
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-  set(key: string, data: any): Observable<undefined> {
+  set(key: string, data: any, schema?: JSONSchema): Observable<undefined> {
 
     /* Storing `undefined` or `null` is useless and can cause issues in `indexedDb` in some browsers,
      * so removing item instead for all storages to have a consistent API */
     if ((data === undefined) || (data === null)) {
       return this.delete(key);
+    }
+
+    /* Validate data against a JSON schema if provided */
+    if (schema && !this.jsonValidator.validate(data, schema)) {
+      return throwError(new ValidationError());
     }
 
     return this.database.set(key, data)
