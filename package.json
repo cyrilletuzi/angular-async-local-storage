@@ -10,6 +10,7 @@
     "test:specs": "ng test @ngx-pwa/local-storage --watch false",
     "test:demo": "ng e2e demo-e2e",
     "test:interoperability": "ng e2e localforage-e2e",
+    "test:ivy": "ng e2e ivy",
     "lint": "ng lint",
     "publish": "npm run lint && npm test && npm run build && npm publish dist/ngx-pwa/local-storage --access public --tag next",
     "ci:ng7ts31": "npm install typescript@3.1.1 rxjs@6.4.0 @angular/common@7.0.0 @angular/compiler@7.0.0 @angular/core@7.0.0 @angular/platform-browser@7.0.0 @angular/platform-browser-dynamic@7.0.0 @angular/router@7.0.0 @angular/cli@7.0.1 @angular/compiler-cli@7.0.0 @angular-devkit/build-angular@0.10.1 @angular-devkit/build-ng-packagr@0.10.1",

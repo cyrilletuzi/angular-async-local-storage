@@ -1,23 +1,74 @@
-import { AppPage } from './app.po';
-import { browser, logging } from 'protractor';
+import { browser, $ } from 'protractor';
 
-describe('workspace-project App', () => {
-  let page: AppPage;
+describe('public api', () => {
 
-  beforeEach(() => {
-    page = new AppPage();
+  beforeAll((done) => {
+
+    browser.get('/').then(() => {
+
+      /* Wait for a few seconds as operations are asynchronous */
+      setTimeout(() => {
+        done();
+      }, 2000);
+
+    });
+
   });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to ivy!');
+  it('getItem()', async () => {
+
+    const data = await $('#get-item').getText();
+
+    expect(data).toBe('hello world');
+
   });
 
-  afterEach(async () => {
-    // Assert that there are no errors emitted from the browser
-    const logs = await browser.manage().logs().get(logging.Type.BROWSER);
-    expect(logs).not.toContain(jasmine.objectContaining({
-      level: logging.Level.SEVERE,
-    } as logging.Entry));
+  it('schema error', async () => {
+
+    const data = await $('#schema-error').getText();
+
+    expect(data).toBe('schema error');
+
   });
+
+  it('removeItem()', async () => {
+
+    const data = await $('#remove-item').getText();
+
+    expect(data).toBe('');
+
+  });
+
+  it('clear()', async () => {
+
+    const data = await $('#clear').getText();
+
+    expect(data).toBe('');
+
+  });
+
+  it('length', async () => {
+
+    const data = Number.parseInt(await $('#length').getText(), 10);
+
+    expect(data).toBeGreaterThan(1);
+
+  });
+
+  it('keys()', async () => {
+
+    const data = (await $('#keys').getText()).split(',');
+
+    expect(data.length).toBeGreaterThan(1);
+
+  });
+
+  it('has', async () => {
+
+    const data = await $('#has').getAttribute('hidden');
+
+    expect(data).toBe('true');
+
+  });
+
 });
