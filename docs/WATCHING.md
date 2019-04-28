@@ -44,7 +44,7 @@ export class SomeComponent implements OnInit, OnDestroy {
 }
 ```
 
-## Via manual subscription
+## Via the `async` pipe
 
 ```typescript
 import { Observable } from 'rjxs';
@@ -80,7 +80,7 @@ interface Data {
 
 @Component({
   template: `
-    <div *ngIf="{{data$ | async as data}}">
+    <div *ngIf="data$ | async as data">
       <p>{{data.hello}}</p>
       <p>{{data.world}}</p>
     <div>
