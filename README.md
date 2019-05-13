@@ -45,10 +45,10 @@ to be homogeneous with other Angular modules.
 Install the right version according to your Angular one via [`npm`](http://npmjs.com):
 
 ```bash
-# For Angular 7 & 8 and RxJS >= 6.4:
+# For Angular 8:
 npm install @ngx-pwa/local-storage@next
 
-# For Angular 6:
+# For Angular 6 & 7:
 npm install @ngx-pwa/local-storage@6
 ```
 
@@ -104,7 +104,7 @@ export class YourService {
 }
 ```
 
-New since version 8 of this lib, this service API follows the
+New *since version 8* of this lib, this service API follows the
 [native `Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), 
 except it's asynchronous via [RxJS `Observable`s](http://reactivex.io/rxjs/).
 
