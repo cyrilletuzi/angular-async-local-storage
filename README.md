@@ -240,6 +240,7 @@ Could happen to anyone:
 
 Could only happen when in `localStorage` fallback:
 - `.setItem()`: error in JSON serialization because of circular references (`TypeError`)
+- `.setItem()`: trying to store data that can't be serialized like `Blob`, `Map` or `Set` (`SerializationError` from this lib)
 - `.getItem()`: error in JSON unserialization (`SyntaxError`)
 
 Should only happen if data was corrupted or modified from outside of the lib:

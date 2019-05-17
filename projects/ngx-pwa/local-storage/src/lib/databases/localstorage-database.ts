@@ -4,6 +4,7 @@ import { observeOn } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { LOCAL_STORAGE_PREFIX, LS_PREFIX } from '../tokens';
+import { SerializationError } from './exceptions';
 
 @Injectable({
   providedIn: 'root'
@@ -85,6 +86,13 @@ export class LocalStorageDatabase implements LocalDatabase {
       serializedData = JSON.stringify(data);
     } catch (error) {
       return throwError(error as TypeError);
+    }
+
+    /* Check if data can be serialized */
+    const dataPrototype = Object.getPrototypeOf(data);
+    if ((typeof data === 'object') && (data !== null) && !Array.isArray(data) &&
+    !((dataPrototype === Object.prototype) || (dataPrototype === null))) {
+      return throwError(new SerializationError());
     }
 
     /* Can fail if storage quota is exceeded */
