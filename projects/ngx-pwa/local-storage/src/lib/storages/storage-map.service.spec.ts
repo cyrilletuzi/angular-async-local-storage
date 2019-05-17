@@ -222,6 +222,31 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       });
 
+      it('blob', (done) => {
+
+        const value = new Blob();
+
+        // tslint:disable-next-line: no-string-literal
+        const observer = (localStorageService['database'] instanceof LocalStorageDatabase) ?
+          {
+            next: () => {},
+            error: () => {
+              expect().nothing();
+              done();
+            }
+          } : {
+            next: (result: unknown) => {
+              expect(result).toEqual(value);
+              done();
+            }
+          };
+
+        localStorageService.set(key, value).pipe(
+          mergeMap(() => localStorageService.get(key))
+        ).subscribe(observer);
+
+      });
+
       it('update', (done) => {
 
         localStorageService.set(key, 'value').pipe(

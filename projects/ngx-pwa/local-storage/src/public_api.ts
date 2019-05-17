@@ -10,7 +10,7 @@ export {
   JSONSchemaNumeric, JSONSchemaString, JSONSchemaArray, JSONSchemaArrayOf, JSONSchemaObject,
   VALIDATION_ERROR, ValidationError
 } from './lib/validation';
-export { LocalDatabase } from './lib/databases';
+export { LocalDatabase, SERIALIZATION_ERROR, SerializationError } from './lib/databases';
 export { LocalStorage, StorageMap, LSGetItemOptions } from './lib/storages';
 export {
   localStorageProviders, LocalStorageProvidersConfig,
