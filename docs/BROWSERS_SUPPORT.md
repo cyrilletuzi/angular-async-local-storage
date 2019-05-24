@@ -11,7 +11,8 @@ so internal operations are synchronous (the public API remains asynchronous-like
 
 This module is not impacted by IE/Edge missing `indexedDB` features.
 
-It also works in tools based on browser engines (like Electron) but not in non-browser tools (like NativeScript, see
+It also works in tools based on browser engines (like Electron, WebViews, Ionic...),
+but not in non-browser tools (like NativeScript, see
 [#11](https://github.com/cyrilletuzi/angular-async-local-storage/issues/11)).
 
 ## Browsers restrictions

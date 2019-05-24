@@ -1,5 +1,5 @@
 import { Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser, isPlatformWorkerApp, isPlatformWorkerUi } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 
 import { IndexedDBDatabase } from './indexeddb-database';
@@ -19,10 +19,8 @@ import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX } from '..
 export function localDatabaseFactory(
   platformId: string, LSPrefix: string, IDBDBName: string, IDBstoreName: string, oldPrefix: string): LocalDatabase {
 
-  // TODO: test in web workers (announced for CLI v8)
   // Do not explicit `window` here, as the global object is not the same in web workers
-  if ((isPlatformBrowser(platformId) || isPlatformWorkerApp(platformId) || isPlatformWorkerUi(platformId))
-  && (indexedDB !== undefined) && (indexedDB !== null) && ('open' in indexedDB)) {
+  if (isPlatformBrowser(platformId) && (indexedDB !== undefined) && (indexedDB !== null) && ('open' in indexedDB)) {
 
     /* Check:
      * - if we are in a browser context (issue: server-side rendering)
