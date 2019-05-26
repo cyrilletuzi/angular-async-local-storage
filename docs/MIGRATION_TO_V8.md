@@ -343,11 +343,11 @@ export class AppModule {}
 
 Since v8:
 ```typescript
-import { localStorageProviders } from '@ngx-pwa/local-storage';
+import { StorageModule } from '@ngx-pwa/local-storage';
 
 @NgModule({
-  providers: [
-    localStorageProviders({
+  imports: [
+    StorageModule.forRoot({
       LSPrefix: 'myapp_', // Note the underscore
       IDBDBName: 'myapp_ngStorage',
     }),

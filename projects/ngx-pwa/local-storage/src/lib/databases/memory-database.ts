@@ -11,7 +11,7 @@ export class MemoryDatabase implements LocalDatabase {
   /**
    * Memory storage
    */
-  private memoryStorage = new Map<string, any>();
+  protected memoryStorage = new Map<string, any>();
 
   /**
    * Number of items in memory

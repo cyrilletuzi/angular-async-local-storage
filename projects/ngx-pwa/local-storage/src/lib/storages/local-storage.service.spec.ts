@@ -3,8 +3,9 @@ import { mergeMap, filter, tap } from 'rxjs/operators';
 
 import { LocalStorage } from './local-storage.service';
 import { StorageMap } from './storage-map.service';
+import { VALIDATION_ERROR } from './exceptions';
 import { IndexedDBDatabase, LocalStorageDatabase, MemoryDatabase } from '../databases';
-import { JSONSchema, VALIDATION_ERROR } from '../validation';
+import { JSONSchema } from '../validation';
 import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
 
 function tests(description: string, localStorageServiceFactory: () => LocalStorage) {

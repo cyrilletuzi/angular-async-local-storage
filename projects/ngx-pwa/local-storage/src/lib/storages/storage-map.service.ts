@@ -2,26 +2,18 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable, throwError, of, OperatorFunction } from 'rxjs';
 import { mergeMap, catchError } from 'rxjs/operators';
 
+import { ValidationError } from './exceptions';
 import {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger,
-  JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf, ValidationError, JSONValidator
+  JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf, JSONValidator
 } from '../validation';
-import { LocalDatabase, IDB_BROKEN_ERROR, LocalStorageDatabase } from '../databases';
+import { LocalDatabase, IDB_BROKEN_ERROR, LocalStorageDatabase, IndexedDBDatabase, MemoryDatabase } from '../databases';
 import { LS_PREFIX, LOCAL_STORAGE_PREFIX } from '../tokens';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageMap {
-
-  /**
-   * Number of items in storage
-   */
-  get size(): Observable<number> {
-
-    return this.database.size;
-
-  }
 
   /**
    * Constructor params are provided by Angular (but can also be passed manually in tests)
@@ -37,6 +29,84 @@ export class StorageMap {
     // tslint:disable-next-line: deprecation
     @Inject(LOCAL_STORAGE_PREFIX) protected oldPrefix = '',
   ) {}
+
+  /**
+   * Number of items in storage.
+   */
+  get size(): Observable<number> {
+
+    return this.database.size;
+
+  }
+
+  /**
+   * Tells you which storage engine is used. *Only useful for interoperability.*
+   * Note that due to some browsers issues in some special contexts
+   * (Firefox private mode and Safari cross-origin iframes),
+   * **this information may be wrong at initialization,**
+   * as the storage could fallback from `indexedDB` to `localStorage`
+   * only after a first read or write operation.
+   * @returns Storage engine used
+   */
+  get backingEngine(): 'indexedDB' | 'localStorage' | 'memory' | 'unknown' {
+
+    if (this.database instanceof IndexedDBDatabase) {
+
+      return 'indexedDB';
+
+    } else if (this.database instanceof LocalStorageDatabase) {
+
+      return 'localStorage';
+
+    } else if (this.database instanceof MemoryDatabase) {
+
+      return 'memory';
+
+    } else {
+
+      return 'unknown';
+
+    }
+
+  }
+
+  /**
+   * Info about `indexedDB` database. *Only useful for interoperability.*
+   * @returns `indexedDB` database name, store name and database version.
+   * **Values will be empty if the storage is not `indexedDB`,**
+   * **so it should be used after an engine check**:
+   * ```ts
+   * if (this.storageMap.backingEngine === 'indexedDB') {
+   *   const { database, store, version } = this.storageMap.backingStore;
+   * }
+   * ```
+   */
+  get backingStore(): { database: string, store: string, version: number } {
+
+    return (this.database instanceof IndexedDBDatabase) ?
+      this.database.backingStore :
+      { database: '', store: '', version: 0 };
+
+  }
+
+  /**
+   * Info about `localStorage` fallback storage. *Only useful for interoperability.*
+   * @returns `localStorage` prefix.
+   * **Values will be empty if the storage is not `localStorage`,**
+   * **so it should be used after an engine check**:
+   * ```ts
+   * if (this.storageMap.backingEngine === 'localStorage') {
+   *   const { prefix } = this.storageMap.fallbackBackingStore;
+   * }
+   * ```
+   */
+  get fallbackBackingStore(): { prefix: string } {
+
+    return (this.database instanceof LocalStorageDatabase) ?
+      { prefix: this.database.prefix } :
+      { prefix: '' };
+
+  }
 
   /**
    * Get an item value in storage.
@@ -166,7 +236,7 @@ export class StorageMap {
    * RxJS operator to catch if `indexedDB` is broken
    * @param operationCallback Callback with the operation to redo
    */
-  private catchIDBBroken<T>(operationCallback: () => Observable<T>): OperatorFunction<T, T> {
+  protected catchIDBBroken<T>(operationCallback: () => Observable<T>): OperatorFunction<T, T> {
 
     return catchError((error) => {
 

@@ -2,9 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { mergeMap, tap, filter } from 'rxjs/operators';
 
 import { StorageMap } from './storage-map.service';
+import { VALIDATION_ERROR } from './exceptions';
 import { IndexedDBDatabase, LocalStorageDatabase, MemoryDatabase } from '../databases';
-import { JSONSchema, VALIDATION_ERROR } from '../validation';
-import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8 } from '../tokens';
+import { JSONSchema } from '../validation';
+import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_DB_VERSION } from '../tokens';
 import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
 
 function tests(description: string, localStorageServiceFactory: () => StorageMap) {
@@ -226,8 +227,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         const value = new Blob();
 
-        // tslint:disable-next-line: no-string-literal
-        const observer = (localStorageService['database'] instanceof LocalStorageDatabase) ?
+        const observer = (localStorageService.backingEngine === 'localStorage') ?
           {
             next: () => {},
             error: () => {
@@ -652,7 +652,12 @@ describe('StorageMap', () => {
 
   tests('indexedDB', () => new StorageMap(new IndexedDBDatabase()));
 
-  tests('indexedDB with old prefix', () => new StorageMap(new IndexedDBDatabase(undefined, undefined, `myapp${Date.now()}`)));
+  tests('indexedDB with no wrap', () => new StorageMap(new IndexedDBDatabase()));
+
+  tests('indexedDB with custom options', () => new StorageMap(new IndexedDBDatabase('customDbTest', 'storeTest', 2)));
+
+  tests('indexedDB with old prefix', () =>
+    new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, undefined, `myapp${Date.now()}`)));
 
   tests(
     'indexedDB with custom database and store names',
@@ -668,6 +673,65 @@ describe('StorageMap', () => {
       const value = 'test';
 
       const localStorageService = new StorageMap(new IndexedDBDatabase());
+
+      localStorageService.set(index, value).subscribe(() => {
+
+        try {
+
+          const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME);
+
+          dbOpen.addEventListener('success', () => {
+
+            const store = dbOpen.result.transaction([DEFAULT_IDB_STORE_NAME], 'readonly').objectStore(DEFAULT_IDB_STORE_NAME);
+
+            const request = store.get(index);
+
+            request.addEventListener('success', () => {
+
+              expect(request.result).toEqual({ value });
+
+              dbOpen.result.close();
+
+              closeAndDeleteDatabase(done, localStorageService);
+
+            });
+
+            request.addEventListener('error', () => {
+
+              dbOpen.result.close();
+
+              /* This case is not supposed to happen */
+              fail();
+
+            });
+
+          });
+
+          dbOpen.addEventListener('error', () => {
+
+            /* Cases : Firefox private mode where `indexedDb` exists but fails */
+            pending();
+
+          });
+
+        } catch {
+
+          /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
+          pending();
+
+        }
+
+      });
+
+    });
+
+    /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
+    it('IndexedDb with noWrap (will be pending in Firefox/IE private mode)', (done) => {
+
+      const index = `nowrap${Date.now()}`;
+      const value = 'test';
+
+      const localStorageService = new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, true));
 
       localStorageService.set(index, value).subscribe(() => {
 
@@ -720,18 +784,20 @@ describe('StorageMap', () => {
 
     });
 
-    it('indexedDB default store name (will be pending in Firefox private mode)', (done) => {
+    it('indexedDB default options (will be pending in Firefox private mode)', (done) => {
 
       const localStorageService = new StorageMap(new IndexedDBDatabase());
 
       /* Do a request first as a first transaction is needed to set the store name */
       localStorageService.get('test').subscribe(() => {
 
-        // tslint:disable-next-line: no-string-literal
-        if (localStorageService['database'] instanceof IndexedDBDatabase) {
+        if (localStorageService.backingEngine === 'indexedDB') {
 
-          // tslint:disable-next-line: no-string-literal
-          expect(localStorageService['database']['storeName']).toBe(DEFAULT_IDB_STORE_NAME);
+          const { database, store, version } = localStorageService.backingStore;
+
+          expect(database).toBe(DEFAULT_IDB_DB_NAME);
+          expect(store).toBe(DEFAULT_IDB_STORE_NAME);
+          expect(version).toBe(DEFAULT_IDB_DB_VERSION);
 
           closeAndDeleteDatabase(done, localStorageService);
 
@@ -746,22 +812,25 @@ describe('StorageMap', () => {
 
     });
 
-    it('indexedDB custom store name (will be pending in Firefox private mode)', (done) => {
+    it('indexedDB custom options (will be pending in Firefox private mode)', (done) => {
 
       /* Unique names to be sure `indexedDB` `upgradeneeded` event is triggered */
       const dbName = `dbCustom${Date.now()}`;
       const storeName = `storeCustom${Date.now()}`;
+      const dbVersion = 2;
 
-      const localStorageService = new StorageMap(new IndexedDBDatabase(dbName, storeName));
+      const localStorageService = new StorageMap(new IndexedDBDatabase(dbName, storeName, dbVersion));
 
       /* Do a request first as a first transaction is needed to set the store name */
       localStorageService.get('test').subscribe(() => {
 
-        // tslint:disable-next-line: no-string-literal
-        if (localStorageService['database'] instanceof IndexedDBDatabase) {
+        if (localStorageService.backingEngine === 'indexedDB') {
 
-          // tslint:disable-next-line: no-string-literal
-          expect(localStorageService['database']['storeName']).toBe(storeName);
+          const { database, store, version } = localStorageService.backingStore;
+
+          expect(database).toBe(dbName);
+          expect(store).toBe(storeName);
+          expect(version).toBe(dbVersion);
 
           closeAndDeleteDatabase(done, localStorageService);
 
@@ -773,117 +842,6 @@ describe('StorageMap', () => {
         }
 
       });
-
-    });
-
-    it('indexedDB store prior to v8 (will be pending in Firefox/IE private mode)', (done) => {
-
-      /* Unique name to be sure `indexedDB` `upgradeneeded` event is triggered */
-      const dbName = `ngStoreV7${Date.now()}`;
-
-      const index1 = `test1${Date.now()}`;
-      const value1 = 'test1';
-      const index2 = `test2${Date.now()}`;
-      const value2 = 'test2';
-
-      try {
-
-        const dbOpen = indexedDB.open(dbName);
-
-        dbOpen.addEventListener('upgradeneeded', () => {
-
-          // tslint:disable-next-line: deprecation
-          if (!dbOpen.result.objectStoreNames.contains(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8)) {
-
-            /* Create the object store */
-            // tslint:disable-next-line: deprecation
-            dbOpen.result.createObjectStore(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
-
-          }
-
-        });
-
-        dbOpen.addEventListener('success', () => {
-
-          const localStorageService = new StorageMap(new IndexedDBDatabase(dbName));
-
-          // tslint:disable-next-line: deprecation
-          const store1 = dbOpen.result.transaction([DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8], 'readwrite')
-            // tslint:disable-next-line: deprecation
-            .objectStore(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
-
-          const request1 = store1.add({ value: value1 }, index1);
-
-          request1.addEventListener('success', () => {
-
-            localStorageService.get(index1).subscribe((result) => {
-
-              /* Check detection of old store has gone well */
-              // tslint:disable-next-line: deprecation no-string-literal
-              expect((localStorageService['database'] as IndexedDBDatabase)['storeName']).toBe(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
-
-              /* Via the lib, data should be unwrapped */
-              expect(result).toBe(value1);
-
-              localStorageService.set(index2, value2).subscribe(() => {
-
-                // tslint:disable-next-line: deprecation
-                const store2 = dbOpen.result.transaction([DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8], 'readonly')
-                  // tslint:disable-next-line: deprecation
-                  .objectStore(DEFAULT_IDB_STORE_NAME_PRIOR_TO_V8);
-
-                const request2 = store2.get(index2);
-
-                request2.addEventListener('success', () => {
-
-                  /* Via direct `indexedDB`, data should be wrapped */
-                  expect(request2.result).toEqual({ value: value2 });
-
-                  dbOpen.result.close();
-
-                  closeAndDeleteDatabase(done, localStorageService);
-
-                });
-
-                request2.addEventListener('error', () => {
-
-                  dbOpen.result.close();
-
-                  /* This case is not supposed to happen */
-                  fail();
-
-                });
-
-              });
-
-            });
-
-          });
-
-          request1.addEventListener('error', () => {
-
-            dbOpen.result.close();
-
-            /* This case is not supposed to happen */
-            fail();
-
-          });
-
-        });
-
-        dbOpen.addEventListener('error', () => {
-
-          /* Cases : Firefox private mode where `indexedDb` exists but fails */
-          pending();
-
-        });
-
-      } catch {
-
-        /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
-        pending();
-
-      }
 
     });
 
@@ -891,16 +849,14 @@ describe('StorageMap', () => {
 
       /* Unique name to be sure `indexedDB` `upgradeneeded` event is triggered */
       const prefix = `myapp${Date.now()}`;
-      const localStorageService = new StorageMap(new IndexedDBDatabase(undefined, undefined, prefix));
+      const localStorageService = new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, undefined, prefix));
 
       /* Do a request first to allow localStorage fallback if needed */
       localStorageService.get('test').subscribe(() => {
 
-        // tslint:disable-next-line: no-string-literal
-        if (localStorageService['database'] instanceof IndexedDBDatabase) {
+        if (localStorageService.backingEngine === 'indexedDB') {
 
-          // tslint:disable-next-line: no-string-literal
-          expect(localStorageService['database']['dbName']).toBe(`${prefix}_${DEFAULT_IDB_DB_NAME}`);
+          expect(localStorageService.backingStore.database).toBe(`${prefix}_${DEFAULT_IDB_DB_NAME}`);
 
           closeAndDeleteDatabase(done, localStorageService);
 
@@ -922,7 +878,7 @@ describe('StorageMap', () => {
       const localStorageService = new StorageMap(new LocalStorageDatabase(prefix));
 
       // tslint:disable-next-line: no-string-literal
-      expect((localStorageService['database'] as LocalStorageDatabase)['prefix']).toBe(prefix);
+      expect(localStorageService.fallbackBackingStore.prefix).toBe(prefix);
 
     });
 
@@ -933,7 +889,7 @@ describe('StorageMap', () => {
       const localStorageService = new StorageMap(new LocalStorageDatabase(undefined, prefix));
 
       // tslint:disable-next-line: no-string-literal
-      expect((localStorageService['database'] as LocalStorageDatabase)['prefix']).toBe(`${prefix}_`);
+      expect(localStorageService.fallbackBackingStore.prefix).toBe(`${prefix}_`);
 
     });
 

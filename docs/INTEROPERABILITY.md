@@ -44,11 +44,11 @@ import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME } from '@ngx-pwa/local-stor
 Option 2: change this lib config, according to your other APIs:
 
 ```typescript
-import { localStorageProviders } from '@ngx-pwa/local-storage';
+import { StorageModule } from '@ngx-pwa/local-storage';
 
 @NgModule({
-  providers: [
-    localStorageProviders({
+  imports: [
+    StorageModule.forRoot({
       IDBDBName: 'customDataBaseName',
       IDBStoreName: 'customStoreName',
     })
@@ -65,11 +65,11 @@ Some libs prefixes `localStorage` keys. This lib doesn't by default,
 but you can add a prefix:
 
 ```typescript
-import { localStorageProviders } from '@ngx-pwa/local-storage';
+import { StorageModule } from '@ngx-pwa/local-storage';
 
 @NgModule({
-  providers: [
-    localStorageProviders({
+  imports: [
+    StorageModule.forRoot({
       LSPrefix: 'myapp_',
     })
   ]
@@ -82,11 +82,11 @@ export class AppModule {}
 Interoperability with `localforage` lib can be achieved with this config:
 
 ```typescript
-import { localStorageProviders } from '@ngx-pwa/local-storage';
+import { StorageModule } from '@ngx-pwa/local-storage';
 
 @NgModule({
-  providers: [
-    localStorageProviders({
+  imports: [
+    StorageModule.forRoot({
       LSPrefix: 'localforage/',
       IDBDBName: 'localforage',
       IDBStoreName: 'keyvaluepairs',

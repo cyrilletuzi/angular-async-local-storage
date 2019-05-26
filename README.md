@@ -52,6 +52,26 @@ npm install @ngx-pwa/local-storage@next
 npm install @ngx-pwa/local-storage@6
 ```
 
+*Since v8*, this second step is:
+- not required for the lib to work,
+- *strongly recommended for all new applications*, as it allows interoperability
+and is future-proof, as it should become the default in a future version,
+- **prohibited in applications already using this lib and already deployed in production**,
+as it would break with existing data.
+
+```ts
+import { StorageModule } from '@ngx-pwa/local-storage';
+
+@NgModule({
+  imports: [
+    StorageModule.forRoot({
+      IDBNoWrap: true,
+    })
+  ]
+})
+export class AppModule {}
+```
+
 ### Upgrading
 
 If you still use the old `angular-async-local-storage` package, or to update to new versions,

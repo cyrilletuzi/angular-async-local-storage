@@ -17,11 +17,11 @@ but is not recommended as there was breaking changes in v8.
 For example:
 
 ```typescript
-import { localStorageProviders } from '@ngx-pwa/local-storage';
+import { StorageModule } from '@ngx-pwa/local-storage';
 
 @NgModule({
-  providers: [
-    localStorageProviders({
+  imports: [
+    StorageModule.forRoot({
       IDBDBName: 'myAppStorage', // custom database name when in `indexedDB`
       LSPrefix: 'myapp_', // prefix when in `localStorage` fallback
     })
