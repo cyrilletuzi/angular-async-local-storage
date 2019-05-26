@@ -19,36 +19,42 @@ as there are important things to do and to be aware of to achieve interoperabili
 Interoperability can be achieved:
 - **since v8 of this lib**,
 - **only for apps that haven't been deployed in production yet**,
-as v8 changed the storage system to achieve interoperability:
-  - it won't work on data stored with this lib before v8, as it still uses the old storage system for backward compatibility,
-  - changing configuration on the fly would mean to **lose all previously stored data**.
+as v8 uses the following opt-in option to allow interoperability:
+changing configuration on the fly would mean to **lose all previously stored data**.
 
-## Configuration
+```ts
+import { StorageModule } from '@ngx-pwa/local-storage';
+
+@NgModule({
+  imports: [
+    StorageModule.forRoot({
+      IDBNoWrap: true,
+    })
+  ]
+})
+export class AppModule {}
+```
 
 Note:
 - it is an initialization step, so as mentioned in the examples below, **it must be done in `AppModule`**,
 - **never change these options in an app already deployed in production, as all previously stored data would be lost**.
+
+## Configuration
 
 ### `indexedDB` database and object store names
 
 When storing in `indexedDB`, names are used for the database and the object store,
 so you will need that all APIs use the same names.
 
-Option 1: keep the config of this lib and change the names in the other APIs,
-by using the default values exported by the lib:
+- Option 1 (recommended): change this lib config, according to your other APIs:
 
-```typescript
-import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME } from '@ngx-pwa/local-storage';
-```
-
-Option 2: change this lib config, according to your other APIs:
-
-```typescript
-import { localStorageProviders } from '@ngx-pwa/local-storage';
+```ts
+import { StorageModule } from '@ngx-pwa/local-storage';
 
 @NgModule({
-  providers: [
-    localStorageProviders({
+  imports: [
+    StorageModule.forRoot({
+      IDBNoWrap: true,
       IDBDBName: 'customDataBaseName',
       IDBStoreName: 'customStoreName',
     })
@@ -57,19 +63,36 @@ import { localStorageProviders } from '@ngx-pwa/local-storage';
 export class AppModule {}
 ```
 
+- Option 2: keep the config of this lib and change the options in the other APIs,
+by using the values exported by the lib:
+
+```ts
+if (this.storageMap.backingEngine === 'indexedDB') {
+  const { database, store, version } = this.storageMap.backingStore;
+}
+```
+
+This second option can be difficult to manage due to some browsers issues in some special contexts
+(Firefox private mode and Safari cross-origin iframes),
+as **the information may be wrong at initialization,**
+as the storage could fallback from `indexedDB` to `localStorage`
+only after a first read or write operation.
+
 ### `localStorage` prefix
 
 In some cases (see the [browser support guide](./BROWSERS_SUPPORT)),
 `indexedDB` is not available, and libs fallback to `localStorage`.
 Some libs prefixes `localStorage` keys. This lib doesn't by default,
-but you can add a prefix:
+but you can add a prefix.
+
+- Option 1 (recommended):
 
 ```typescript
-import { localStorageProviders } from '@ngx-pwa/local-storage';
+import { StorageModule } from '@ngx-pwa/local-storage';
 
 @NgModule({
-  providers: [
-    localStorageProviders({
+  imports: [
+    StorageModule.forRoot({
       LSPrefix: 'myapp_',
     })
   ]
@@ -77,16 +100,25 @@ import { localStorageProviders } from '@ngx-pwa/local-storage';
 export class AppModule {}
 ```
 
+- Option 2:
+
+```ts
+if (this.storageMap.backingEngine === 'localStorage') {
+  const { prefix } = this.storageMap.fallbackBackingStore;
+}
+```
+
 ### Example with `localforage`
 
 Interoperability with `localforage` lib can be achieved with this config:
 
 ```typescript
-import { localStorageProviders } from '@ngx-pwa/local-storage';
+import { StorageModule } from '@ngx-pwa/local-storage';
 
 @NgModule({
-  providers: [
-    localStorageProviders({
+  imports: [
+    StorageModule.forRoot({
+      IDBNoWrap: true,
       LSPrefix: 'localforage/',
       IDBDBName: 'localforage',
       IDBStoreName: 'keyvaluepairs',
@@ -94,6 +126,28 @@ import { localStorageProviders } from '@ngx-pwa/local-storage';
   ]
 })
 export class AppModule {}
+```
+
+### Example with native `indexedDB`
+
+Interoperability with native `indexedDB` can be achieved that way:
+
+```ts
+if (this.storageMap.backingEngine === 'indexedDB') {
+
+  const { database, store, version } = this.storageMap.backingStore;
+
+  const dbRequest = indexedDB.open(database, version);
+
+  dbRequest.addEventListener('success', () => {
+
+    const store = dbRequest.result.transaction([store], 'readonly').objectStore(store);
+
+    const request = store.get(index);
+
+  });
+
+}
 ```
 
 ## Warnings
@@ -107,7 +161,7 @@ or when the version change (but this case doesn't happen in this lib).
 **If this step is missing, then all `indexedDB` operations in the lib will fail as the store will be missing.**
 
 Then, you need to ensure:
-- you use the same database `version` as the lib (none or `1`),
+- you use the same database `version` as the lib (default to `1`),
 - the store is created:
   - by letting this lib to be initialized first (beware of concurrency issues),
   - or if another API is going first, it needs to take care of the creation of the store (with the same name).

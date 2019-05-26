@@ -44,19 +44,6 @@ npm install @ngx-pwa/local-storage@next
 2. Start your project: problems will be seen at compilation.
 Or you could search for `getItem` as most breaking changes are about its options.
 
-## New `indexedDB` store
-
-To allow interoperability, the internal `indexedDB` storing system has changed.
-It is not a breaking change as the lib do it in a backward-compatible way:
-- when `indexedDB` storage is empty (new app users or data swiped), the new storage is used,
-- when `indexedDB` old storage is here, the lib stays on this one.
-
-So it should not concern you, but as it is very sensitive change, we recommend
-**to test previously stored data is not lost before deploying in production**.
-
-It's internal stuff, but it also means there is a transition phase where some of the users of your app
-will be on the new storage, and others will be on the old one.
-
 ## The bad part: breaking changes
 
 **The following changes may require action from you**.
@@ -343,11 +330,11 @@ export class AppModule {}
 
 Since v8:
 ```typescript
-import { localStorageProviders } from '@ngx-pwa/local-storage';
+import { StorageModule } from '@ngx-pwa/local-storage';
 
 @NgModule({
-  providers: [
-    localStorageProviders({
+  imports: [
+    StorageModule.forRoot({
       LSPrefix: 'myapp_', // Note the underscore
       IDBDBName: 'myapp_ngStorage',
     }),

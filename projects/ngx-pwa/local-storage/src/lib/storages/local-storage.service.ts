@@ -44,7 +44,7 @@ export class LocalStorage {
   }
 
   /* Use the `StorageMap` service to avoid code duplication */
-  constructor(private storageMap: StorageMap) {}
+  constructor(protected storageMap: StorageMap) {}
 
   /**
    * Get an item value in storage.

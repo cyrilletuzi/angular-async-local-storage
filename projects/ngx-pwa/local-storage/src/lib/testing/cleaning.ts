@@ -1,5 +1,5 @@
 import { StorageMap } from '../storages';
-import { IndexedDBDatabase, LocalStorageDatabase, MemoryDatabase } from '../databases';
+import { IndexedDBDatabase, MemoryDatabase } from '../databases';
 
 /**
  * Helper to clear all data in storage to avoid tests overlap
@@ -8,21 +8,18 @@ import { IndexedDBDatabase, LocalStorageDatabase, MemoryDatabase } from '../data
  */
 export function clearStorage(done: DoneFn, storageService: StorageMap) {
 
-  // tslint:disable-next-line: no-string-literal
-  if (storageService['database'] instanceof IndexedDBDatabase) {
+  if (storageService.backingEngine === 'indexedDB') {
 
     // tslint:disable-next-line: no-string-literal
-    const indexedDBService = storageService['database'];
+    const indexedDBService = storageService['database'] as IndexedDBDatabase;
 
     try {
 
-      // tslint:disable-next-line: no-string-literal
-      const dbOpen = indexedDB.open(indexedDBService['dbName']);
+      const dbOpen = indexedDB.open(indexedDBService.backingStore.database);
 
       dbOpen.addEventListener('success', () => {
 
-        // tslint:disable-next-line: no-string-literal
-        const storeName = indexedDBService['storeName'];
+        const storeName = indexedDBService.backingStore.store;
 
         /* May be `null` if no requests were made */
         if (storeName) {
@@ -75,18 +72,16 @@ export function clearStorage(done: DoneFn, storageService: StorageMap) {
 
     }
 
-  // tslint:disable-next-line: no-string-literal
-  } else if (storageService['database'] instanceof LocalStorageDatabase) {
+  } else if (storageService.backingEngine === 'localStorage') {
 
     localStorage.clear();
 
     done();
 
-  // tslint:disable-next-line: no-string-literal
-  } else if (storageService['database'] instanceof MemoryDatabase) {
+  } else if (storageService.backingEngine === 'memory') {
 
     // tslint:disable-next-line: no-string-literal
-    storageService['database']['memoryStorage'].clear();
+    (storageService['database'] as MemoryDatabase)['memoryStorage'].clear();
 
     done();
 
@@ -110,11 +105,10 @@ export function clearStorage(done: DoneFn, storageService: StorageMap) {
 export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap) {
 
   /* Only `indexedDB` is concerned */
-  // tslint:disable-next-line: no-string-literal
-  if (storageService['database'] instanceof IndexedDBDatabase) {
+  if (storageService.backingEngine === 'indexedDB') {
 
     // tslint:disable-next-line: no-string-literal
-    const indexedDBService = storageService['database'];
+    const indexedDBService = storageService['database'] as IndexedDBDatabase;
 
     // tslint:disable-next-line: no-string-literal
     indexedDBService['database'].subscribe({
@@ -124,8 +118,7 @@ export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap)
         database.close();
 
         /* Delete database */
-        // tslint:disable-next-line: no-string-literal
-        const deletingDb = indexedDB.deleteDatabase(indexedDBService['dbName']);
+        const deletingDb = indexedDB.deleteDatabase(indexedDBService.backingStore.database);
 
         /* Use an arrow function for done, otherwise it causes an issue in IE */
         deletingDb.addEventListener('success', () => { done(); });

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { IndexedDBDatabase } from './indexeddb-database';
 import { LocalStorageDatabase } from './localstorage-database';
 import { MemoryDatabase } from './memory-database';
-import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX } from '../tokens';
+import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX, IDB_DB_VERSION, IDB_NO_WRAP } from '../tokens';
 
 /**
  * Factory to create a storage according to browser support
@@ -17,7 +17,8 @@ import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX } from '..
  * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/BROWSERS_SUPPORT.md
  */
 export function localDatabaseFactory(
-  platformId: string, LSPrefix: string, IDBDBName: string, IDBstoreName: string, oldPrefix: string): LocalDatabase {
+  platformId: string, LSPrefix: string, IDBDBName: string, IDBStoreName: string,
+  IDBDBVersion: number, IDBNoWrap: boolean, oldPrefix: string): LocalDatabase {
 
   // Do not explicit `window` here, as the global object is not the same in web workers
   if (isPlatformBrowser(platformId) && (indexedDB !== undefined) && (indexedDB !== null) && ('open' in indexedDB)) {
@@ -30,7 +31,7 @@ export function localDatabaseFactory(
      * Will be the case for:
      * - IE10+ and all other browsers in normal mode
      * - Chromium / Safari private mode, but in this case, data will be swiped when the user leaves the app */
-    return new IndexedDBDatabase(IDBDBName, IDBstoreName, oldPrefix);
+    return new IndexedDBDatabase(IDBDBName, IDBStoreName, IDBDBVersion, IDBNoWrap, oldPrefix);
 
   } else if (isPlatformBrowser(platformId)
   && (localStorage !== undefined) && (localStorage !== null) && ('getItem' in localStorage)) {
@@ -69,6 +70,8 @@ export function localDatabaseFactory(
     LS_PREFIX,
     IDB_DB_NAME,
     IDB_STORE_NAME,
+    IDB_DB_VERSION,
+    IDB_NO_WRAP,
     // tslint:disable-next-line: deprecation
     LOCAL_STORAGE_PREFIX,
   ]
