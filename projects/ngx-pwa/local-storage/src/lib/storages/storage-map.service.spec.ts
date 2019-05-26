@@ -678,7 +678,7 @@ describe('StorageMap', () => {
 
         try {
 
-          const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME);
+          const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME, DEFAULT_IDB_DB_VERSION);
 
           dbOpen.addEventListener('success', () => {
 
@@ -737,7 +737,7 @@ describe('StorageMap', () => {
 
         try {
 
-          const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME);
+          const dbOpen = indexedDB.open(DEFAULT_IDB_DB_NAME, DEFAULT_IDB_DB_VERSION);
 
           dbOpen.addEventListener('success', () => {
 
