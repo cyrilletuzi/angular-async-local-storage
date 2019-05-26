@@ -7,7 +7,6 @@ Efficient client-side storage module for Angular apps and Progressive Wep Apps (
 - **security**: validate data with a JSON Schema,
 - **compatibility**: works around some browsers issues,
 - **documentation**: API fully explained, and a changelog!
-- **maintenance**: the lib follows Angular LTS and anticipates the next Angular version,
 - **reference**: 1st Angular library for client-side storage according to [ngx.tools](https://ngx.tools/#/search?q=local%20storage).
 
 ## By the same author
@@ -52,12 +51,12 @@ npm install @ngx-pwa/local-storage@next
 npm install @ngx-pwa/local-storage@6
 ```
 
-*Since v8*, this second step is:
+*Since version 8*, this second step is:
 - not required for the lib to work,
-- *strongly recommended for all new applications*, as it allows interoperability
+- **strongly recommended for all new applications**, as it allows interoperability
 and is future-proof, as it should become the default in a future version,
 - **prohibited in applications already using this lib and already deployed in production**,
-as it would break with existing data.
+as it would break with previously stored data.
 
 ```ts
 import { StorageModule } from '@ngx-pwa/local-storage';
@@ -71,6 +70,8 @@ import { StorageModule } from '@ngx-pwa/local-storage';
 })
 export class AppModule {}
 ```
+
+**Must be done at initialization, ie. in `AppModule`, and must not be loaded again in another module.**
 
 ### Upgrading
 
@@ -125,7 +126,8 @@ export class YourService {
 ```
 
 New *since version 8* of this lib, this service API follows the
-[native `Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), 
+[native `Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
+and the new upcoming standard [kv-storage API](https://github.com/WICG/kv-storage), 
 except it's asynchronous via [RxJS `Observable`s](http://reactivex.io/rxjs/).
 
 It does the same thing as the `LocalStorage` service, but also allows more advanced operations.

@@ -49,7 +49,7 @@ It was time to do a full review and refactoring, which results in:
 - `.has()`, `.keys()` and `.size` are deprecated in `LocalStorage`. They will be removed in v9. They moved to the new `StorageMap` service.
 - `JSONSchemaNumeric` deprecated (will be removed in v9)
 - `LSGetItemsOptions` deprecated (not necessary anymore, will be removed in v9)
-- `LOCAL_STORAGE_PREFIX` and `prefix` option of `localStorageProviders()` deprecated (will be removed in v9))
+- `LOCAL_STORAGE_PREFIX` and `localStorageProviders()` deprecated (will be removed in v9). Moved to `StorageModule.forRoot()`
 - `setItemSubscribe()`, `removeItemSubscribe()` and `clearSubscribe()` deprecated (will be removed in v9)
 
 ### Reduced public API
