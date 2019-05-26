@@ -143,7 +143,7 @@ if (this.storageMap.backingEngine === 'indexedDB') {
 
     const store = dbRequest.result.transaction([store], 'readonly').objectStore(store);
 
-    const request = store.get(index);
+    const readRequest = store.get('someindex');
 
   });
 
