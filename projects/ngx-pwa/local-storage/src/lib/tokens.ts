@@ -111,7 +111,7 @@ export const IDB_NO_WRAP = new InjectionToken<boolean>('localStorageIDBWrap', {
   factory: () => DEFAULT_IDB_NO_WRAP
 });
 
-export interface LocalStorageProvidersConfig {
+export interface StorageConfig {
 
   /**
    * Prefix to avoid collision when there are *multiple apps on the same subdomain*.
@@ -158,6 +158,20 @@ export interface LocalStorageProvidersConfig {
    * but **should be `true` in all new applications, as it may become the default in a future version**.
    */
   IDBNoWrap?: boolean;
+
+}
+
+/**
+ * @deprecated in favor of `StorageConfig`. Will be removed in v9.
+ */
+export interface LocalStorageProvidersConfig {
+
+  /**
+   * Prefix to avoid collision when there are *multiple apps on the same subdomain*.
+   * **WARNING: do not change this option in an app already deployed in production, as previously stored data would be lost.**
+   * @deprecated Use `LSPrefix` and `IDBDBName` options instead. Will be removed in v9.
+   */
+  prefix?: string;
 
 }
 

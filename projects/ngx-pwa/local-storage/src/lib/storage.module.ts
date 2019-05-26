@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
-import { LocalStorageProvidersConfig, LS_PREFIX, IDB_DB_NAME, IDB_STORE_NAME, IDB_DB_VERSION, IDB_NO_WRAP } from './tokens';
+import { LS_PREFIX, IDB_DB_NAME, IDB_STORE_NAME, IDB_DB_VERSION, IDB_NO_WRAP, StorageConfig } from './tokens';
 
 /**
  * This module does not contain anything, it's only useful to provide options via `.forRoot()`.
@@ -12,7 +12,7 @@ export class StorageModule {
    * Only useful to provide options, otherwise it does nothing.
    * **Must be used at initialization, ie. in `AppModule`, and must not be loaded again in another module.**
    */
-  static forRoot(config: LocalStorageProvidersConfig): ModuleWithProviders {
+  static forRoot(config: StorageConfig): ModuleWithProviders {
     return {
       ngModule: StorageModule,
       providers: [
