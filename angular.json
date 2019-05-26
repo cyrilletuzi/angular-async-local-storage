@@ -57,6 +57,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/iframe",
             "index": "projects/iframe/src/index.html",
             "main": "projects/iframe/src/main.ts",
@@ -160,6 +161,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/localforage",
             "index": "projects/localforage/src/index.html",
             "main": "projects/localforage/src/main.ts",
@@ -276,6 +278,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/demo",
             "index": "projects/demo/src/index.html",
             "main": "projects/demo/src/main.ts",
@@ -392,6 +395,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/ivy",
             "index": "projects/ivy/src/index.html",
             "main": "projects/ivy/src/main.ts",
