@@ -213,6 +213,7 @@ export interface LocalStorageProvidersConfig {
  * **SO PLEASE TEST BEFORE PUSHING IN PRODUCTION.**
  *
  */
+// tslint:disable-next-line: deprecation
 export function localStorageProviders(config: LocalStorageProvidersConfig): Provider[] {
 
   return [
