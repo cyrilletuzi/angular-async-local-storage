@@ -1,18 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { StorageModule } from '@ngx-pwa/local-storage';
 
 import { AppComponent } from './app.component';
 
+// TODO: reintroduce `StorageModule.forRoot()`
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
-    BrowserModule,
-    StorageModule.forRoot({
-      IDBNoWrap: true,
-    }),
+    BrowserModule
   ],
   providers: [],
   bootstrap: [AppComponent]
