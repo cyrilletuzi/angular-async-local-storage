@@ -6,11 +6,12 @@
     "start": "ng serve demo",
     "start:iframe": "ng serve iframe --port 8080",
     "build": "ng build ngx-pwa-local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage",
-    "test": "npm run test:specs && npm run build && webdriver-manager update && npm run test:demo && npm run test:interoperability",
+    "test": "npm run test:specs && npm run build && webdriver-manager update && npm run test:demo && npm run test:interoperability && npm run test:ivy:fix && npm run test:ivy",
     "test:specs": "ng test ngx-pwa-local-storage --watch false",
     "test:demo": "ng e2e demo",
     "test:interoperability": "ng e2e localforage",
     "test:ivy": "ng e2e ivy",
+    "test:ivy:fix": "./node_modules/.bin/ivy-ngcc -s ./dist",
     "lint": "ng lint",
     "publish": "npm run lint && npm test && npm run build && npm publish dist/ngx-pwa/local-storage --access public --tag next",
     "ci:ng80": "npm install typescript@3.4.1 rxjs@6.4.0 zone.js@0.9.1 @angular/common@next @angular/compiler@next @angular/core@next @angular/platform-browser@next @angular/platform-browser-dynamic@next @angular/router@next @angular/cli@next @angular/compiler-cli@next @angular-devkit/build-angular@next @angular-devkit/build-ng-packagr@next"
