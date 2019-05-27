@@ -895,9 +895,7 @@ describe('StorageMap', () => {
 
     it('automatic storage injection', (done) => {
 
-      // TODO: check new API types  and backward compitiliby with v7
-      // tslint:disable-next-line: deprecation
-      const localStorageService = TestBed.get(StorageMap) as StorageMap;
+      const localStorageService = TestBed.get<StorageMap>(StorageMap) as StorageMap;
 
       const index = 'index';
       const value = `value${Date.now()}`;
