@@ -114,13 +114,6 @@ export const IDB_NO_WRAP = new InjectionToken<boolean>('localStorageIDBWrap', {
 export interface StorageConfig {
 
   /**
-   * Prefix to avoid collision when there are *multiple apps on the same subdomain*.
-   * **WARNING: do not change this option in an app already deployed in production, as previously stored data would be lost.**
-   * @deprecated Use `LSPrefix` and `IDBDBName` options instead. Will be removed in v9.
-   */
-  prefix?: string;
-
-  /**
    * Allows to add a prefix before `localStorage` keys.
    * *Use only* for interoperability with other APIs or to avoid collision for multiple apps on the same subdomain.
    * **WARNING: do not change this option in an app already deployed in production, as previously stored data would be lost.**
