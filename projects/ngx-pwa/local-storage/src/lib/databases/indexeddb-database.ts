@@ -328,7 +328,7 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Connect to `indexedDB`
      * Will fail in Safari cross-origin iframes
-     * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/42 */
+     * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/42} */
     try {
 
       /* Do NOT explicit `window` here, as `indexedDB` could be used from a web worker too */
@@ -356,8 +356,8 @@ export class IndexedDBDatabase implements LocalDatabase {
         },
         error: () => {
           /* Firefox private mode issue: fallback storage if IndexedDb connection is failing
-          * @see https://bugzilla.mozilla.org/show_bug.cgi?id=781982
-          * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/26 */
+          * @see {@link https://bugzilla.mozilla.org/show_bug.cgi?id=781982}
+          * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/26} */
           this.database.error(new IDBBrokenError());
         },
       });

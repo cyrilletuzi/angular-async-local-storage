@@ -11,6 +11,14 @@ export class StorageModule {
   /**
    * Only useful to provide options, otherwise it does nothing.
    * **Must be used at initialization, ie. in `AppModule`, and must not be loaded again in another module.**
+   *
+   * @example
+   * NgModule({
+   *   imports: [StorageModule.forRoot({
+   *     IDBNoWrap: true,
+   *   })]
+   * })
+   * export class AppModule
    */
   static forRoot(config: StorageConfig): ModuleWithProviders {
     return {

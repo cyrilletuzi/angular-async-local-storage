@@ -14,7 +14,7 @@ import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX, IDB_DB_VE
  * @param IDBDBName `indexedDB` database name
  * @param IDBstoreName `indexedDB` storeName name
  * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain
- * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/BROWSERS_SUPPORT.md
+ * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/BROWSERS_SUPPORT.md}
  */
 export function localDatabaseFactory(
   platformId: string, LSPrefix: string, IDBDBName: string, IDBStoreName: string,
@@ -43,10 +43,10 @@ export function localDatabaseFactory(
      * Will be the case for:
      * - IE9
      * - Safari cross-origin iframes, detected later in `IndexedDBDatabase.connect()`
-     * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/42
+     * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/42}
      * - IE / Edge / Firefox private mode, but in this case, data will be swiped when the user leaves the app
      * For Firefox, can only be detected later in `IndexedDBDatabase.connect()`
-     * @see https://bugzilla.mozilla.org/show_bug.cgi?id=781982
+     * @see {@link https://bugzilla.mozilla.org/show_bug.cgi?id=781982}
      */
     return new LocalStorageDatabase(LSPrefix, oldPrefix);
 

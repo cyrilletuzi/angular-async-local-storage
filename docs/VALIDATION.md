@@ -319,6 +319,16 @@ this.localStorage.getItem('notExisting', { type: 'string' })
 });
 ```
 
+## Validation when writing
+
+While this may be superfluous for primitive types, you can also validate while storing,
+to avoid a mismatch between your JSON schema and the object you're storing,
+which would result in a future error when trying to read the data.
+
+```typescript
+this.storageMap.set('test', 'value', { type: 'string' })
+```
+
 ## Differences from the standard
 
 The role of the validation feature in this lib is to check the data against corruption,
