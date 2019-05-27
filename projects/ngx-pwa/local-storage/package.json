@@ -1,6 +1,6 @@
 {
   "name": "@ngx-pwa/local-storage",
-  "version": "8.0.0-beta.12",
+  "version": "8.0.0-beta.13",
   "description": "Efficient local storage module for Angular apps and PWA: simple API based on native localStorage API, but internally stored via the asynchronous IndexedDB API for performance, and wrapped in RxJS observables to be homogeneous with other Angular modules.",
   "author": "Cyrille Tuzi",
   "license": "MIT",
