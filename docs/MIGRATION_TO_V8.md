@@ -16,7 +16,8 @@ It was time to do a full review (and rewrite).
 
 So yes, there are a lot of changes, but it's for good:
 - many things (like validation) have been simplified
-- more advanced and some long-awaited features (like watching an item #101) are now possible
+- more advanced and some long-awaited features (like watching an item
+[#101](https://github.com/cyrilletuzi/angular-async-local-storage/pull/101)) are now possible
 - errors are managed in a better way, fixing many edgy cases
 - and more!
 
