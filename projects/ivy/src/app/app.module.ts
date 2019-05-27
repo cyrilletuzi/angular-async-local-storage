@@ -4,7 +4,6 @@ import { StorageModule } from '@ngx-pwa/local-storage';
 
 import { AppComponent } from './app.component';
 
-// TODO: reintroduce `StorageModule.forRoot()`
 @NgModule({
   declarations: [AppComponent],
   imports: [
