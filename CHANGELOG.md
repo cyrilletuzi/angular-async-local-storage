@@ -56,7 +56,7 @@ It was time to do a full review and refactoring, which results in:
 
 Should not concern you as it was internal stuff.
 
-- `IndexedDBDatabase`, `LocalStorageDatabase` and `JSONValidator` not exported anymore
+- `IndexedDBDatabase` and `LocalStorageDatabase` not exported anymore
 - `MockLocalDatabase` renamed and not exported anymore
 
 ## 7.4.1 (2019-01-27) / 5.3.6 and 6.2.3 and 7.4.2 (2019-02-25)
