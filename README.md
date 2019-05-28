@@ -51,7 +51,8 @@ npm install @ngx-pwa/local-storage@next
 npm install @ngx-pwa/local-storage@6
 ```
 
-*Since version 8*, this second step is:
+The following second setup step is:
+- **only for version >= 8**,
 - not required for the lib to work,
 - **strongly recommended for all new applications**, as it allows interoperability
 and is future-proof, as it should become the default in a future version,
