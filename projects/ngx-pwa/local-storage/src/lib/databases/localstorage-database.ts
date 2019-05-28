@@ -81,18 +81,18 @@ export class LocalStorageDatabase implements LocalDatabase {
 
     let serializedData: string | null = null;
 
-    /* Try to stringify (can fail on circular references) */
-    try {
-      serializedData = JSON.stringify(data);
-    } catch (error) {
-      return throwError(error as TypeError);
-    }
-
     /* Check if data can be serialized */
     const dataPrototype = Object.getPrototypeOf(data);
     if ((typeof data === 'object') && (data !== null) && !Array.isArray(data) &&
     !((dataPrototype === Object.prototype) || (dataPrototype === null))) {
       return throwError(new SerializationError());
+    }
+
+    /* Try to stringify (can fail on circular references) */
+    try {
+      serializedData = JSON.stringify(data);
+    } catch (error) {
+      return throwError(error as TypeError);
     }
 
     /* Can fail if storage quota is exceeded */

@@ -167,7 +167,6 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           mergeMap(() => localStorageService.get(key)),
         ).subscribe((result) => {
 
-          // TODO: see if `null` can be stored in IE/Edge
           expect(result).toBeUndefined();
 
           done();
