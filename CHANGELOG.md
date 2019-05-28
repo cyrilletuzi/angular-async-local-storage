@@ -2,13 +2,13 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.0.0-beta.10 (2019-04-26)
+## 8.0.0-rc.0 (2019-05-28)
 
 **A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.**
 
-v8 works with:
-- Angular 8 and TypeScript 3.4,
-- Angular 7 and TypeScript 3.1 or 3.2 and RxJS >= 6.4
+### Angular 8
+
+v8 requires Angular 8.
 
 ### Feature: new `StorageMap` service
 
@@ -35,7 +35,6 @@ It was time to do a full review and refactoring, which results in:
 
 - `indexedDB` database and object store names default values are exported and can be changed
 (see the [interoperability guide](./docs/INTEROPERABILITY.md))
-- `indexedDB` storage will now works in web workers too
 - When trying to store `null` or `undefined`, `removeItem()` instead of just bypassing (meaning the old value was kept)
 
 ### Breaking changes
@@ -50,14 +49,14 @@ It was time to do a full review and refactoring, which results in:
 - `.has()`, `.keys()` and `.size` are deprecated in `LocalStorage`. They will be removed in v9. They moved to the new `StorageMap` service.
 - `JSONSchemaNumeric` deprecated (will be removed in v9)
 - `LSGetItemsOptions` deprecated (not necessary anymore, will be removed in v9)
-- `LOCAL_STORAGE_PREFIX` and `prefix` option of `localStorageProviders()` deprecated (will be removed in v9))
+- `LOCAL_STORAGE_PREFIX`, `LocalStorageProvidersConfig` and `localStorageProviders()` deprecated (will be removed in v9). Moved to `StorageModule.forRoot()`
 - `setItemSubscribe()`, `removeItemSubscribe()` and `clearSubscribe()` deprecated (will be removed in v9)
 
 ### Reduced public API
 
 Should not concern you as it was internal stuff.
 
-- `IndexedDBDatabase`, `LocalStorageDatabase` and `JSONValidator` not exported anymore
+- `IndexedDBDatabase` and `LocalStorageDatabase` not exported anymore
 - `MockLocalDatabase` renamed and not exported anymore
 
 ## 7.4.1 (2019-01-27) / 5.3.6 and 6.2.3 and 7.4.2 (2019-02-25)

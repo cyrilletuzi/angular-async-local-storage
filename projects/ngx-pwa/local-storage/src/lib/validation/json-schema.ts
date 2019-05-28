@@ -262,6 +262,34 @@ export type JSONSchemaNumeric = JSONSchemaNumber | JSONSchemaInteger;
 /**
  * Subset of the JSON Schema standard.
  * Types are enforced to validate everything: each value **must** have a `type`.
- * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
+ * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+ *
+ * @example
+ * const schema: JSONSchema = { type: 'string' };
+ *
+ * @example
+ * const schema: JSONSchema = { type: 'number' };
+ *
+ * @example
+ * const schema: JSONSchema = { type: 'integer' };
+ *
+ * @example
+ * const schema: JSONSchema = { type: 'boolean' };
+ *
+ * @example
+ * const schema: JSONSchema = {
+ *   type: 'array',
+ *   items: { type: 'string' },
+ * };
+ *
+ * @example
+ * const schema: JSONSchema = {
+ *   type: 'object',
+ *   properties: {
+ *     firstName: { type: 'string' },
+ *     lastName: { type: 'string' },
+ *   },
+ *   required: ['firstName'],
+ * };
  */
 export type JSONSchema = JSONSchemaString | JSONSchemaNumber | JSONSchemaInteger | JSONSchemaBoolean | JSONSchemaArray | JSONSchemaObject;

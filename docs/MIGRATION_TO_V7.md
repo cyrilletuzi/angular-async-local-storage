@@ -12,7 +12,9 @@ Unfortunately, unforeseen issues happened, some very bad as they were beyond our
 
 Version 8 achieves the goal we tried in v7 the right way. Everything has been cleaned and things are a lot easier for you.
 
-Then, **v7 is deprecated**: for Angular 7 & 8, **upgrade directly to v8 and go to the [v8 migration guide](./MIGRATION_TO_V8.md)**.
+Then, **v7 is deprecated**. For Angular 7, it is recommended to:
+- stay on v6 of the lib,
+- or upgrade to Angular 8 and use v8 of the lib (see the [v8 migration guide](./MIGRATION_TO_V8.md).
 
 ## Previous migrations
 

@@ -7,7 +7,6 @@ Efficient client-side storage module for Angular apps and Progressive Wep Apps (
 - **security**: validate data with a JSON Schema,
 - **compatibility**: works around some browsers issues,
 - **documentation**: API fully explained, and a changelog!
-- **maintenance**: the lib follows Angular LTS and anticipates the next Angular version,
 - **reference**: 1st Angular library for client-side storage according to [ngx.tools](https://ngx.tools/#/search?q=local%20storage).
 
 ## By the same author
@@ -45,12 +44,35 @@ to be homogeneous with other Angular modules.
 Install the right version according to your Angular one via [`npm`](http://npmjs.com):
 
 ```bash
-# For Angular 7 & 8 and RxJS >= 6.4:
+# For Angular 8:
 npm install @ngx-pwa/local-storage@next
 
-# For Angular 6:
+# For Angular 6 & 7:
 npm install @ngx-pwa/local-storage@6
 ```
+
+The following second setup step is:
+- **only for version >= 8**,
+- not required for the lib to work,
+- **strongly recommended for all new applications**, as it allows interoperability
+and is future-proof, as it should become the default in a future version,
+- **prohibited in applications already using this lib and already deployed in production**,
+as it would break with previously stored data.
+
+```ts
+import { StorageModule } from '@ngx-pwa/local-storage';
+
+@NgModule({
+  imports: [
+    StorageModule.forRoot({
+      IDBNoWrap: true,
+    })
+  ]
+})
+export class AppModule {}
+```
+
+**Must be done at initialization, ie. in `AppModule`, and must not be loaded again in another module.**
 
 ### Upgrading
 
@@ -104,8 +126,9 @@ export class YourService {
 }
 ```
 
-New since version 8 of this lib, this service API follows the
-[native `Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), 
+New *since version 8* of this lib, this service API follows the
+[native `Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
+and the new upcoming standard [kv-storage API](https://github.com/WICG/kv-storage), 
 except it's asynchronous via [RxJS `Observable`s](http://reactivex.io/rxjs/).
 
 It does the same thing as the `LocalStorage` service, but also allows more advanced operations.
@@ -164,11 +187,11 @@ this.localStorage.clear().subscribe(() => {});
 ### Reading data
 
 ```typescript
-this.storageMap.get<User>('user').subscribe((user) => {
+this.storageMap.get('user').subscribe((user) => {
   console.log(user);
 });
 // or
-this.localStorage.getItem<User>('user').subscribe((user) => {
+this.localStorage.getItem('user').subscribe((user) => {
   console.log(user);
 });
 ```
@@ -188,8 +211,13 @@ this.localStorage.getItem('notexisting').subscribe((data) => {
 ```
 
 Note you'll only get *one* value: the `Observable` is here for asynchrony but is not meant to
-emit again when the stored data is changed. If you need to watch the value,
-version 8 introduced a `watch()` method, see the [watching guide](./docs/WATCHING.md).
+emit again when the stored data is changed. And it's normal: if app data change, it's the role of your app
+to keep track of it, not of this lib. See [#16](https://github.com/cyrilletuzi/angular-async-local-storage/issues/16) 
+for more context and [#4](https://github.com/cyrilletuzi/angular-async-local-storage/issues/4)
+for an example. 
+
+If you need to watch the value,
+version 8.1 introduced a `watch()` method, see the [watching guide](./docs/WATCHING.md).
 
 ### Checking data
 
@@ -238,11 +266,15 @@ Could happen to anyone:
 
 Could only happen when in `localStorage` fallback:
 - `.setItem()`: error in JSON serialization because of circular references (`TypeError`)
+- `.setItem()`: trying to store data that can't be serialized like `Blob`, `Map` or `Set` (`SerializationError` from this lib)
 - `.getItem()`: error in JSON unserialization (`SyntaxError`)
 
 Should only happen if data was corrupted or modified from outside of the lib:
 - `.getItem()`: data invalid against your JSON schema (`ValidationError` from this lib)
 - any method when in `indexedDB`: database store has been deleted (`DOMException` with name `NotFoundError`)
+
+Could only happen when in Safari private mode:
+- `.setItem()`: trying to store a `Blob`
 
 Other errors are supposed to be catched or avoided by the lib,
 so if you were to run into an unlisted error, please file an issue.

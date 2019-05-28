@@ -1,11 +1,11 @@
 import { Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser, isPlatformWorkerApp, isPlatformWorkerUi } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 
 import { IndexedDBDatabase } from './indexeddb-database';
 import { LocalStorageDatabase } from './localstorage-database';
 import { MemoryDatabase } from './memory-database';
-import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX } from '../tokens';
+import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX, IDB_DB_VERSION, IDB_NO_WRAP } from '../tokens';
 
 /**
  * Factory to create a storage according to browser support
@@ -14,15 +14,14 @@ import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX } from '..
  * @param IDBDBName `indexedDB` database name
  * @param IDBstoreName `indexedDB` storeName name
  * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain
- * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/BROWSERS_SUPPORT.md
+ * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/BROWSERS_SUPPORT.md}
  */
 export function localDatabaseFactory(
-  platformId: string, LSPrefix: string, IDBDBName: string, IDBstoreName: string, oldPrefix: string): LocalDatabase {
+  platformId: string, LSPrefix: string, IDBDBName: string, IDBStoreName: string,
+  IDBDBVersion: number, IDBNoWrap: boolean, oldPrefix: string): LocalDatabase {
 
-  // TODO: test in web workers (announced for CLI v8)
   // Do not explicit `window` here, as the global object is not the same in web workers
-  if ((isPlatformBrowser(platformId) || isPlatformWorkerApp(platformId) || isPlatformWorkerUi(platformId))
-  && (indexedDB !== undefined) && (indexedDB !== null) && ('open' in indexedDB)) {
+  if (isPlatformBrowser(platformId) && (indexedDB !== undefined) && (indexedDB !== null) && ('open' in indexedDB)) {
 
     /* Check:
      * - if we are in a browser context (issue: server-side rendering)
@@ -32,7 +31,7 @@ export function localDatabaseFactory(
      * Will be the case for:
      * - IE10+ and all other browsers in normal mode
      * - Chromium / Safari private mode, but in this case, data will be swiped when the user leaves the app */
-    return new IndexedDBDatabase(IDBDBName, IDBstoreName, oldPrefix);
+    return new IndexedDBDatabase(IDBDBName, IDBStoreName, IDBDBVersion, IDBNoWrap, oldPrefix);
 
   } else if (isPlatformBrowser(platformId)
   && (localStorage !== undefined) && (localStorage !== null) && ('getItem' in localStorage)) {
@@ -44,10 +43,10 @@ export function localDatabaseFactory(
      * Will be the case for:
      * - IE9
      * - Safari cross-origin iframes, detected later in `IndexedDBDatabase.connect()`
-     * @see https://github.com/cyrilletuzi/angular-async-local-storage/issues/42
+     * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/42}
      * - IE / Edge / Firefox private mode, but in this case, data will be swiped when the user leaves the app
      * For Firefox, can only be detected later in `IndexedDBDatabase.connect()`
-     * @see https://bugzilla.mozilla.org/show_bug.cgi?id=781982
+     * @see {@link https://bugzilla.mozilla.org/show_bug.cgi?id=781982}
      */
     return new LocalStorageDatabase(LSPrefix, oldPrefix);
 
@@ -71,6 +70,8 @@ export function localDatabaseFactory(
     LS_PREFIX,
     IDB_DB_NAME,
     IDB_STORE_NAME,
+    IDB_DB_VERSION,
+    IDB_NO_WRAP,
     // tslint:disable-next-line: deprecation
     LOCAL_STORAGE_PREFIX,
   ]

@@ -36,7 +36,7 @@ jobs: # a collection of steps
       - run: # run tests
           name: test
           command: npm test && npm run test:ivy
-  ng7ts31:
+  ng80:
     docker: # run the steps with Docker
       - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
@@ -49,24 +49,7 @@ jobs: # a collection of steps
           command: npm install
       - run:
           name: downgrade
-          command: npm run ci:ng7ts31
-      - run: # run tests
-          name: test
-          command: npm test
-  ng7ts32:
-    docker: # run the steps with Docker
-      - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
-    steps: # a collection of executable commands
-      - checkout
-      - restore_cache: # special step to restore the dependency cache
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: install-npm-wee
-          command: npm install
-      - run:
-          name: downgrade
-          command: npm run ci:ng7ts32
+          command: npm run ci:ng80
       - run: # run tests
           name: test
           command: npm test
@@ -76,5 +59,4 @@ workflows:
     jobs:
       - lint
       - test
-      - ng7ts31
-      - ng7ts32
+      - ng80

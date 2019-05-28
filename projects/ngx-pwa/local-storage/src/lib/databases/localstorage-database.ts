@@ -3,6 +3,7 @@ import { Observable, of, throwError, asyncScheduler } from 'rxjs';
 import { observeOn } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
+import { SerializationError } from './exceptions';
 import { LOCAL_STORAGE_PREFIX, LS_PREFIX } from '../tokens';
 
 @Injectable({
@@ -13,7 +14,23 @@ export class LocalStorageDatabase implements LocalDatabase {
   /**
    * Optional user prefix to avoid collision for multiple apps on the same subdomain
    */
-  private readonly prefix: string;
+  readonly prefix: string;
+
+  /**
+   * Constructor params are provided by Angular (but can also be passed manually in tests)
+   * @param prefix Prefix option to avoid collision for multiple apps on the same subdomain or for interoperability
+   * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain or for interoperability
+   */
+  constructor(
+    @Inject(LS_PREFIX) prefix = '',
+    // tslint:disable-next-line: deprecation
+    @Inject(LOCAL_STORAGE_PREFIX) oldPrefix = '',
+  ) {
+
+    /* Priority for the new prefix option, otherwise old prefix with separator, or no prefix */
+    this.prefix = prefix || (oldPrefix ? `${oldPrefix}_` : '');
+
+  }
 
   /**
    * Number of items in `localStorage`
@@ -22,22 +39,6 @@ export class LocalStorageDatabase implements LocalDatabase {
 
     /* Wrap in a RxJS `Observable` to be consistent with other storages */
     return of(localStorage.length);
-
-  }
-
-  /**
-   * Constructor params are provided by Angular (but can also be passed manually in tests)
-   * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain or for interoperability
-   * @param newPrefix Prefix option to avoid collision for multiple apps on the same subdomain or for interoperability
-   */
-  constructor(
-    @Inject(LS_PREFIX) newPrefix = '',
-    // tslint:disable-next-line: deprecation
-    @Inject(LOCAL_STORAGE_PREFIX) oldPrefix = '',
-  ) {
-
-    /* Priority for the new prefix option, otherwise old prefix with separator, or no prefix */
-    this.prefix = newPrefix || (oldPrefix ? `${oldPrefix}_` : '');
 
   }
 
@@ -79,6 +80,13 @@ export class LocalStorageDatabase implements LocalDatabase {
   set(key: string, data: any): Observable<undefined> {
 
     let serializedData: string | null = null;
+
+    /* Check if data can be serialized */
+    const dataPrototype = Object.getPrototypeOf(data);
+    if ((typeof data === 'object') && (data !== null) && !Array.isArray(data) &&
+    !((dataPrototype === Object.prototype) || (dataPrototype === null))) {
+      return throwError(new SerializationError());
+    }
 
     /* Try to stringify (can fail on circular references) */
     try {
@@ -182,7 +190,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    * @param index Index of the key
    * @returns The unprefixed key name if exists, `null` otherwise
    */
-  private getUnprefixedKey(index: number): string | null {
+  protected getUnprefixedKey(index: number): string | null {
 
     /* Get the key in storage: may have a prefix */
     const prefixedKey = localStorage.key(index);
@@ -203,7 +211,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    * @param key The key name
    * @returns The prefixed key name
    */
-  private prefixKey(key: string): string {
+  protected prefixKey(key: string): string {
 
     return `${this.prefix}${key}`;
 

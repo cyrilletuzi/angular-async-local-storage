@@ -1,39 +1,39 @@
 {
-  "name": "angular-async-local-storage",
+  "name": "@ngx-pwa/local-storage",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve demo",
     "start:iframe": "ng serve iframe --port 8080",
     "build": "ng build ngx-pwa-local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage",
-    "test": "npm run test:specs && npm run build && webdriver-manager update && npm run test:demo && npm run test:interoperability",
+    "test": "npm run test:specs && npm run build && webdriver-manager update && npm run test:demo && npm run test:interoperability && npm run test:ivy:fix && npm run test:ivy",
     "test:specs": "ng test ngx-pwa-local-storage --watch false",
     "test:demo": "ng e2e demo",
     "test:interoperability": "ng e2e localforage",
     "test:ivy": "ng e2e ivy",
+    "test:ivy:fix": "./node_modules/.bin/ivy-ngcc -s ./dist",
     "lint": "ng lint",
     "publish": "npm run lint && npm test && npm run build && npm publish dist/ngx-pwa/local-storage --access public --tag next",
-    "ci:ng7ts31": "npm install typescript@3.1.1 rxjs@6.4.0 zone.js@0.8.26 @angular/common@7.0.0 @angular/compiler@7.0.0 @angular/core@7.0.0 @angular/platform-browser@7.0.0 @angular/platform-browser-dynamic@7.0.0 @angular/router@7.0.0 @angular/cli@7.0.1 @angular/compiler-cli@7.0.0 @angular-devkit/build-angular@0.10.1 @angular-devkit/build-ng-packagr@0.10.1",
-    "ci:ng7ts32": "npm install typescript@3.2 zone.js@0.8 @angular/common@7 @angular/compiler@7 @angular/core@7 @angular/platform-browser@7 @angular/platform-browser-dynamic@7 @angular/router@7 @angular/cli@7 @angular/compiler-cli@7 @angular-devkit/build-angular@0.13 @angular-devkit/build-ng-packagr@0.13"
+    "ci:ng80": "npm install typescript@3.4.1 rxjs@6.4.0 zone.js@0.9.1 @angular/common@next @angular/compiler@next @angular/core@next @angular/platform-browser@next @angular/platform-browser-dynamic@next @angular/router@next @angular/cli@next @angular/compiler-cli@next @angular-devkit/build-angular@next @angular-devkit/build-ng-packagr@next"
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^8.0.0-rc.1",
-    "@angular/compiler": "^8.0.0-rc.1",
-    "@angular/core": "^8.0.0-rc.1",
-    "@angular/platform-browser": "^8.0.0-rc.1",
-    "@angular/platform-browser-dynamic": "^8.0.0-rc.1",
-    "@angular/router": "^8.0.0-rc.1",
-    "rxjs": "^6.5.1"
+    "@angular/common": "^8.0.0-rc.5",
+    "@angular/compiler": "^8.0.0-rc.5",
+    "@angular/core": "^8.0.0-rc.5",
+    "@angular/platform-browser": "^8.0.0-rc.5",
+    "@angular/platform-browser-dynamic": "^8.0.0-rc.5",
+    "@angular/router": "^8.0.0-rc.5",
+    "rxjs": "^6.5.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.800.0-rc.1",
-    "@angular-devkit/build-ng-packagr": "^0.800.0-rc.1",
-    "@angular/cli": "^8.0.0-rc.1",
-    "@angular/compiler-cli": "^8.0.0-rc.1",
+    "@angular-devkit/build-angular": "^0.800.0-rc.4",
+    "@angular-devkit/build-ng-packagr": "^0.800.0-rc.4",
+    "@angular/cli": "^8.0.0-rc.4",
+    "@angular/compiler-cli": "^8.0.0-rc.5",
     "@types/jasmine": "^3.3.12",
     "@types/jasminewd2": "^2.0.6",
-    "@types/node": "^10.14.6",
+    "@types/node": "^10.14.7",
     "codelyzer": "^5.0.1",
     "copyfiles": "^2.1.0",
     "jasmine-core": "^3.4.0",
@@ -49,12 +49,13 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-safari-private-launcher": "^1.0.0",
     "localforage": "^1.7.3",
-    "ng-packagr": "^5.1.0",
+    "ng-packagr": "^5.2.0",
     "protractor": "^5.4.2",
-    "ts-node": "^8.1.0",
+    "ts-node": "^8.2.0",
+    "tsickle": "^0.35.0",
     "tslib": "^1.7.1",
     "tslint": "^5.16.0",
     "typescript": "~3.4.5",
-    "zone.js": "~0.9.0"
+    "zone.js": "~0.9.1"
   }
 }
