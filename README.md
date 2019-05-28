@@ -279,7 +279,7 @@ For example, it allows to implement a multiple databases scenario.
 We follow [Angular LTS support](https://angular.io/guide/releases),
 meaning we support Angular >= 6, until November 2019.
 
-This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler).
+This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler) and Ivy.
 
 This module supports [Universal server-side rendering](https://github.com/angular/universal)
 via a mock storage.
