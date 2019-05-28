@@ -203,7 +203,7 @@ this.localStorage.getItem('notexisting').subscribe((data) => {
 });
 ```
 
-## The good part: simplication changes
+## The good part: simplification changes
 
 The following changes are not required but recommended.
 **Previous code will still work** for now, but *for new code, follow these new guidelines*.
