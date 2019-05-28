@@ -171,33 +171,10 @@ and then `get()` will fail.
 So when storing complex objects, it's better to check the structure when writing too:
 
 ```typescript
-import { JSONSchema } from '@ngx-pwa/local-storage';
-
-interface User {
-  firstName: string;
-  lastName: string;
-  age?: number;
-}
-
-const user: User = {
-  firstName: `Henri`,
-  lastName: `Bergson`,
-}
-
-const schema: JSONSchema = {
-  type: 'object',
-  properties: {
-    firstName: { type: 'string' },
-    lastName: { type: 'string' },
-    age: { type: 'number' },
-  },
-  required: ['firstName', 'lastName']
-};
-
 this.storageMap.set('test', user, schema)
 ```
 
-If can also use your environnements to do this check only in development:
+You can also use your environnements to do this check only in development:
 
 ```typescript
 this.storageMap.set('test', user, (!environment.production) ? schema : undefined)
@@ -317,16 +294,6 @@ this.localStorage.getItem('notExisting', { type: 'string' })
   next: (result) => { result; /* null */ },
   error: (error) => { /* Not called */ },
 });
-```
-
-## Validation when writing
-
-While this may be superfluous for primitive types, you can also validate while storing,
-to avoid a mismatch between your JSON schema and the object you're storing,
-which would result in a future error when trying to read the data.
-
-```typescript
-this.storageMap.set('test', 'value', { type: 'string' })
 ```
 
 ## Differences from the standard
