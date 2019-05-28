@@ -222,7 +222,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       });
 
-      it('blob', (done) => {
+      it('blob (will be pending in Safari private)', (done) => {
 
         const value = new Blob();
 
@@ -236,6 +236,11 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           } : {
             next: (result: unknown) => {
               expect(result).toEqual(value);
+              done();
+            },
+            error: () => {
+              /* Safari in private mode doesn't allow to store `Blob` in `indexedDB` */
+              pending();
               done();
             }
           };

@@ -269,6 +269,9 @@ Should only happen if data was corrupted or modified from outside of the lib:
 - `.getItem()`: data invalid against your JSON schema (`ValidationError` from this lib)
 - any method when in `indexedDB`: database store has been deleted (`DOMException` with name `NotFoundError`)
 
+Could only happen when in Safari private mode:
+- `.setItem()`: trying to store a `Blob`
+
 Other errors are supposed to be catched or avoided by the lib,
 so if you were to run into an unlisted error, please file an issue.
 
