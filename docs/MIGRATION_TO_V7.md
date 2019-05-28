@@ -6,21 +6,15 @@ so you understand exactly what you are doing. But relax,
 
 ## WARNING
 
-Version 7 of this library tried to take a huge step forward by forcing validation, for security and error management.
-Unfortunately, unforeseen issues happened, some very bad as they are beyond our control
+Version 7 of this library tried to take a huge step forward by enforcing validation, for security and error management.
+Unfortunately, unforeseen issues happened, some very bad as they were beyond our control
 (like [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)).
 
-Version 8 will achieve the goal we tried in v7 the right way. Everything will be clean and a lot easier for you.
+Version 8 achieves the goal we tried in v7 the right way. Everything has been cleaned and things are a lot easier for you.
 
-Then, **we actually recommend to *not* upgrade to v7 and to wait for v8**,
-to avoid a double painful migration. v8 will be released at the same time as Angular 8, ie. in May 2019.
-
-**Version 6 of the library is compatible with Angular 7.** Bug fixes that happened during v7 have all been backported to v6.
-
-You can install it with:
-```bash
-npm install @ngx-pwa/local-storage@6
-```
+Then, **v7 is deprecated**. For Angular 7, it is recommended to:
+- stay on v6 of the lib,
+- or upgrade to Angular 8 and use v8 of the lib (see the [v8 migration guide](./MIGRATION_TO_V8.md).
 
 ## Previous migrations
 
@@ -101,7 +95,13 @@ So you ended up with a `string` type while the real data may not be a `string` a
 
 If you were not already validating your data, there are several options.
 
-### Solution 1: JSON schema validation (recommended)
+### Solution 1: JSON schema validation with v8 (recommended)
+
+Version 8 of the lib greatly simplifies validation. So if you're not yet on v7,
+we strongly recommend you to to [upgrade to v8 directly](./MIGRATION_TO_V8.md),
+and to follow the [new validation guide](./VALIDATION.md) instead.
+
+### Solution 2: JSON schema validation with v7 (quite painful)
 
 The simpler and better way to validate your data is to search `getItem` in your project 
 and **use the JSON schema option proposed by the lib**. For example:
@@ -114,9 +114,9 @@ this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
 });
 ```
 
-**A [full validation guide](./VALIDATION.md) is available with all the options.**
+**A [full validation guide](./VALIDATION_BEFORE_V8.md) is available with all the options.**
 
-### Solution 2: custom validation (painful)
+### Solution 3: custom validation (very painful)
 
 You can use all the native JavaScript operators and functions to validate. For example:
 
@@ -156,7 +156,7 @@ this.localStorage.getItem('test').subscribe((unsafeResult) => {
 });
 ```
 
-### Solution 3: defer the upgrade (temporary)
+### Solution 4: defer the upgrade (temporary)
 
 **Version 6 of the library is compatible with Angular 7.**
 So you can upgrade to Angular 7 now and defer the upgrade of this lib,
@@ -168,6 +168,6 @@ and as you'll miss new features and bug fixes.
 ## More documentation
 
 - [Full changelog for v7](../CHANGELOG.md)
-- [Full validation guide](./VALIDATION.md)
+- [Full validation guide](./VALIDATION_BEFORE_V8.md)
 - [Other migration guides](../MIGRATION.md)
 - [Main documentation](../README.md)

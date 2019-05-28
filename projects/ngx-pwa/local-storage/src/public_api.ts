@@ -2,14 +2,14 @@
  * Public API Surface of local-storage
  */
 
+// TODO: Test with Bazel
+
 export {
-  JSONSchema, JSONSchemaConst, JSONSchemaEnum, JSONSchemaBoolean,
-  JSONSchemaNumeric, JSONSchemaString, JSONSchemaArray, JSONSchemaObject
-} from './lib/validation/json-schema';
-export { LocalDatabase } from './lib/databases/local-database';
-export { IndexedDBDatabase } from './lib/databases/indexeddb-database';
-export { LocalStorageDatabase } from './lib/databases/localstorage-database';
-export { MockLocalDatabase } from './lib/databases/mock-local-database';
-export { JSONValidator } from './lib/validation/json-validator';
-export { LSGetItemOptions, LocalStorage } from './lib/lib.service';
-export { localStorageProviders, LocalStorageProvidersConfig, LOCAL_STORAGE_PREFIX } from './lib/tokens';
+  JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber,
+  JSONSchemaNumeric, JSONSchemaString, JSONSchemaArray, JSONSchemaArrayOf, JSONSchemaObject
+} from './lib/validation';
+export { LocalDatabase, SERIALIZATION_ERROR, SerializationError } from './lib/databases';
+export { LocalStorage, StorageMap, LSGetItemOptions, ValidationError, VALIDATION_ERROR } from './lib/storages';
+export { JSONValidator } from './lib/validation';
+export { StorageConfig, localStorageProviders, LocalStorageProvidersConfig, LOCAL_STORAGE_PREFIX } from './lib/tokens';
+export { StorageModule } from './lib/storage.module';

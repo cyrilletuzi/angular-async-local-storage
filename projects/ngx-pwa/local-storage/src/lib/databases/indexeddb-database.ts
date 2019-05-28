@@ -1,10 +1,13 @@
-import { Injectable, Optional, Inject } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
-import { map, mergeMap, first, tap, filter } from 'rxjs/operators';
+import { map, mergeMap, first, takeWhile, tap } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
-import { LocalStorageDatabase } from './localstorage-database';
-import { LOCAL_STORAGE_PREFIX } from '../tokens';
+import { IDBBrokenError } from './exceptions';
+import {
+  IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, IDB_DB_VERSION, LOCAL_STORAGE_PREFIX,
+  DEFAULT_IDB_DB_NAME, DEFAULT_IDB_DB_VERSION, IDB_NO_WRAP, DEFAULT_IDB_NO_WRAP
+} from '../tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -12,430 +15,468 @@ import { LOCAL_STORAGE_PREFIX } from '../tokens';
 export class IndexedDBDatabase implements LocalDatabase {
 
   /**
-   * IndexedDB database name for local storage
+   * `indexedDB` database name
    */
-  protected dbName = 'ngStorage';
+  protected readonly dbName: string;
+
   /**
-   * IndexedDB object store name for local storage
+   * `indexedDB` object store name
    */
-  protected readonly objectStoreName = 'localStorage';
+  protected readonly storeName: string;
+
   /**
-   * IndexedDB key path name for local storage (where an item's key will be stored)
+   * `indexedDB` database version. Must be an unsigned **integer**
    */
-  protected readonly keyPath = 'key';
+  protected readonly dbVersion: number;
+
   /**
-   * IndexedDB data path name for local storage (where items' value will be stored)
-   */
-  protected readonly dataPath = 'value';
-  /**
-   * IndexedDB database connection, wrapped in a RxJS ReplaySubject to be able to access the connection
+   * `indexedDB` database connection, wrapped in a RxJS `ReplaySubject` to be able to access the connection
    * even after the connection success event happened
    */
-  protected database: ReplaySubject<IDBDatabase>;
-  /**
-   * IndexedDB is available but failing in some scenarios (Firefox private mode, Safari cross-origin iframes),
-   * so a fallback can be needed.
-   */
-  protected fallback: LocalDatabase | null = null;
+  protected readonly database = new ReplaySubject<IDBDatabase>(1);
 
+  /**
+   * Flag to not wrap `indexedDB` values for interoperability or to wrap for backward compatibility.
+   */
+  protected readonly noWrap: boolean;
+
+  /**
+   * Index used when wrapping value. *For backward compatibility only.*
+   */
+  protected readonly wrapIndex = 'value';
+
+  /**
+   * Constructor params are provided by Angular (but can also be passed manually in tests)
+   * @param dbName `indexedDB` database name
+   * @param storeName `indexedDB` store name
+   * @param dbVersion `indexedDB` database version
+   * @param noWrap `indexedDB` database version
+   * @param oldPrefix Pre-v8 backward compatible prefix
+   */
+  constructor(
+    @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,
+    @Inject(IDB_STORE_NAME) storeName = DEFAULT_IDB_STORE_NAME,
+    @Inject(IDB_DB_VERSION) dbVersion = DEFAULT_IDB_DB_VERSION,
+    @Inject(IDB_NO_WRAP) noWrap = DEFAULT_IDB_NO_WRAP,
+    // tslint:disable-next-line: deprecation
+    @Inject(LOCAL_STORAGE_PREFIX) oldPrefix = '',
+  ) {
+
+    /* Initialize `indexedDB` database name, with prefix if provided by the user */
+    this.dbName = oldPrefix ? `${oldPrefix}_${dbName}` : dbName;
+
+    this.storeName = storeName;
+    this.dbVersion = dbVersion;
+    this.noWrap = noWrap;
+
+    /* Connect to `indexedDB`, with prefix if provided by the user */
+    this.connect();
+
+  }
+
+  /**
+   * Information about `indexedDB` connection. *Only useful for interoperability.*
+   * @returns `indexedDB` database name, store name and database version
+   */
+  get backingStore(): { database: string, store: string, version: number } {
+
+    return {
+      database: this.dbName,
+      store: this.storeName,
+      version: this.dbVersion,
+    };
+
+  }
+
+  /**
+   * Number of items in our `indexedDB` database and object store
+   */
   get size(): Observable<number> {
 
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.size;
-    }
-
+    /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
-      mergeMap((transaction) => {
+      mergeMap((store) => {
 
-        /* Deleting the item in local storage */
-        const request = transaction.count();
+        /* Request to know the number of items */
+        const request = store.count();
 
-        const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
-          map((event) => (event.target as IDBRequest).result as number),
-        );
-
-        /* Merging success and errors events and autoclosing the observable */
-        return (race(success, this.toErrorObservable(request, `length`)) as Observable<number>);
+        /* Manage success and error events, and get the result */
+        return this.requestEventsAndMapTo(request, () => request.result);
 
       }),
-      first()
+      /* The observable will complete after the first value */
+      first(),
     );
 
   }
 
   /**
-   * Connects to IndexedDB
-   */
-  constructor(@Optional() @Inject(LOCAL_STORAGE_PREFIX) protected prefix: string | null = null) {
-
-    if (prefix) {
-
-      this.dbName = `${prefix}_${this.dbName}`;
-
-    }
-
-    /* Creating the RxJS ReplaySubject */
-    this.database = new ReplaySubject<IDBDatabase>();
-
-    /* Connecting to IndexedDB */
-    this.connect(prefix);
-
-  }
-
-  /**
-   * Gets an item value in local storage
+   * Gets an item value in our `indexedDB` store
    * @param key The item's key
-   * @returns The item's value if the key exists, null otherwise, wrapped in an RxJS Observable
+   * @returns The item's value if the key exists, `undefined` otherwise, wrapped in an RxJS `Observable`
    */
-  getItem<T = any>(key: string): Observable<T | null> {
+  get<T = any>(key: string): Observable<T | undefined> {
 
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.getItem<T>(key);
-    }
+    /* Open a transaction in read-only mode */
+    return this.transaction('readonly').pipe(
+      mergeMap((store) => {
 
-    /* Opening a trasaction and requesting the item in local storage */
-    return this.transaction().pipe(
-      map((transaction) => transaction.get(key)),
-      mergeMap((request) => {
+        /* Request the value with the key provided by the user */
+        const request = store.get(key);
 
-        /* Listening to the success event, and passing the item value if found, null otherwise */
-        const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
-          map((event) => (event.target as IDBRequest).result),
-          map((result) => {
+        /* Manage success and error events, and get the result */
+        return this.requestEventsAndMapTo(request, () => {
 
-            if ((result != null) && (typeof result === 'object') && (this.dataPath in result) && (result[this.dataPath] != null)) {
-              return (result[this.dataPath] as T);
-            } else if (result != null) {
-              return result as T;
+          if ((request.result !== undefined) && (request.result !== null)) {
+
+            /* Prior to v8, the value was wrapped in an `{ value: ...}` object */
+            if (!this.noWrap && (typeof request.result === 'object') && (this.wrapIndex in request.result) &&
+            (request.result[this.wrapIndex] !== undefined) && (request.result[this.wrapIndex] !== null)) {
+
+              return (request.result[this.wrapIndex] as T);
+
+            } else {
+
+              /* Cast to the wanted type */
+              return request.result as T;
+
             }
 
-            return null;
+          }
 
-          })
-        );
+          /* Return `undefined` if the value is empty */
+          return undefined;
 
-        /* Merging success and errors events and autoclosing the observable */
-        return (race(success, this.toErrorObservable(request, `getter`)));
+        });
+
       }),
-      first()
+      /* The observable will complete after the first value */
+      first(),
     );
 
   }
 
   /**
-   * Sets an item in local storage
+   * Sets an item in our `indexedDB` store
    * @param key The item's key
-   * @param data The item's value, must NOT be null or undefined
-   * @returns An RxJS Observable to wait the end of the operation
+   * @param data The item's value
+   * @returns An RxJS `Observable` to wait the end of the operation
    */
-  setItem(key: string, data: any): Observable<boolean> {
+  set(key: string, data: any): Observable<undefined> {
 
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.setItem(key, data);
+    /* Storing `undefined` in `indexedDb` can cause issues in some browsers so removing item instead */
+    if (data === undefined) {
+      return this.delete(key);
     }
 
-    /* Storing null is not correctly supported by IndexedDB and unnecessary here */
-    if (data == null) {
+    /* Open a transaction in write mode */
+    return this.transaction('readwrite').pipe(
+      mergeMap((store) => {
 
-      return of(true);
+        /* Check if the key already exists or not
+         * `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge).
+         * In older browsers, the value is checked instead, but it could lead to an exception
+         * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
+         */
+        const requestGet = this.getKeyRequest(store, key);
 
-    }
-
-    /* Transaction must be the same for read and write, to avoid concurrency issues */
-    const transaction$ = this.transaction('readwrite');
-    let transaction: IDBObjectStore;
-
-        /* Opening a transaction */
-        return transaction$.pipe(
-          tap((value) => {
-            transaction = value;
-          }),
-          /* Check if the key already exists or not
-           * `getKey()` is only available in indexedDb v2 (Chrome >= 58)
-           * In older browsers, the value is checked instead, but it could lead to an exception
-           * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDb` API)
-           */
-          map(() => ('getKey' in transaction) ? transaction.getKey(key) : (transaction as IDBObjectStore).get(key)),
-          mergeMap((request) => {
-
-            /* Listening to the success event, and passing the item value if found, null otherwise */
-            const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
-              map((event) => (event.target as IDBRequest).result as string | undefined),
-            );
-
-            /* Merging success and errors events and autoclosing the observable */
-            return (race(success, this.toErrorObservable(request, `setter`)));
-
-          }),
+        /* Manage success and error events, and get the request result */
+        return this.requestEventsAndMapTo(requestGet, () => requestGet.result).pipe(
           mergeMap((existingEntry) => {
 
-            /* Adding or updating local storage, based on previous checking */
-            const request: IDBRequest = (existingEntry === undefined) ?
-              transaction.add({ [this.dataPath]: data }, key) :
-              transaction.put({ [this.dataPath]: data }, key);
+            /* It is very important the second request is done from the same transaction/store as the previous one,
+             * otherwise it could lead to concurrency failures
+             * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/47 */
 
-            /* Merging success (passing true) and error events and autoclosing the observable */
-            return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `setter`)));
+            /* Prior to v8, data was wrapped in a `{ value: ... }` object */
+            const dataToStore = this.noWrap ? data : { [this.wrapIndex]: data };
 
-        }),
-        first()
-      );
+            /* Add if the item is not existing yet, or update otherwise */
+            const requestSet = (existingEntry === undefined) ?
+              store.add(dataToStore, key) :
+              store.put(dataToStore, key);
+
+            /* Manage success and error events, and map to `true` */
+            return this.requestEventsAndMapTo(requestSet, () => undefined);
+
+          }),
+        );
+      }),
+      /* The observable will complete after the first value */
+      first(),
+    );
 
   }
 
   /**
-   * Deletes an item in local storage
+   * Deletes an item in our `indexedDB` store
    * @param key The item's key
-   * @returns An RxJS Observable to wait the end of the operation
+   * @returns An RxJS `Observable` to wait the end of the operation
    */
-  removeItem(key: string): Observable<boolean> {
+  delete(key: string): Observable<undefined> {
 
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.removeItem(key);
-    }
+    /* Open a transaction in write mode */
+    return this.transaction('readwrite').pipe(
+      mergeMap((store) => {
 
-    /* Opening a transaction and checking if the item exists in local storage */
-    return this.getItem(key).pipe(
-      mergeMap((data) => {
+        /* Deletethe item in store */
+        const request = store.delete(key);
 
-        /* If the item exists in local storage */
-        if (data != null) {
-
-          /* Opening a transaction */
-          return this.transaction('readwrite').pipe(mergeMap((transaction) => {
-
-            /* Deleting the item in local storage */
-            const request = transaction.delete(key);
-
-            /* Merging success (passing true) and error events and autoclosing the observable */
-            return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `remover`)));
-
-          }));
-
-        }
-
-        /* Passing true if the item does not exist in local storage */
-        return of(true);
+        /* Manage success and error events, and map to `true` */
+        return this.requestEventsAndMapTo(request, () => undefined);
 
       }),
-      first()
+      /* The observable will complete after the first value */
+      first(),
     );
 
   }
 
   /**
-   * Deletes all items from local storage
-   * @returns An RxJS Observable to wait the end of the operation
+   * Deletes all items from our `indexedDB` objet store
+   * @returns An RxJS `Observable` to wait the end of the operation
    */
-  clear(): Observable<boolean> {
+  clear(): Observable<undefined> {
 
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.clear();
-    }
-
-    /* Opening a transaction */
+    /* Open a transaction in write mode */
     return this.transaction('readwrite').pipe(
-      mergeMap((transaction) => {
+      mergeMap((store) => {
 
-        /* Deleting all items from local storage */
-        const request = transaction.clear();
+        /* Delete all items in object store */
+        const request = store.clear();
 
-        /* Merging success (passing true) and error events and autoclosing the observable */
-        return (race(this.toSuccessObservable(request), this.toErrorObservable(request, `clearer`)));
+        /* Manage success and error events, and map to `true` */
+        return this.requestEventsAndMapTo(request, () => undefined);
 
       }),
-      first()
+      /* The observable will complete */
+      first(),
     );
 
   }
 
-  keys(): Observable<string[]> {
+  /**
+   * Get all the keys in our `indexedDB` store
+   * @returns An RxJS `Observable` iterating on each key
+   */
+  keys(): Observable<string> {
 
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.keys();
-    }
-
+    /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
-      mergeMap((transaction) => {
+      /* `first()` is used as the final operator in other methods to complete the `Observable`
+       * (as it all starts from a `ReplaySubject` which never ends),
+       * but as this method is iterating over multiple values, `first()` **must** be used here */
+      first(),
+      mergeMap((store) => {
 
-        if ('getAllKeys' in transaction) {
+        /* Open a cursor on the store
+         * `.openKeyCursor()` is better for performance, but only available in indexedDB v2 (missing in IE/Edge)
+         * Avoid issues like https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
+        const request = ('openKeyCursor' in store) ? store.openKeyCursor() : (store as IDBObjectStore).openCursor();
 
-          /* Deleting the item in local storage */
-          const request = transaction.getAllKeys();
-
-          const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
-            map((event) => (event.target as IDBRequest).result as string[])
-          );
-
-          /* Merging success and errors events and autoclosing the observable */
-          return (race(success, this.toErrorObservable(request, `keys`)));
-
-        } else {
-
-          /* `getAllKeys()` is from IndexedDB v2.0 standard, which is not supported in IE/Edge */
-
-          const request = (transaction as IDBObjectStore).openCursor();
-
-          const keys: string[] = [];
-
-          const success = fromEvent(request, 'success').pipe(
-            map((event) => (event.target as IDBRequest).result as IDBCursorWithValue),
-            tap((cursor) =>  {
-              if (cursor) {
-                keys.push(cursor.key as string);
-                cursor.continue();
-              }
-            }),
-            filter((cursor) => !cursor),
-            map(() => keys)
-          );
-
-          /* Merging success and errors events and autoclosing the observable */
-          return (race(success, this.toErrorObservable(request, `keys`)));
-
-        }
-
-      }),
-      first()
-    );
-
-  }
-
-  has(key: string): Observable<boolean> {
-
-    /* Fallback storage if set */
-    if (this.fallback) {
-      return this.fallback.has(key);
-    }
-
-    return this.transaction('readonly').pipe(
-      /* `getKey()` is from IndexedDB v2.0 standard, which is not supported in IE/Edge */
-      map((transaction) => ('getKey' in transaction) ? transaction.getKey(key) : (transaction as IDBObjectStore).get(key)),
-      mergeMap((request) => {
-
-        /* Listening to the success event, and passing the item value if found, null otherwise */
-        const success = (fromEvent(request, 'success') as Observable<Event>).pipe(
-          map((event) => (event.target as IDBRequest).result),
-          map((result) => (result !== undefined) ? true : false)
+        /* Listen to success event */
+        const success$ = this.successEvent(request).pipe(
+          /* Stop the `Observable` when the cursor is `null` */
+          takeWhile(() => (request.result !== null)),
+          /* This lib only allows string keys, but user could have added other types of keys from outside
+           * It's OK to cast as the cursor as been tested in the previous operator */
+          map(() => (request.result as IDBCursor).key.toString()),
+          /* Iterate on the cursor */
+          tap(() => { (request.result as IDBCursor).continue(); }),
         );
 
-        /* Merging success and errors events and autoclosing the observable */
-        return (race(success, this.toErrorObservable(request, `has`)));
+        /* Listen to error event and if so, throw an error */
+        const error$ = this.errorEvent(request);
+
+        /* Choose the first event to occur */
+        return race([success$, error$]);
+
       }),
+    );
+
+  }
+
+  /**
+   * Check if a key exists in our `indexedDB` store
+   * @returns An RxJS `Observable` telling if the key exists or not
+   */
+  has(key: string): Observable<boolean> {
+
+    /* Open a transaction in read-only mode */
+    return this.transaction('readonly').pipe(
+      mergeMap((store) => {
+
+        /* Check if the key exists in the store */
+        const request = this.getKeyRequest(store, key);
+
+        /* Manage success and error events, and map to a boolean based on the existence of the key */
+        return this.requestEventsAndMapTo(request, () => (request.result !== undefined) ? true : false);
+
+      }),
+      /* The observable will complete */
       first()
     );
 
   }
 
   /**
-   * Connects to IndexedDB and creates the object store on first time
+   * Connects to `indexedDB` and creates the object store on first time
    */
-  protected connect(prefix: string | null = null): void {
+  protected connect(): void {
 
     let request: IDBOpenDBRequest;
 
-    /* Connecting to IndexedDB */
+    /* Connect to `indexedDB`
+     * Will fail in Safari cross-origin iframes
+     * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/42} */
     try {
 
-      request = indexedDB.open(this.dbName);
+      /* Do NOT explicit `window` here, as `indexedDB` could be used from a web worker too */
+      request = indexedDB.open(this.dbName, this.dbVersion);
 
-    } catch (error) {
+    } catch {
 
-      /* Fallback storage if IndexedDb connection is failing */
-      this.setFallback(prefix);
+      this.database.error(new IDBBrokenError());
 
       return;
 
     }
 
-    /* Listening the event fired on first connection, creating the object store for local storage */
-    (fromEvent(request, 'upgradeneeded') as Observable<Event>)
+    /* Create store on first connection */
+    this.createStore(request);
+
+    /* Listen to success and error events and choose the first to occur */
+    race([this.successEvent(request), this.errorEvent(request)])
+      /* The observable will complete */
       .pipe(first())
-      .subscribe((event) => {
+      .subscribe({
+        next: () => {
+          /* Register the database connection in the `ReplaySubject` for further access */
+          this.database.next(request.result);
+        },
+        error: () => {
+          /* Firefox private mode issue: fallback storage if IndexedDb connection is failing
+          * @see {@link https://bugzilla.mozilla.org/show_bug.cgi?id=781982}
+          * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/26} */
+          this.database.error(new IDBBrokenError());
+        },
+      });
 
-        /* Getting the database connection */
-        const database = (event.target as IDBRequest).result as IDBDatabase;
+  }
 
-        /* Checking if the object store already exists, to avoid error */
-        if (!database.objectStoreNames.contains(this.objectStoreName)) {
+  /**
+   * Create store on first use of `indexedDB`
+   * @param request `indexedDB` database opening request
+   */
+  protected createStore(request: IDBOpenDBRequest): void {
 
-          /* Creating the object store for local storage */
-          database.createObjectStore(this.objectStoreName);
+    /* Listen to the event fired on first connection */
+    fromEvent(request, 'upgradeneeded')
+      /* The observable will complete */
+      .pipe(first())
+      .subscribe({
+        next: () => {
+
+          /* Check if the store already exists, to avoid error */
+          if (!request.result.objectStoreNames.contains(this.storeName)) {
+
+            /* Create the object store */
+            request.result.createObjectStore(this.storeName);
+
+          }
+
+        }
+      });
+
+  }
+
+  /**
+   * Open an `indexedDB` transaction and get our store
+   * @param mode `readonly` or `readwrite`
+   * @returns An `indexedDB` store, wrapped in an RxJS `Observable`
+   */
+  protected transaction(mode: IDBTransactionMode): Observable<IDBObjectStore> {
+
+    /* From the `indexedDB` connection, open a transaction and get the store */
+    return this.database
+      .pipe(mergeMap((database) => {
+
+        let store: IDBObjectStore;
+
+        try {
+
+          store = database.transaction([this.storeName], mode).objectStore(this.storeName);
+
+        } catch (error) {
+
+            /* The store could have been deleted from outside */
+            return throwError(error as DOMException);
 
         }
 
-      });
+        return of(store);
 
-    /* Listening the success event and converting to an RxJS Observable */
-    const success = fromEvent(request, 'success') as Observable<Event>;
-
-    /* Merging success and errors events */
-    (race(success, this.toErrorObservable(request, `connection`)) as Observable<Event>)
-      .pipe(first())
-      .subscribe((event) => {
-
-        /* Storing the database connection for further access */
-        this.database.next((event.target as IDBRequest).result as IDBDatabase);
-
-      }, () => {
-
-        /* Fallback storage if IndexedDb connection is failing */
-        this.setFallback(prefix);
-
-      });
+      }));
 
   }
 
   /**
-   * Opens an IndexedDB transaction and gets the local storage object store
-   * @param mode Default to 'readonly' for read operations, or 'readwrite' for write operations
-   * @returns An IndexedDB transaction object store, wrapped in an RxJS Observable
+   * Listen to an `indexedDB` success error event
+   * @param request Request to listen
+   * @returns An RxJS `Observable` listening to the success event
    */
-  protected transaction(mode: 'readonly' | 'readwrite' = 'readonly'): Observable<IDBObjectStore> {
+  protected successEvent(request: IDBRequest): Observable<Event> {
 
-    /* From the IndexedDB connection, opening a transaction and getting the local storage objet store */
-    return this.database
-      .pipe(map((database) => database.transaction([this.objectStoreName], mode).objectStore(this.objectStoreName)));
+    return fromEvent(request, 'success');
 
   }
 
   /**
-   * Transforms a IndexedDB success event in an RxJS Observable
-   * @param request The request to listen
-   * @returns A RxJS Observable with true value
+   * Listen to an `indexedDB` request error event
+   * @param request Request to listen
+   * @returns An RxJS `Observable` listening to the error event and if so, throwing an error
    */
-  protected toSuccessObservable(request: IDBRequest): Observable<boolean> {
+  protected errorEvent(request: IDBRequest): Observable<never> {
 
-    /* Transforming a IndexedDB success event in an RxJS Observable with true value */
-    return (fromEvent(request, 'success') as Observable<Event>)
-      .pipe(map(() => true));
+    return fromEvent(request, 'error').pipe(mergeMap(() => throwError(request.error as DOMException)));
 
   }
 
   /**
-   * Transforms a IndexedDB error event in an RxJS ErrorObservable
-   * @param request The request to listen
-   * @param error Optionnal details about the error's origin
-   * @returns A RxJS ErrorObservable
+   * Listen to an `indexedDB` request success and error event, and map to the wanted value
+   * @param request Request to listen
+   * @param mapCallback Callback returning the wanted value
+   * @returns An RxJS `Observable` listening to request events and mapping to the wanted value
    */
-  protected toErrorObservable(request: IDBRequest, error = ``): Observable<never> {
+  protected requestEventsAndMapTo<T>(request: IDBRequest, mapCallback: () => T): Observable<T> {
 
-    /* Transforming a IndexedDB error event in an RxJS ErrorObservable */
-    return (fromEvent(request, 'error') as Observable<Event>)
-      .pipe(
-        mergeMap(() => throwError(new Error(`IndexedDB ${error} issue : ${(request.error as DOMException).message}.`)))
-      );
+    /* Listen to the success event and map to the wanted value
+     * `mapTo()` must not be used here as it would eval `request.result` too soon */
+    const success$ = this.successEvent(request).pipe(map(mapCallback));
+
+    /* Listen to the error event */
+    const error$ = this.errorEvent(request);
+
+    /* Choose the first event to occur */
+    return race([success$, error$]);
 
   }
 
-  protected setFallback(prefix: string | null): void {
-    this.fallback = new LocalStorageDatabase(prefix);
+  /**
+   * Check if the key exists in the store
+   * @param store Objet store on which to perform the request
+   * @param key Key to check
+   * @returns An `indexedDB` request
+   */
+  protected getKeyRequest(store: IDBObjectStore, key: string): IDBRequest {
+
+    /* `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge).
+     * In older browsers, the value is checked instead, but it could lead to an exception
+     * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
+     * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69
+     */
+    return ('getKey' in store) ? store.getKey(key) : (store as IDBObjectStore).get(key);
+
   }
 
 }

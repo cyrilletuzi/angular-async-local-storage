@@ -6,15 +6,14 @@ But **do not worry: the previous package is still here** and will be as long as 
 Migration to the new package is recommended as soon as possible to enjoy bug fixes and new features,
 but is not required for Angular 4 & 5. **It is only required when upgrading to Angular >= 6.**
 
-## Version alignment
+## Versions
 
-The lib major version is now aligned to the major version of Angular. Meaning you need:
 - v4 for Angular 4,
 - v5 for Angular 5,
 - v6 for Angular 6,
-- v7 for Angular 7.
+- v8 for Angular 7 & 8.
 
-Note that Angular 4 LTS support has ended.
+Note that Angular 4 & 5 LTS support has ended.
 
 ## Installing the new package
 
@@ -33,6 +32,11 @@ npm install @ngx-pwa/local-storage@5
 - for **Angular 6**:
 ```bash
 npm install @ngx-pwa/local-storage@6
+```
+
+- for **Angular 7 & 8**:
+```bash
+npm install @ngx-pwa/local-storage@8
 ```
 
 ## Refactoring

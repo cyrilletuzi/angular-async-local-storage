@@ -1,28 +1,46 @@
 # `Map`-like operations
 
-Starting with version >= 7.4, in addition to the classic `localStorage`-like API,
+Starting with version >= 8 of this lib, in addition to the classic `localStorage`-like API,
 this lib also provides a partial `Map`-like API for advanced operations.
+
+To use it:
+
+```typescript
+import { StorageMap } from '@ngx-pwa/local-storage';
+
+export class AngularComponentOrService {
+
+  constructor(private storageMap: StorageMap) {}
+
+}
+```
 
 ## `.keys()` method
 
-An `Observable` returning an array of keys:
+An `Observable` iterating over keys in storage:
 
 ```typescript
-this.localStorage.keys().subscribe((keys) => {
-
-  console.log(keys);
-
+this.storageMap.keys().subscribe({
+  next: (key) => {
+    console.log(key);
+  },
+  complete: () => {
+    console.log('Done');
+  },
 });
 ```
 
-If there is no keys, an empty array is returned.
+Note this is an *iterating* `Observable`:
+- if there is no key, the `next` callback will *not* be invoked,
+- if you need to wait the whole operation to end, be sure to act in the `complete` callback,
+as this `Observable` can emit several values and so will invoke the `next` callback several times.
 
 ## `.has(key)` method
 
 Gives you an `Observable` telling you if a key exists in storage:
 
 ```typescript
-this.localStorage.has('someindex').subscribe((result) => {
+this.storageMap.has('someindex').subscribe((result) => {
 
   if (result) {
     console.log('The key exists :)');
@@ -35,10 +53,10 @@ this.localStorage.has('someindex').subscribe((result) => {
 
 ## `.size` property
 
-Number of items stored in local storage.
+Number of items stored in storage.
 
 ```typescript
-this.localStorage.size.subscribe((size) => {
+this.storageMap.size.subscribe((size) => {
 
   console.log(size);
 
@@ -47,7 +65,8 @@ this.localStorage.size.subscribe((size) => {
 
 ## Other methods
 
-`.values()` and `.entries()` have not been implemented on purpose, because it would not be a good idea for performance.
+`.values()` and `.entries()` have not been implemented on purpose,
+because it has few use cases and it would not be a good idea for performance.
 But you can easily do your own implementation via `keys()`. 
 
 ## Recipes
@@ -63,29 +82,25 @@ Let's say you stored:
 You can then delete only app data:
 
 ```typescript
-import { from } from 'rxjs';
 import { filter, mergeMap } from 'rxjs/operators';
 
-this.localStorageService.keys().pipe(
-
-  /* Transform the array of keys in an Observable iterating over the array.
-   * Why not iterating on the array directly with a `for... of` or `forEach`?
-   * Because the next step (removing the item) will be asynchronous,
-   * and we want to keep track of the process to know when everything is over  */
-  mergeMap((keys) => from(keys)),
+this.storageMap.keys().pipe(
 
   /* Keep only keys starting with 'app_' */
   filter((key) => key.startsWith('app_')),
 
   /* Remove the item for each key */
-  mergeMap((key) => localStorageService.removeItem(key))
+  mergeMap((key) => this.storageMap.delete(key))
 
-).subscribe({ complete: () => {
+).subscribe({
+  complete: () => {
 
-  /* Note we don't act in the classic success callback as it will be trigerred for each key,
-   * while we want to act only when all the operations are done */
+    /* Note we don't act in the classic success callback as it will be trigerred for each key,
+     * while we want to act only when all the operations are done */
+    console.log('Done!');
 
-  console.log('Done!');
-
-} });
+  }
+});
 ```
+
+[Back to general documentation](../README.md)

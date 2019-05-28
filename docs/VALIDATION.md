@@ -1,5 +1,20 @@
 # Validation guide
 
+## Version
+
+**This is the up to date guide about validation for versions >= 8 of this lib.**
+The old guide for validation in versions < 8 is available [here](./VALIDATION_BEFORE_V8.md),
+but is not recommended as there was breaking changes in v8.
+
+## Examples
+
+The examples will use the new `StorageMap` service.
+But everything in this guide can be done in the same way with the `LocalStorage` service:
+- `this.storageMap.get()` is the same as `this.localStorage.getItem()`
+- `this.storageMap.set()` is the same as `this.localStorage.setItem()`
+- `this.storageMap.delete()` is the same as `this.localStorage.removeItem()`
+- `this.storageMap.clear()` is the same as `this.localStorage.clear()`
+
 ## Why validation?
 
 Any client-side storage (cookies, `localStorage`, `indexedDb`...) is not secure by nature,
@@ -9,15 +24,13 @@ It can cause obvious **security issues**, but also **errors** and thus crashes (
 
 Then, **any data coming from client-side storage should be checked before used**.
 
-It was allowed since v5 of the lib, and is **now required since v7** (see the [migration guide](./MIGRATION_TO_V7.md)).
-
 ## Why JSON schemas?
 
 [JSON Schema](https://json-schema.org/) is a standard to describe the structure of a JSON data.
 You can see this as an equivalent to the DTD in XML, the Doctype in HTML or interfaces in TypeScript.
 
 It can have many uses (it's why you have autocompletion in some JSON files in Visual Studio Code).
-**In this lib, JSON schemas are used to validate the data retrieved from local storage.**
+**In this lib, JSON schemas are used to validate the data retrieved from client-side storage.**
 
 ## How to validate simple data
 
@@ -27,58 +40,77 @@ as you'll see the more complex it is, the more complex is validation too.
 ### Boolean
 
 ```typescript
-this.localStorage.getItem<boolean>('test', { schema: { type: 'boolean' } })
+this.storageMap.get('test', { type: 'boolean' })
 ```
 
 ### Integer
 
 ```typescript
-this.localStorage.getItem<number>('test', { schema: { type: 'integer' } })
+this.storageMap.get('test', { type: 'integer' })
 ```
 
 ### Number
 
 ```typescript
-this.localStorage.getItem<number>('test', { schema: { type: 'number' } })
+this.storageMap.get('test', { type: 'number' })
 ```
 
 ### String
 
 ```typescript
-this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
+this.storageMap.get('test', { type: 'string' })
 ```
 
 ### Arrays
 
 ```typescript
-this.localStorage.getItem<boolean[]>('test', { schema: {
+this.storageMap.get('test', {
   type: 'array',
-  items: { type: 'boolean' }
-} })
+  items: { type: 'boolean' },
+})
 ```
 
 ```typescript
-this.localStorage.getItem<number[]>('test', { schema: {
+this.storageMap.get('test', {
   type: 'array',
-  items: { type: 'integer' }
-} })
+  items: { type: 'integer' },
+})
 ```
 
 ```typescript
-this.localStorage.getItem<number[]>('test', { schema: {
+this.storageMap.get('test', {
   type: 'array',
-  items: { type: 'number' }
-} })
+  items: { type: 'number' },
+})
 ```
 
 ```typescript
-this.localStorage.getItem<string[]>('test', { schema: {
+this.storageMap.get('test', {
   type: 'array',
-  items: { type: 'string' }
-} })
+  items: { type: 'string' },
+})
 ```
 
 What's expected in `items` is another JSON schema.
+
+## Tuples
+
+In most cases, an array is for a list with values of the *same type*.
+In special cases, it can be useful to use arrays with values of different types.
+It's called tuples in TypeScript. For example: `['test', 1]`
+
+```typescript
+this.storageMap.get('test', {
+  type: 'array',
+  items: [
+    { type: 'string' },
+    { type: 'number' },
+  ],
+})
+```
+
+Note a tuple has a fixed length: the number of values in the array and the number of schemas provided in `items`
+must be exactly the same, otherwise the validation fails.
 
 ## How to validate objects
 
@@ -102,37 +134,85 @@ const schema: JSONSchema = {
   required: ['firstName', 'lastName']
 };
 
-this.localStorage.getItem<User>('test', { schema })
+this.storageMap.get<User>('test', schema)
 ```
 
 What's expected for each property is another JSON schema.
 
-## Why a schema *and* a cast?
+### Special objects
 
-You may ask why we have to define a TypeScript cast with `getItem<User>()` *and* a JSON schema with `{ schema }`.
+For special structures like `Map`, `Set` or `Blob`,
+see the [serialization guide](./SERIALIZATION.md).
+
+### Why a schema *and* a cast?
+
+You may ask why we have to define a TypeScript cast with `get<User>()` *and* a JSON schema with `schema`.
 
 It's because they happen at different steps:
-- a cast (`getItem<User>()`) just says "TypeScript, trust me, I'm telling you it will be a `User`", but it only happens at *compilation* time (it won't be checked at runtime)
-- the JSON schema (`{ schema }`) will be used at *runtime* when getting data in local storage for real.
+- a cast (`get<User>()`) just says "TypeScript, trust me, I'm telling you it will be a `User`", but it only happens at *compilation* time (it won't be checked at runtime)
+- the JSON schema (`schema`) will be used at *runtime* when getting data in local storage for real.
 
 So they each serve a different purpose:
-- casting allow you to retrieve the data if the good type instead of `any`
-- the schema allow the lib to validate the data at runtime
+- casting allows you to retrieve the data with the good type instead of `any`
+- the schema allows the lib to validate the data at runtime
+
+For previous basic types, as they are static, we can infer automatically.
+But as objects properties are dynamic, we can't do the same for objects.
 
 Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
 The lib can't check that.
 
-## How to validate fixed values
+### Validation when writing
 
-Temporarily, documentation for constants and enums is removed,
-as there will be a breaking change in v8.
+While validation is only required when *reading* storage,
+when the data is complex, you could store a wrongly structured object by error without noticing,
+and then `get()` will fail.
+
+So when storing complex objects, it's better to check the structure when writing too:
+
+```typescript
+import { JSONSchema } from '@ngx-pwa/local-storage';
+
+interface User {
+  firstName: string;
+  lastName: string;
+  age?: number;
+}
+
+const user: User = {
+  firstName: `Henri`,
+  lastName: `Bergson`,
+}
+
+const schema: JSONSchema = {
+  type: 'object',
+  properties: {
+    firstName: { type: 'string' },
+    lastName: { type: 'string' },
+    age: { type: 'number' },
+  },
+  required: ['firstName', 'lastName']
+};
+
+this.storageMap.set('test', user, schema)
+```
+
+If can also use your environnements to do this check only in development:
+
+```typescript
+this.storageMap.set('test', user, (!environment.production) ? schema : undefined)
+```
 
 ## Additional validation
 
-Some types have additional validation options since version >= 6.
+### Options for booleans
+
+- `const`
 
 ### Options for integers and numbers
 
+- `const`
+- `enum`
 - `multipleOf`
 - `maximum`
 - `exclusiveMaximum`
@@ -140,26 +220,27 @@ Some types have additional validation options since version >= 6.
 - `exclusiveMinimum`
 
 For example:
-
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.storageMap.get('test', {
   type: 'number',
   maximum: 5
-} })
+})
 ```
 
 ### Options for strings
 
+- `const`
+- `enum`
 - `maxLength`
 - `minLength`
 - `pattern`
 
 For example:
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.storageMap.get('test', {
   type: 'string',
   maxLength: 10
-} })
+})
 ```
 
 ### Options for arrays
@@ -170,11 +251,11 @@ this.localStorage.getItem('test', { schema: {
 
 For example:
 ```typescript
-this.localStorage.getItem('test', { schema: {
+this.storageMap.get('test', {
   type: 'array',
   items: { type: 'string' },
   maxItems: 5
-} })
+})
 ```
 
 ## How to validate nested types
@@ -202,31 +283,50 @@ const schema: JSONSchema = {
   }
 };
 
-this.localStorage.getItem<User[]>('test', { schema })
+this.storageMap.get<User[]>('test', schema)
 ```
 
-## Errors vs. `null`
+## Errors vs. `undefined` / `null`
 
 If validation fails, it'll go in the error callback:
 
 ```typescript
-this.localStorage.getItem<string>('existing', { schema: { type: 'string' } })
-.subscribe((result) => {
-  // Called if data is valid or null
-}, (error) => {
-  // Called if data is invalid
+this.storageMap.get('existing', { type: 'string' })
+.subscribe({
+  next: (result) => { /* Called if data is valid or null or undefined */ },
+  error: (error) => { /* Called if data is invalid */ },
 });
 ```
 
-But as usual (like when you do a database request), not finding an item is not an error. It succeeds but returns `null`.
+But as usual (like when you do a database request), not finding an item is not an error.
+It succeeds but returns:
+
+- `undefined` with `StorageMap`
+```typescript
+this.storageMap.get('notExisting', { type: 'string' })
+.subscribe({
+  next: (result) => { result; /* undefined */ },
+  error: (error) => { /* Not called */ },
+});
+```
+
+- `null` with `LocalStorage`
+```typescript
+this.localStorage.getItem('notExisting', { type: 'string' })
+.subscribe({
+  next: (result) => { result; /* null */ },
+  error: (error) => { /* Not called */ },
+});
+```
+
+## Validation when writing
+
+While this may be superfluous for primitive types, you can also validate while storing,
+to avoid a mismatch between your JSON schema and the object you're storing,
+which would result in a future error when trying to read the data.
 
 ```typescript
-this.localStorage.getItem<string>('notExisting', { schema: { type: 'string' } })
-.subscribe((result) => {
-  result; // null
-}, (error) => {
-  // Not called
-});
+this.storageMap.set('test', 'value', { type: 'string' })
 ```
 
 ## Differences from the standard
@@ -254,30 +354,5 @@ are *not* available in this lib:
 - `anyOf`
 - `oneOf`
 - array for `type`
-
-## ES6 shortcut
-
-In EcmaScript >= 6, this:
-
-```typescript
-const schema: JSONSchemaBoolean = { type: 'boolean' };
-
-this.localStorage.getItem<boolean>('test', { schema });
-```
-
-is a shortcut for this:
-```typescript
-const schema: JSONSchemaBoolean = { type: 'boolean' };
-
-this.localStorage.getItem<boolean>('test', { schema: schema });
-```
-
-which works only if the property and the variable have the same name.
-So if your variable has another name, you can't use the shortcut:
-```typescript
-const customSchema: JSONSchemaBoolean = { type: 'boolean' };
-
-this.localStorage.getItem<boolean>('test', { schema: customSchema });
-```
 
 [Back to general documentation](../README.md)

@@ -1,29 +1,10 @@
-/**
- * Avoid: will be removed in v8 in favor of another interface.
- */
-export interface JSONSchemaConst {
-
-  /**
-   * Checks if a value is strictly equal to this.
-   * Can't be an object or array, as two objects or arrays are never equal.
-   */
-  const: string | number | boolean | null;
-
-}
+/* All schemas interfaces must have a required and different `type`,
+ * to create a TypeScript discriminant union type.
+ * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/64 */
 
 /**
- * Avoid: will be removed in v8 in favor of another interface.
+ * JSON Schema to describe a boolean value.
  */
-export interface JSONSchemaEnum {
-
-  /**
-   * Checks if a value is strictly equal to one of the value of enum.
-   * Can't be an object or array, as two objects or arrays are never equal.
-   */
-  enum: (string | number | boolean | null)[];
-
-}
-
 export interface JSONSchemaBoolean {
 
   /**
@@ -31,50 +12,32 @@ export interface JSONSchemaBoolean {
    */
   type: 'boolean';
 
+  /**
+   * Checks if a value is strictly equal to this.
+   */
+  const?: boolean;
+
 }
 
 /**
- * Avoid: will be removed in v8.
+ * JSON Schema to describe a number value.
  */
-export interface JSONSchemaNull {
+export interface JSONSchemaNumber {
 
   /**
-   * Type for a null value.
+   * Type for a numeric value.
    */
-  type: 'null';
-
-}
-
-export interface JSONSchemaString {
+  type: 'number';
 
   /**
-   * Type for a string value.
+   * Checks if a value is strictly equal to this.
    */
-  type: 'string';
+  const?: number;
 
   /**
-   * Maxium length for a string.
-   * Must be a non-negative integer.
+   * Checks if a value is strictly equal to one of the value of enum.
    */
-  maxLength?: number;
-
-  /**
-   * Minimum length for a string.
-   * Must be a non-negative integer.
-   */
-  minLength?: number;
-
-  /**
-   * Pattern to match for a string.
-   * Must be a valid regular expression, WITHOUT the / delimiters.
-   */
-  pattern?: string;
-
-}
-
-export interface JSONSchemaNumeric {
-
-  type: 'number' | 'integer';
+  enum?: number[];
 
   /**
    * Check if a number is a multiple of x.
@@ -83,12 +46,12 @@ export interface JSONSchemaNumeric {
   multipleOf?: number;
 
   /**
-   * Check if a number is less or equal than this maximum.
+   * Check if a number is lower or equal than this maximum.
    */
   maximum?: number;
 
   /**
-   * Check if a number is strictly less than this maximum.
+   * Check if a number is strictly lower than this maximum.
    */
   exclusiveMaximum?: number;
 
@@ -104,22 +67,111 @@ export interface JSONSchemaNumeric {
 
 }
 
+/**
+ * JSON Schema to describe an integer value.
+ */
+export interface JSONSchemaInteger {
+
+  /**
+   * Type for an integer value.
+   */
+  type: 'integer';
+
+  /**
+   * Checks if a value is strictly equal to this.
+   */
+  const?: number;
+
+  /**
+   * Checks if a value is strictly equal to one of the value of enum.
+   */
+  enum?: number[];
+
+  /**
+   * Check if a number is a multiple of x.
+   * Must be strictly greater than 0.
+   */
+  multipleOf?: number;
+
+  /**
+   * Check if a number is lower or equal than this maximum.
+   */
+  maximum?: number;
+
+  /**
+   * Check if a number is strictly lower than this maximum.
+   */
+  exclusiveMaximum?: number;
+
+  /**
+   * Check if a number is greater or equal than this minimum.
+   */
+  minimum?: number;
+
+  /**
+   * Check if a number is strictly greater than this minimum.
+   */
+  exclusiveMinimum?: number;
+
+}
+
+/**
+ * JSON Schema to describe a string value.
+ */
+export interface JSONSchemaString {
+
+  /**
+   * Type for a string value.
+   */
+  type: 'string';
+
+  /**
+   * Checks if a value is strictly equal to this.
+   */
+  const?: string;
+
+  /**
+   * Checks if a value is strictly equal to one of the value of enum.
+   */
+  enum?: string[];
+
+  /**
+   * Maxium length for a string.
+   * Must be a non-negative integer.
+   */
+  maxLength?: number;
+
+  /**
+   * Minimum length for a string.
+   * Must be a non-negative integer.
+   */
+  minLength?: number;
+
+  /**
+   * Pattern to match for a string.
+   * Must be a valid regular expression, *without* the `/` delimiters.
+   */
+  pattern?: string;
+
+}
+
+/**
+ * JSON schema to describe an array of values.
+ */
 export interface JSONSchemaArray {
 
   /**
-   * Type for an array value.
-   * Will be *required* in v8, so explicit this now!
+   * Type for an array of values.
    */
-  type?: 'array';
+  type: 'array';
 
   /**
-   * Schema for the values of an array.
-   * Avoid to use an array of schemas, this feature will be removed in v8.
+   * Schema for the values of an array, or array of schemas for a tuple.
    */
   items: JSONSchema | JSONSchema[];
 
   /**
-   * Check if an array length is less or equal to this value.
+   * Check if an array length is lower or equal to this value.
    * Must be a non negative integer.
    */
   maxItems?: number;
@@ -137,16 +189,56 @@ export interface JSONSchemaArray {
 
 }
 
+/**
+ * JSON Schema to describe an array of primitive values:
+ * - array of booleans: `JSONSchemaArrayOf<JSONSchemaBoolean>`,
+ * - array of numbers: `JSONSchemaArrayOf<JSONSchemaNumber>`,
+ * - array of integers: `JSONSchemaArrayOf<JSONSchemaInteger>`,
+ * - array of strings: `JSONSchemaArrayOf<JSONSchemaString>`.
+ */
+export interface JSONSchemaArrayOf<T extends JSONSchemaBoolean | JSONSchemaNumber | JSONSchemaInteger | JSONSchemaString> {
+
+  /**
+   * Type for an array of values.
+   */
+  type: 'array';
+
+  /**
+   * Schema for the values of an array.
+   */
+  items: T;
+
+  /**
+   * Check if an array length is lower or equal to this value.
+   * Must be a non negative integer.
+   */
+  maxItems?: number;
+
+  /**
+   * Check if an array length is greater or equal to this value.
+   * Must be a non negative integer.
+   */
+  minItems?: number;
+
+  /**
+   * Check if an array only have unique values.
+   */
+  uniqueItems?: boolean;
+
+}
+
+/**
+ * JSON schema to describe an object.
+ */
 export interface JSONSchemaObject {
 
   /**
-   * Type for an object value.
-   * Will be *required* in v8, so explicit this now!
+   * Type for an object.
    */
-  type?: 'object';
+  type: 'object';
 
   /**
-   * List of properties schemas for an object.
+   * List of properties of the object and their associated JSON schemas.
    */
   properties: {
     [k: string]: JSONSchema;
@@ -154,20 +246,50 @@ export interface JSONSchemaObject {
 
   /**
    * Array of names of the required properties for an object.
-   * Properties set as required should be present in 'properties' too.
-   * Note that in the last spec, booleans are not supported anymore.
+   * Properties set as required should be present in `properties` too.
    */
   required?: string[];
 
 }
 
 /**
- * Subset of the JSON Schema.
- * Types are enforced to validate everything: each value MUST have a `type`.
- * Not all validation features are supported: just follow the interface.
- * Avoid extra properties: it won't be possible anymore in v8.
+ * @deprecated Deprecated in favor of `JSONSchemaNumber` or `JSONSchemaInteger`
+ * Available for backward-compatibility only, **do not use**.
+ * May be removed in v9.
  */
-export type JSONSchema = (JSONSchemaConst | JSONSchemaEnum |
-  JSONSchemaBoolean | JSONSchemaNull | JSONSchemaString | JSONSchemaNumeric |
-  JSONSchemaArray | JSONSchemaObject)
-  & { [k: string]: any; };
+export type JSONSchemaNumeric = JSONSchemaNumber | JSONSchemaInteger;
+
+/**
+ * Subset of the JSON Schema standard.
+ * Types are enforced to validate everything: each value **must** have a `type`.
+ * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+ *
+ * @example
+ * const schema: JSONSchema = { type: 'string' };
+ *
+ * @example
+ * const schema: JSONSchema = { type: 'number' };
+ *
+ * @example
+ * const schema: JSONSchema = { type: 'integer' };
+ *
+ * @example
+ * const schema: JSONSchema = { type: 'boolean' };
+ *
+ * @example
+ * const schema: JSONSchema = {
+ *   type: 'array',
+ *   items: { type: 'string' },
+ * };
+ *
+ * @example
+ * const schema: JSONSchema = {
+ *   type: 'object',
+ *   properties: {
+ *     firstName: { type: 'string' },
+ *     lastName: { type: 'string' },
+ *   },
+ *   required: ['firstName'],
+ * };
+ */
+export type JSONSchema = JSONSchemaString | JSONSchemaNumber | JSONSchemaInteger | JSONSchemaBoolean | JSONSchemaArray | JSONSchemaObject;
