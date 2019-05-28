@@ -187,11 +187,11 @@ this.localStorage.clear().subscribe(() => {});
 ### Reading data
 
 ```typescript
-this.storageMap.get<User>('user').subscribe((user) => {
+this.storageMap.get('user').subscribe((user) => {
   console.log(user);
 });
 // or
-this.localStorage.getItem<User>('user').subscribe((user) => {
+this.localStorage.getItem('user').subscribe((user) => {
   console.log(user);
 });
 ```
