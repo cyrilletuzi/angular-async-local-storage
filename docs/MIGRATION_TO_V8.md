@@ -39,7 +39,7 @@ A full [validation guide](./VALIDATION.md) is available.
 
 1. Update the lib:
 ```
-npm install @ngx-pwa/local-storage@next
+npm install @ngx-pwa/local-storage@8
 ```
 
 2. Start your project: problems will be seen at compilation.

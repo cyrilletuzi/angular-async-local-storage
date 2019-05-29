@@ -45,7 +45,7 @@ Install the right version according to your Angular one via [`npm`](http://npmjs
 
 ```bash
 # For Angular 8:
-npm install @ngx-pwa/local-storage@next
+npm install @ngx-pwa/local-storage
 
 # For Angular 6 & 7:
 npm install @ngx-pwa/local-storage@6
