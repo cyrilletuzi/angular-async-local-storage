@@ -35,7 +35,7 @@
     "@types/jasmine": "3.3.13",
     "@types/jasminewd2": "2.0.6",
     "@types/node": "10.14.8",
-    "codelyzer": "5.0.1",
+    "codelyzer": "5.1.0",
     "copyfiles": "2.1.0",
     "jasmine-core": "3.4.0",
     "jasmine-spec-reporter": "4.2.1",
@@ -54,7 +54,7 @@
     "protractor": "5.4.2",
     "ts-node": "8.2.0",
     "tsickle": "0.35.0",
-    "tslint": "5.16.0",
+    "tslint": "5.17.0",
     "typescript": "3.4.5",
     "zone.js": "0.9.1"
   }
