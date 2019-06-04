@@ -2,12 +2,13 @@
   "extends": [
     "config:base"
   ],
-  "assignees": [
-    "cyrilletuzi"
-  ],
-  "reviewers": [
-    "cyrilletuzi"
-  ],
+  "automerge": true,
+  "major": {
+    "automerge": false,
+    "assignees": [
+      "cyrilletuzi"
+    ]
+  },
   "ignorePaths": [
     "projects/ngx-pwa/local-storage/package.json"
   ],
