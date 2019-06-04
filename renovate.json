@@ -1,5 +1,20 @@
 {
   "extends": [
     "config:base"
+  ],
+  "assignees": [
+    "cyrilletuzi"
+  ],
+  "reviewers": [
+    "cyrilletuzi"
+  ],
+  "ignorePaths": [
+    "projects/ngx-pwa/local-storage/package.json"
+  ],
+  "packageRules": [
+    {
+      "packageNames": ["typescript"],
+      "allowedVersions": "<3.5"
+    }
   ]
 }
