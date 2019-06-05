@@ -2,7 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.0.1 (2019-06-05)
+## 6.2.4 & 8.0.1 (2019-06-05)
 
 ### Bug fix
 
