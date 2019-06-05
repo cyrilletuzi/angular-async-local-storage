@@ -30,4 +30,7 @@ In some scenarios, `indexedDB`  is not available, so the lib fallbacks to (synch
 If these scenarios are a concern for you, it impacts what you can store.
 See the [serialization guide](./SERIALIZATION.md) for full details.
 
+Also, if the "Block all cookies" option has been enabled in the browser,
+then all storages are blocked. In this case, the lib will fallback to an in-memory storage.
+
 [Back to general documentation](../README.md)
