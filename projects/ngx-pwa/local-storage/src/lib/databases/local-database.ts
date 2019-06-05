@@ -20,45 +20,52 @@ export function localDatabaseFactory(
   platformId: string, LSPrefix: string, IDBDBName: string, IDBStoreName: string,
   IDBDBVersion: number, IDBNoWrap: boolean, oldPrefix: string): LocalDatabase {
 
-  // Do not explicit `window` here, as the global object is not the same in web workers
-  if (isPlatformBrowser(platformId) && (indexedDB !== undefined) && (indexedDB !== null) && ('open' in indexedDB)) {
+  /* When storage is fully disabled in browser (via the "Block all cookies" option),
+   * just trying to check `indexedDB` or `localStorage` variables causes a security exception.
+   * Prevents https://github.com/cyrilletuzi/angular-async-local-storage/issues/118
+   */
+  try {
 
-    /* Check:
-     * - if we are in a browser context (issue: server-side rendering)
-     * - if `indexedDB` exists (issue: IE9)
-     * - it could exist but be `undefined` or `null` (issue: IE / Edge private mode)
-     * - it could exists but not having a working API
-     * Will be the case for:
-     * - IE10+ and all other browsers in normal mode
-     * - Chromium / Safari private mode, but in this case, data will be swiped when the user leaves the app */
-    return new IndexedDBDatabase(IDBDBName, IDBStoreName, IDBDBVersion, IDBNoWrap, oldPrefix);
+    // Do not explicit `window` here, as the global object is not the same in web workers
+    if (isPlatformBrowser(platformId) && (indexedDB !== undefined) && (indexedDB !== null) && ('open' in indexedDB)) {
 
-  } else if (isPlatformBrowser(platformId)
-  && (localStorage !== undefined) && (localStorage !== null) && ('getItem' in localStorage)) {
+      /* Check:
+      * - if we are in a browser context (issue: server-side rendering)
+      * - if `indexedDB` exists (issue: IE9)
+      * - it could exist but be `undefined` or `null` (issue: IE / Edge private mode)
+      * - it could exists but not having a working API
+      * Will be the case for:
+      * - IE10+ and all other browsers in normal mode
+      * - Chromium / Safari private mode, but in this case, data will be swiped when the user leaves the app */
+      return new IndexedDBDatabase(IDBDBName, IDBStoreName, IDBDBVersion, IDBNoWrap, oldPrefix);
 
-    /* Check:
-     * - if we are in a browser context (issue: server-side rendering)
-     * - if `localStorage` exists (to be sure)
-     * - it could exists but not having a working API
-     * Will be the case for:
-     * - IE9
-     * - Safari cross-origin iframes, detected later in `IndexedDBDatabase.connect()`
-     * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/42}
-     * - IE / Edge / Firefox private mode, but in this case, data will be swiped when the user leaves the app
-     * For Firefox, can only be detected later in `IndexedDBDatabase.connect()`
-     * @see {@link https://bugzilla.mozilla.org/show_bug.cgi?id=781982}
-     */
-    return new LocalStorageDatabase(LSPrefix, oldPrefix);
+    } else if (isPlatformBrowser(platformId)
+    && (localStorage !== undefined) && (localStorage !== null) && ('getItem' in localStorage)) {
 
-  } else {
+      /* Check:
+      * - if we are in a browser context (issue: server-side rendering)
+      * - if `localStorage` exists (to be sure)
+      * - it could exists but not having a working API
+      * Will be the case for:
+      * - IE9
+      * - Safari cross-origin iframes, detected later in `IndexedDBDatabase.connect()`
+      * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/42}
+      * - IE / Edge / Firefox private mode, but in this case, data will be swiped when the user leaves the app
+      * For Firefox, can only be detected later in `IndexedDBDatabase.connect()`
+      * @see {@link https://bugzilla.mozilla.org/show_bug.cgi?id=781982}
+      */
+      return new LocalStorageDatabase(LSPrefix, oldPrefix);
 
-    /* Will be the case for:
-     * - Server-side rendering
-     * - All other non-browser context
-     */
-    return new MemoryDatabase();
+    }
 
-  }
+  } catch {}
+
+  /* Will be the case for:
+   * - In browsers if storage has been fully disabled (via the "Block all cookies" option)
+   * - Server-side rendering
+   * - All other non-browser context
+   */
+  return new MemoryDatabase();
 
 }
 
