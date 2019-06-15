@@ -17,5 +17,7 @@
       "packageNames": ["typescript"],
       "allowedVersions": "<3.5"
     }
-  ]
+  ],
+  "schedule": ["after 10am and before 5pm on every weekday"],
+  "timezone": "Europe/Paris"
 }
