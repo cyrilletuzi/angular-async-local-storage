@@ -52,7 +52,7 @@
     "localforage": "1.7.3",
     "ng-packagr": "5.3.0",
     "protractor": "5.4.2",
-    "ts-node": "8.2.0",
+    "ts-node": "8.3.0",
     "tsickle": "0.35.0",
     "tslint": "5.17.0",
     "typescript": "3.4.5",
