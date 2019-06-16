@@ -22,6 +22,6 @@
       "automerge": false
     }
   ],
-  "schedule": ["after 9am and before 10am on friday"],
+  "schedule": ["after 9am and before 12am on friday"],
   "timezone": "Europe/Paris"
 }
