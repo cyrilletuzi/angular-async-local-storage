@@ -16,6 +16,10 @@
     {
       "packageNames": ["typescript"],
       "allowedVersions": "<3.5"
+    },
+    {
+      "packagePatterns": ["^@angular"],
+      "automerge": false
     }
   ],
   "schedule": ["after 9am and before 10am on friday"],
