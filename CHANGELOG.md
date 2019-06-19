@@ -2,6 +2,13 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 6.2.5 & 8.0.2 (2019-06-19)
+
+### Bug fix
+
+- Same fix as previous release, but makes it work for all browsers
+(fixes [#118](https://github.com/cyrilletuzi/angular-async-local-storage/issues/118))
+
 ## 6.2.4 & 8.0.1 (2019-06-05)
 
 ### Bug fix
