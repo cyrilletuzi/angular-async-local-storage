@@ -318,6 +318,11 @@ export class StorageMap {
             /* Fallback to `localStorage` if available */
             this.database = new LocalStorageDatabase(this.LSPrefix, this.oldPrefix);
 
+          } else {
+
+            /* Fallback to memory storage otherwise */
+            this.database = new MemoryDatabase();
+
           }
 
         } catch {
