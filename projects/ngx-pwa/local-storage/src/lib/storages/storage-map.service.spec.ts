@@ -897,25 +897,6 @@ describe('StorageMap', () => {
 
     });
 
-    it('automatic storage injection', (done) => {
-
-      const localStorageService = TestBed.get<StorageMap>(StorageMap) as StorageMap;
-
-      const index = 'index';
-      const value = `value${Date.now()}`;
-
-      localStorageService.set(index, value).pipe(
-        mergeMap(() => localStorageService.get(index))
-      ).subscribe((data) => {
-
-        expect(data).toBe(value);
-
-        closeAndDeleteDatabase(done, localStorageService);
-
-      });
-
-    });
-
   });
 
 });
