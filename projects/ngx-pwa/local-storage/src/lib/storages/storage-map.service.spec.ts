@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import { mergeMap, tap, filter } from 'rxjs/operators';
 
 import { StorageMap } from './storage-map.service';
@@ -894,25 +893,6 @@ describe('StorageMap', () => {
 
       // tslint:disable-next-line: no-string-literal
       expect(localStorageService.fallbackBackingStore.prefix).toBe(`${prefix}_`);
-
-    });
-
-    it('automatic storage injection', (done) => {
-
-      const localStorageService = TestBed.get<StorageMap>(StorageMap) as StorageMap;
-
-      const index = 'index';
-      const value = `value${Date.now()}`;
-
-      localStorageService.set(index, value).pipe(
-        mergeMap(() => localStorageService.get(index))
-      ).subscribe((data) => {
-
-        expect(data).toBe(value);
-
-        closeAndDeleteDatabase(done, localStorageService);
-
-      });
 
     });
 

@@ -16,7 +16,7 @@ interface Data {
     <p id="clear">{{clear}}</p>
     <p id="length">{{length$ | async}}</p>
     <p id="keys">{{keys$ | async | json}}</p>
-    <p id="has" [hidden]="has$ | async">Should not be seen</p>
+    <p id="has" [hidden]="has">Should not be seen</p>
     <iframe src="http://localhost:8080"></iframe>
   `
 })
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   size$!: Observable<number>;
   length$!: Observable<number>;
   keys$!: Observable<string[]>;
-  has$!: Observable<boolean>;
+  has = false;
 
   constructor(private localStorage: LocalStorage, private storageMap: StorageMap) {}
 
@@ -77,9 +77,11 @@ export class AppComponent implements OnInit {
         toArray(),
       );
 
-      this.has$ = this.localStorage.setItem('has', 'test').pipe(
+      this.localStorage.setItem('has', 'test').pipe(
         mergeMap(() => this.storageMap.has('has')),
-      );
+      ).subscribe((has) => {
+        this.has = has;
+      });
 
     });
 
