@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import { mergeMap, tap, filter } from 'rxjs/operators';
 
 import { StorageMap } from './storage-map.service';
