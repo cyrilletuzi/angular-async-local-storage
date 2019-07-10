@@ -10,8 +10,8 @@ the library will fall back to `localStorage`, where JSON serialization will happ
 Everything can be serialized (`JSON.stringify()`), but when you unserialize (`JSON.parse()`),
 you'll only get a JSON, ie. a primitive type, an array or a *literal* object.
 
-So if you store an instance of a specific class in `localStorage`, like `Map`, `Set` or `Blob`,
-it won't throw but what you will get with `.setItem()` won't be a `Map`, `Set` or `Blob`, but just a literal object.
+So if you store an instance of a specific class in `localStorage`, like `Date`, `Map`, `Set` or `Blob`,
+what you'll get then with `.setItem()` won't be a `Map`, `Set` or `Blob`, but just a literal object.
 
 So, it's safer to **stick to JSON-compatible values**.
 
@@ -24,6 +24,20 @@ you'll have to manage your own validation (which is possible but painful).
 ## Examples
 
 Here are some examples of the recommended way to store special structures.
+
+### Storing a `Date`
+
+```typescript
+const someDate = new Date('2019-07-19');
+
+/* Writing */
+this.storageMap.set('date', someDate.toJSON()).subscribe();
+
+/* Reading */
+this.storageMap.get<string>('date', { type: 'string' }).pipe(
+  map((dateJSON) => new Date(dateJSON)),
+).subscribe((date) => {});
+```
 
 ### Storing a `Map`
 

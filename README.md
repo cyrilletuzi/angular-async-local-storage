@@ -165,7 +165,7 @@ this.localStorage.setItem('user', user).subscribe(() => {});
 You can store any value, without worrying about serializing. But note that:
 - storing `null` or `undefined` makes no sense and can cause issues in some browsers, so the item will be removed instead,
 - you should stick to JSON data, ie. primitive types, arrays and *literal* objects.
-`Map`, `Set`, `Blob` and other special structures can cause issues in some scenarios.
+`Date`, `Map`, `Set`, `Blob` and other special structures can cause issues in some scenarios.
 See the [serialization guide](./docs/SERIALIZATION.md) for more details.
 
 ### Deleting data
