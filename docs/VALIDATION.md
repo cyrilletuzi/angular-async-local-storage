@@ -322,4 +322,47 @@ are *not* available in this lib:
 - `oneOf`
 - array for `type`
 
+## Custom validation
+
+Validating via this lib is recommended but not required.
+You can use all the native JavaScript operators and functions to validate by yourself.
+For example:
+
+```typescript
+this.storageMap.get('test').subscribe((result) => {
+
+  result; // type: unknown
+
+  if (typeof result === 'string') {
+    result; // type: string
+    result.substr(0, 2); // OK
+  }
+
+});
+```
+
+**TypeScript will narrow the data type as you validate**.
+
+You can also use any other library to validate your data. But in this case,
+TypeScript may not be able to narrow the data type automatically.
+You can help TypeScript like this:
+
+```typescript
+import { isString } from 'some-library';
+
+this.storageMap.get('test').subscribe((unsafeResult) => {
+
+  if (isString(unsafeResult)) {
+
+    unsafeResult; // type: still unknown
+
+    const result = unsafeResult as string;
+    result; // type: string
+    result.substr(0, 2); // OK
+
+  }
+
+});
+```
+
 [Back to general documentation](../README.md)
