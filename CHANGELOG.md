@@ -2,7 +2,23 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.0.0-rc.0 (2019-05-28)
+## 6.2.5 & 8.0.2 (2019-06-19)
+
+### Bug fix
+
+- Same fix as previous release, but makes it work for all browsers
+(fixes [#118](https://github.com/cyrilletuzi/angular-async-local-storage/issues/118))
+
+## 6.2.4 & 8.0.1 (2019-06-05)
+
+### Bug fix
+
+- When storage is fully disabled in browser (via the "Block all cookies" option),
+just trying to check `indexedDB` or `localStorage` variables causes a security exception,
+and all Angular code will fail. So the lib is now catching the error,
+and fallbacks to in-memory storage in this case.
+
+## 8.0.0 (2019-05-29)
 
 **A [full migration guide to version 8](./docs/MIGRATION_TO_V8.md) is available.**
 

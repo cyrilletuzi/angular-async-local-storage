@@ -379,8 +379,30 @@ export class StorageMap {
       /* Check if `indexedDB` is broken based on error message (the specific error class seems to be lost in the process) */
       if ((error !== undefined) && (error !== null) && (error.message === IDB_BROKEN_ERROR)) {
 
-        /* Fallback to `localStorage` */
-        this.database = new LocalStorageDatabase(this.LSPrefix, this.oldPrefix);
+        /* When storage is fully disabled in browser (via the "Block all cookies" option),
+         * just trying to check `localStorage` variable causes a security exception.
+         * Prevents https://github.com/cyrilletuzi/angular-async-local-storage/issues/118
+         */
+        try {
+
+          if ('getItem' in localStorage) {
+
+            /* Fallback to `localStorage` if available */
+            this.database = new LocalStorageDatabase(this.LSPrefix, this.oldPrefix);
+
+          } else {
+
+            /* Fallback to memory storage otherwise */
+            this.database = new MemoryDatabase();
+
+          }
+
+        } catch {
+
+          /* Fallback to memory storage otherwise */
+          this.database = new MemoryDatabase();
+
+        }
 
         /* Redo the operation */
         return operationCallback();

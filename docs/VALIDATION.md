@@ -171,33 +171,10 @@ and then `get()` will fail.
 So when storing complex objects, it's better to check the structure when writing too:
 
 ```typescript
-import { JSONSchema } from '@ngx-pwa/local-storage';
-
-interface User {
-  firstName: string;
-  lastName: string;
-  age?: number;
-}
-
-const user: User = {
-  firstName: `Henri`,
-  lastName: `Bergson`,
-}
-
-const schema: JSONSchema = {
-  type: 'object',
-  properties: {
-    firstName: { type: 'string' },
-    lastName: { type: 'string' },
-    age: { type: 'number' },
-  },
-  required: ['firstName', 'lastName']
-};
-
 this.storageMap.set('test', user, schema)
 ```
 
-If can also use your environnements to do this check only in development:
+You can also use your environnements to do this check only in development:
 
 ```typescript
 this.storageMap.set('test', user, (!environment.production) ? schema : undefined)
@@ -319,16 +296,6 @@ this.localStorage.getItem('notExisting', { type: 'string' })
 });
 ```
 
-## Validation when writing
-
-While this may be superfluous for primitive types, you can also validate while storing,
-to avoid a mismatch between your JSON schema and the object you're storing,
-which would result in a future error when trying to read the data.
-
-```typescript
-this.storageMap.set('test', 'value', { type: 'string' })
-```
-
 ## Differences from the standard
 
 The role of the validation feature in this lib is to check the data against corruption,
@@ -354,5 +321,48 @@ are *not* available in this lib:
 - `anyOf`
 - `oneOf`
 - array for `type`
+
+## Custom validation
+
+Validating via this lib is recommended but not required.
+You can use all the native JavaScript operators and functions to validate by yourself.
+For example:
+
+```typescript
+this.storageMap.get('test').subscribe((result) => {
+
+  result; // type: unknown
+
+  if (typeof result === 'string') {
+    result; // type: string
+    result.substr(0, 2); // OK
+  }
+
+});
+```
+
+**TypeScript will narrow the data type as you validate**.
+
+You can also use any other library to validate your data. But in this case,
+TypeScript may not be able to narrow the data type automatically.
+You can help TypeScript like this:
+
+```typescript
+import { isString } from 'some-library';
+
+this.storageMap.get('test').subscribe((unsafeResult) => {
+
+  if (isString(unsafeResult)) {
+
+    unsafeResult; // type: still unknown
+
+    const result = unsafeResult as string;
+    result; // type: string
+    result.substr(0, 2); // OK
+
+  }
+
+});
+```
 
 [Back to general documentation](../README.md)

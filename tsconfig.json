@@ -5,10 +5,10 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "importHelpers": true,
     "target": "es2015",
     "typeRoots": [
@@ -31,5 +31,9 @@
         "dist/ngx-pwa/local-storage/*"
       ]
     }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
   }
 }

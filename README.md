@@ -45,7 +45,7 @@ Install the right version according to your Angular one via [`npm`](http://npmjs
 
 ```bash
 # For Angular 8:
-npm install @ngx-pwa/local-storage@next
+npm install @ngx-pwa/local-storage
 
 # For Angular 6 & 7:
 npm install @ngx-pwa/local-storage@6
@@ -165,7 +165,7 @@ this.localStorage.setItem('user', user).subscribe(() => {});
 You can store any value, without worrying about serializing. But note that:
 - storing `null` or `undefined` makes no sense and can cause issues in some browsers, so the item will be removed instead,
 - you should stick to JSON data, ie. primitive types, arrays and *literal* objects.
-`Map`, `Set`, `Blob` and other special structures can cause issues in some scenarios.
+`Date`, `Map`, `Set`, `Blob` and other special structures can cause issues in some scenarios.
 See the [serialization guide](./docs/SERIALIZATION.md) for more details.
 
 ### Deleting data
@@ -214,7 +214,8 @@ Note you'll only get *one* value: the `Observable` is here for asynchrony but is
 emit again when the stored data is changed. And it's normal: if app data change, it's the role of your app
 to keep track of it, not of this lib. See [#16](https://github.com/cyrilletuzi/angular-async-local-storage/issues/16) 
 for more context and [#4](https://github.com/cyrilletuzi/angular-async-local-storage/issues/4)
-for an example. 
+for an example. A `watch()` method may come soon
+(see [#108](https://github.com/cyrilletuzi/angular-async-local-storage/pull/108))
 
 If you need to watch the value,
 version 8.1 introduced a `watch()` method, see the [watching guide](./docs/WATCHING.md).
@@ -232,7 +233,7 @@ this.storageMap.get('test', { type: 'string' }).subscribe({
 });
 ```
 
-See the [full validation guide](./docs/VALIDATION.md) to see how to validate all common scenarios.
+**See the [full validation guide](./docs/VALIDATION.md) to see how to validate all common scenarios.**
 
 ### Subscription
 
@@ -261,23 +262,7 @@ this.storageMap.get('color').pipe(
 ).subscribe((result) => {});
 ```
 
-Could happen to anyone:
-- `.setItem()`: storage is full (`DOMException` with name `'QuotaExceededError`)
-
-Could only happen when in `localStorage` fallback:
-- `.setItem()`: error in JSON serialization because of circular references (`TypeError`)
-- `.setItem()`: trying to store data that can't be serialized like `Blob`, `Map` or `Set` (`SerializationError` from this lib)
-- `.getItem()`: error in JSON unserialization (`SyntaxError`)
-
-Should only happen if data was corrupted or modified from outside of the lib:
-- `.getItem()`: data invalid against your JSON schema (`ValidationError` from this lib)
-- any method when in `indexedDB`: database store has been deleted (`DOMException` with name `NotFoundError`)
-
-Could only happen when in Safari private mode:
-- `.setItem()`: trying to store a `Blob`
-
-Other errors are supposed to be catched or avoided by the lib,
-so if you were to run into an unlisted error, please file an issue.
+See the [errors guide](./docs/ERRORS.md) for some details about what errors can happen.
 
 ### `Map`-like operations
 
@@ -297,7 +282,7 @@ For example, it allows to implement a multiple databases scenario.
 We follow [Angular LTS support](https://angular.io/guide/releases),
 meaning we support Angular >= 6, until November 2019.
 
-This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler).
+This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler) and Ivy.
 
 This module supports [Universal server-side rendering](https://github.com/angular/universal)
 via a mock storage.

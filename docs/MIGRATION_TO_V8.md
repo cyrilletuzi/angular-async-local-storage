@@ -17,7 +17,7 @@ It was time to do a full review (and rewrite).
 So yes, there are a lot of changes, but it's for good:
 - many things (like validation) have been simplified
 - more advanced and some long-awaited features (like watching an item
-[#101](https://github.com/cyrilletuzi/angular-async-local-storage/pull/101)) are now possible
+[#108](https://github.com/cyrilletuzi/angular-async-local-storage/pull/108)) are now possible
 - errors are managed in a better way, fixing many edgy cases
 - and more!
 
@@ -39,7 +39,7 @@ A full [validation guide](./VALIDATION.md) is available.
 
 1. Update the lib:
 ```
-npm install @ngx-pwa/local-storage@next
+npm install @ngx-pwa/local-storage@8
 ```
 
 2. Start your project: problems will be seen at compilation.
@@ -203,7 +203,7 @@ this.localStorage.getItem('notexisting').subscribe((data) => {
 });
 ```
 
-## The good part: simplication changes
+## The good part: simplification changes
 
 The following changes are not required but recommended.
 **Previous code will still work** for now, but *for new code, follow these new guidelines*.
