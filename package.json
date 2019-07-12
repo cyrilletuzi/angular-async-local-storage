@@ -13,7 +13,7 @@
     "test:ivy": "ng e2e ivy",
     "test:ivy:fix": "./node_modules/.bin/ivy-ngcc -s ./dist",
     "lint": "ng lint",
-    "publish": "npm run lint && npm test && npm run build && npm publish dist/ngx-pwa/local-storage --access public",
+    "publish": "npm run lint && npm test && npm run build && npm publish dist/ngx-pwa/local-storage --access public --tag next",
     "ci:ng80": "npm install typescript@3.4.1 rxjs@6.4.0 zone.js@0.9.1 @angular/common@8.0.0 @angular/compiler@8.0.0 @angular/core@8.0.0 @angular/platform-browser@8.0.0 @angular/platform-browser-dynamic@8.0.0 @angular/router@8.0.0 @angular/cli@8.0.1 @angular/compiler-cli@8.0.0 @angular-devkit/build-angular@0.800.1 @angular-devkit/build-ng-packagr@0.800.1"
   },
   "private": true,
