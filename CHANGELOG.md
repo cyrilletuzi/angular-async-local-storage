@@ -2,6 +2,17 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 8.1.0-beta.0 (2019-07-12)
+
+### Feature
+
+- New `.watch()` method on `StorageMap` service
+see [#108](https://github.com/cyrilletuzi/angular-async-local-storage/pull/108/)
+
+To test: `npm install @ngx-pwa/local-storage@next`
+
+As a reminder, beta versions are for testing purposes only. Do **not** use in production.
+
 ## 6.2.5 & 8.0.2 (2019-06-19)
 
 ### Bug fix
