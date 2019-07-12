@@ -7,7 +7,7 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 ### Feature
 
 - New `.watch()` method on `StorageMap` service
-see [#108](https://github.com/cyrilletuzi/angular-async-local-storage/pull/108/)
+(see [#108](https://github.com/cyrilletuzi/angular-async-local-storage/pull/108/))
 
 To test: `npm install @ngx-pwa/local-storage@next`
 
