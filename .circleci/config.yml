@@ -5,20 +5,14 @@ jobs: # a collection of steps
       - image: circleci/node:10 # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout
-      - run:
-          name: install-npm-wee
-          command: npm ci
       - run: # run tests
           name: lint
-          command: npm run lint
+          command: npm ci && npm run lint
   nglatest:
     docker: # run the steps with Docker
       - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout
-      - run:
-          name: install-npm-wee
-          command: npm ci
       - run: # run tests
           name: test
           command: npm run ci:nglatest
@@ -28,9 +22,6 @@ jobs: # a collection of steps
     steps: # a collection of executable commands
       - checkout
       - run:
-          name: install-npm-wee
-          command: npm ci
-      - run:
           name: test
           command: npm run ci:ng80
   ngnext:
@@ -38,9 +29,6 @@ jobs: # a collection of steps
       - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout
-      - run:
-          name: install-npm-wee
-          command: npm ci
       - run: # run tests
           name: test
           command: npm run ci:ngnext
