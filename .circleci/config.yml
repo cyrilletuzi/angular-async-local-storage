@@ -5,58 +5,50 @@ jobs: # a collection of steps
       - image: circleci/node:10 # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout
-      - restore_cache: # special step to restore the dependency cache
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: install-npm-wee
-          command: npm install
-      - save_cache: # special step to save the dependency cache
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - ./node_modules
+          command: npm ci
       - run: # run tests
           name: lint
           command: npm run lint
-  test:
+  nglatest:
     docker: # run the steps with Docker
       - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout
-      - restore_cache: # special step to restore the dependency cache
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: install-npm-wee
-          command: npm install
-      - save_cache: # special step to save the dependency cache
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - ./node_modules
+          command: npm ci
       - run: # run tests
           name: test
-          command: npm test && npm run test:ivy
+          command: npm ci:nglatest
   ng80:
     docker: # run the steps with Docker
       - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout
-      - restore_cache: # special step to restore the dependency cache
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: install-npm-wee
-          command: npm install
+          command: npm ci
       - run:
-          name: downgrade
+          name: test
           command: npm run ci:ng80
+  ngnext:
+    docker: # run the steps with Docker
+      - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
+    steps: # a collection of executable commands
+      - checkout
+      - run:
+          name: install-npm-wee
+          command: npm ci
       - run: # run tests
           name: test
-          command: npm test
+          command: npm ci:ngnext
 workflows:
   version: 2
   test:
     jobs:
       - lint
-      - test
+      - nglatest
       - ng80
+      - ngnext
