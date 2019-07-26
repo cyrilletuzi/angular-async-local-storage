@@ -12,7 +12,7 @@
     "test:interoperability": "ng e2e localforage",
     "test:ivy": "ng e2e ivy",
     "lint": "ng lint",
-    "publish": "npm run lint && npm test && npm run build && npm publish dist/ngx-pwa/local-storage --access public",
+    "publish": "npm run lint && npm run build && npm test && npm publish dist/ngx-pwa/local-storage --access public",
     "ci:nglatest": "npm run build && npm run test && npm run test:ivy",
     "ci:ngnext": "npm run build && @angular/common@next @angular/compiler@next @angular/core@next @angular/platform-browser@next @angular/platform-browser-dynamic@next @angular/router@next @angular/cli@next @angular/compiler-cli@next @angular-devkit/build-angular@next @angular-devkit/build-ng-packagr@next && npm run test && npm run test:ivy",
     "ci:ng80": "npm run build && npm install typescript@3.4.1 rxjs@6.4.0 zone.js@0.9.1 @angular/common@8.0.0 @angular/compiler@8.0.0 @angular/core@8.0.0 @angular/platform-browser@8.0.0 @angular/platform-browser-dynamic@8.0.0 @angular/router@8.0.0 @angular/cli@8.0.1 @angular/compiler-cli@8.0.0 @angular-devkit/build-angular@0.800.1 @angular-devkit/build-ng-packagr@0.800.1 && npm run test"
