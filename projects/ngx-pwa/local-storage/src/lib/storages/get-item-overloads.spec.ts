@@ -656,22 +656,4 @@ describe('getItem() API prior to v8', () => {
 
   });
 
-  it('schema with unsupported options', (done) => {
-
-    localStorageService.getItem('test', { schema: {
-      type: 'object',
-      properties: {
-        test: { type: 'string' }
-      },
-      ddd: 'ddd'
-    } }).subscribe((_: any) => {
-
-      expect().nothing();
-
-      done();
-
-    });
-
-  });
-
 });
