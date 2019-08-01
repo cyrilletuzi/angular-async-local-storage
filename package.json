@@ -6,12 +6,13 @@
     "start": "ng serve demo",
     "start:iframe": "ng serve iframe --port 8080",
     "build": "ng build ngx-pwa-local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage",
-    "test": "npm run test:unit && npm run test:e2e:demo && npm run test:e2e:interoperability",
+    "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "ng test ngx-pwa-local-storage --watch false",
+    "test:e2e": "npm run webdriver && npm run test:e2e:demo && npm run test:e2e:interoperability",
     "test:e2e:demo": "ng e2e demo",
     "test:e2e:interoperability": "ng e2e localforage",
     "test:ivy": "ng e2e ivy",
-    "webdriver": "./node_modules/webdriver-manager/bin/webdriver-manager update",
+    "webdriver": "webdriver-manager update",
     "lint": "ng lint",
     "publish": "npm run lint && npm run build && npm test && npm publish dist/ngx-pwa/local-storage --access public",
     "ci:ngnext": "npm ci && npm run build && npm install @angular/common@next @angular/compiler@next @angular/core@next @angular/platform-browser@next @angular/platform-browser-dynamic@next @angular/router@next @angular/cli@next @angular/compiler-cli@next @angular-devkit/build-angular@next @angular-devkit/build-ng-packagr@next && npm run test && npm run test:ivy",
@@ -57,7 +58,6 @@
     "tsickle": "0.36.0",
     "tslint": "5.18.0",
     "typescript": "3.5.3",
-    "webdriver-manager": "^12.1.6",
     "zone.js": "^0.9.1"
   }
 }
