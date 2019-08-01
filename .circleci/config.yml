@@ -6,16 +6,37 @@ jobs: # a collection of steps
     steps: # a collection of executable commands
       - checkout
       - run: # run tests
+          name: install
+          command: npm ci
+      - run: # run tests
           name: lint
-          command: npm ci && npm run lint
+          command: npm run lint
   nglatest:
     docker: # run the steps with Docker
       - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout
       - run: # run tests
-          name: test
-          command: npm run ci:nglatest
+          name: install
+          command: npm ci
+      - run: # run tests
+          name: build
+          command: npm run build
+      - run: # run tests
+          name: test-unit
+          command: npm run test:unit
+      - run: # run tests
+          name: webdriver
+          command: npm install webdriver-manager -g && webdriver-manager update
+      - run: # run tests
+          name: test-e2e-demo
+          command: npm run test:e2e:demo
+      - run: # run tests
+          name: test-e2e-interoperability
+          command: npm run test:e2e:interoperability
+      - run: # run tests
+          name: test-ivy
+          command: npm run test:ivy
   ng80:
     docker: # run the steps with Docker
       - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
