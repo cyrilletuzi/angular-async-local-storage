@@ -1,56 +1,56 @@
-version: 2 # use CircleCI 2.0
-jobs: # a collection of steps
+version: 2
+jobs:
   lint:
-    docker: # run the steps with Docker
-      - image: circleci/node:10 # ...with this image as the primary container; this is where all `steps` will run
-    steps: # a collection of executable commands
+    docker:
+      - image: circleci/node:10
+    steps:
       - checkout
-      - run: # run tests
+      - run:
           name: install
           command: npm ci
-      - run: # run tests
+      - run:
           name: lint
           command: npm run lint
   nglatest:
-    docker: # run the steps with Docker
-      - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
-    steps: # a collection of executable commands
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
       - checkout
-      - run: # run tests
+      - run:
           name: install
           command: npm ci
-      - run: # run tests
+      - run:
           name: build
           command: npm run build
-      - run: # run tests
+      - run:
           name: test-unit
           command: npm run test:unit
-      - run: # run tests
+      - run:
           name: webdriver
-          command: npm install webdriver-manager -g && webdriver-manager update
-      - run: # run tests
+          command: sudo npm install webdriver-manager -g && webdriver-manager update
+      - run:
           name: test-e2e-demo
           command: npm run test:e2e:demo
-      - run: # run tests
+      - run:
           name: test-e2e-interoperability
           command: npm run test:e2e:interoperability
-      - run: # run tests
+      - run:
           name: test-ivy
           command: npm run test:ivy
   ng80:
-    docker: # run the steps with Docker
-      - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
-    steps: # a collection of executable commands
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
       - checkout
       - run:
           name: test
           command: npm run ci:ng80
   ngnext:
-    docker: # run the steps with Docker
-      - image: circleci/node:10-browsers # ...with this image as the primary container; this is where all `steps` will run
-    steps: # a collection of executable commands
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
       - checkout
-      - run: # run tests
+      - run:
           name: test
           command: npm run ci:ngnext
 workflows:
