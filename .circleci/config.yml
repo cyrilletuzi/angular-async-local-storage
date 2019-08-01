@@ -27,7 +27,7 @@ jobs:
           command: npm run test:unit
       - run:
           name: webdriver
-          command: sudo npm install webdriver-manager -g && sudo webdriver-manager update
+          command: npm run webdriver
       - run:
           name: test-e2e-demo
           command: npm run test:e2e:demo
