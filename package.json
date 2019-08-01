@@ -6,7 +6,7 @@
     "start": "ng serve demo",
     "start:iframe": "ng serve iframe --port 8080",
     "build": "ng build ngx-pwa-local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage",
-    "test": "npm run test:specs && webdriver-manager update && npm run test:demo && npm run test:interoperability",
+    "test": "npm run test:specs && webdriver-manager update --versions.chrome 76 && npm run test:demo && npm run test:interoperability",
     "test:specs": "ng test ngx-pwa-local-storage --watch false",
     "test:demo": "ng e2e demo",
     "test:interoperability": "ng e2e localforage",
@@ -57,7 +57,7 @@
     "tsickle": "0.36.0",
     "tslint": "5.18.0",
     "typescript": "3.5.3",
-    "webdriver-manager": "12.1.6",
+    "webdriver-manager": "^12.1.6",
     "zone.js": "^0.9.1"
   }
 }
