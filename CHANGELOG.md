@@ -2,7 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.1.0-beta.0 (2019-07-12)
+## 8.2.0-beta.0 (2019-08-17)
 
 ### Feature
 
@@ -12,6 +12,12 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 To test: `npm install @ngx-pwa/local-storage@next`
 
 As a reminder, beta versions are for testing purposes only. Do **not** use in production.
+
+## 8.1.0 (2019-08-17)
+
+### Performance
+
+- Simpler and quicker way to store a value with `indexedDb`
 
 ## 6.2.5 & 8.0.2 (2019-06-19)
 
