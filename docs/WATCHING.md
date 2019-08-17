@@ -1,6 +1,6 @@
 # Watching guide
 
-*Since version 8.1 of this lib*, you can now watch an item via the `StorageMap` service.
+*Since version 8.2 of this lib*, you can now watch an item via the `StorageMap` service.
 
 Notes:
 
