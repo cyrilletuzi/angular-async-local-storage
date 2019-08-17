@@ -173,34 +173,15 @@ export class IndexedDBDatabase implements LocalDatabase {
     return this.transaction('readwrite').pipe(
       mergeMap((store) => {
 
-        /* Check if the key already exists or not
-         * `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge).
-         * In older browsers, the value is checked instead, but it could lead to an exception
-         * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
-         */
-        const requestGet = this.getKeyRequest(store, key);
+        /* Prior to v8, data was wrapped in a `{ value: ... }` object */
+        const dataToStore = this.noWrap ? data : { [this.wrapIndex]: data };
 
-        /* Manage success and error events, and get the request result */
-        return this.requestEventsAndMapTo(requestGet, () => requestGet.result).pipe(
-          mergeMap((existingEntry) => {
+        /* Add if the item is not existing yet, or update otherwise */
+        const request = store.put(dataToStore, key);
 
-            /* It is very important the second request is done from the same transaction/store as the previous one,
-             * otherwise it could lead to concurrency failures
-             * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/47 */
+        /* Manage success and error events, and map to `true` */
+        return this.requestEventsAndMapTo(request, () => undefined);
 
-            /* Prior to v8, data was wrapped in a `{ value: ... }` object */
-            const dataToStore = this.noWrap ? data : { [this.wrapIndex]: data };
-
-            /* Add if the item is not existing yet, or update otherwise */
-            const requestSet = (existingEntry === undefined) ?
-              store.add(dataToStore, key) :
-              store.put(dataToStore, key);
-
-            /* Manage success and error events, and map to `true` */
-            return this.requestEventsAndMapTo(requestSet, () => undefined);
-
-          }),
-        );
       }),
       /* The observable will complete after the first value */
       first(),
@@ -306,8 +287,13 @@ export class IndexedDBDatabase implements LocalDatabase {
     return this.transaction('readonly').pipe(
       mergeMap((store) => {
 
-        /* Check if the key exists in the store */
-        const request = this.getKeyRequest(store, key);
+        /* Check if the key exists in the store
+         * `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge).
+         * In older browsers, the value is checked instead, but it could lead to an exception
+         * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
+         * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69
+         */
+        const request =  ('getKey' in store) ? store.getKey(key) : (store as IDBObjectStore).get(key);
 
         /* Manage success and error events, and map to a boolean based on the existence of the key */
         return this.requestEventsAndMapTo(request, () => (request.result !== undefined) ? true : false);
@@ -459,23 +445,6 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Choose the first event to occur */
     return race([success$, error$]);
-
-  }
-
-  /**
-   * Check if the key exists in the store
-   * @param store Objet store on which to perform the request
-   * @param key Key to check
-   * @returns An `indexedDB` request
-   */
-  protected getKeyRequest(store: IDBObjectStore, key: string): IDBRequest {
-
-    /* `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge).
-     * In older browsers, the value is checked instead, but it could lead to an exception
-     * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
-     * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69
-     */
-    return ('getKey' in store) ? store.getKey(key) : (store as IDBObjectStore).get(key);
 
   }
 
