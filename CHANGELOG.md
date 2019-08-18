@@ -17,13 +17,13 @@ To test: `npm install @ngx-pwa/local-storage@next`
 
 ### Error management
 
-- Before v8.2.0, this lib was listening to `indexedDb` *request* `success` event.
+Before v8.2.0, this lib was listening to `indexedDb` *request* `success` event.
 Now it's listening to *transaction* `complete` event.
 
 Except for the special `.keys()` method, all other methods in this lib are doing just one request by transaction.
 So request `success` or transaction `complete` are supposed to be equivalent. But there are rare cases like
 [#162](https://github.com/cyrilletuzi/angular-async-local-storage/issues/162)
-were the transaction could fail even if the request succeeded (meaning the data won't be written on disk).
+where the transaction could fail even if the request succeeded (meaning the data won't be written on disk).
 
 So now it should catch more rare edgy cases, but for nearly everyone it should not change anything.
 But it's still a sensitive change as it concerns asynchrony (the order of operations are not exactly the same),
