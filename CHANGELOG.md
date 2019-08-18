@@ -2,7 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.2.0-beta.0 (2019-08-17)
+## 9.0.0-beta.0 (2019-08-18)
 
 ### Feature
 
@@ -11,7 +11,25 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 
 To test: `npm install @ngx-pwa/local-storage@next`
 
-As a reminder, beta versions are for testing purposes only. Do **not** use in production.
+**As a reminder, beta versions are for testing purposes only. Do *NOT* use in production.**
+
+## 8.2.0-beta.1 (2019-08-18)
+
+### Error management
+
+- Before v8.2.0, this lib was listening to `indexedDb` *request* `success` event.
+Now it's listening to *transaction* `complete` event.
+
+Except for the special `.keys()` method, all other methods in this lib are doing just one request by transaction.
+So request `success` or transaction `complete` are supposed to be equivalent. But there are rare cases like
+[#162](https://github.com/cyrilletuzi/angular-async-local-storage/issues/162)
+were the transaction could fail even if the request succeeded (meaning the data won't be written on disk).
+
+So now it should catch more rare edgy cases, but for nearly everyone it should not change anything.
+But it's still a sensitive change as it concerns asynchrony (the order of operations are not exactly the same),
+so testing is very welcomed.
+
+To test: `npm install @ngx-pwa/local-storage@beta`
 
 ## 8.1.0 (2019-08-17)
 
