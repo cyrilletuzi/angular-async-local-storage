@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
-import { map, mergeMap, first, takeWhile, tap } from 'rxjs/operators';
+import { map, mergeMap, first, takeWhile, tap, mapTo } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { IDBBrokenError } from './exceptions';
@@ -95,13 +95,15 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
-      mergeMap((store) => {
+      mergeMap((transactionData) => {
+
+        const { store, events } = transactionData;
 
         /* Request to know the number of items */
         const request = store.count();
 
-        /* Manage success and error events, and get the result */
-        return this.requestEventsAndMapTo(request, () => request.result);
+        /* Return the result */
+        return events.pipe(map(() => request.result));
 
       }),
       /* The observable will complete after the first value */
@@ -119,13 +121,15 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
-      mergeMap((store) => {
+      mergeMap((transactionData) => {
+
+        const { store, events } = transactionData;
 
         /* Request the value with the key provided by the user */
         const request = store.get(key);
 
-        /* Manage success and error events, and get the result */
-        return this.requestEventsAndMapTo(request, () => {
+        /* Listen events and return the result */
+        return events.pipe(map(() => {
 
           if ((request.result !== undefined) && (request.result !== null)) {
 
@@ -147,7 +151,7 @@ export class IndexedDBDatabase implements LocalDatabase {
           /* Return `undefined` if the value is empty */
           return undefined;
 
-        });
+        }));
 
       }),
       /* The observable will complete after the first value */
@@ -171,16 +175,18 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Open a transaction in write mode */
     return this.transaction('readwrite').pipe(
-      mergeMap((store) => {
+      mergeMap((transactionData) => {
+
+        const { store, events } = transactionData;
 
         /* Prior to v8, data was wrapped in a `{ value: ... }` object */
         const dataToStore = this.noWrap ? data : { [this.wrapIndex]: data };
 
         /* Add if the item is not existing yet, or update otherwise */
-        const request = store.put(dataToStore, key);
+        store.put(dataToStore, key);
 
-        /* Manage success and error events, and map to `true` */
-        return this.requestEventsAndMapTo(request, () => undefined);
+        /* Listen to events and return `undefined` as no value is expected */
+        return events.pipe(mapTo(undefined));
 
       }),
       /* The observable will complete after the first value */
@@ -198,13 +204,15 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Open a transaction in write mode */
     return this.transaction('readwrite').pipe(
-      mergeMap((store) => {
+      mergeMap((transactionData) => {
 
-        /* Deletethe item in store */
-        const request = store.delete(key);
+        const { store, events } = transactionData;
 
-        /* Manage success and error events, and map to `true` */
-        return this.requestEventsAndMapTo(request, () => undefined);
+        /* Delete the item in store */
+        store.delete(key);
+
+        /* Listen to events and return `undefined` as no data is expected here */
+        return events.pipe(mapTo(undefined));
 
       }),
       /* The observable will complete after the first value */
@@ -221,13 +229,15 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Open a transaction in write mode */
     return this.transaction('readwrite').pipe(
-      mergeMap((store) => {
+      mergeMap((transactionData) => {
+
+        const { store, events } = transactionData;
 
         /* Delete all items in object store */
-        const request = store.clear();
+        store.clear();
 
-        /* Manage success and error events, and map to `true` */
-        return this.requestEventsAndMapTo(request, () => undefined);
+        /* Listen to events and return `undefined` as no data is expected here */
+        return events.pipe(mapTo(undefined));
 
       }),
       /* The observable will complete */
@@ -248,7 +258,9 @@ export class IndexedDBDatabase implements LocalDatabase {
        * (as it all starts from a `ReplaySubject` which never ends),
        * but as this method is iterating over multiple values, `first()` **must** be used here */
       first(),
-      mergeMap((store) => {
+      mergeMap((transactionData) => {
+
+        const { store } = transactionData;
 
         /* Open a cursor on the store
          * `.openKeyCursor()` is better for performance, but only available in indexedDB v2 (missing in IE/Edge)
@@ -256,7 +268,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         const request = ('openKeyCursor' in store) ? store.openKeyCursor() : (store as IDBObjectStore).openCursor();
 
         /* Listen to success event */
-        const success$ = this.successEvent(request).pipe(
+        const success$ = fromEvent(request, 'success').pipe(
           /* Stop the `Observable` when the cursor is `null` */
           takeWhile(() => (request.result !== null)),
           /* This lib only allows string keys, but user could have added other types of keys from outside
@@ -267,7 +279,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         );
 
         /* Listen to error event and if so, throw an error */
-        const error$ = this.errorEvent(request);
+        const error$ = fromEvent(request, 'error').pipe(mergeMap(() => throwError(request.error as DOMException)));
 
         /* Choose the first event to occur */
         return race([success$, error$]);
@@ -285,7 +297,9 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
-      mergeMap((store) => {
+      mergeMap((transactionData) => {
+
+        const { store, events } = transactionData;
 
         /* Check if the key exists in the store
          * `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge).
@@ -295,12 +309,12 @@ export class IndexedDBDatabase implements LocalDatabase {
          */
         const request =  ('getKey' in store) ? store.getKey(key) : (store as IDBObjectStore).get(key);
 
-        /* Manage success and error events, and map to a boolean based on the existence of the key */
-        return this.requestEventsAndMapTo(request, () => (request.result !== undefined) ? true : false);
+        /* Listen to events and return `true` or `false` */
+        return events.pipe(map(() => (request.result !== undefined) ? true : false));
 
       }),
       /* The observable will complete */
-      first()
+      first(),
     );
 
   }
@@ -332,7 +346,7 @@ export class IndexedDBDatabase implements LocalDatabase {
     this.createStore(request);
 
     /* Listen to success and error events and choose the first to occur */
-    race([this.successEvent(request), this.errorEvent(request)])
+    race([fromEvent(request, 'success'), fromEvent(request, 'error')])
       /* The observable will complete */
       .pipe(first())
       .subscribe({
@@ -379,19 +393,22 @@ export class IndexedDBDatabase implements LocalDatabase {
   /**
    * Open an `indexedDB` transaction and get our store
    * @param mode `readonly` or `readwrite`
-   * @returns An `indexedDB` store, wrapped in an RxJS `Observable`
+   * @returns An `indexedDB` transaction store and events, wrapped in an RxJS `Observable`
    */
-  protected transaction(mode: IDBTransactionMode): Observable<IDBObjectStore> {
+  protected transaction(mode: IDBTransactionMode): Observable<{
+    store: IDBObjectStore;
+    events: Observable<Event>;
+  }> {
 
     /* From the `indexedDB` connection, open a transaction and get the store */
     return this.database
       .pipe(mergeMap((database) => {
 
-        let store: IDBObjectStore;
+        let transaction: IDBTransaction;
 
         try {
 
-          store = database.transaction([this.storeName], mode).objectStore(this.storeName);
+          transaction = database.transaction([this.storeName], mode);
 
         } catch (error) {
 
@@ -400,51 +417,33 @@ export class IndexedDBDatabase implements LocalDatabase {
 
         }
 
-        return of(store);
+        /* Get the store from the transaction */
+        const store = transaction.objectStore(this.storeName);
+
+        /* Listen transaction `complete` and `error` events */
+        const events = this.listenTransactionEvents(transaction);
+
+        return of({ store, events });
 
       }));
 
   }
 
   /**
-   * Listen to an `indexedDB` success error event
-   * @param request Request to listen
-   * @returns An RxJS `Observable` listening to the success event
+   * Listen transaction `complete` and `error` events
+   * @param transaction Transaction to listen
+   * @returns An `Observable` listening to transaction `complete` and `error` events
    */
-  protected successEvent(request: IDBRequest): Observable<Event> {
+  protected listenTransactionEvents(transaction: IDBTransaction): Observable<Event> {
 
-    return fromEvent(request, 'success');
+    /* Listen to the `complete` event */
+    const complete$ = fromEvent(transaction, 'complete');
 
-  }
-
-  /**
-   * Listen to an `indexedDB` request error event
-   * @param request Request to listen
-   * @returns An RxJS `Observable` listening to the error event and if so, throwing an error
-   */
-  protected errorEvent(request: IDBRequest): Observable<never> {
-
-    return fromEvent(request, 'error').pipe(mergeMap(() => throwError(request.error as DOMException)));
-
-  }
-
-  /**
-   * Listen to an `indexedDB` request success and error event, and map to the wanted value
-   * @param request Request to listen
-   * @param mapCallback Callback returning the wanted value
-   * @returns An RxJS `Observable` listening to request events and mapping to the wanted value
-   */
-  protected requestEventsAndMapTo<T>(request: IDBRequest, mapCallback: () => T): Observable<T> {
-
-    /* Listen to the success event and map to the wanted value
-     * `mapTo()` must not be used here as it would eval `request.result` too soon */
-    const success$ = this.successEvent(request).pipe(map(mapCallback));
-
-    /* Listen to the error event */
-    const error$ = this.errorEvent(request);
+    /* Listen to the `error` event */
+    const error$ = fromEvent(transaction, 'error').pipe(mergeMap(() => throwError(transaction.error)));
 
     /* Choose the first event to occur */
-    return race([success$, error$]);
+    return race([complete$, error$]);
 
   }
 
