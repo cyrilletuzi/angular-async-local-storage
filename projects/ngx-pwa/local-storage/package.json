@@ -31,5 +31,8 @@
     "@angular/core": "^8.0.0-beta || ^8.0.0-rc || ^8.0.0",
     "rxjs": "^6.4.0"
   },
-  "schematics": "./schematics/collection.json"
+  "schematics": "./schematics/collection.json",
+  "ng-update": {
+    "migrations": "./schematics/migration.json"
+  }
 }
