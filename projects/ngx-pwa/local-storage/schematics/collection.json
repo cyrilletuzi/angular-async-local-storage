@@ -3,7 +3,8 @@
   "schematics": {
     "ng-add": {
       "description": "Add @ngx-pwa/local-storage library to the project.",
-      "factory": "./ng-add/index"
+      "factory": "./ng-add/index",
+      "schema": "./ng-add/schema.json"
     }
   }
 }
