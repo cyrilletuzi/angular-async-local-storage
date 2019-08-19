@@ -41,46 +41,20 @@ to be homogeneous with other Angular modules.
 
 ## Getting started
 
-Install the right version according to your Angular one via [`npm`](http://npmjs.com):
+Install with this command:
 
 ```bash
-# For Angular 8:
-npm install @ngx-pwa/local-storage
-
-# For Angular 6 & 7:
-npm install @ngx-pwa/local-storage@6
+ng add @ngx-pwa/local-storage
 ```
 
-The following second setup step is:
-- **only for version >= 8**,
-- not required for the lib to work,
-- **strongly recommended for all new applications**, as it allows interoperability
-and is future-proof, as it should become the default in a future version,
-- **prohibited in applications already using this lib and already deployed in production**,
-as it would break with previously stored data.
-
-```ts
-import { StorageModule } from '@ngx-pwa/local-storage';
-
-@NgModule({
-  imports: [
-    StorageModule.forRoot({
-      IDBNoWrap: true,
-    })
-  ]
-})
-export class AppModule {}
-```
-
-**Must be done at initialization, ie. in `AppModule`, and must not be loaded again in another module.**
+*Done!* You should **stick to this command**. If for any reason it does not work,
+be sure to follow the [manual installation guide](./docs/MANUAL_INSTALLATION.md),
+as there are additionnal steps to do in addition to the package installation.
 
 ### Upgrading
 
 If you still use the old `angular-async-local-storage` package, or to update to new versions,
 see the **[migration guides](./MIGRATION.md).**
-
-Versions 4 & 5, which are *not* supported anymore,
-needed an additional setup step explained in [the old module guide](./docs/OLD_MODULE.md).
 
 ## API
 
