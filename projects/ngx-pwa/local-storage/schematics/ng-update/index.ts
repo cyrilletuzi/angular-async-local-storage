@@ -10,6 +10,7 @@ export function updateToV8(): Rule {
     const angularMajorVersion = getAngularMajorVersion(host);
     const mainPaths = await getAllMainPaths(host);
 
+    /* Update `AppModule` of all projects */
     return chain(mainPaths.map((mainPath) => updateModule(angularMajorVersion, mainPath)));
 
   };

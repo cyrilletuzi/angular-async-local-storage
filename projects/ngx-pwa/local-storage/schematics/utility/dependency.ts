@@ -3,34 +3,32 @@ import { addPackageJsonDependency, NodeDependencyType } from '@schematics/angula
 
 import { packageVersionLatest, packageName } from './config';
 
-function manageDependency(angularMajorVersion: number, overwrite: boolean): Rule {
+export function addDependency(angularMajorVersion: number): Rule {
   return (host: Tree) => {
 
     /* Set lib version depending on Angular version */
     let packageVersion = packageVersionLatest;
 
+    /* Throw on unsupported versions */
     if (angularMajorVersion >= 2 && angularMajorVersion <= 5) {
       throw new SchematicsException('Angular versions < 6 are no longer supported.');
-    } else if (angularMajorVersion === 6 || angularMajorVersion === 7) {
+    }
+    /* Manage LTS versions */
+    if (angularMajorVersion === 6 || angularMajorVersion === 7) {
       packageVersion = '^6.0.0';
     }
 
     addPackageJsonDependency(host, {
+      /* Default = prod dependency */
       type: NodeDependencyType.Default,
       name: packageName,
       version: packageVersion,
-      overwrite,
+      /* Angular CLI will have pre-installed the package to get the schematics,
+       * so we need to overwrite to install the good versions */
+      overwrite: true,
     });
 
     return host;
 
   };
-}
-
-export function addDependency(angularMajorVersion: number) {
-  return manageDependency(angularMajorVersion, false);
-}
-
-export function updateDependency(angularMajorVersion: number) {
-  return manageDependency(angularMajorVersion, true);
 }

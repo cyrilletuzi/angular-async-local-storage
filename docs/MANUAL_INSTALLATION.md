@@ -54,7 +54,7 @@ export class AppModule {}
 
 ### Versions 4 & 5 (deprecated)
 
-An different additional setup step is required **for *versions 4 & 5 only***:
+A different additional setup step is required **for *versions 4 & 5 only***:
 **include the `LocalStorageModule`** in your app root module (just once, do **not** re-import it in your submodules).
 
 ```typescript

@@ -13,7 +13,7 @@ export default function(options: StorageAddOptions): Rule {
     const angularMajorVersion = getAngularMajorVersion(host);
     const mainPath = await getMainPath(host, options.project);
 
-    /* Task to run `npm install` (or else) */
+    /* Task to run `npm install` (or user package manager) */
     context.addTask(new NodePackageInstallTask());
 
     return chain([
