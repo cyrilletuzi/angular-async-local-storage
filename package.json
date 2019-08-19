@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve demo",
     "start:iframe": "ng serve iframe --port 8080",
-    "build": "ng build ngx-pwa-local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage",
+    "build": "ng build ngx-pwa-local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage && npm run schematics",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "ng test ngx-pwa-local-storage --watch false",
     "test:e2e": "npm run webdriver && npm run test:e2e:demo && npm run test:e2e:interoperability",
@@ -14,6 +14,7 @@
     "test:ivy": "ng e2e ivy",
     "webdriver": "webdriver-manager update",
     "lint": "ng lint",
+    "schematics": "tsc -p projects/ngx-pwa/local-storage/tsconfig.schematics.json && copyfiles --flat projects/ngx-pwa/local-storage/schematics/collection.json dist/ngx-pwa/local-storage/schematics",
     "publish": "npm run lint && npm run build && npm test && npm publish dist/ngx-pwa/local-storage --access public"
   },
   "private": true,
