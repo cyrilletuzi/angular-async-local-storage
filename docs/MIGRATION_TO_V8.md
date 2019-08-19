@@ -39,8 +39,14 @@ A full [validation guide](./VALIDATION.md) is available.
 
 1. Update the lib:
 ```
-npm install @ngx-pwa/local-storage@8
+ng update @ngx-pwa/local-storage
 ```
+
+It will:
+- update the package (eg. `npm install @ngx-pwa/local-storage@8`)
+- add `StorageModule.forRoot({ IDBNoWrap: false })` in `AppModule` in each project for backward compatibility
+
+If there is an error, you can do the 2 steps manually, but please file an issue.
 
 2. Start your project: problems will be seen at compilation.
 Or you could search for `getItem` as most breaking changes are about its options.
