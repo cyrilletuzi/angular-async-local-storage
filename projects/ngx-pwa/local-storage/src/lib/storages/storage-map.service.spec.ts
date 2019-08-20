@@ -651,16 +651,11 @@ describe('StorageMap', () => {
 
   tests('localStorage with prefix', () => new StorageMap(new LocalStorageDatabase(`ls`)));
 
-  tests('localStorage with old prefix', () => new StorageMap(new LocalStorageDatabase(undefined, `old`)));
-
   tests('indexedDB', () => new StorageMap(new IndexedDBDatabase()));
 
   tests('indexedDB with no wrap', () => new StorageMap(new IndexedDBDatabase()));
 
   tests('indexedDB with custom options', () => new StorageMap(new IndexedDBDatabase('customDbTest', 'storeTest', 2)));
-
-  tests('indexedDB with old prefix', () =>
-    new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, undefined, `myapp${Date.now()}`)));
 
   tests(
     'indexedDB with custom database and store names',
@@ -848,32 +843,6 @@ describe('StorageMap', () => {
 
     });
 
-    it('indexedDB old prefix (will be pending in Firefox private mode)', (done) => {
-
-      /* Unique name to be sure `indexedDB` `upgradeneeded` event is triggered */
-      const prefix = `myapp${Date.now()}`;
-      const localStorageService = new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, undefined, prefix));
-
-      /* Do a request first to allow localStorage fallback if needed */
-      localStorageService.get('test').subscribe(() => {
-
-        if (localStorageService.backingEngine === 'indexedDB') {
-
-          expect(localStorageService.backingStore.database).toBe(`${prefix}_${DEFAULT_IDB_DB_NAME}`);
-
-          closeAndDeleteDatabase(done, localStorageService);
-
-        } else {
-
-          /* Cases: Firefox private mode */
-          pending();
-
-        }
-
-      });
-
-    });
-
     it('localStorage prefix', () => {
 
       const prefix = `ls_`;
@@ -882,17 +851,6 @@ describe('StorageMap', () => {
 
       // tslint:disable-next-line: no-string-literal
       expect(localStorageService.fallbackBackingStore.prefix).toBe(prefix);
-
-    });
-
-    it('localStorage old prefix', () => {
-
-      const prefix = `old`;
-
-      const localStorageService = new StorageMap(new LocalStorageDatabase(undefined, prefix));
-
-      // tslint:disable-next-line: no-string-literal
-      expect(localStorageService.fallbackBackingStore.prefix).toBe(`${prefix}_`);
 
     });
 
