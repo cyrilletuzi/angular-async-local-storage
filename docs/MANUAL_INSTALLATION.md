@@ -1,6 +1,6 @@
 # Manual installation
 
-**You should install this library with this command:**
+**For versions >= 8, you should install this library with this command:**
 
 ```bash
 ng add @ngx-pwa/local-storage

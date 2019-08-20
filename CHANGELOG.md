@@ -17,7 +17,7 @@ To test: `npm install @ngx-pwa/local-storage@next`
 
 ### Features
 
-- Support for `ng add @ngx-pwa/local-storage`
+- Support for `ng add @ngx-pwa/local-storage` (for versions >= 8)
 - Support for `ng update @ngx-pwa/local-storage`
 (it doesn't mean you don't have work to do when updating, be sure to follow the [migrations guides](./MIGRATION.md))
 

@@ -41,13 +41,19 @@ to be homogeneous with other Angular modules.
 
 ## Getting started
 
-Install with this command:
+Install the package, according to your Angular version:
 
 ```bash
+# For Angular 8:
 ng add @ngx-pwa/local-storage
+
+# For Angular 6 & 7:
+npm install @ngx-pwa/local-storage@6
 ```
 
-*Done!* You should **stick to this command**. If for any reason it does not work,
+*Done!*
+
+You should **stick to these commands**. If for any reason `ng add` does not work,
 be sure to follow the [manual installation guide](./docs/MANUAL_INSTALLATION.md),
 as there are additionnal steps to do in addition to the package installation.
 

@@ -37,6 +37,8 @@ A full [validation guide](./VALIDATION.md) is available.
 
 ## How to migrate?
 
+As usual, be sure to update Angular and Angular CLI first.
+
 1. Update the lib:
 ```
 ng update @ngx-pwa/local-storage
