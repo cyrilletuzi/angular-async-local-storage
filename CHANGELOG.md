@@ -13,7 +13,7 @@ To test: `npm install @ngx-pwa/local-storage@next`
 
 **As a reminder, beta versions are for testing purposes only. Do *NOT* use in production.**
 
-## 8.2.0 (2019-08-20)
+## 8.2.1 (2019-08-20)
 
 ### Features
 

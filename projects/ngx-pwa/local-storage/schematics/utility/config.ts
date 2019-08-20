@@ -5,7 +5,7 @@ import { getWorkspace as getWorkspaceConfig } from '@schematics/angular/utility/
 
 export const packageName = '@ngx-pwa/local-storage';
 // TODO: Automate this
-export const packageVersionLatest = '^8.2.0';
+export const packageVersionLatest = '^8.2.1';
 export const packageVersionLTS = '^6.2.5';
 
 export function getAngularMajorVersion(host: Tree): number {
@@ -35,11 +35,19 @@ export async function getAllMainPaths(host: Tree): Promise<string[]> {
 
       /* Get `main` option in angular.json project config */
       const buildTarget = project.targets.get('build');
-      if (!buildTarget || !buildTarget.options || !buildTarget.options.main) {
+      const e2eTarget = project.targets.get('e2e');
+
+      if (buildTarget) {
+
+        if (!buildTarget.options || !buildTarget.options.main) {
+          throw new SchematicsException(`angular.json config is broken, can't find 'architect.build.options.main' in one or more projects`);
+        }
+        mainPaths.push(buildTarget.options.main as string);
+
+      } else if (!e2eTarget) {
+        /* In old CLI projects, e2e where distinct applications project, we don't need to throw for them */
         throw new SchematicsException(`angular.json config is broken, can't find 'architect.build.options.main' in one or more projects`);
       }
-
-      mainPaths.push(buildTarget.options.main as string);
 
     }
 
