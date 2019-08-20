@@ -132,7 +132,7 @@ It allows more advanced operations, and can be combined with other `Observable`-
 
 ### `LocalStorage`: legacy
 
-You can keep this legacy service in existing apps, but it's *not* recommended anymore.
+You can keep this legacy service in existing apps, but it's *not* recommended anymore for new applications.
 
 ```typescript
 import { LocalStorage } from '@ngx-pwa/local-storage';
