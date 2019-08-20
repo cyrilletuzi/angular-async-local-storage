@@ -1,9 +1,9 @@
 # Async local storage for Angular
 
 Efficient client-side storage module for Angular apps and Progressive Wep Apps (PWA):
-- **simplicity**: based on native `localStorage` API,
+- **simplicity**: a `Promise`-based API similar to native `localStorage`,
+- **scalability**: or an `Observable`-based API similar to native `Map` and `kv-storage` for advanced cases,
 - **perfomance**: internally stored via the asynchronous `indexedDB` API,
-- **Angular-like**: wrapped in RxJS `Observable`s,
 - **security**: validate data with a JSON Schema,
 - **compatibility**: works around some browsers issues,
 - **documentation**: API fully explained, and a changelog!
@@ -36,7 +36,7 @@ but internally stored via the asynchronous `indexedDB` for performance.
 But it's built in ES5 old school way and then it's a mess to include into Angular.
 
 This module is based on the same idea as `localForage`, but built in ES6+ 
-and additionally wrapped into [RxJS `Observable`s](http://reactivex.io/rxjs/) 
+and with additional tools like [RxJS `Observable`s](https://rxjs.dev/) 
 to be homogeneous with other Angular modules.
 
 ## Getting started
@@ -69,36 +69,39 @@ see the **[migration guides](./MIGRATION.md).**
 
 ## API
 
-2 services are available for client-side storage, you just have to inject one of them were you need it.
+3 services are available for client-side storage, you just have to inject one of them were you need it.
 
-### `LocalStorage`
+### `KVStorage` (`Promise`-based)
+
+New *since version 9* of this lib, this service is recommended for **simple cases**.
 
 ```typescript
-import { LocalStorage } from '@ngx-pwa/local-storage';
+import { KVStorage } from '@ngx-pwa/local-storage';
 
 @Injectable()
 export class YourService {
 
-  constructor(private localStorage: LocalStorage) {}
+  constructor(private kvStorage: KVStorage) {}
 
 }
 ```
 
 This service API follows the
-[native `localStorage` API](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage), 
-except it's asynchronous via [RxJS `Observable`s](http://reactivex.io/rxjs/):
+new standard [`kv-storage` API](https://wicg.github.io/kv-storage/):
 
 ```typescript
-class LocalStorage {
-  length: Observable<number>;
-  getItem(index: string, schema?: JSONSchema): Observable<unknown> {}
-  setItem(index: string, value: any): Observable<true> {}
-  removeItem(index: string): Observable<true> {}
-  clear(): Observable<true> {}
+class KVStorage {
+  get(index: string, schema?: JSONSchema): Promise<unknown> {}
+  set(index: string, value: any): Promise<undefined> {}
+  delete(index: string): Promise<undefined> {}
+  clear(): Promise<undefined> {}
 }
 ```
 
-### `StorageMap`
+
+### `StorageMap` (`Observable`-based)
+
+New *since version 8* of this lib, this service is recommended for **advanced cases**.
 
 ```typescript
 import { StorageMap } from '@ngx-pwa/local-storage';
@@ -111,13 +114,12 @@ export class YourService {
 }
 ```
 
-New *since version 8* of this lib, this service API follows the
+This service API follows the
 [native `Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
-and the new upcoming standard [kv-storage API](https://github.com/WICG/kv-storage), 
-except it's asynchronous via [RxJS `Observable`s](http://reactivex.io/rxjs/).
+and the new standard [kv-storage API](https://github.com/WICG/kv-storage), 
+except it's wrapped in [RxJS `Observable`s](https://rxjs.dev/).
 
-It does the same thing as the `LocalStorage` service, but also allows more advanced operations.
-If you are familiar to `Map`, we recommend to use only this service.
+It does the same thing as the `KVStorage` service, but also allows more advanced operations.
 
 ```typescript
 class StorageMap {
@@ -131,20 +133,50 @@ class StorageMap {
 }
 ```
 
+### `LocalStorage` (legacy)
+
+You can keep this legacy service in existing apps, but it's *not* recommended anymore.
+
+```typescript
+import { LocalStorage } from '@ngx-pwa/local-storage';
+
+@Injectable()
+export class YourService {
+
+  constructor(private localStorage: LocalStorage) {}
+
+}
+```
+
+This service API follows the
+standard [`localStorage` API](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage), 
+except it's asynchronous via [RxJS `Observable`s](https://rxjs.dev/):
+
+```typescript
+class LocalStorage {
+  length: Observable<number>;
+  getItem(index: string, schema?: JSONSchema): Observable<unknown> {}
+  setItem(index: string, value: any): Observable<true> {}
+  removeItem(index: string): Observable<true> {}
+  clear(): Observable<true> {}
+}
+```
+
 ## How to
 
-The following examples will show the 2 services for basic operations,
-then stick to the `StorageMap` API. But except for methods which are specific to `StorageMap`,
-you can always do the same with the `LocalStorage` API.
+The following examples will show examples with the 2 recommended services.
+But for older versions, you can always do the same with the `LocalStorage` API.
 
 ### Writing data
 
 ```typescript
-let user: User = { firstName: 'Henri', lastName: 'Bergson' };
+const user: User = { firstName: 'Henri', lastName: 'Bergson' };
 
+// Promise-based
+await this.kvStorage.set('user', user);
+
+// Observable-based
 this.storageMap.set('user', user).subscribe(() => {});
-// or
-this.localStorage.setItem('user', user).subscribe(() => {});
 ```
 
 You can store any value, without worrying about serializing. But note that:
@@ -157,45 +189,47 @@ See the [serialization guide](./docs/SERIALIZATION.md) for more details.
 
 To delete one item:
 ```typescript
-this.storageMap.delete('user').subscribe(() => {});
-// or
-this.localStorage.removeItem('user').subscribe(() => {});
+// Promise-based
+await this.kvStorage.delete('user', user);
+
+// Observable-based
+this.storageMap.delete('user', user).subscribe(() => {});
 ```
 
 To delete all items:
 ```typescript
-this.storageMap.clear().subscribe(() => {});
-// or
-this.localStorage.clear().subscribe(() => {});
+// Promise-based
+await this.kvStorage.clear('user', user);
+
+// Observable-based
+this.storageMap.clear('user', user).subscribe(() => {});
 ```
 
 ### Reading data
 
 ```typescript
+// Promise-based
+const user = await this.kvStorage.get('user');
+console.log(user);
+
+// Observable-based
 this.storageMap.get('user').subscribe((user) => {
-  console.log(user);
-});
-// or
-this.localStorage.getItem('user').subscribe((user) => {
   console.log(user);
 });
 ```
 
-Not finding an item is not an error, it succeeds but returns:
-- `undefined` with `StorageMap`
+Not finding an item is not an error, it succeeds but returns `undefined` (or `null` with legacy `LocalStorage`):
 ```typescript
+// Promise-based
+const data = await this.kvStorage.get('notexisting'); // undefined
+
+// Observable-based
 this.storageMap.get('notexisting').subscribe((data) => {
   data; // undefined
 });
 ```
-- `null` with `LocalStorage`
-```typescript
-this.localStorage.getItem('notexisting').subscribe((data) => {
-  data; // null
-});
-```
 
-Note you'll only get *one* value: the `Observable` is here for asynchrony but is not meant to
+Note you'll only get *one* value: the `Promise` or `Observable` is here for asynchrony but is not meant to
 emit again when the stored data is changed. And it's normal: if app data change, it's the role of your app
 to keep track of it, not of this lib. See [#16](https://github.com/cyrilletuzi/angular-async-local-storage/issues/16) 
 for more context and [#4](https://github.com/cyrilletuzi/angular-async-local-storage/issues/4)
@@ -209,8 +243,15 @@ Don't forget it's client-side storage: **always check the data**, as it could ha
 You can use a [JSON Schema](http://json-schema.org/) to validate the data.
 
 ```typescript
+// Promise-based
+try {
+  const data = await this.kvStorage.get('test', { type: 'string' });
+  /* Called if data is valid or `undefined` */
+} catch (error) { /* Called if data is invalid */ }
+
+// Observable-based
 this.storageMap.get('test', { type: 'string' }).subscribe({
-  next: (user) => { /* Called if data is valid or `undefined` or `null` */ },
+  next: (user) => { /* Called if data is valid or `undefined` */ },
   error: (error) => { /* Called if data is invalid */ },
 });
 ```
@@ -219,7 +260,8 @@ this.storageMap.get('test', { type: 'string' }).subscribe({
 
 ### Subscription
 
-You *DO NOT* need to unsubscribe: the `Observable` autocompletes (like in the Angular `HttpClient` service).
+If using one of the `Observable`-based API, you *DO NOT* need to unsubscribe:
+the `Observable` autocompletes (like in the Angular `HttpClient` service).
 
 But **you *DO* need to subscribe**, even if you don't have something specific to do after writing in storage
 (because it's how RxJS `Observable`s work).
@@ -228,6 +270,12 @@ But **you *DO* need to subscribe**, even if you don't have something specific to
 
 As usual, it's better to catch any potential error:
 ```typescript
+// Promise-based
+try {
+  await this.kvStorage.set('color', 'red');
+} catch (error) {}
+
+// Observable-based
 this.storageMap.set('color', 'red').subscribe({
   next: () => {},
   error: (error) => {},
@@ -236,6 +284,13 @@ this.storageMap.set('color', 'red').subscribe({
 
 For read operations, you can also manage errors by providing a default value:
 ```typescript
+// Promise-based
+let color = 'red';
+try {
+  color = await this.kvStorage.get('color');
+} catch (error) {}
+
+// Observable-based
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -248,7 +303,7 @@ See the [errors guide](./docs/ERRORS.md) for some details about what errors can 
 
 ### `Map`-like operations
 
-Starting *with version >= 8* of this lib, in addition to the classic `localStorage`-like API,
+Starting *with version >= 8* of this lib,
 this lib also provides a `Map`-like API for advanced operations:
   - `.keys()`
   - `.has(key)`
@@ -262,7 +317,7 @@ For example, it allows to implement a multiple databases scenario.
 ### Angular support
 
 We follow [Angular LTS support](https://angular.io/guide/releases),
-meaning we support Angular >= 6, until November 2019.
+meaning we support Angular >= 7, until April 2020.
 
 This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler) and Ivy.
 

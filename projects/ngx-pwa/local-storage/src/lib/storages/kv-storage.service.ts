@@ -103,20 +103,4 @@ export class KVStorage {
 
   }
 
-  // /**
-  //  * Get all keys stored in storage
-  //  * @returns A list of the keys wrapped in a RxJS `Observable`
-  //  * @deprecated Moved to `StorageMap` service. Will be removed in v9.
-  //  * Note that while this method was giving you all keys at once in an array,
-  //  * the new `keys()` method in `StorageMap` service will *iterate* on each key.
-  //  */
-  // keys(): Observable<string[]> {
-
-  //   return this.storageMap.keys().pipe(
-  //     /* Backward compatibility with v7: transform iterating `Observable` to a single array value */
-  //     toArray(),
-  //   );
-
-  // }
-
 }

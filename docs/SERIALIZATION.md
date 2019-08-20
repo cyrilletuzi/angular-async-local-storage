@@ -30,11 +30,21 @@ Here are some examples of the recommended way to store special structures.
 ```typescript
 const someDate = new Date('2019-07-19');
 
+// Promise-based
+/* Writing */
+await this.kvStorage.set('date', someDate.toJSON());
+
+/* Reading */
+const dateJSON = await this.kvStorage.get('date', { type: 'string' });
+const date = new Date(dateJSON);
+
+
+// Observable-based
 /* Writing */
 this.storageMap.set('date', someDate.toJSON()).subscribe();
 
 /* Reading */
-this.storageMap.get<string>('date', { type: 'string' }).pipe(
+this.storageMap.get('date', { type: 'string' }).pipe(
   map((dateJSON) => new Date(dateJSON)),
 ).subscribe((date) => {});
 ```
@@ -43,11 +53,6 @@ this.storageMap.get<string>('date', { type: 'string' }).pipe(
 
 ```typescript
 const someMap = new Map<string, number>([['hello', 1], ['world', 2]]);
-
-/* Writing */
-this.storageMap.set('test', Array.from(someMap)).subscribe();
-
-/* Reading */
 const schema: JSONSchema = {
   type: 'array',
   items: {
@@ -59,8 +64,23 @@ const schema: JSONSchema = {
   },
 };
 
+// Promise-based
+/* Writing */
+await this.kvStorage.set('test', Array.from(someMap));
+
+/* Reading */
+const dataRaw = await this.kvStorage.get<[string, number][]>('test', schema);
+const data = new Map(dataRaw);
+data.get('hello'); // 1
+
+
+// Observable-based
+/* Writing */
+this.storageMap.set('test', Array.from(someMap)).subscribe();
+
+/* Reading */
 this.storageMap.get<[string, number][]>('test', schema).pipe(
-  map((data) => new Map(data)),
+  map((dataRaw) => new Map(dataRaw)),
 ).subscribe((data) => {
   data.get('hello'); // 1
 });
@@ -70,16 +90,24 @@ this.storageMap.get<[string, number][]>('test', schema).pipe(
 
 ```typescript
 const someSet = new Set<string>(['hello', 'world']);
-
-/* Writing */
-this.storageMap.set('test', Array.from(someSet)).subscribe();
-
-/* Reading */
 const schema: JSONSchema = {
   type: 'array',
   items: { type: 'string' },
 };
 
+// Promise-based
+/* Writing */
+await this.kvStorage.set('test', Array.from(someSet));
+
+/* Reading */
+const dataRaw = await this.kvStorage.get<[string, number][]>('test', schema);
+const data = new Set(dataRaw);
+data.has('hello'); // true
+
+/* Writing */
+this.storageMap.set('test', Array.from(someSet)).subscribe();
+
+/* Reading */
 this.storageMap.get('test', schema).pipe(
   map((data) => new Set(data)),
 ).subscribe((data) => {
