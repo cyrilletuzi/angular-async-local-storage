@@ -4,7 +4,7 @@ import { observeOn } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { SerializationError } from './exceptions';
-import { LOCAL_STORAGE_PREFIX, LS_PREFIX } from '../tokens';
+import { LS_PREFIX } from '../tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -19,16 +19,13 @@ export class LocalStorageDatabase implements LocalDatabase {
   /**
    * Constructor params are provided by Angular (but can also be passed manually in tests)
    * @param prefix Prefix option to avoid collision for multiple apps on the same subdomain or for interoperability
-   * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain or for interoperability
    */
   constructor(
     @Inject(LS_PREFIX) prefix = '',
-    // tslint:disable-next-line: deprecation
-    @Inject(LOCAL_STORAGE_PREFIX) oldPrefix = '',
   ) {
 
-    /* Priority for the new prefix option, otherwise old prefix with separator, or no prefix */
-    this.prefix = prefix || (oldPrefix ? `${oldPrefix}_` : '');
+    /* Prefix if asked, or no prefix otherwise */
+    this.prefix = prefix || '';
 
   }
 

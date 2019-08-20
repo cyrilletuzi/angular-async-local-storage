@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { IndexedDBDatabase } from './indexeddb-database';
 import { LocalStorageDatabase } from './localstorage-database';
 import { MemoryDatabase } from './memory-database';
-import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX, IDB_DB_VERSION, IDB_NO_WRAP } from '../tokens';
+import { IDB_STORE_NAME, IDB_DB_NAME, LS_PREFIX, IDB_DB_VERSION, IDB_NO_WRAP } from '../tokens';
 
 /**
  * Factory to create a storage according to browser support
@@ -13,12 +13,11 @@ import { IDB_STORE_NAME, IDB_DB_NAME, LOCAL_STORAGE_PREFIX, LS_PREFIX, IDB_DB_VE
  * @param LSPrefix Prefix for `localStorage` keys to avoid collision for multiple apps on the same subdomain
  * @param IDBDBName `indexedDB` database name
  * @param IDBstoreName `indexedDB` storeName name
- * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain
  * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/BROWSERS_SUPPORT.md}
  */
 export function localDatabaseFactory(
   platformId: string, LSPrefix: string, IDBDBName: string, IDBStoreName: string,
-  IDBDBVersion: number, IDBNoWrap: boolean, oldPrefix: string): LocalDatabase {
+  IDBDBVersion: number, IDBNoWrap: boolean): LocalDatabase {
 
   /* When storage is fully disabled in browser (via the "Block all cookies" option),
    * just trying to check `indexedDB` or `localStorage` variables causes a security exception.
@@ -37,7 +36,7 @@ export function localDatabaseFactory(
       * Will be the case for:
       * - IE10+ and all other browsers in normal mode
       * - Chromium / Safari private mode, but in this case, data will be swiped when the user leaves the app */
-      return new IndexedDBDatabase(IDBDBName, IDBStoreName, IDBDBVersion, IDBNoWrap, oldPrefix);
+      return new IndexedDBDatabase(IDBDBName, IDBStoreName, IDBDBVersion, IDBNoWrap);
 
     } else if (isPlatformBrowser(platformId)
     && (localStorage !== undefined) && (localStorage !== null) && ('getItem' in localStorage)) {
@@ -54,7 +53,7 @@ export function localDatabaseFactory(
       * For Firefox, can only be detected later in `IndexedDBDatabase.connect()`
       * @see {@link https://bugzilla.mozilla.org/show_bug.cgi?id=781982}
       */
-      return new LocalStorageDatabase(LSPrefix, oldPrefix);
+      return new LocalStorageDatabase(LSPrefix);
 
     }
 
@@ -79,8 +78,6 @@ export function localDatabaseFactory(
     IDB_STORE_NAME,
     IDB_DB_VERSION,
     IDB_NO_WRAP,
-    // tslint:disable-next-line: deprecation
-    LOCAL_STORAGE_PREFIX,
   ]
 })
 export abstract class LocalDatabase {

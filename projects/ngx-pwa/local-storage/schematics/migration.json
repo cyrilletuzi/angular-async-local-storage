@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "migration-v8": {
+      "version": "8",
+      "description": "Updates @ngx-pwa/local-storage to v8",
+      "factory": "./ng-update/index#updateToV8"
+    }
+  }
+}

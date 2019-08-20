@@ -37,10 +37,21 @@ A full [validation guide](./VALIDATION.md) is available.
 
 ## How to migrate?
 
+As usual, be sure to update Angular and Angular CLI first.
+
 1. Update the lib:
 ```
-npm install @ngx-pwa/local-storage@8
+ng update @ngx-pwa/local-storage
 ```
+
+Check that the following steps succeeded:
+- `package.json` updated (as if you did `npm install @ngx-pwa/local-storage@8`)
+- `StorageModule.forRoot({ IDBNoWrap: false })` added in `AppModule` imports of each project (for backward compatibility)
+
+If there is an error, you can do the 2 steps manually, but please file an issue.
+
+If you have multiple applications in your project but you do not use this lib in all projects,
+remove `StorageModule.forRoot({ IDBNoWrap: false })` and the import in the unconcerned `AppModule`s.
 
 2. Start your project: problems will be seen at compilation.
 Or you could search for `getItem` as most breaking changes are about its options.
