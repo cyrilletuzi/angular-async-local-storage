@@ -13,7 +13,13 @@ To test: `npm install @ngx-pwa/local-storage@next`
 
 **As a reminder, beta versions are for testing purposes only. Do *NOT* use in production.**
 
-## 8.2.0-beta.1 (2019-08-18)
+## 8.2.0 (2019-08-20)
+
+### Features
+
+- Support for `ng add @ngx-pwa/local-storage`
+- Support for `ng update @ngx-pwa/local-storage`
+(it doesn't mean you don't have work to do when updating, be sure to follow the [migrations guides](./MIGRATION.md))
 
 ### Error management
 
@@ -26,10 +32,7 @@ So request `success` or transaction `complete` are supposed to be equivalent. Bu
 where the transaction could fail even if the request succeeded (meaning the data won't be written on disk).
 
 So now it should catch more rare edgy cases, but for nearly everyone it should not change anything.
-But it's still a sensitive change as it concerns asynchrony (the order of operations are not exactly the same),
-so testing is very welcomed.
-
-To test: `npm install @ngx-pwa/local-storage@beta`
+But it's still a sensitive change as it concerns asynchrony (the order of operations are not exactly the same).
 
 ## 8.1.0 (2019-08-17)
 
