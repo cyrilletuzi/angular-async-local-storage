@@ -1,45 +1,4 @@
-import { InjectionToken, Provider } from '@angular/core';
-
-/**
- * Token to provide a prefix to avoid collision when multiple apps on the same *sub*domain.
- * @deprecated **Will be removed in v9**. Set options with `StorageModule.forRoot()` instead:
- *
- * Before v8:
- * ```ts
- * import { localStorageProviders, LOCAL_STORAGE_PREFIX } from '@ngx-pwa/local-storage';
- *
- * @NgModule({
- *   providers: [
- *     { provide: LOCAL_STORAGE_PREFIX, useValue: 'myapp' },
- *   ]
- * })
- * export class AppModule {}
- * ```
- *
- * Since v8:
- * ```ts
- * import { StorageModule } from '@ngx-pwa/local-storage';
- *
- * @NgModule({
- *   imports: [
- *     StorageModule.forRoot({
- *       LSPrefix: 'myapp_', // Note the underscore
- *       IDBDBName: 'myapp_ngStorage',
- *     }),
- *   ]
- * })
- * export class AppModule {}
- * ```
- *
- * **Be very careful while changing this in applications already deployed in production,**
- * **as an error would mean the loss of all previously stored data.**
- * **SO PLEASE TEST BEFORE PUSHING IN PRODUCTION.**
- *
- */
-export const LOCAL_STORAGE_PREFIX = new InjectionToken<string>('localStoragePrefix', {
-  providedIn: 'root',
-  factory: () => ''
-});
+import { InjectionToken } from '@angular/core';
 
 /**
  * Token to provide a prefix to `localStorage` keys.
@@ -93,9 +52,7 @@ export const IDB_STORE_NAME = new InjectionToken<string>('localStorageIDBStoreNa
 /**
  * Default value for interoperability with native `indexedDB` and other storage libs,
  * by changing how values are stored in `indexedDB` database.
- * Currently defaults to `false` for backward compatiblity in existing applications
- * (**DO NOT CHANGE IT IN PRODUCTION**, as it would break with existing data),
- * but **should be `false` in all new applications, as it may become the default in a future version**.
+ * Currently defaults to `false` for backward compatiblity in existing applications.
  */
 export const DEFAULT_IDB_NO_WRAP = false;
 
@@ -151,67 +108,5 @@ export interface StorageConfig {
    * but **should be `true` in all new applications, as it may become the default in a future version**.
    */
   IDBNoWrap?: boolean;
-
-}
-
-/**
- * @deprecated in favor of `StorageConfig`. Will be removed in v9.
- */
-export interface LocalStorageProvidersConfig {
-
-  /**
-   * Prefix to avoid collision when there are *multiple apps on the same subdomain*.
-   * **WARNING: do not change this option in an app already deployed in production, as previously stored data would be lost.**
-   * @deprecated Use `LSPrefix` and `IDBDBName` options instead. Will be removed in v9.
-   */
-  prefix?: string;
-
-}
-
-/**
- * Helper function to provide options. **Must be used at initialization, ie. in `AppModule`.**
- * @param config Options.
- * @returns A list of providers for the lib options.
- * @deprecated **Will be removed in v9.** Set options via `StorageModule.forRoot()` instead:
- *
- * Before v8:
- * ```ts
- * import { localStorageProviders, LOCAL_STORAGE_PREFIX } from '@ngx-pwa/local-storage';
- *
- * @NgModule({
- *   providers: [
- *     localStorageProviders({ prefix: 'myapp' }),
- *   ]
- * })
- * export class AppModule {}
- * ```
- *
- * Since v8:
- * ```ts
- * import { StorageModule } from '@ngx-pwa/local-storage';
- *
- * @NgModule({
- *   imports: [
- *     StorageModule.forRoot({
- *       LSPrefix: 'myapp_', // Note the underscore
- *       IDBDBName: 'myapp_ngStorage',
- *     }),
- *   ]
- * })
- * export class AppModule {}
- * ```
- *
- * **Be very careful while changing this in applications already deployed in production,**
- * **as an error would mean the loss of all previously stored data.**
- * **SO PLEASE TEST BEFORE PUSHING IN PRODUCTION.**
- *
- */
-// tslint:disable-next-line: deprecation
-export function localStorageProviders(config: LocalStorageProvidersConfig): Provider[] {
-
-  return [
-    // tslint:disable-next-line: deprecation
-    config.prefix ? { provide: LOCAL_STORAGE_PREFIX, useValue: config.prefix } : [],
-  ];
 
 }

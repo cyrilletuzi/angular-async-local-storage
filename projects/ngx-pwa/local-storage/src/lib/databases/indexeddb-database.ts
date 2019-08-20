@@ -5,7 +5,7 @@ import { map, mergeMap, first, takeWhile, tap, mapTo } from 'rxjs/operators';
 import { LocalDatabase } from './local-database';
 import { IDBBrokenError } from './exceptions';
 import {
-  IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, IDB_DB_VERSION, LOCAL_STORAGE_PREFIX,
+  IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, IDB_DB_VERSION,
   DEFAULT_IDB_DB_NAME, DEFAULT_IDB_DB_VERSION, IDB_NO_WRAP, DEFAULT_IDB_NO_WRAP
 } from '../tokens';
 
@@ -51,20 +51,15 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param storeName `indexedDB` store name
    * @param dbVersion `indexedDB` database version
    * @param noWrap `indexedDB` database version
-   * @param oldPrefix Pre-v8 backward compatible prefix
    */
   constructor(
     @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,
     @Inject(IDB_STORE_NAME) storeName = DEFAULT_IDB_STORE_NAME,
     @Inject(IDB_DB_VERSION) dbVersion = DEFAULT_IDB_DB_VERSION,
     @Inject(IDB_NO_WRAP) noWrap = DEFAULT_IDB_NO_WRAP,
-    // tslint:disable-next-line: deprecation
-    @Inject(LOCAL_STORAGE_PREFIX) oldPrefix = '',
   ) {
 
-    /* Initialize `indexedDB` database name, with prefix if provided by the user */
-    this.dbName = oldPrefix ? `${oldPrefix}_${dbName}` : dbName;
-
+    this.dbName = dbName;
     this.storeName = storeName;
     this.dbVersion = dbVersion;
     this.noWrap = noWrap;
