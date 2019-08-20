@@ -51,6 +51,11 @@ ng add @ngx-pwa/local-storage
 be sure to follow the [manual installation guide](./docs/MANUAL_INSTALLATION.md),
 as there are additionnal steps to do in addition to the package installation.
 
+If you have multiple applications in the same project, as usual, you need to choose the project:
+```bash
+ng add @ngx-pwa/local-storage --project yourprojectname
+```
+
 ### Upgrading
 
 If you still use the old `angular-async-local-storage` package, or to update to new versions,
