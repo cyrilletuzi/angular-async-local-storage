@@ -69,9 +69,9 @@ see the **[migration guides](./MIGRATION.md).**
 
 ## API
 
-3 services are available for client-side storage, you just have to inject one of them were you need it.
+3 services are available for client-side storage, you just have to inject one of them where you need them.
 
-### `KVStorage` (`Promise`-based)
+### `KVStorage`: `Promise`-based for simple cases
 
 New *since version 9* of this lib, this service is recommended for **simple cases**.
 
@@ -80,14 +80,14 @@ import { KVStorage } from '@ngx-pwa/local-storage';
 
 @Injectable()
 export class YourService {
-
   constructor(private kvStorage: KVStorage) {}
-
 }
 ```
 
 This service API follows the
-new standard [`kv-storage` API](https://wicg.github.io/kv-storage/):
+new standard [`kv-storage` API](https://wicg.github.io/kv-storage/),
+which is similar to the standard [`Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
+but `Promise`-based.
 
 ```typescript
 class KVStorage {
@@ -98,8 +98,7 @@ class KVStorage {
 }
 ```
 
-
-### `StorageMap` (`Observable`-based)
+### `StorageMap`: `Observable`-based for advanced cases
 
 New *since version 8* of this lib, this service is recommended for **advanced cases**.
 
@@ -108,18 +107,14 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Injectable()
 export class YourService {
-
   constructor(private storageMap: StorageMap) {}
-
 }
 ```
 
 This service API follows the
-[native `Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
-and the new standard [kv-storage API](https://github.com/WICG/kv-storage), 
-except it's wrapped in [RxJS `Observable`s](https://rxjs.dev/).
-
-It does the same thing as the `KVStorage` service, but also allows more advanced operations.
+new standard [`kv-storage` API](https://wicg.github.io/kv-storage/),
+which is similar to the standard [`Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map),
+except it's based on [RxJS `Observable`s](https://rxjs.dev/) instead of `Promise`s:
 
 ```typescript
 class StorageMap {
@@ -133,7 +128,9 @@ class StorageMap {
 }
 ```
 
-### `LocalStorage` (legacy)
+It allows more advanced operations, and can be combined with other `Observable`-based APIs in Angular.
+
+### `LocalStorage`: legacy
 
 You can keep this legacy service in existing apps, but it's *not* recommended anymore.
 
@@ -142,9 +139,7 @@ import { LocalStorage } from '@ngx-pwa/local-storage';
 
 @Injectable()
 export class YourService {
-
   constructor(private localStorage: LocalStorage) {}
-
 }
 ```
 
@@ -245,7 +240,7 @@ You can use a [JSON Schema](http://json-schema.org/) to validate the data.
 ```typescript
 // Promise-based
 try {
-  const data = await this.kvStorage.get('test', { type: 'string' });
+  const user = await this.kvStorage.get('test', { type: 'string' });
   /* Called if data is valid or `undefined` */
 } catch (error) { /* Called if data is invalid */ }
 
