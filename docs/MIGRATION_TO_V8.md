@@ -48,6 +48,9 @@ Check that the following steps succeeded:
 
 If there is an error, you can do the 2 steps manually, but please file an issue.
 
+If you have multiple applications in your project but you do not use this lib in all projects,
+remove `StorageModule.forRoot({ IDBNoWrap: false })` and the import in the unconcerned `AppModule`s.
+
 2. Start your project: problems will be seen at compilation.
 Or you could search for `getItem` as most breaking changes are about its options.
 
