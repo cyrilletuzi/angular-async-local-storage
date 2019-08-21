@@ -132,7 +132,7 @@ class LocalStorage {
 
 ## How to
 
-The following examples will show examples with the recommended `StorageMap` service.
+The following examples will use the recommended `StorageMap` service.
 But for older versions, you can always do the same with the `LocalStorage` service.
 
 ### Writing data
