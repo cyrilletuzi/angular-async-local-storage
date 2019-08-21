@@ -31,10 +31,10 @@ Here are some examples of the recommended way to store special structures.
 const someDate = new Date('2019-07-19');
 
 /* Writing */
-this.storageMap.set('date', someDate.toJSON()).subscribe();
+this.storage.set('date', someDate.toJSON()).subscribe();
 
 /* Reading */
-this.storageMap.get<string>('date', { type: 'string' }).pipe(
+this.storage.get('date', { type: 'string' }).pipe(
   map((dateJSON) => new Date(dateJSON)),
 ).subscribe((date) => {});
 ```
@@ -45,7 +45,7 @@ this.storageMap.get<string>('date', { type: 'string' }).pipe(
 const someMap = new Map<string, number>([['hello', 1], ['world', 2]]);
 
 /* Writing */
-this.storageMap.set('test', Array.from(someMap)).subscribe();
+this.storage.set('test', Array.from(someMap)).subscribe();
 
 /* Reading */
 const schema: JSONSchema = {
@@ -59,8 +59,8 @@ const schema: JSONSchema = {
   },
 };
 
-this.storageMap.get<[string, number][]>('test', schema).pipe(
-  map((data) => new Map(data)),
+this.storage.get<[string, number][]>('test', schema).pipe(
+  map((dataArray) => new Map(dataArray)),
 ).subscribe((data) => {
   data.get('hello'); // 1
 });
@@ -72,7 +72,7 @@ this.storageMap.get<[string, number][]>('test', schema).pipe(
 const someSet = new Set<string>(['hello', 'world']);
 
 /* Writing */
-this.storageMap.set('test', Array.from(someSet)).subscribe();
+this.storage.set('test', Array.from(someSet)).subscribe();
 
 /* Reading */
 const schema: JSONSchema = {
@@ -80,8 +80,8 @@ const schema: JSONSchema = {
   items: { type: 'string' },
 };
 
-this.storageMap.get('test', schema).pipe(
-  map((data) => new Set(data)),
+this.storage.get('test', schema).pipe(
+  map((dataArray) => new Set(dataArray)),
 ).subscribe((data) => {
   data.has('hello'); // true
 });
