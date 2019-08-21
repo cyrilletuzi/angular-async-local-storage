@@ -16,17 +16,19 @@ Install the right version according to your Angular one via [`npm`](http://npmjs
 
 ```bash
 # For Angular 8:
-npm install @ngx-pwa/local-storage
+npm install @ngx-pwa/local-storage@8
 
 # For Angular 6 & 7:
 npm install @ngx-pwa/local-storage@6
+
+# For Angular 5:
+npm install @ngx-pwa/local-storage@5
+
+# For Angular 4:
+npm install @ngx-pwa/local-storage@5
 ```
 
 ## Importing the module
-
-### Version 6
-
-Done, nothing else to do!
 
 ### Version 8
 
@@ -52,10 +54,14 @@ export class AppModule {}
 
 **Must be done at initialization, ie. in `AppModule`, and must not be loaded again in another module.**
 
-### Versions 4 & 5 (deprecated)
+### Version 6 (LTS support ended)
 
-A different additional setup step is required **for *versions 4 & 5 only***:
-**include the `LocalStorageModule`** in your app root module (just once, do **not** re-import it in your submodules).
+You're done, nothing else to do.
+
+### Versions 4 & 5 (LTS support ended)
+
+A different additional setup step is required for *versions 4 & 5 only*:
+include the `LocalStorageModule` in your app root module (just once, do *not* re-import it in your submodules).
 
 ```typescript
 import { LocalStorageModule } from '@ngx-pwa/local-storage';
@@ -70,5 +76,3 @@ import { LocalStorageModule } from '@ngx-pwa/local-storage';
 })
 export class AppModule {}
 ```
-
-**Note that versions 4 & 5 are *not* supported anymore.**
