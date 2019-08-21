@@ -10,7 +10,7 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 
 export class AngularComponentOrService {
 
-  constructor(private storageMap: StorageMap) {}
+  constructor(private storage: StorageMap) {}
 
 }
 ```
@@ -20,7 +20,7 @@ export class AngularComponentOrService {
 An `Observable` iterating over keys in storage:
 
 ```typescript
-this.storageMap.keys().subscribe({
+this.storage.keys().subscribe({
   next: (key) => {
     console.log(key);
   },
@@ -40,7 +40,7 @@ as this `Observable` can emit several values and so will invoke the `next` callb
 Gives you an `Observable` telling you if a key exists in storage:
 
 ```typescript
-this.storageMap.has('someindex').subscribe((result) => {
+this.storage.has('someindex').subscribe((result) => {
 
   if (result) {
     console.log('The key exists :)');
@@ -56,7 +56,7 @@ this.storageMap.has('someindex').subscribe((result) => {
 Number of items stored in storage.
 
 ```typescript
-this.storageMap.size.subscribe((size) => {
+this.storage.size.subscribe((size) => {
 
   console.log(size);
 
@@ -84,13 +84,13 @@ You can then delete only app data:
 ```typescript
 import { filter, mergeMap } from 'rxjs/operators';
 
-this.storageMap.keys().pipe(
+this.storage.keys().pipe(
 
   /* Keep only keys starting with 'app_' */
   filter((key) => key.startsWith('app_')),
 
   /* Remove the item for each key */
-  mergeMap((key) => this.storageMap.delete(key))
+  mergeMap((key) => this.storage.delete(key))
 
 ).subscribe({
   complete: () => {
