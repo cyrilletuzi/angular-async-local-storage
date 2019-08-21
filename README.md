@@ -112,7 +112,7 @@ import { LocalStorage } from '@ngx-pwa/local-storage';
 
 @Injectable()
 export class YourService {
-  constructor(private storage: LocalStorage) {}
+  constructor(private localStorage: LocalStorage) {}
 }
 ```
 
