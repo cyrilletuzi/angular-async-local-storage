@@ -178,7 +178,7 @@ this.storage.get('notexisting').subscribe((data) => {
 
 Note you'll only get *one* value: the `Observable` is here for asynchrony but is not meant to
 emit again when the stored data is changed. If you need to watch the value,
-version 8.2 introduced a `watch()` method, see the [watching guide](./docs/WATCHING.md).
+version 9 introduced a `watch()` method, see the [watching guide](./docs/WATCHING.md).
 
 ### Checking data
 
