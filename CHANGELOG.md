@@ -2,16 +2,39 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 9.0.0-beta.0 (2019-08-18)
+## 9.0.0-beta.1 (2019-08-21)
+
+Note that for now, it works both with Angular 8 & 9 for testing purposes,
+but the final v9 may only support Angular 9.
+
+To test: `npm install @ngx-pwa/local-storage@next`
+
+**As a reminder, beta versions are for testing purposes only. Do *NOT* use in production.**
 
 ### Feature
 
 - New `.watch()` method on `StorageMap` service
 (see [#108](https://github.com/cyrilletuzi/angular-async-local-storage/pull/108/))
 
-To test: `npm install @ngx-pwa/local-storage@next`
+### Breaking changes
 
-**As a reminder, beta versions are for testing purposes only. Do *NOT* use in production.**
+The following APIs were already deprecated in v8 and are now removed in v9.
+Please follow the [migration guide to v8](./docs/MIGRATION_TO_V8.md) for more details about how to update to new APIs.
+
+- Removed providers for prefix management
+  - **If you're concerned, be very careful with this migration, otherwise you could lost previously stored data**
+  - `{ provide: LOCAL_STORAGE_PREFIX, useValue: 'myapp' }` and `localStorageProviders()` (use `StorageModule.forRoot({ LSPrefix: 'myapp_', IDBDBName: 'myapp_ngStorage' })` module import instead)
+  - `LocalStorageProvidersConfig` interface (useless)
+- Removed APIs in validation
+  - `JSONSchemaNumeric` interface (use `JSONSchema` instead)
+  - `LSGetItemOptions` interface (useless)
+- Removed methods in `LocalStorage` service
+  - `.size` (use `.length` or `StorageMap.size` instead)
+  - `.has()` (use `StorageMap.has()` instead)
+  - `.keys()` (use *iterative* `StorageMap.keys()` instead)
+  - `.setItemSubscribe()` (use `.setItem().subscribe()` instead)
+  - `.removeItemSubscribe()` (use `.removeItem().subscribe()` instead)
+  - `.clearSubscribe()` (use `.clear().subscribe()` instead)
 
 ## 8.2.1 (2019-08-20)
 

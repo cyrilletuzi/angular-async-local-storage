@@ -1,5 +1,13 @@
 # Migration guide to version 9
 
+```
+npm install @ngx-pwa/local-storage@next
+```
+
+If you've already completed the full [v8 migration](./MIGRATION_TO_V8.md), you're done!
+
+We asked you a lot in the previous major versions migrations, but now the lib is clean!
+
 ## Removed deprecated features
 
 The following APIs were already deprecated in v8 and are now removed in v9.
