@@ -41,98 +41,53 @@ to be homogeneous with other Angular modules.
 
 ## Getting started
 
-Install the right version according to your Angular one via [`npm`](http://npmjs.com):
+Install the package, according to your Angular version:
 
 ```bash
 # For Angular 8:
-npm install @ngx-pwa/local-storage
+ng add @ngx-pwa/local-storage
 
 # For Angular 6 & 7:
 npm install @ngx-pwa/local-storage@6
 ```
 
-The following second setup step is:
-- **only for version >= 8**,
-- not required for the lib to work,
-- **strongly recommended for all new applications**, as it allows interoperability
-and is future-proof, as it should become the default in a future version,
-- **prohibited in applications already using this lib and already deployed in production**,
-as it would break with previously stored data.
+*Done!*
 
-```ts
-import { StorageModule } from '@ngx-pwa/local-storage';
+You should **stick to these commands**. If for any reason `ng add` does not work,
+be sure to follow the [manual installation guide](./docs/MANUAL_INSTALLATION.md),
+as there are additionnal steps to do in addition to the package installation.
 
-@NgModule({
-  imports: [
-    StorageModule.forRoot({
-      IDBNoWrap: true,
-    })
-  ]
-})
-export class AppModule {}
+For version >= 8, if you have multiple applications in the same project, as usual, you need to choose the project:
+```bash
+ng add @ngx-pwa/local-storage --project yourprojectname
 ```
-
-**Must be done at initialization, ie. in `AppModule`, and must not be loaded again in another module.**
 
 ### Upgrading
 
 If you still use the old `angular-async-local-storage` package, or to update to new versions,
 see the **[migration guides](./MIGRATION.md).**
 
-Versions 4 & 5, which are *not* supported anymore,
-needed an additional setup step explained in [the old module guide](./docs/OLD_MODULE.md).
-
 ## API
 
-2 services are available for client-side storage, you just have to inject one of them were you need it.
+2 services are available for client-side storage, you just have to inject one of them where you need it.
 
-### `LocalStorage`
+### `StorageMap`: recommended
 
-```typescript
-import { LocalStorage } from '@ngx-pwa/local-storage';
-
-@Injectable()
-export class YourService {
-
-  constructor(private localStorage: LocalStorage) {}
-
-}
-```
-
-This service API follows the
-[native `localStorage` API](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage), 
-except it's asynchronous via [RxJS `Observable`s](http://reactivex.io/rxjs/):
-
-```typescript
-class LocalStorage {
-  length: Observable<number>;
-  getItem(index: string, schema?: JSONSchema): Observable<unknown> {}
-  setItem(index: string, value: any): Observable<true> {}
-  removeItem(index: string): Observable<true> {}
-  clear(): Observable<true> {}
-}
-```
-
-### `StorageMap`
+New *since version 8* of this lib, this is the recommended service:
 
 ```typescript
 import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Injectable()
 export class YourService {
-
-  constructor(private storageMap: StorageMap) {}
-
+  constructor(private storage: StorageMap) {}
 }
 ```
 
-New *since version 8* of this lib, this service API follows the
-[native `Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
-and the new upcoming standard [kv-storage API](https://github.com/WICG/kv-storage), 
-except it's asynchronous via [RxJS `Observable`s](http://reactivex.io/rxjs/).
-
-It does the same thing as the `LocalStorage` service, but also allows more advanced operations.
-If you are familiar to `Map`, we recommend to use only this service.
+This service API follows the
+new standard [`kv-storage` API](https://wicg.github.io/kv-storage/),
+which is similar to the standard [`Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map),
+except it's based on [RxJS `Observable`s](https://rxjs.dev/) instead of `Promise`s:
 
 ```typescript
 class StorageMap {
@@ -146,20 +101,46 @@ class StorageMap {
 }
 ```
 
+It does the same thing as the `localStorage` API, but also allows more advanced operations.
+
+### `LocalStorage`: legacy
+
+You can keep this legacy service in existing apps, but it's not recommended anymore for new applications.
+
+```typescript
+import { LocalStorage } from '@ngx-pwa/local-storage';
+
+@Injectable()
+export class YourService {
+  constructor(private localStorage: LocalStorage) {}
+}
+```
+
+This service API follows the
+standard [`localStorage` API](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage), 
+except it's asynchronous via [RxJS `Observable`s](https://rxjs.dev/):
+
+```typescript
+class LocalStorage {
+  length: Observable<number>;
+  getItem(index: string, schema?: JSONSchema): Observable<unknown> {}
+  setItem(index: string, value: any): Observable<true> {}
+  removeItem(index: string): Observable<true> {}
+  clear(): Observable<true> {}
+}
+```
+
 ## How to
 
-The following examples will show the 2 services for basic operations,
-then stick to the `StorageMap` API. But except for methods which are specific to `StorageMap`,
-you can always do the same with the `LocalStorage` API.
+The following examples will use the recommended `StorageMap` service.
+But for older versions, you can always do the same with the `LocalStorage` service.
 
 ### Writing data
 
 ```typescript
 let user: User = { firstName: 'Henri', lastName: 'Bergson' };
 
-this.storageMap.set('user', user).subscribe(() => {});
-// or
-this.localStorage.setItem('user', user).subscribe(() => {});
+this.storage.set('user', user).subscribe(() => {});
 ```
 
 You can store any value, without worrying about serializing. But note that:
@@ -172,41 +153,26 @@ See the [serialization guide](./docs/SERIALIZATION.md) for more details.
 
 To delete one item:
 ```typescript
-this.storageMap.delete('user').subscribe(() => {});
-// or
-this.localStorage.removeItem('user').subscribe(() => {});
+this.storage.delete('user').subscribe(() => {});
 ```
 
 To delete all items:
 ```typescript
-this.storageMap.clear().subscribe(() => {});
-// or
-this.localStorage.clear().subscribe(() => {});
+this.storage.clear().subscribe(() => {});
 ```
 
 ### Reading data
 
 ```typescript
-this.storageMap.get('user').subscribe((user) => {
-  console.log(user);
-});
-// or
-this.localStorage.getItem('user').subscribe((user) => {
+this.storage.get('user').subscribe((user) => {
   console.log(user);
 });
 ```
 
-Not finding an item is not an error, it succeeds but returns:
-- `undefined` with `StorageMap`
+Not finding an item is not an error, it succeeds but returns `undefined` (or `null` with `LocalStorage` legacy service):
 ```typescript
-this.storageMap.get('notexisting').subscribe((data) => {
+this.storage.get('notexisting').subscribe((data) => {
   data; // undefined
-});
-```
-- `null` with `LocalStorage`
-```typescript
-this.localStorage.getItem('notexisting').subscribe((data) => {
-  data; // null
 });
 ```
 
@@ -221,8 +187,8 @@ Don't forget it's client-side storage: **always check the data**, as it could ha
 You can use a [JSON Schema](http://json-schema.org/) to validate the data.
 
 ```typescript
-this.storageMap.get('test', { type: 'string' }).subscribe({
-  next: (user) => { /* Called if data is valid or `undefined` or `null` */ },
+this.storage.get('test', { type: 'string' }).subscribe({
+  next: (user) => { /* Called if data is valid or `undefined` */ },
   error: (error) => { /* Called if data is invalid */ },
 });
 ```
@@ -240,7 +206,7 @@ But **you *DO* need to subscribe**, even if you don't have something specific to
 
 As usual, it's better to catch any potential error:
 ```typescript
-this.storageMap.set('color', 'red').subscribe({
+this.storage.set('color', 'red').subscribe({
   next: () => {},
   error: (error) => {},
 });
@@ -251,7 +217,7 @@ For read operations, you can also manage errors by providing a default value:
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-this.storageMap.get('color').pipe(
+this.storage.get('color').pipe(
   catchError(() => of('red')),
 ).subscribe((result) => {});
 ```
@@ -274,7 +240,7 @@ For example, it allows to implement a multiple databases scenario.
 ### Angular support
 
 We follow [Angular LTS support](https://angular.io/guide/releases),
-meaning we support Angular >= 6, until November 2019.
+meaning we support Angular >= 7, until April 2020.
 
 This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler) and Ivy.
 

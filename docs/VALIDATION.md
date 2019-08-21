@@ -8,12 +8,12 @@ but is not recommended as there was breaking changes in v8.
 
 ## Examples
 
-The examples will use the new `StorageMap` service.
+The examples will use the recommended `StorageMap` service.
 But everything in this guide can be done in the same way with the `LocalStorage` service:
-- `this.storageMap.get()` is the same as `this.localStorage.getItem()`
-- `this.storageMap.set()` is the same as `this.localStorage.setItem()`
-- `this.storageMap.delete()` is the same as `this.localStorage.removeItem()`
-- `this.storageMap.clear()` is the same as `this.localStorage.clear()`
+- `this.storage.get()` is the same as `this.localStorage.getItem()`
+- `this.storage.set()` is the same as `this.localStorage.setItem()`
+- `this.storage.delete()` is the same as `this.localStorage.removeItem()`
+- `this.storage.clear()` is the same as `this.localStorage.clear()`
 
 ## Why validation?
 
@@ -40,52 +40,52 @@ as you'll see the more complex it is, the more complex is validation too.
 ### Boolean
 
 ```typescript
-this.storageMap.get('test', { type: 'boolean' })
+this.storage.get('test', { type: 'boolean' })
 ```
 
 ### Integer
 
 ```typescript
-this.storageMap.get('test', { type: 'integer' })
+this.storage.get('test', { type: 'integer' })
 ```
 
 ### Number
 
 ```typescript
-this.storageMap.get('test', { type: 'number' })
+this.storage.get('test', { type: 'number' })
 ```
 
 ### String
 
 ```typescript
-this.storageMap.get('test', { type: 'string' })
+this.storage.get('test', { type: 'string' })
 ```
 
 ### Arrays
 
 ```typescript
-this.storageMap.get('test', {
+this.storage.get('test', {
   type: 'array',
   items: { type: 'boolean' },
 })
 ```
 
 ```typescript
-this.storageMap.get('test', {
+this.storage.get('test', {
   type: 'array',
   items: { type: 'integer' },
 })
 ```
 
 ```typescript
-this.storageMap.get('test', {
+this.storage.get('test', {
   type: 'array',
   items: { type: 'number' },
 })
 ```
 
 ```typescript
-this.storageMap.get('test', {
+this.storage.get('test', {
   type: 'array',
   items: { type: 'string' },
 })
@@ -100,7 +100,7 @@ In special cases, it can be useful to use arrays with values of different types.
 It's called tuples in TypeScript. For example: `['test', 1]`
 
 ```typescript
-this.storageMap.get('test', {
+this.storage.get('test', {
   type: 'array',
   items: [
     { type: 'string' },
@@ -134,7 +134,7 @@ const schema: JSONSchema = {
   required: ['firstName', 'lastName']
 };
 
-this.storageMap.get<User>('test', schema)
+this.storage.get<User>('test', schema)
 ```
 
 What's expected for each property is another JSON schema.
@@ -171,13 +171,13 @@ and then `get()` will fail.
 So when storing complex objects, it's better to check the structure when writing too:
 
 ```typescript
-this.storageMap.set('test', user, schema)
+this.storage.set('test', user, schema)
 ```
 
 You can also use your environnements to do this check only in development:
 
 ```typescript
-this.storageMap.set('test', user, (!environment.production) ? schema : undefined)
+this.storage.set('test', user, (!environment.production) ? schema : undefined)
 ```
 
 ## Additional validation
@@ -198,7 +198,7 @@ this.storageMap.set('test', user, (!environment.production) ? schema : undefined
 
 For example:
 ```typescript
-this.storageMap.get('test', {
+this.storage.get('test', {
   type: 'number',
   maximum: 5
 })
@@ -214,7 +214,7 @@ this.storageMap.get('test', {
 
 For example:
 ```typescript
-this.storageMap.get('test', {
+this.storage.get('test', {
   type: 'string',
   maxLength: 10
 })
@@ -228,7 +228,7 @@ this.storageMap.get('test', {
 
 For example:
 ```typescript
-this.storageMap.get('test', {
+this.storage.get('test', {
   type: 'array',
   items: { type: 'string' },
   maxItems: 5
@@ -260,7 +260,7 @@ const schema: JSONSchema = {
   }
 };
 
-this.storageMap.get<User[]>('test', schema)
+this.storage.get<User[]>('test', schema)
 ```
 
 ## Errors vs. `undefined` / `null`
@@ -268,7 +268,7 @@ this.storageMap.get<User[]>('test', schema)
 If validation fails, it'll go in the error callback:
 
 ```typescript
-this.storageMap.get('existing', { type: 'string' })
+this.storage.get('existing', { type: 'string' })
 .subscribe({
   next: (result) => { /* Called if data is valid or null or undefined */ },
   error: (error) => { /* Called if data is invalid */ },
@@ -276,22 +276,11 @@ this.storageMap.get('existing', { type: 'string' })
 ```
 
 But as usual (like when you do a database request), not finding an item is not an error.
-It succeeds but returns:
-
-- `undefined` with `StorageMap`
+It succeeds but returns `undefined` (or `null` with legacy `LocalStorage` service):
 ```typescript
-this.storageMap.get('notExisting', { type: 'string' })
+this.storage.get('notExisting', { type: 'string' })
 .subscribe({
   next: (result) => { result; /* undefined */ },
-  error: (error) => { /* Not called */ },
-});
-```
-
-- `null` with `LocalStorage`
-```typescript
-this.localStorage.getItem('notExisting', { type: 'string' })
-.subscribe({
-  next: (result) => { result; /* null */ },
   error: (error) => { /* Not called */ },
 });
 ```
@@ -329,7 +318,7 @@ You can use all the native JavaScript operators and functions to validate by you
 For example:
 
 ```typescript
-this.storageMap.get('test').subscribe((result) => {
+this.storage.get('test').subscribe((result) => {
 
   result; // type: unknown
 
@@ -350,7 +339,7 @@ You can help TypeScript like this:
 ```typescript
 import { isString } from 'some-library';
 
-this.storageMap.get('test').subscribe((unsafeResult) => {
+this.storage.get('test').subscribe((unsafeResult) => {
 
   if (isString(unsafeResult)) {
 

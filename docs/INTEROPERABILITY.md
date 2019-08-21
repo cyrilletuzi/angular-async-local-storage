@@ -67,8 +67,8 @@ export class AppModule {}
 by using the values exported by the lib:
 
 ```ts
-if (this.storageMap.backingEngine === 'indexedDB') {
-  const { database, store, version } = this.storageMap.backingStore;
+if (this.storage.backingEngine === 'indexedDB') {
+  const { database, store, version } = this.storage.backingStore;
 }
 ```
 
@@ -103,8 +103,8 @@ export class AppModule {}
 - Option 2:
 
 ```ts
-if (this.storageMap.backingEngine === 'localStorage') {
-  const { prefix } = this.storageMap.fallbackBackingStore;
+if (this.storage.backingEngine === 'localStorage') {
+  const { prefix } = this.storage.fallbackBackingStore;
 }
 ```
 
@@ -133,9 +133,9 @@ export class AppModule {}
 Interoperability with native `indexedDB` can be achieved that way:
 
 ```ts
-if (this.storageMap.backingEngine === 'indexedDB') {
+if (this.storage.backingEngine === 'indexedDB') {
 
-  const { database, store, version } = this.storageMap.backingStore;
+  const { database, store, version } = this.storage.backingStore;
 
   const dbRequest = indexedDB.open(database, version);
 

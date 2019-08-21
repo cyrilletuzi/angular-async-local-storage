@@ -8,7 +8,7 @@ import {
   JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf, JSONValidator
 } from '../validation';
 import { LocalDatabase, IDB_BROKEN_ERROR, LocalStorageDatabase, IndexedDBDatabase, MemoryDatabase } from '../databases';
-import { LS_PREFIX, LOCAL_STORAGE_PREFIX } from '../tokens';
+import { LS_PREFIX } from '../tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -22,14 +22,11 @@ export class StorageMap {
    * @param database Storage to use
    * @param jsonValidator Validator service
    * @param LSPrefix Prefix for `localStorage` keys to avoid collision for multiple apps on the same subdomain or for interoperability
-   * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain or for interoperability
    */
   constructor(
     protected database: LocalDatabase,
     protected jsonValidator: JSONValidator = new JSONValidator(),
     @Inject(LS_PREFIX) protected LSPrefix = '',
-    // tslint:disable-next-line: deprecation
-    @Inject(LOCAL_STORAGE_PREFIX) protected oldPrefix = '',
   ) {}
 
   /**
@@ -388,7 +385,7 @@ export class StorageMap {
           if ('getItem' in localStorage) {
 
             /* Fallback to `localStorage` if available */
-            this.database = new LocalStorageDatabase(this.LSPrefix, this.oldPrefix);
+            this.database = new LocalStorageDatabase(this.LSPrefix);
 
           } else {
 

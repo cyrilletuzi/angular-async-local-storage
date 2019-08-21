@@ -37,10 +37,21 @@ A full [validation guide](./VALIDATION.md) is available.
 
 ## How to migrate?
 
+As usual, be sure to update Angular and Angular CLI first.
+
 1. Update the lib:
 ```
-npm install @ngx-pwa/local-storage@8
+ng update @ngx-pwa/local-storage
 ```
+
+Check that the following steps succeeded:
+- `package.json` updated (as if you did `npm install @ngx-pwa/local-storage@8`)
+- `StorageModule.forRoot({ IDBNoWrap: false })` added in `AppModule` imports of each project (for backward compatibility)
+
+If there is an error, you can do the 2 steps manually, but please file an issue.
+
+If you have multiple applications in your project but you do not use this lib in all projects,
+remove `StorageModule.forRoot({ IDBNoWrap: false })` and the import in the unconcerned `AppModule`s.
 
 2. Start your project: problems will be seen at compilation.
 Or you could search for `getItem` as most breaking changes are about its options.
@@ -157,14 +168,15 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 @Injectable()
 export class YourService {
 
-  constructor(private storageMap: StorageMap) {}
+  constructor(private storage: StorageMap) {}
 
 }
 ```
 
 This service API follows the
-[native `Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), 
-except it's asynchronous via [RxJS `Observable`s](http://reactivex.io/rxjs/).
+new standard [`kv-storage` API](https://wicg.github.io/kv-storage/),
+which is similar to the standard [`Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map),
+except it's based on [RxJS `Observable`s](https://rxjs.dev/) instead of `Promise`s:
 
 ```typescript
 class StorageMap {
@@ -178,21 +190,22 @@ class StorageMap {
 }
 ```
 
-It does the same thing as the `LocalStorage` service, but also allows more advanced operations.
+It does the same thing as the `localStorage` API, but also allows more advanced operations.
 If you are familiar to `Map`, we recommend to use only this service.
 
-So the following examples will use this new service to help you familiarize with it.
+So it's now the recommended service, and the following example will use it to make you familiar with it.
+
 But don't worry: the `LocalStorage` service is still there,
 and everything can still be done in the same way with the `LocalStorage` service:
-- `this.storageMap.get()` is the same as `this.localStorage.getItem()`
-- `this.storageMap.set()` is the same as `this.localStorage.setItem()`
-- `this.storageMap.delete()` is the same as `this.localStorage.removeItem()`
-- `this.storageMap.clear()` is the same as `this.localStorage.clear()`
+- `this.storage.get()` is the same as `this.localStorage.getItem()`
+- `this.storage.set()` is the same as `this.localStorage.setItem()`
+- `this.storage.delete()` is the same as `this.localStorage.removeItem()`
+- `this.storage.clear()` is the same as `this.localStorage.clear()`
 
 Just one difference on the return value when the requested key does not exist:
 - `undefined` with `StorageMap`
 ```typescript
-this.storageMap.get('notexisting').subscribe((data) => {
+this.storage.get('notexisting').subscribe((data) => {
   data; // undefined
 });
 ```
@@ -219,7 +232,7 @@ this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
 
 Since v8:
 ```typescript
-this.storageMap.get('test', { type: 'string' })
+this.storage.get('test', { type: 'string' })
 ```
 
 Passing the schema via an object is deprecated and will be removed in v9.
@@ -243,7 +256,7 @@ this.localStorage.getItem<string>('test', { schema: { type: 'string' } }).subscr
 
 Since v8:
 ```typescript
-this.storageMap.get('test', { type: 'string' }).subscribe((data) => {
+this.storage.get('test', { type: 'string' }).subscribe((data) => {
   data; // string :D
 });
 ```
@@ -270,7 +283,7 @@ this.localStorage.has('somekey').subscribe((result) => {});
 
 Since v8:
 ```typescript
-this.storageMap.has('somekey').subscribe((result) => {});
+this.storage.has('somekey').subscribe((result) => {});
 ```
 
 They are still in the `LocalStorage` service but deprecated.
@@ -289,7 +302,7 @@ While *not* recommended, you can get the same behavior as before by doing this:
 ```typescript
 import { toArray } from 'rxjs/operators';
 
-this.storageMap.keys().pipe(toArray()).subscribe((keys) => {});
+this.storage.keys().pipe(toArray()).subscribe((keys) => {});
 ```
 
 ### Use the generic `JSONSchema`

@@ -6,12 +6,12 @@
   "license": "MIT",
   "keywords": [
     "angular",
-    "angular6",
-    "angular 6",
     "angular7",
     "angular 7",
     "angular8",
     "angular 8",
+    "angular9",
+    "angular 9",
     "localstorage",
     "local storage",
     "indexeddb",
@@ -27,8 +27,12 @@
     "url": "https://github.com/cyrilletuzi/angular-async-local-storage/issues"
   },
   "peerDependencies": {
-    "@angular/common": "^8.0.0-beta || ^8.0.0-rc || ^8.0.0",
-    "@angular/core": "^8.0.0-beta || ^8.0.0-rc || ^8.0.0",
+    "@angular/common": "^8.0.0",
+    "@angular/core": "^8.0.0",
     "rxjs": "^6.4.0"
+  },
+  "schematics": "./schematics/collection.json",
+  "ng-update": {
+    "migrations": "./schematics/migration.json"
   }
 }

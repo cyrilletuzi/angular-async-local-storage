@@ -253,13 +253,6 @@ export interface JSONSchemaObject {
 }
 
 /**
- * @deprecated Deprecated in favor of `JSONSchemaNumber` or `JSONSchemaInteger`
- * Available for backward-compatibility only, **do not use**.
- * May be removed in v9.
- */
-export type JSONSchemaNumeric = JSONSchemaNumber | JSONSchemaInteger;
-
-/**
  * Subset of the JSON Schema standard.
  * Types are enforced to validate everything: each value **must** have a `type`.
  * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
