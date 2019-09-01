@@ -5,7 +5,7 @@ import { getWorkspace as getWorkspaceConfig } from '@schematics/angular/utility/
 
 export const packageName = '@ngx-pwa/local-storage';
 // TODO: Automate this
-export const packageVersionLatest = '^8.2.1';
+export const packageVersionLatest = '^8.2.2';
 export const packageVersionLTS = '^6.2.5';
 
 export function getAngularMajorVersion(host: Tree): number {
