@@ -7,8 +7,7 @@ import { StorageMap } from '@ngx-pwa/local-storage';
   template: `
     <h1>{{title}}</h1>
     <router-outlet></router-outlet>
-  `,
-  styles: ['']
+  `
 })
 export class AppComponent implements OnInit {
 
