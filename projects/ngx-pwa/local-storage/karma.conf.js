@@ -49,7 +49,7 @@ module.exports = function (config) {
       }
     },
     /* Default tests (for CircleCI) */
-    browsers: ['Chrome', 'Firefox'],
+    browsers: ['ChromeHeadless', 'FirefoxHeadless'],
     /* Tests on Mac
      * There is currently an issue with karma and Safari 12,
      * needing to explicitly click "open" to launch the tests
