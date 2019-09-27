@@ -8,7 +8,7 @@
     "build": "ng build ngx-pwa-local-storage --prod && copyfiles README.md LICENSE dist/ngx-pwa/local-storage && npm run schematics",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "ng test ngx-pwa-local-storage --watch false",
-    "test:unit:macOS-latest": "ng test ngx-pwa-local-storage --watch false --browsers Chrome,SafariNative",
+    "test:unit:macOS-latest": "ng test ngx-pwa-local-storage --watch false --browsers SafariNative",
     "test:unit:ubuntu-latest": "ng test ngx-pwa-local-storage --watch false --browsers ChromeHeadless,FirefoxHeadless",
     "test:unit:windows-latest": "ng test ngx-pwa-local-storage --watch false --browsers ChromeHeadless,FirefoxHeadless,IE --tsConfig projects/ngx-pwa/local-storage/tsconfig.spec.ie.json",
     "test:e2e": "npm run webdriver && npm run test:e2e:demo && npm run test:e2e:interoperability",
