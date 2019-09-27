@@ -19,6 +19,9 @@ So it means the page never changes or reloads, so JavaScript is running as long 
 So **if we want to keep some data just while the user is here, we just need to store it in a classic variable, constant or property**.
 You don't need local storage at all, neither temporary nor persistent.
 
+If there are many of them, we may need to organize them in what we call a store,
+but it would still be just variables.
+
 To summarize:
 - for persistent storage (if the user leaves and comes back later): `localStorage` (or this lib)
 - for temporary storage (just when the user is browsing):
