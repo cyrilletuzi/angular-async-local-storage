@@ -36,6 +36,12 @@ Please follow the [migration guide to v8](./docs/MIGRATION_TO_V8.md) for more de
   - `.removeItemSubscribe()` (use `.removeItem().subscribe()` instead)
   - `.clearSubscribe()` (use `.clear().subscribe()` instead)
 
+## 8.2.3 (2019-09-27)
+
+### Bug fix
+
+- `.size` in now working in Firefox private mode
+
 ## 8.2.2 (2019-09-01)
 
 ### Bug fix
