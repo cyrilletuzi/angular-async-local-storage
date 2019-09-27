@@ -37,7 +37,7 @@ module.exports = function (config) {
       },
       Firefox_private: {
         base: 'Firefox',
-        flags: ['-private']
+        flags: ['--headless', '-private']
       },
       Edge_private: {
         base: 'Edge',
@@ -48,7 +48,7 @@ module.exports = function (config) {
         flags: ['-private']
       }
     },
-    /* Default tests (for CircleCI) */
+    /* Default tests (for CI) */
     browsers: ['ChromeHeadless'],
     /* Tests on Mac
      * There is currently an issue with karma and Safari 12,

@@ -3,15 +3,32 @@ name: CI
 on: pull_request
 
 jobs:
+
+  lint:
+    name: Lint check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10
+    - name: Install dependencies
+      run: npm ci
+      env:
+        CI: true
+    - name: Lint check
+      run: npm run lint
+
   test:
-  
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-    
+
     name: Test with Angular@latest on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    
+
     steps:
     - uses: actions/checkout@v1
     - name: Setup Node
@@ -25,7 +42,7 @@ jobs:
     - name: Build the lib
       run: npm run build
     - name: Run unit tests
-      run: npm run test:unit
+      run: npm run test:unit:${{ matrix.os }}
     - name: Install webdriver for e2e tests
       run: npm run webdriver
     - name: Run general e2e tests
