@@ -43,8 +43,6 @@ jobs:
       run: npm run build
     - name: Run unit tests
       run: npm run test:unit:${{ matrix.os }}
-    - name: Install webdriver for e2e tests
-      run: npm run webdriver
     - name: Run general e2e tests
       run: npm run test:e2e:demo
     - name: Run interoperability e2e tests
