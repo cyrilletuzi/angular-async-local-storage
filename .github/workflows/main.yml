@@ -20,7 +20,7 @@ jobs:
     - name: Lint check
       run: npm run lint
 
-  test:
+  test-latest:
 
     strategy:
       matrix:
@@ -52,3 +52,61 @@ jobs:
     - name: Run Ivy e2e tests
       run: npm run test:ivy
       if: matrix.os == 'ubuntu-latest'
+
+  test-next:
+
+    name: Test with Angular@next
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    - name: Install dependencies
+      run: npm ci
+      env:
+        CI: true
+    - name: Build the lib (with the current version, as it is what is published on npm)
+      run: npm run build
+    - name: Update dependencies to next version
+      run: npm install @angular/common@next @angular/compiler@next @angular/core@next @angular/platform-browser@next @angular/platform-browser-dynamic@next @angular/router@next @angular/cli@next @angular/compiler-cli@next @angular-devkit/build-angular@next @angular-devkit/build-ng-packagr@next
+      env:
+        CI: true
+    - name: Run unit tests
+      run: npm run test:unit:ubuntu-latest
+    - name: Run general e2e tests
+      run: npm run test:e2e:demo
+    - name: Run interoperability e2e tests
+      run: npm run test:e2e:interoperability
+    - name: Run Ivy e2e tests
+      run: npm run test:ivy
+
+  test-backward:
+
+    name: Test with Angular@8.0 (and TypeScript@3.4 and RxJS@6.4)
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 8
+    - name: Install dependencies
+      run: npm ci
+      env:
+        CI: true
+    - name: Build the lib (with the current version, as it is what is published on npm)
+      run: npm run build
+    - name: Update dependencies to next version
+      run: npm install typescript@3.4.1 rxjs@6.4.0 zone.js@0.9.1 @angular/common@8.0.0 @angular/compiler@8.0.0 @angular/core@8.0.0 @angular/platform-browser@8.0.0 @angular/platform-browser-dynamic@8.0.0 @angular/router@8.0.0 @angular/cli@8.0.1 @angular/compiler-cli@8.0.0 @angular-devkit/build-angular@0.800.1 @angular-devkit/build-ng-packagr@0.800.1
+      env:
+        CI: true
+    - name: Run unit tests
+      run: npm run test:unit:ubuntu-latest
+    - name: Run general e2e tests
+      run: npm run test:e2e:demo
+    - name: Run interoperability e2e tests
+      run: npm run test:e2e:interoperability
