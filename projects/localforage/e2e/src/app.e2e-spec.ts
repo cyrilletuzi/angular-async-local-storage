@@ -2,25 +2,36 @@ import { browser, $ } from 'protractor';
 
 describe('interoperability', () => {
 
-  it('compatibility with localforage lib', async () => {
+  it('compatibility with localforage lib', (done) => {
 
-    await browser.get('/');
-
-    const title = await $('h1').getText();
-
-    expect(title).toBe('hello world');
+    browser.get('/').then(() => {
+      /* Wait for a few seconds as operations are asynchronous */
+      setTimeout(() => {
+        $('h1').getText().then((title) => {
+          expect(title).toBe('hello world');
+        });
+        done();
+      }, 1000);
+    });
 
   });
 
-  it('lazy loading', async () => {
+  it('lazy loading', (done) => {
 
-    await browser.get('/');
-
-    await browser.get('/lazy');
-
-    const text = await $('#lazy').getText();
-
-    expect(text).toBe('hello world');
+    browser.get('/').then(() => {
+      /* Wait for a few seconds as operations are asynchronous */
+      setTimeout(() => {
+        browser.get('/lazy').then(() => {
+          /* Wait for a few seconds as operations are asynchronous */
+          setTimeout(() => {
+            $('#lazy').getText().then((title) => {
+              expect(title).toBe('hello world');
+            });
+            done();
+          }, 1000);
+        });
+      }, 1000);
+    });
 
   });
 

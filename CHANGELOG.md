@@ -36,6 +36,18 @@ Please follow the [migration guide to v8](./docs/MIGRATION_TO_V8.md) for more de
   - `.removeItemSubscribe()` (use `.removeItem().subscribe()` instead)
   - `.clearSubscribe()` (use `.clear().subscribe()` instead)
 
+## 8.2.3 (2019-09-27)
+
+### Bug fix
+
+- `.size` in now working in Firefox private mode
+
+## 8.2.2 (2019-09-01)
+
+### Bug fix
+
+- Fix a regression introduced in 8.2.0, causing the lib to fail instead of falling back to other storages in Firefox private mode
+
 ## 8.2.1 (2019-08-20)
 
 ### Features

@@ -9,7 +9,7 @@ describe('public api', () => {
       /* Wait for a few seconds as operations are asynchronous */
       setTimeout(() => {
         done();
-      }, 2000);
+      }, 1000);
 
     });
 

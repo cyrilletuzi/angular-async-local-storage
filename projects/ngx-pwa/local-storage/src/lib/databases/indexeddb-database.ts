@@ -274,7 +274,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         );
 
         /* Listen to error event and if so, throw an error */
-        const error$ = fromEvent(request, 'error').pipe(mergeMap(() => throwError(request.error as DOMException)));
+        const error$ = this.listenError(request);
 
         /* Choose the first event to occur */
         return race([success$, error$]);
@@ -340,8 +340,12 @@ export class IndexedDBDatabase implements LocalDatabase {
     /* Create store on first connection */
     this.createStore(request);
 
-    /* Listen to success and error events and choose the first to occur */
-    race([fromEvent(request, 'success'), fromEvent(request, 'error')])
+    /* Listen to success and error events */
+    const success$ = fromEvent(request, 'success');
+    const error$ = this.listenError(request);
+
+    /* Choose the first to occur */
+    race([success$, error$])
       /* The observable will complete */
       .pipe(first())
       .subscribe({
@@ -425,6 +429,20 @@ export class IndexedDBDatabase implements LocalDatabase {
   }
 
   /**
+   * Listen errors on a transaction or request, and throw if trigerred
+   * @param transactionOrRequest `indexedDb` transaction or request to listen
+   * @returns An `Observable` listening to errors
+   */
+  protected listenError(transactionOrRequest: IDBTransaction | IDBRequest): Observable<never> {
+
+    return fromEvent(transactionOrRequest, 'error').pipe(
+      /* Throw on error to be able to catch errors in RxJS way */
+      mergeMap(() => throwError(transactionOrRequest.error)),
+    );
+
+  }
+
+  /**
    * Listen transaction `complete` and `error` events
    * @param transaction Transaction to listen
    * @returns An `Observable` listening to transaction `complete` and `error` events
@@ -435,7 +453,7 @@ export class IndexedDBDatabase implements LocalDatabase {
     const complete$ = fromEvent(transaction, 'complete');
 
     /* Listen to the `error` event */
-    const error$ = fromEvent(transaction, 'error').pipe(mergeMap(() => throwError(transaction.error)));
+    const error$ = this.listenError(transaction);
 
     /* Choose the first event to occur */
     return race([complete$, error$]);
