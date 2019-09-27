@@ -20,7 +20,7 @@ So **if we want to keep some data just while the user is here, we just need to s
 You don't need local storage at all, neither temporary nor persistent.
 
 To summarize:
-- for persistent storage (if the user leaves and comes back later): `localStorage` (or `indexedDb`)
+- for persistent storage (if the user leaves and comes back later): `localStorage` (or this lib)
 - for temporary storage (just when the user is browsing):
   - `sessionStorage` in a website
   - just variables, constants and properties in an application
