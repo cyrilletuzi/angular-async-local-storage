@@ -17,10 +17,6 @@ exports.config = {
       'browserName': 'chrome',
       'goog:chromeOptions': { args: [ "--headless" ] },
     },
-    {
-      'browserName': 'firefox',
-      'moz:firefoxOptions': { args: [ '--headless' ] },
-    },
   ],
   directConnect: true,
   baseUrl: 'http://localhost:4200/',
