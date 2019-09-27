@@ -39,7 +39,9 @@ export class StorageMap {
    */
   get size(): Observable<number> {
 
-    return this.database.size;
+    return this.database.size
+      /* Catch if `indexedDb` is broken */
+      .pipe(this.catchIDBBroken(() => this.database.size));
 
   }
 

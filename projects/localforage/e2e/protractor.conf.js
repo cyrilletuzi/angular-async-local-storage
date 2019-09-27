@@ -13,8 +13,10 @@ exports.config = {
     './src/**/*.e2e-spec.ts'
   ],
   multiCapabilities: [
-    { 'browserName': 'chrome' },
-    { 'browserName': 'firefox' },
+    {
+      'browserName': 'chrome',
+      'goog:chromeOptions': { args: [ "--headless" ] },
+    },
   ],
   directConnect: true,
   baseUrl: 'http://localhost:4200/',
