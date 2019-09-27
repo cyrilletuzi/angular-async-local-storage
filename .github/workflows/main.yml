@@ -43,6 +43,8 @@ jobs:
       run: npm run build
     - name: Run unit tests
       run: npm run test:unit:${{ matrix.os }}
+    - name: Run unit tests in private mode
+      run: npm run test:unit:${{ matrix.os }}:private
     - name: Run general e2e tests
       run: npm run test:e2e:demo
       if: matrix.os == 'ubuntu-latest'
@@ -76,6 +78,8 @@ jobs:
         CI: true
     - name: Run unit tests
       run: npm run test:unit:ubuntu-latest
+    - name: Run unit tests in private mode
+      run: npm run test:unit:ubuntu-latest:private
     - name: Run general e2e tests
       run: npm run test:e2e:demo
     - name: Run interoperability e2e tests
@@ -106,6 +110,8 @@ jobs:
         CI: true
     - name: Run unit tests
       run: npm run test:unit:ubuntu-latest
+    - name: Run unit tests in private mode
+      run: npm run test:unit:ubuntu-latest:private
     - name: Run general e2e tests
       run: npm run test:e2e:demo
     - name: Run interoperability e2e tests
