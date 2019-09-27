@@ -15,7 +15,7 @@ it may be necessary to save some data in:
 But now with tools like Angular, *from the technical side*, we're building applications, not websites anymore.
 Even if we may distribute our application as what's look like as a website *from the user side*.
 
-So it means the page never changes or reloads, so JavaScript is running as long as the user don't quit the app.
+So it means the page never changes or reloads, so JavaScript is running as long as the user doesn't quit the app.
 So **if we want to keep some data just while the user is here, we just need to store it in a classic variable, constant or property**.
 You don't need local storage at all, neither temporary nor persistent.
 
