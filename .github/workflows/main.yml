@@ -15,12 +15,14 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: Use Node ${{ matrix.node_version }}
+    - name: Setup Node
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node_version }}
     - name: Install dependencies
       run: npm ci
+      env:
+        CI: true
     - name: Build the lib
       run: npm run build
     - name: Run unit tests
