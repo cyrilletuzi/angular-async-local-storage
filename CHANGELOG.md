@@ -2,6 +2,12 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 8.2.3 (2019-09-27)
+
+### Bug fix
+
+- `.size` in now working in Firefox private mode
+
 ## 9.0.0-beta.1 (2019-08-21)
 
 Note that for now, it works both with Angular 8 & 9 for testing purposes,
@@ -35,12 +41,6 @@ Please follow the [migration guide to v8](./docs/MIGRATION_TO_V8.md) for more de
   - `.setItemSubscribe()` (use `.setItem().subscribe()` instead)
   - `.removeItemSubscribe()` (use `.removeItem().subscribe()` instead)
   - `.clearSubscribe()` (use `.clear().subscribe()` instead)
-
-## 8.2.3 (2019-09-27)
-
-### Bug fix
-
-- `.size` in now working in Firefox private mode
 
 ## 8.2.2 (2019-09-01)
 

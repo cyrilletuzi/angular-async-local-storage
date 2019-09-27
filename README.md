@@ -5,7 +5,7 @@ Efficient client-side storage module for Angular apps and Progressive Wep Apps (
 - **perfomance**: internally stored via the asynchronous `indexedDB` API,
 - **Angular-like**: wrapped in RxJS `Observable`s,
 - **security**: validate data with a JSON Schema,
-- **compatibility**: works around some browsers issues,
+- **compatibility**: works around some browsers issues and heavily tested via GitHub Actions,
 - **documentation**: API fully explained, and a changelog!
 - **reference**: 1st Angular library for client-side storage according to [ngx.tools](https://ngx.tools/#/search?q=local%20storage).
 
