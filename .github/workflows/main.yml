@@ -43,12 +43,12 @@ jobs:
       run: npm run build
     - name: Run unit tests
       run: npm run test:unit:${{ matrix.os }}
-    - name: Install specific Webdriver on Windows to match CI Chrome version
-      run: ./node_modules/.bin/webdriver-manager update --versions.chrome 76
-      if: matrix.os == 'windows-latest'
     - name: Run general e2e tests
       run: npm run test:e2e:demo
+      if: matrix.os == 'macOS-latest'
     - name: Run interoperability e2e tests
       run: npm run test:e2e:interoperability
+      if: matrix.os == 'macOS-latest'
     - name: Run Ivy e2e tests
       run: npm run test:ivy
+      if: matrix.os == 'macOS-latest'
