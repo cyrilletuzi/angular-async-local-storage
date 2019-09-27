@@ -9,7 +9,7 @@ module.exports = function (config) {
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
-      require('karma-safari-launcher'),
+      require('karma-safarinative-launcher'),
       require('karma-safari-private-launcher'),
       require('karma-edge-launcher'),
       require('karma-ie-launcher'),
@@ -31,37 +31,33 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     customLaunchers: {
-      Chrome_private: {
+      ChromePrivate: {
         base: 'Chrome',
         flags: ['--incognito']
       },
-      Firefox_private: {
+      FirefoxPrivate: {
         base: 'Firefox',
         flags: ['--headless', '-private']
       },
-      Edge_private: {
+      EdgePrivate: {
         base: 'Edge',
         flags: ['-private']
       },
-      IE_private: {
+      IEPrivate: {
         base: 'IE',
         flags: ['-private']
       }
     },
-    /* Default tests (for CI) */
+    /* Default */
     browsers: ['ChromeHeadless'],
-    /* Tests on Mac
-     * There is currently an issue with karma and Safari 12,
-     * needing to explicitly click "open" to launch the tests
-     */
-    // browsers: ['Chrome', 'Firefox', 'Safari'],
-    /* Tests on Mac in private modes */
-    // browsers: ['Chrome_private', 'Firefox_private', 'SafariPrivate'],
-    /* Tests on Windows */
+    /* Tests on Mac */
+    // browsers: ['ChromeHeadless', 'FirefoxHeadless', 'SafariNative'],
+    /* Tests on Mac in private mode */
+    // browsers: ['ChromePrivate', 'FirefoxPrivate', 'SafariPrivate'],
+    /* Tests on Windows 10 */
     // browsers: ['Chrome', 'Firefox', 'Edge', 'IE'],
-    /* Tests on Windows in private mode
-     * Not sure the private option for Edge is working... */
-    // browsers: ['Chrome', 'Chrome_private', 'Firefox_private', 'Edge_private', 'IE_private'],
+    /* Tests on Windows 10 in private mode (not sure the private option for Edge is working) */
+    // browsers: ['ChromePrivate', 'FirefoxPrivate', 'EdgePrivate', 'IEPrivate'],
     singleRun: false
   });
 };
