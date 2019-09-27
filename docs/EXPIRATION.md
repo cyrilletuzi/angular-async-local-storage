@@ -36,7 +36,7 @@ If you really are in this case, you'll have to stick to the native `sessionStora
 as it's not possible to manage temporary data in `indexedDb`, and manually detecting when the user leaves is unreliable
 (as the browser won't always fire the `unload` event, for privacy reasons).
 
-## Expiration
+## Theoretical persistency
 
 Let's also make clear that this lib, as native `localStorage` and `indexedDb`, is about *persistent* storage,
 but *persistent* is to understand at a theoretical level.
