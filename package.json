@@ -9,7 +9,7 @@
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "ng test ngx-pwa-local-storage --watch false",
     "test:unit:macOS-latest": "ng test ngx-pwa-local-storage --watch false --browsers SafariNative",
-    "test:unit:macOS-latest:private": "ng test ngx-pwa-local-storage --watch false --browsers SafariPrivate",
+    "test:unit:macOS-latest:private": "true",
     "test:unit:ubuntu-latest": "ng test ngx-pwa-local-storage --watch false --browsers ChromeHeadless,ChromeHeadless",
     "test:unit:ubuntu-latest:private": "ng test ngx-pwa-local-storage --watch false --browsers ChromeHeadless",
     "test:unit:windows-latest": "ng test ngx-pwa-local-storage --watch false --browsers ChromeHeadless,FirefoxHeadless,IE --tsConfig projects/ngx-pwa/local-storage/tsconfig.spec.ie.json",
