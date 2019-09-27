@@ -227,6 +227,13 @@ this.storage.get('color').pipe(
 
 See the [errors guide](./docs/ERRORS.md) for some details about what errors can happen.
 
+### Expiration
+
+This lib, as native `localStorage` and `indexedDb`, is about *persistent* storage.
+
+Wanting *temporary* storage (like `sessionStorage`) is a very common misconception:
+an application doesn't need that. [More details here](./docs/EXPIRATION.md).
+
 ### `Map`-like operations
 
 Starting *with version >= 8* of this lib, in addition to the classic `localStorage`-like API,
