@@ -91,11 +91,17 @@ except it's based on [RxJS `Observable`s](https://rxjs.dev/) instead of `Promise
 
 ```typescript
 class StorageMap {
-  size: Observable<number>;
-  get(index: string, schema?: JSONSchema): Observable<unknown> {}
+  // Read
+  get(index: string): Observable<unknown> {}
+  get<T>(index: string, schema: JSONSchema): Observable<T> {}
+
+  // Write
   set(index: string, value: any): Observable<undefined> {}
   delete(index: string): Observable<undefined> {}
   clear(): Observable<undefined> {}
+
+  // Advanced
+  size: Observable<number>;
   has(index: string): Observable<boolean> {}
   keys(): Observable<string> {}
 }
@@ -122,11 +128,17 @@ except it's asynchronous via [RxJS `Observable`s](https://rxjs.dev/):
 
 ```typescript
 class LocalStorage {
-  length: Observable<number>;
-  getItem(index: string, schema?: JSONSchema): Observable<unknown> {}
+  // Read
+  getItem(index: string): Observable<unknown> {}
+  getItem<T>(index: string, schema: JSONSchema): Observable<T> {}
+
+  // Write
   setItem(index: string, value: any): Observable<true> {}
   removeItem(index: string): Observable<true> {}
   clear(): Observable<true> {}
+
+  // Advanced
+  length: Observable<number>;
 }
 ```
 
