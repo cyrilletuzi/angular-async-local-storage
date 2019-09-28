@@ -8,6 +8,18 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 
 - `.size` in now working in Firefox private mode
 
+### Tests
+
+The repo has moved from CircleCI to GitHub Actions.
+So it's free and a lot easier to test on several configurations, and now the lib is tested for each pull request on:
+- Chrome (Ubuntu & Windows)
+- Firefox (Ubuntu & Windows)
+- Safari (macOS)
+- IE (Windows)
+- in private mode of Chrome, Firefox and IE
+
+Previously, the lib was only automatically tested in Chrome and Firefox on Ubuntu, in normal mode (other configs were tested manually).
+
 ## 9.0.0-beta.1 (2019-08-21)
 
 Note that for now, it works both with Angular 8 & 9 for testing purposes,
