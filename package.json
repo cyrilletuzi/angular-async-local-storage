@@ -40,7 +40,7 @@
     "@angular/cli": "8.3.6",
     "@angular/compiler-cli": "8.2.8",
     "@types/jasmine": "3.4.2",
-    "@types/jasminewd2": "2.0.7",
+    "@types/jasminewd2": "2.0.8",
     "@types/node": "10.14.20",
     "codelyzer": "5.1.2",
     "copyfiles": "2.1.1",
