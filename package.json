@@ -21,7 +21,7 @@
     "webdriver": "webdriver-manager update",
     "lint": "ng lint",
     "schematics": "tsc -p projects/ngx-pwa/local-storage/tsconfig.schematics.json && copyfiles --up 3 projects/ngx-pwa/local-storage/schematics/collection.json projects/ngx-pwa/local-storage/schematics/migration.json projects/ngx-pwa/local-storage/schematics/**/schema.json dist/ngx-pwa/local-storage",
-    "publish": "npm run lint && npm run build && npm test && npm publish dist/ngx-pwa/local-storage --access public --tag next"
+    "publish": "npm run build && npm publish dist/ngx-pwa/local-storage --access public --tag next"
   },
   "private": true,
   "dependencies": {
