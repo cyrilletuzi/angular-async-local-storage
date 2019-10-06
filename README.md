@@ -5,7 +5,7 @@ Efficient client-side storage module for Angular apps and Progressive Wep Apps (
 - **perfomance**: internally stored via the asynchronous `indexedDB` API,
 - **Angular-like**: wrapped in RxJS `Observable`s,
 - **security**: validate data with a JSON Schema,
-- **compatibility**: works around some browsers issues,
+- **compatibility**: works around some browsers issues and heavily tested via GitHub Actions,
 - **documentation**: API fully explained, and a changelog!
 - **reference**: 1st Angular library for client-side storage according to [ngx.tools](https://ngx.tools/#/search?q=local%20storage).
 
@@ -91,11 +91,17 @@ except it's based on [RxJS `Observable`s](https://rxjs.dev/) instead of `Promise
 
 ```typescript
 class StorageMap {
-  size: Observable<number>;
-  get(index: string, schema?: JSONSchema): Observable<unknown> {}
+  // Read
+  get(index: string): Observable<unknown> {}
+  get<T>(index: string, schema: JSONSchema): Observable<T> {}
+
+  // Write
   set(index: string, value: any): Observable<undefined> {}
   delete(index: string): Observable<undefined> {}
   clear(): Observable<undefined> {}
+
+  // Advanced
+  size: Observable<number>;
   has(index: string): Observable<boolean> {}
   keys(): Observable<string> {}
 }
@@ -122,11 +128,17 @@ except it's asynchronous via [RxJS `Observable`s](https://rxjs.dev/):
 
 ```typescript
 class LocalStorage {
-  length: Observable<number>;
-  getItem(index: string, schema?: JSONSchema): Observable<unknown> {}
+  // Read
+  getItem(index: string): Observable<unknown> {}
+  getItem<T>(index: string, schema: JSONSchema): Observable<T> {}
+
+  // Write
   setItem(index: string, value: any): Observable<true> {}
   removeItem(index: string): Observable<true> {}
   clear(): Observable<true> {}
+
+  // Advanced
+  length: Observable<number>;
 }
 ```
 
@@ -223,6 +235,13 @@ this.storage.get('color').pipe(
 ```
 
 See the [errors guide](./docs/ERRORS.md) for some details about what errors can happen.
+
+### Expiration
+
+This lib, as native `localStorage` and `indexedDb`, is about *persistent* storage.
+
+Wanting *temporary* storage (like `sessionStorage`) is a very common misconception:
+an application doesn't need that. [More details here](./docs/EXPIRATION.md).
 
 ### `Map`-like operations
 
