@@ -35,14 +35,14 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.900.0-next.8",
-    "@angular-devkit/build-ng-packagr": "~0.900.0-next.8",
+    "@angular-devkit/build-angular": "0.900.0-next.8",
+    "@angular-devkit/build-ng-packagr": "0.900.0-next.8",
     "@angular/cli": "9.0.0-next.8",
     "@angular/compiler-cli": "9.0.0-next.9",
     "@types/jasmine": "3.4.2",
     "@types/jasminewd2": "2.0.8",
     "@types/node": "10.14.20",
-    "codelyzer": "^5.1.2",
+    "codelyzer": "5.1.2",
     "copyfiles": "2.1.1",
     "jasmine-core": "3.5.0",
     "jasmine-spec-reporter": "4.2.1",
@@ -57,11 +57,11 @@
     "karma-safari-private-launcher": "1.0.0",
     "karma-safarinative-launcher": "1.1.0",
     "localforage": "1.7.3",
-    "ng-packagr": "^5.5.1",
+    "ng-packagr": "5.5.1",
     "protractor": "5.4.2",
     "ts-node": "8.4.1",
     "tslint": "5.20.0",
     "typescript": "3.5.3",
-    "zone.js": "~0.10.2"
+    "zone.js": "0.10.2"
   }
 }
