@@ -17,7 +17,7 @@ It *cannot* detect external changes (for examples via the native `indexedDB` API
 ## Via manual subscription
 
 ```typescript
-import { Subscription } from 'rjxs';
+import { Subscription } from 'rxjs';
 import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Component({
@@ -47,7 +47,7 @@ export class SomeComponent implements OnInit, OnDestroy {
 ## Via the `async` pipe
 
 ```typescript
-import { Observable } from 'rjxs';
+import { Observable } from 'rxjs';
 import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Component({
