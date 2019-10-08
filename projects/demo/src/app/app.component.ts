@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
     this.localStorage.setItem('clear', 'test').pipe(
       mergeMap(() => this.localStorage.clear()),
       mergeMap(() => this.localStorage.getItem('clear', { type: 'string' })),
-    ).subscribe((result) => {
+    ).subscribe((result: string) => {
 
       /* Waiting for the `.clear()` to be done before other operations,
        * as all operations are asynchronous, `.clear()` could interfer with the other tests */
