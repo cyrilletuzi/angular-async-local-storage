@@ -506,6 +506,87 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
     });
 
+    describe('watch()', () => {
+
+      it('with valid schema', (done) => {
+
+        const watchedKey = 'watched1';
+        const values = [undefined, 'test1', undefined, 'test2', undefined];
+        let i = 0;
+
+        localStorageService.watch(watchedKey, { type: 'string' }).subscribe((result) => {
+
+          expect(result).toBe(values[i]);
+
+          i += 1;
+
+          if (i === 1) {
+
+            localStorageService.set(watchedKey, values[1]).pipe(
+              mergeMap(() => localStorageService.delete(watchedKey)),
+              mergeMap(() => localStorageService.set(watchedKey, values[3])),
+              mergeMap(() => localStorageService.clear()),
+            ).subscribe();
+
+          }
+
+          if (i === values.length) {
+            done();
+          }
+
+        });
+
+      });
+
+      it('with invalid schema', (done) => {
+
+        const watchedKey = 'watched2';
+
+        localStorageService.set(watchedKey, 'test').subscribe(() => {
+
+          localStorageService.watch(watchedKey, { type: 'number' }).subscribe({
+            error: () => {
+              expect().nothing();
+              done();
+            }
+          });
+
+        });
+
+      });
+
+      it('without schema', (done) => {
+
+        const watchedKey = 'watched3';
+        const values = [undefined, 'test1', undefined, 'test2', undefined];
+        let i = 0;
+
+        localStorageService.watch(watchedKey).subscribe((result) => {
+
+          expect(result).toBe(values[i]);
+
+          i += 1;
+
+          if (i === 1) {
+
+            localStorageService.set(watchedKey, values[1]).pipe(
+              mergeMap(() => localStorageService.delete(watchedKey)),
+              mergeMap(() => localStorageService.set(watchedKey, values[3])),
+              mergeMap(() => localStorageService.clear()),
+            ).subscribe();
+
+          }
+
+          if (i === values.length) {
+            done();
+          }
+
+        });
+
+      });
+
+    });
+
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/25
     * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/5 */
     describe('complete', () => {
