@@ -15,6 +15,9 @@ In the meantime, you can proceed to a manual installation, but be sure to follow
 Install the right version according to your Angular one via [`npm`](http://npmjs.com):
 
 ```bash
+# For Angular 9:
+npm install @ngx-pwa/local-storage@9
+
 # For Angular 8:
 npm install @ngx-pwa/local-storage@8
 
@@ -30,7 +33,7 @@ npm install @ngx-pwa/local-storage@5
 
 ## Importing the module
 
-### Version 8
+### Versions 8 & 9
 
 The following second setup step is:
 - **only for version >= 8**,
@@ -54,7 +57,7 @@ export class AppModule {}
 
 **Must be done at initialization, ie. in `AppModule`, and must not be loaded again in another module.**
 
-### Version 6 (LTS support ended)
+### Version 6
 
 You're done, nothing else to do.
 

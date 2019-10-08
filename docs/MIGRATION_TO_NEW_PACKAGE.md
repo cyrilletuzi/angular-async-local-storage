@@ -11,7 +11,8 @@ but is not required for Angular 4 & 5. **It is only required when upgrading to A
 - v4 for Angular 4,
 - v5 for Angular 5,
 - v6 for Angular 6 & 7,
-- v8 for Angular 8.
+- v8 for Angular 8,
+- v9 for Angular 9.
 
 Note that Angular 4 & 5 LTS support has ended.
 
@@ -37,6 +38,11 @@ npm install @ngx-pwa/local-storage@6
 - for **Angular 8**:
 ```bash
 npm install @ngx-pwa/local-storage@8
+```
+
+- for **Angular 9**:
+```bash
+npm install @ngx-pwa/local-storage@9
 ```
 
 ## Refactoring
