@@ -5,6 +5,11 @@
       "version": "8",
       "description": "Updates @ngx-pwa/local-storage to v8",
       "factory": "./ng-update/index#updateToV8"
+    },
+    "migration-v9": {
+      "version": "9",
+      "description": "Updates @ngx-pwa/local-storage to v9",
+      "factory": "./ng-update/index#updateToV9"
     }
   }
 }
