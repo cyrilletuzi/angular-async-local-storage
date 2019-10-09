@@ -52,16 +52,14 @@ export const IDB_STORE_NAME = new InjectionToken<string>('localStorageIDBStoreNa
 /**
  * Default value for interoperability with native `indexedDB` and other storage libs,
  * by changing how values are stored in `indexedDB` database.
- * Currently defaults to `false` for backward compatiblity in existing applications.
  */
-export const DEFAULT_IDB_NO_WRAP = false;
+export const DEFAULT_IDB_NO_WRAP = true;
 
 /**
  * Token to allow interoperability with native `indexedDB` and other storage libs,
  * by changing how values are stored in `indexedDB` database.
- * Currently defaults to `false` for backward compatiblity in existing applications
- * (**DO NOT CHANGE IT IN PRODUCTION**, as it would break with existing data),
- * but **should be `true` in all new applications, as it may become the default in a future version**.
+ * Defaults to `true`. Change to `false` for backward compatiblity in existing applications.
+ * **DO NOT CHANGE THIS BEHAVIOR ONCE IN PRODUCTION**, as it would break with existing data.
  */
 export const IDB_NO_WRAP = new InjectionToken<boolean>('localStorageIDBWrap', {
   providedIn: 'root',
@@ -103,9 +101,8 @@ export interface StorageConfig {
   /**
    * Allows interoperability with native `indexedDB` and other storage libs,
    * by changing how values are stored in `indexedDB` database.
-   * Currently defaults to `false` for backward compatiblity in existing applications,
-   * **DO NOT CHANGE IT IN PRODUCTION**, as it would break with existing data.
-   * but **should be `true` in all new applications, as it may become the default in a future version**.
+   * Defaults to `true`. Change to `false` for backward compatiblity in existing applications.
+   * **DO NOT CHANGE THIS BEHAVIOR ONCE IN PRODUCTION**, as it would break with existing data.
    */
   IDBNoWrap?: boolean;
 

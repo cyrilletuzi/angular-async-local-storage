@@ -50,7 +50,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param dbName `indexedDB` database name
    * @param storeName `indexedDB` store name
    * @param dbVersion `indexedDB` database version
-   * @param noWrap `indexedDB` database version
+   * @param noWrap Flag to not wrap `indexedDB` values for interoperability or to wrap for backward compatibility
    */
   constructor(
     @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,

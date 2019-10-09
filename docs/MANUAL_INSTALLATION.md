@@ -33,14 +33,13 @@ npm install @ngx-pwa/local-storage@5
 
 ## Importing the module
 
-### Versions 8 & 9
+### Version 9
 
-The following second setup step is:
-- **only for version >= 8**,
-- **strongly recommended for all new applications**, as it allows interoperability
-and is future-proof, as it should become the default in a future version,
-- **prohibited in applications already using this lib and already deployed in production**,
-as it would break with previously stored data.
+You're done, nothing else to do.
+
+### Version 8
+
+An additional setup step is required for *version 8 only* and **only for new applications**:
 
 ```ts
 import { StorageModule } from '@ngx-pwa/local-storage';
@@ -55,7 +54,10 @@ import { StorageModule } from '@ngx-pwa/local-storage';
 export class AppModule {}
 ```
 
-**Must be done at initialization, ie. in `AppModule`, and must not be loaded again in another module.**
+Note:
+- **must be done at initialization, ie. in `AppModule`, and must not be loaded again in another module**,
+- **never change these options in an app already deployed in production, as all previously stored data would be lost**.
+If you are already using the lib, you should use the [migrations guides](../MIGRATION.md).
 
 ### Version 6
 
