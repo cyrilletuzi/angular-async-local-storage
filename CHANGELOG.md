@@ -2,25 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.2.3 (2019-09-27)
-
-### Bug fix
-
-- `.size` in now working in Firefox private mode
-
-### Tests
-
-The repo has moved from CircleCI to GitHub Actions.
-So it's free and a lot easier to test on several configurations, and now the lib is tested for each pull request on:
-- Chrome (Ubuntu & Windows)
-- Firefox (Ubuntu & Windows)
-- Safari (macOS)
-- IE (Windows)
-- in private mode of Chrome, Firefox and IE
-
-Previously, the lib was only automatically tested in Chrome and Firefox on Ubuntu, in normal mode (other configs were tested manually).
-
-## 9.0.0-beta.1 (2019-08-21)
+## 9.0.0-beta.2 (2019-10-08)
 
 Note that for now, it works both with Angular 8 & 9 for testing purposes,
 but the final v9 may only support Angular 9.
@@ -53,6 +35,24 @@ Please follow the [migration guide to v8](./docs/MIGRATION_TO_V8.md) for more de
   - `.setItemSubscribe()` (use `.setItem().subscribe()` instead)
   - `.removeItemSubscribe()` (use `.removeItem().subscribe()` instead)
   - `.clearSubscribe()` (use `.clear().subscribe()` instead)
+
+## 8.2.3 (2019-09-27)
+
+### Bug fix
+
+- `.size` in now working in Firefox private mode
+
+### Tests
+
+The repo has moved from CircleCI to GitHub Actions.
+So it's free and a lot easier to test on several configurations, and now the lib is tested for each pull request on:
+- Chrome (Ubuntu & Windows)
+- Firefox (Ubuntu & Windows)
+- Safari (macOS)
+- IE (Windows)
+- in private mode of Chrome, Firefox and IE
+
+Previously, the lib was only automatically tested in Chrome and Firefox on Ubuntu, in normal mode (other configs were tested manually).
 
 ## 8.2.2 (2019-09-01)
 
