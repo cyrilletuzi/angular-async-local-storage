@@ -15,7 +15,7 @@ export class StorageModule {
    * @example
    * NgModule({
    *   imports: [StorageModule.forRoot({
-   *     IDBNoWrap: true,
+   *     LSPrefix: 'custom_',
    *   })]
    * })
    * export class AppModule
@@ -28,7 +28,7 @@ export class StorageModule {
         config.IDBDBName ? { provide: IDB_DB_NAME, useValue: config.IDBDBName } : [],
         config.IDBStoreName ? { provide: IDB_STORE_NAME, useValue: config.IDBStoreName } : [],
         config.IDBDBVersion ? { provide: IDB_DB_VERSION, useValue: config.IDBDBVersion } : [],
-        config.IDBNoWrap ? { provide: IDB_NO_WRAP, useValue: config.IDBNoWrap } : [],
+        (config.IDBNoWrap === false) ? { provide: IDB_NO_WRAP, useValue: config.IDBNoWrap } : [],
       ],
     };
   }

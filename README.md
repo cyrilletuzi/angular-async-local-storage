@@ -55,7 +55,7 @@ npm install @ngx-pwa/local-storage@6
 
 You should **stick to these commands**. If for any reason `ng add` does not work,
 be sure to follow the [manual installation guide](./docs/MANUAL_INSTALLATION.md),
-as there are additionnal steps to do in addition to the package installation.
+as there are additionnal steps to do in addition to the package installation for some versions.
 
 For version >= 8, if you have multiple applications in the same project, as usual, you need to choose the project:
 ```bash

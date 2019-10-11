@@ -16,11 +16,11 @@ as there are important things to do and to be aware of to achieve interoperabili
 
 ## Requirements
 
-Interoperability can be achieved:
-- **since v8 of this lib**,
-- **only for apps that haven't been deployed in production yet**,
-as v8 uses the following opt-in option to allow interoperability:
-changing configuration on the fly would mean to **lose all previously stored data**.
+Interoperability can be achieved **since v8 of this lib**.
+
+In versions >= 9, no requirement, the new configuration is now the default.
+
+In version 8, you need to add this config:
 
 ```ts
 import { StorageModule } from '@ngx-pwa/local-storage';
@@ -54,7 +54,7 @@ import { StorageModule } from '@ngx-pwa/local-storage';
 @NgModule({
   imports: [
     StorageModule.forRoot({
-      IDBNoWrap: true,
+      IDBNoWrap: true, // Not required in versions >= 9
       IDBDBName: 'customDataBaseName',
       IDBStoreName: 'customStoreName',
     })
@@ -93,6 +93,7 @@ import { StorageModule } from '@ngx-pwa/local-storage';
 @NgModule({
   imports: [
     StorageModule.forRoot({
+      IDBNoWrap: true, // Not required in versions >= 9
       LSPrefix: 'myapp_',
     })
   ]
@@ -118,7 +119,7 @@ import { StorageModule } from '@ngx-pwa/local-storage';
 @NgModule({
   imports: [
     StorageModule.forRoot({
-      IDBNoWrap: true,
+      IDBNoWrap: true, // Not required in versions >= 9
       LSPrefix: 'localforage/',
       IDBDBName: 'localforage',
       IDBStoreName: 'keyvaluepairs',

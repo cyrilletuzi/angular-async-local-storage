@@ -767,7 +767,7 @@ describe('StorageMap', () => {
 
             request.addEventListener('success', () => {
 
-              expect(request.result).toEqual({ value });
+              expect(request.result).toBe(value);
 
               dbOpen.result.close();
 
@@ -805,12 +805,12 @@ describe('StorageMap', () => {
     });
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
-    it('IndexedDb with noWrap (will be pending in Firefox/IE private mode)', (done) => {
+    it('IndexedDb with noWrap to false (will be pending in Firefox/IE private mode)', (done) => {
 
-      const index = `nowrap${Date.now()}`;
+      const index = `wrap${Date.now()}`;
       const value = 'test';
 
-      const localStorageService = new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, true));
+      const localStorageService = new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, false));
 
       localStorageService.set(index, value).subscribe(() => {
 
@@ -826,7 +826,7 @@ describe('StorageMap', () => {
 
             request.addEventListener('success', () => {
 
-              expect(request.result).toEqual(value);
+              expect(request.result).toEqual({ value });
 
               dbOpen.result.close();
 
