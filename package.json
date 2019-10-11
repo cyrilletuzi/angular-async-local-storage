@@ -39,7 +39,7 @@
     "@angular-devkit/build-ng-packagr": "0.803.8",
     "@angular/cli": "8.3.8",
     "@angular/compiler-cli": "8.2.9",
-    "@types/jasmine": "3.4.2",
+    "@types/jasmine": "3.4.4",
     "@types/jasminewd2": "2.0.8",
     "@types/node": "10.14.20",
     "codelyzer": "5.1.2",
