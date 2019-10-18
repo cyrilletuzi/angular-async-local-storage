@@ -57,7 +57,7 @@
     "karma-safari-private-launcher": "1.0.0",
     "karma-safarinative-launcher": "1.1.0",
     "localforage": "1.7.3",
-    "ng-packagr": "5.6.1",
+    "ng-packagr": "5.7.0",
     "protractor": "5.4.2",
     "ts-node": "8.4.1",
     "tslint": "5.20.0",
