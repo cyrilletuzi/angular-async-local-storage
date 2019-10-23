@@ -70,9 +70,9 @@ export class LocalStorage {
   getItem<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | null>;
   getItem<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | null>;
   getItem<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | null>;
-  getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema }): Observable<T | null>;
+  getItem<T = unknown>(key: string, schema: JSONSchema | { schema: JSONSchema }): Observable<T | null>;
   getItem<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
-  getItem<T = any>(key: string, schema?: JSONSchema | { schema: JSONSchema } | undefined) {
+  getItem<T = unknown>(key: string, schema?: JSONSchema | { schema: JSONSchema } | undefined): Observable<unknown> {
 
     if (schema) {
 
@@ -106,7 +106,7 @@ export class LocalStorage {
    * @example
    * this.localStorage.set('key', 'value').subscribe(() => {});
    */
-  setItem(key: string, data: any, schema?: JSONSchema): Observable<boolean> {
+  setItem(key: string, data: unknown, schema?: JSONSchema): Observable<boolean> {
 
     return this.storageMap.set(key, data, schema).pipe(
       /* Transform `undefined` into `true` for backward compatibility with v7 */

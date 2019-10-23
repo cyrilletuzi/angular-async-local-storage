@@ -112,7 +112,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, `undefined` otherwise, wrapped in an RxJS `Observable`
    */
-  get<T = any>(key: string): Observable<T | undefined> {
+  get<T = unknown>(key: string): Observable<T | undefined> {
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
@@ -161,7 +161,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns An RxJS `Observable` to wait the end of the operation
    */
-  set(key: string, data: any): Observable<undefined> {
+  set(key: string, data: unknown): Observable<undefined> {
 
     /* Storing `undefined` in `indexedDb` can cause issues in some browsers so removing item instead */
     if (data === undefined) {

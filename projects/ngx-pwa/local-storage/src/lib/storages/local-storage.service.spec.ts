@@ -7,7 +7,7 @@ import { IndexedDBDatabase, LocalStorageDatabase, MemoryDatabase } from '../data
 import { JSONSchema } from '../validation';
 import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
 
-function tests(description: string, localStorageServiceFactory: () => LocalStorage) {
+function tests(description: string, localStorageServiceFactory: () => LocalStorage): void {
 
   const key = 'test';
   let localStorageService: LocalStorage;

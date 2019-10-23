@@ -7,7 +7,7 @@ import { JSONSchema } from '../validation';
 import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_DB_VERSION } from '../tokens';
 import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
 
-function tests(description: string, localStorageServiceFactory: () => StorageMap) {
+function tests(description: string, localStorageServiceFactory: () => StorageMap): void {
 
   const key = 'test';
   let localStorageService: StorageMap;

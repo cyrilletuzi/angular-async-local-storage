@@ -6,7 +6,7 @@ import { IndexedDBDatabase, MemoryDatabase } from '../databases';
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param storageService Service
  */
-export function clearStorage(done: DoneFn, storageService: StorageMap) {
+export function clearStorage(done: DoneFn, storageService: StorageMap): void {
 
   if (storageService.backingEngine === 'indexedDB') {
 
@@ -102,7 +102,7 @@ export function clearStorage(done: DoneFn, storageService: StorageMap) {
  * @param doneJasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param storageService Service
  */
-export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap) {
+export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap): void {
 
   /* Only `indexedDB` is concerned */
   if (storageService.backingEngine === 'indexedDB') {

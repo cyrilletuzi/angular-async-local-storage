@@ -18,7 +18,7 @@ export class JSONValidator {
    * @returns If data is valid: `true`, if it is invalid: `false`
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
-  validate(data: any, schema: JSONSchema): boolean {
+  validate(data: unknown, schema: JSONSchema): boolean {
 
     switch (schema.type) {
 
@@ -44,7 +44,7 @@ export class JSONValidator {
    * @param schema Schema describing the string
    * @returns If data is valid: `true`, if it is invalid: `false`
    */
-  protected validateString(data: any, schema: JSONSchemaString): boolean {
+  protected validateString(data: unknown, schema: JSONSchemaString): boolean {
 
     if (typeof data !== 'string') {
       return false;
@@ -90,7 +90,7 @@ export class JSONValidator {
    * @param schema Schema describing the number or integer
    * @returns If data is valid: `true`, if it is invalid: `false`
    */
-  protected validateNumber(data: any, schema: JSONSchemaNumber | JSONSchemaInteger): boolean {
+  protected validateNumber(data: unknown, schema: JSONSchemaNumber | JSONSchemaInteger): boolean {
 
     if (typeof data !== 'number') {
       return false;
@@ -141,7 +141,7 @@ export class JSONValidator {
    * @param schema Schema describing the boolean
    * @returns If data is valid: `true`, if it is invalid: `false`
    */
-  protected validateBoolean(data: any, schema: JSONSchemaBoolean): boolean {
+  protected validateBoolean(data: unknown, schema: JSONSchemaBoolean): boolean {
 
     if (typeof data !== 'boolean') {
       return false;
@@ -161,7 +161,7 @@ export class JSONValidator {
    * @param schema Schema describing the array
    * @returns If data is valid: `true`, if it is invalid: `false`
    */
-  protected validateArray(data: any[], schema: JSONSchemaArray): boolean {
+  protected validateArray(data: unknown, schema: JSONSchemaArray): boolean {
 
     if (!Array.isArray(data)) {
       return false;
@@ -212,7 +212,7 @@ export class JSONValidator {
    * @param schemas Schemas describing the tuple
    * @returns If data is valid: `true`, if it is invalid: `false`
    */
-  protected validateTuple(data: any[], schemas: JSONSchema[]): boolean {
+  protected validateTuple(data: unknown[], schemas: JSONSchema[]): boolean {
 
     /* Tuples have a fixed length */
     if (data.length !== schemas.length) {
@@ -239,10 +239,10 @@ export class JSONValidator {
    * @param schema JSON schema describing the object
    * @returns If data is valid: `true`, if it is invalid: `false`
    */
-  protected validateObject(data: { [k: string]: any; }, schema: JSONSchemaObject): boolean {
+  protected validateObject(data: unknown, schema: JSONSchemaObject): boolean {
 
     /* Check the type and if not `null` as `null` also have the type `object` in old browsers */
-    if ((data === null) || (typeof data !== 'object')) {
+    if ((typeof data !== 'object') || (data === null)) {
       return false;
     }
 
@@ -272,7 +272,7 @@ export class JSONValidator {
       /* Filter to keep only real properties (no internal JS stuff) and check if the data has the property too */
       if (schema.properties.hasOwnProperty(property) && data.hasOwnProperty(property)) {
 
-        if (!this.validate(data[property], schema.properties[property])) {
+        if (!this.validate((data as { [k: string]: unknown; })[property], schema.properties[property])) {
           return false;
         }
 
@@ -290,7 +290,7 @@ export class JSONValidator {
    * @param schema JSON schema describing the constant
    * @returns If data is valid: `true`, if it is invalid: `false`
    */
-  protected validateConst(data: any, schema: JSONSchemaBoolean | JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
+  protected validateConst(data: unknown, schema: JSONSchemaBoolean | JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
 
     if (!schema.const) {
       return true;
@@ -306,14 +306,14 @@ export class JSONValidator {
    * @param schema JSON schema describing the enum
    * @returns If data is valid: `true`, if it is invalid: `false`
    */
-  protected validateEnum(data: any, schema: JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
+  protected validateEnum(data: unknown, schema: JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
 
     if (!schema.enum) {
       return true;
     }
 
     /* Cast as the data can be of multiple types, and so TypeScript is lost */
-    return ((schema.enum as any[]).includes(data));
+    return ((schema.enum as unknown[]).includes(data));
 
   }
 

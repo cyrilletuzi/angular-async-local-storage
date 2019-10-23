@@ -15,7 +15,7 @@ import { LS_PREFIX } from '../tokens';
 })
 export class StorageMap {
 
-  protected notifiers = new Map<string, ReplaySubject<any>>();
+  protected notifiers = new Map<string, ReplaySubject<unknown>>();
 
   /**
    * Constructor params are provided by Angular (but can also be passed manually in tests)
@@ -163,9 +163,9 @@ export class StorageMap {
   get<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
   get<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
   get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
-  get<T = any>(key: string, schema: JSONSchema): Observable<T | undefined>;
+  get<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
   get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
-  get<T = any>(key: string, schema?: JSONSchema) {
+  get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
     /* Get the data in storage */
     return this.database.get<T>(key).pipe(
@@ -209,7 +209,7 @@ export class StorageMap {
    * @example
    * this.storageMap.set('key', 'value').subscribe(() => {});
    */
-  set(key: string, data: any, schema?: JSONSchema): Observable<undefined> {
+  set(key: string, data: unknown, schema?: JSONSchema): Observable<undefined> {
 
     /* Storing `undefined` or `null` is useless and can cause issues in `indexedDb` in some browsers,
      * so removing item instead for all storages to have a consistent API */
@@ -324,9 +324,9 @@ export class StorageMap {
   watch<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
   watch<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
   watch<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
-  watch<T = any>(key: string, schema: JSONSchema): Observable<T | undefined>;
+  watch<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
   watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
-  watch<T = any>(key: string, schema?: JSONSchema) {
+  watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
     /* Check if there is already a notifier and cast according to schema */
     let notifier = this.notifiers.get(key) as ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>;
@@ -357,7 +357,7 @@ export class StorageMap {
    * @param key The item's key
    * @param data The new value
    */
-  protected notify(key: string, value: any): void {
+  protected notify(key: string, value: unknown): void {
 
     const notifier = this.notifiers.get(key);
 

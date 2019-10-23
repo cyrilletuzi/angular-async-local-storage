@@ -84,8 +84,8 @@ export abstract class LocalDatabase {
 
   abstract readonly size: Observable<number>;
 
-  abstract get<T = any>(key: string): Observable<T | undefined>;
-  abstract set(key: string, data: any): Observable<undefined>;
+  abstract get<T = unknown>(key: string): Observable<T | undefined>;
+  abstract set(key: string, data: unknown): Observable<undefined>;
   abstract delete(key: string): Observable<undefined>;
   abstract clear(): Observable<undefined>;
   abstract keys(): Observable<string>;

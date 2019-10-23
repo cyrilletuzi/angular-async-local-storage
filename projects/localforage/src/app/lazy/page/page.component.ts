@@ -12,7 +12,7 @@ export class PageComponent implements OnInit {
 
   constructor(private storageMap: StorageMap) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.storageMap.get('key', { type: 'string' }).subscribe((result) => {
       this.text = result || 'not ok';
