@@ -85,7 +85,6 @@ jobs:
       run: npm run test:unit:ubuntu-latest:private
     - name: Install matching webdriver version
       run: ./node_modules/.bin/webdriver-manager update --versions.chrome 77.0.3865.40
-      if: matrix.os == 'ubuntu-latest'
     - name: Run general e2e tests
       run: npm run test:e2e:demo
     - name: Run interoperability e2e tests
