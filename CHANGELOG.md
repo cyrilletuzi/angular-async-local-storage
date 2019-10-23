@@ -2,21 +2,31 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 9.0.0-beta.2 (2019-10-08)
+## 9.0.0-beta.4 (2019-10-11)
 
-Note that for now, it works both with Angular 8 & 9 for testing purposes,
-but the final v9 may only support Angular 9.
+To test: `ng update @ngx-pwa/local-storage@next`
 
-To test: `npm install @ngx-pwa/local-storage@next`
+A [full migration guide to version 9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/v9beta/docs/MIGRATION_TO_V9.md) is available.
 
 **As a reminder, beta versions are for testing purposes only. Do *NOT* use in production.**
+
+### Angular 9
+
+v9 requires Angular 9.
+
+### Breaking change: internal storage change
+
+Doing `ng update` should have managed backward compatibility.
+But it's not easy to be sure schematics work in all cases,
+so **be sure to check the migration was done correctly** by following the
+[migration guide to v9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/v9beta/docs/MIGRATION_TO_V9.md), **otherwise you would lost previously stored data**.
 
 ### Feature
 
 - New `.watch()` method on `StorageMap` service
 (see [#108](https://github.com/cyrilletuzi/angular-async-local-storage/pull/108/))
 
-### Breaking changes
+### Breaking changes: removal of deprecated features
 
 The following APIs were already deprecated in v8 and are now removed in v9.
 Please follow the [migration guide to v8](./docs/MIGRATION_TO_V8.md) for more details about how to update to new APIs.
