@@ -1,6 +1,6 @@
 {
   "name": "@ngx-pwa/local-storage",
-  "version": "9.0.0-beta.4",
+  "version": "9.0.0-rc.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve demo",
