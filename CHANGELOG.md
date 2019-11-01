@@ -2,13 +2,11 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 9.0.0-beta.4 (2019-10-11)
+## 9.0.0-rc.0 (2019-11-01)
 
-To test: `ng update @ngx-pwa/local-storage@next`
+To update: `ng update @ngx-pwa/local-storage@next`
 
 A [full migration guide to version 9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/v9beta/docs/MIGRATION_TO_V9.md) is available.
-
-**As a reminder, beta versions are for testing purposes only. Do *NOT* use in production.**
 
 ### Angular 9
 
