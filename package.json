@@ -35,9 +35,9 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.803.19",
-    "@angular-devkit/build-ng-packagr": "0.803.19",
-    "@angular/cli": "8.3.19",
+    "@angular-devkit/build-angular": "0.803.20",
+    "@angular-devkit/build-ng-packagr": "0.803.20",
+    "@angular/cli": "8.3.20",
     "@angular/compiler-cli": "8.2.14",
     "@types/jasmine": "3.5.0",
     "@types/jasminewd2": "2.0.8",
