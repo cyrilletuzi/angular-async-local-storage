@@ -2,7 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 9.0.0-rc.1 (2019-11-08)
+## 9.0.0-rc.2 (2020-01-02)
 
 To update: `ng update @ngx-pwa/local-storage@next`
 

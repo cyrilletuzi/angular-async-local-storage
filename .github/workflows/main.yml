@@ -110,7 +110,7 @@ jobs:
     - name: Build the lib (with the current version, as it is what is published on npm)
       run: npm run build
     - name: Downgrade dependencies to minimal required version
-      run: npm install typescript@3.6.2 rxjs@6.5.3 zone.js@0.10.2
+      run: npm install typescript@3.6.4 rxjs@6.5.3 zone.js@0.10.2
       env:
         CI: true
     - name: Run unit tests
