@@ -92,7 +92,7 @@ jobs:
     - name: Run Ivy e2e tests
       run: npm run test:ivy
 
-  test-v9.0.0:
+  test-minimum:
 
     name: Test with Angular@9.0.0 and minimum dependencies requirements
     runs-on: ubuntu-latest
@@ -109,7 +109,7 @@ jobs:
         CI: true
     - name: Build the lib (with the current version, as it is what is published on npm)
       run: npm run build
-    - name: Update dependencies to next version
+    - name: Downgrade dependencies to minimal required version
       run: npm install typescript@3.6.2 rxjs@6.5.3 zone.js@0.10.2
       env:
         CI: true
