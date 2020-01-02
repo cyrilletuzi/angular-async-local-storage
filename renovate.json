@@ -18,6 +18,10 @@
       "allowedVersions": "<3.7"
     },
     {
+      "packageNames": ["@types/node"],
+      "allowedVersions": "<13"
+    },
+    {
       "packagePatterns": ["^@angular"],
       "automerge": false
     }
