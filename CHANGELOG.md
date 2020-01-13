@@ -2,6 +2,13 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 8.2.4 (2020-01-13)
+
+No code change, just a release built with last Angular 8.
+Probably the last before Angular 9.
+
+Also, documentation about [sponsorship](https://github.com/sponsors/cyrilletuzi).
+
 ## 9.0.0-rc.1 (2019-11-08)
 
 To update: `ng update @ngx-pwa/local-storage@next`
