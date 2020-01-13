@@ -1,6 +1,10 @@
 {
   "name": "@ngx-pwa/local-storage",
   "version": "9.0.0-rc.2",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/cyrilletuzi"
+  },
   "description": "Efficient local storage module for Angular apps and PWA: simple API based on native localStorage API, but internally stored via the asynchronous IndexedDB API for performance, and wrapped in RxJS observables to be homogeneous with other Angular modules.",
   "author": "Cyrille Tuzi",
   "license": "MIT",
