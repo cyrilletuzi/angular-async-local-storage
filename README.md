@@ -7,7 +7,22 @@ Efficient client-side storage module for Angular apps and Progressive Wep Apps (
 - **security**: validate data with a JSON Schema,
 - **compatibility**: works around some browsers issues and heavily tested via GitHub Actions,
 - **documentation**: API fully explained, and a changelog!
-- **reference**: 1st Angular library for client-side storage according to [ngx.tools](https://ngx.tools/#/search?q=local%20storage).
+
+## Sponsorship
+
+What started as a personal project is now,
+according to [ngx.tools](https://ngx.tools/#/search?q=local%20storage),
+**the 1st Angular library used for client-side storage**,
+with about 10 000 downloads [on npm](https://www.npmjs.com/package/@ngx-pwa/local-storage) each week.
+
+But I'm still the only maintainer, and everything is done during my free time.
+The lib may seem easy to use, but it's a lot of work.
+Both client-side storage (with all vendors issues...)
+and maintaining a reliable Angular library (up to date with the framework releases),
+are difficult topics.
+
+So if your company earns money with projects using this lib,
+it would be nice to **consider becoming [a sponsor](https://github.com/sponsors/cyrilletuzi)**.
 
 ## By the same author
 
