@@ -15,7 +15,7 @@
   "packageRules": [
     {
       "packageNames": ["typescript"],
-      "allowedVersions": "<3.7"
+      "allowedVersions": "<3.8"
     },
     {
       "packageNames": ["@types/node"],
