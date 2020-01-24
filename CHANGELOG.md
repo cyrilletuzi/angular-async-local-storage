@@ -2,14 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.2.4 (2020-01-13)
-
-No code change, just a release built with last Angular 8.
-Probably the last before Angular 9.
-
-Also, documentation about [sponsorship](https://github.com/sponsors/cyrilletuzi).
-
-## 9.0.0-rc.2 (2020-01-02)
+## 9.0.0-rc.3 (2020-01-24)
 
 To update: `ng update @ngx-pwa/local-storage@next`
 
@@ -50,6 +43,13 @@ Please follow the [migration guide to v8](./docs/MIGRATION_TO_V8.md) for more de
   - `.setItemSubscribe()` (use `.setItem().subscribe()` instead)
   - `.removeItemSubscribe()` (use `.removeItem().subscribe()` instead)
   - `.clearSubscribe()` (use `.clear().subscribe()` instead)
+
+## 8.2.4 (2020-01-13)
+
+No code change, just a release built with last Angular 8.
+Probably the last before Angular 9.
+
+Also, documentation about [sponsorship](https://github.com/sponsors/cyrilletuzi).
 
 ## 8.2.3 (2019-09-27)
 
