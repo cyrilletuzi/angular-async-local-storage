@@ -37,7 +37,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "0.803.24",
     "@angular-devkit/build-ng-packagr": "0.803.24",
-    "@angular/cli": "8.3.24",
+    "@angular/cli": "9.0.1",
     "@angular/compiler-cli": "8.2.14",
     "@types/jasmine": "3.5.2",
     "@types/jasminewd2": "2.0.8",
