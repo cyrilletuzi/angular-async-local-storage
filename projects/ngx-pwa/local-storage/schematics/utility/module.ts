@@ -74,8 +74,7 @@ export function updateModule(mainPath: string): Rule {
 
     const { appModulePath, appModuleFile } = getAppModule(host, mainPath);
 
-    /* If `IDBNoWrap` is already set, it **must not** be changed, otherwise previously stored data would be lost.
-     * Also, projects already updated to v9 don't need migration */
+    /* If `IDBNoWrap` is already set, it **must not** be changed, otherwise previously stored data would be lost */
     if (!appModuleFile.includes('IDBNoWrap')) {
 
       if (appModuleFile.includes(packageName)) {
