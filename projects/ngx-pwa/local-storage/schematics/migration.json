@@ -6,11 +6,6 @@
       "description": "Updates @ngx-pwa/local-storage to v8",
       "factory": "./ng-update/index#updateToV8"
     },
-    "migration-v9-beta": {
-      "version": "9.0.0-beta",
-      "description": "Updates @ngx-pwa/local-storage to v9",
-      "factory": "./ng-update/index#updateToV9"
-    },
     "migration-v9": {
       "version": "9",
       "description": "Updates @ngx-pwa/local-storage to v9",
