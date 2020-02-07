@@ -6,7 +6,15 @@ This lib is fully documented and so you'll find detailed [migration guides](./MI
 
 ### Bug fix
 
-- Fix a migration schematics issue
+If you were already using version >= v9.0.0-beta.4 or v9.0.0-rc.x of this lib,
+**as a one time exception**, please update with a classic `npm install @ngx-pwa/local-storage@9`,
+to avoid migration happening twice.
+
+For future v9+ updates and if you're coming from v8.0.0 or version v9.0.0-beta.1-3,
+please stick to `ng update @ngx-pwa/local-storage`.
+
+Following these instructions is very important, otherwise it would result in wrong config
+and loss of previously stored data.
 
 ## 9.0.0 (2020-02-07)
 
