@@ -2,18 +2,11 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 8.2.4 (2020-01-13)
+## 9.0.0 (2020-02-07)
 
-No code change, just a release built with last Angular 8.
-Probably the last before Angular 9.
+To update: `ng update @ngx-pwa/local-storage`
 
-Also, documentation about [sponsorship](https://github.com/sponsors/cyrilletuzi).
-
-## 9.0.0-rc.1 (2019-11-08)
-
-To update: `ng update @ngx-pwa/local-storage@next`
-
-A [full migration guide to version 9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/v9beta/docs/MIGRATION_TO_V9.md) is available.
+A [full migration guide to version 9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V9.md) is available.
 
 ### Angular 9
 
@@ -24,12 +17,12 @@ v9 requires Angular 9.
 Doing `ng update` should have managed backward compatibility.
 But it's not easy to be sure schematics work in all cases,
 so **be sure to check the migration was done correctly** by following the
-[migration guide to v9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/v9beta/docs/MIGRATION_TO_V9.md), **otherwise you would lost previously stored data**.
+[migration guide to v9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V9.md), **otherwise you would lost previously stored data**.
 
 ### Feature
 
 - New `.watch()` method on `StorageMap` service
-(see [#108](https://github.com/cyrilletuzi/angular-async-local-storage/pull/108/))
+(see [documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/WATCHING.md))
 
 ### Breaking changes: removal of deprecated features
 
@@ -50,6 +43,13 @@ Please follow the [migration guide to v8](./docs/MIGRATION_TO_V8.md) for more de
   - `.setItemSubscribe()` (use `.setItem().subscribe()` instead)
   - `.removeItemSubscribe()` (use `.removeItem().subscribe()` instead)
   - `.clearSubscribe()` (use `.clear().subscribe()` instead)
+
+## 8.2.4 (2020-01-13)
+
+No code change, just a release built with last Angular 8.
+Probably the last before Angular 9.
+
+Also, documentation about [sponsorship](https://github.com/sponsors/cyrilletuzi).
 
 ## 8.2.3 (2019-09-27)
 

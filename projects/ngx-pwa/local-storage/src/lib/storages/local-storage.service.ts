@@ -1,38 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { mapTo, toArray, map } from 'rxjs/operators';
+import { mapTo, map } from 'rxjs/operators';
 
 import { StorageMap } from './storage-map.service';
 import { JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf } from '../validation';
-
-/**
- * @deprecated Will be removed in v9
- */
-export interface LSGetItemOptions {
-
-  /**
-   * Subset of the JSON Schema standard.
-   * Types are enforced to validate everything: each value **must** have a `type`.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  schema?: JSONSchema | null;
-
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorage {
-
-  /**
-   * Number of items in storage
-   * @deprecated Use `.length`, or use `.size` via the new `StorageMap` service. Will be removed in v9.
-   */
-  get size(): Observable<number> {
-
-    return this.length;
-
-  }
 
   /**
    * Number of items in storage wrapped in an `Observable`
@@ -59,7 +35,7 @@ export class LocalStorage {
    * @param schema Optional JSON schema to validate the data.
    * **Note you must pass the schema directly as the second argument.**
    * **Passing the schema in an object `{ schema }` is deprecated and only here**
-   * **for backward compatibility: it will be removed in v9.**
+   * **for backward compatibility: it will be removed in a future version.**
    * @returns The item's value if the key exists, `null` otherwise, wrapped in a RxJS `Observable`
    *
    * @example
@@ -94,9 +70,9 @@ export class LocalStorage {
   getItem<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | null>;
   getItem<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | null>;
   getItem<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | null>;
-  getItem<T = any>(key: string, schema: JSONSchema | { schema: JSONSchema }): Observable<T | null>;
+  getItem<T = unknown>(key: string, schema: JSONSchema | { schema: JSONSchema }): Observable<T | null>;
   getItem<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
-  getItem<T = any>(key: string, schema?: JSONSchema | { schema: JSONSchema } | undefined) {
+  getItem<T = unknown>(key: string, schema?: JSONSchema | { schema: JSONSchema } | undefined): Observable<unknown> {
 
     if (schema) {
 
@@ -130,7 +106,7 @@ export class LocalStorage {
    * @example
    * this.localStorage.set('key', 'value').subscribe(() => {});
    */
-  setItem(key: string, data: any, schema?: JSONSchema): Observable<boolean> {
+  setItem(key: string, data: unknown, schema?: JSONSchema): Observable<boolean> {
 
     return this.storageMap.set(key, data, schema).pipe(
       /* Transform `undefined` into `true` for backward compatibility with v7 */
@@ -169,84 +145,6 @@ export class LocalStorage {
       /* Transform `undefined` into `true` for backward compatibility with v7 */
       mapTo(true),
     );
-
-  }
-
-  /**
-   * Get all keys stored in storage
-   * @returns A list of the keys wrapped in a RxJS `Observable`
-   * @deprecated Moved to `StorageMap` service. Will be removed in v9.
-   * Note that while this method was giving you all keys at once in an array,
-   * the new `keys()` method in `StorageMap` service will *iterate* on each key.
-   */
-  keys(): Observable<string[]> {
-
-    return this.storageMap.keys().pipe(
-      /* Backward compatibility with v7: transform iterating `Observable` to a single array value */
-      toArray(),
-    );
-
-  }
-
-  /**
-   * Tells if a key exists in storage
-   * @returns A RxJS `Observable` telling if the key exists
-   * @deprecated Moved to `StorageMap` service. Will be removed in v9.
-   */
-  has(key: string): Observable<boolean> {
-
-    return this.storageMap.has(key);
-
-  }
-
-  /**
-   * Set an item in storage, and auto-subscribe
-   * @param key The item's key
-   * @param data The item's value
-   * **WARNING: should be avoided in most cases, use this method only if these conditions are fulfilled:**
-   * - you don't need to manage the error callback (errors will silently fail),
-   * - you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
-   * @deprecated Promoted bad practices. Will be removed in v9.
-   */
-  setItemSubscribe(key: string, data: string | number | boolean | object): void {
-
-    this.setItem(key, data).subscribe({
-      next: () => {},
-      error: () => {},
-    });
-
-  }
-
-  /**
-   * Delete an item in storage, and auto-subscribe
-   * @param key The item's key
-   * **WARNING: should be avoided in most cases, use this method only if these conditions are fulfilled:**
-   * - you don't need to manage the error callback (errors will silently fail),
-   * - you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
-   * @deprecated Promoted bad practices. Will be removed in v9.
-   */
-   removeItemSubscribe(key: string): void {
-
-    this.removeItem(key).subscribe({
-      next: () => {},
-      error: () => {},
-    });
-
-  }
-
-  /**
-   * Delete all items in storage, and auto-subscribe
-   * **WARNING: should be avoided in most cases, use this method only if these conditions are fulfilled:**
-   * - you don't need to manage the error callback (errors will silently fail),
-   * - you don't need to wait the operation to finish before the next one (remember, it's asynchronous).
-   * @deprecated Promoted bad practices. Will be removed in v9.
-   */
-  clearSubscribe(): void {
-
-    this.clear().subscribe({
-      next: () => {},
-      error: () => {},
-    });
 
   }
 

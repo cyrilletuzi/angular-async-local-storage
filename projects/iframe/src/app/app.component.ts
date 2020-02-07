@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
 
   constructor(private storageMap: StorageMap) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     const key = 'test';
     const schema: JSONSchema = {

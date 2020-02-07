@@ -1,7 +1,7 @@
 import { Rule, Tree, SchematicsException } from '@angular-devkit/schematics';
 import { addPackageJsonDependency, NodeDependencyType } from '@schematics/angular/utility/dependencies';
 
-import { packageVersionLatest, packageName, packageVersionLTS } from './config';
+import { packageVersionLatest, packageName, packageVersionLTS7, packageVersionLTS8 } from './config';
 
 export function addDependency(angularMajorVersion: number): Rule {
   return (host: Tree) => {
@@ -15,7 +15,9 @@ export function addDependency(angularMajorVersion: number): Rule {
     }
     /* Manage LTS versions */
     if (angularMajorVersion === 6 || angularMajorVersion === 7) {
-      packageVersion = packageVersionLTS;
+      packageVersion = packageVersionLTS7;
+    } else if (angularMajorVersion === 8) {
+      packageVersion = packageVersionLTS8;
     }
 
     addPackageJsonDependency(host, {

@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { StorageModule } from '@ngx-pwa/local-storage';
 
 import { AppComponent } from './app.component';
 
@@ -8,9 +7,6 @@ import { AppComponent } from './app.component';
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    StorageModule.forRoot({
-      IDBNoWrap: true,
-    }),
   ],
   bootstrap: [AppComponent]
 })

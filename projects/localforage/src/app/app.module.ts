@@ -16,7 +16,6 @@ import { HomeComponent } from './home/home.component';
     AppRoutingModule,
     StorageModule.forRoot({
       LSPrefix: 'localforage/',
-      IDBNoWrap: true,
       IDBDBName: 'localforage',
       IDBStoreName: 'keyvaluepairs'
     }),

@@ -7,7 +7,7 @@ import { JSONSchema } from '../validation';
 import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_DB_VERSION } from '../tokens';
 import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
 
-function tests(description: string, localStorageServiceFactory: () => StorageMap) {
+function tests(description: string, localStorageServiceFactory: () => StorageMap): void {
 
   const key = 'test';
   let localStorageService: StorageMap;
@@ -506,6 +506,87 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
     });
 
+    describe('watch()', () => {
+
+      it('with valid schema', (done) => {
+
+        const watchedKey = 'watched1';
+        const values = [undefined, 'test1', undefined, 'test2', undefined];
+        let i = 0;
+
+        localStorageService.watch(watchedKey, { type: 'string' }).subscribe((result) => {
+
+          expect(result).toBe(values[i]);
+
+          i += 1;
+
+          if (i === 1) {
+
+            localStorageService.set(watchedKey, values[1]).pipe(
+              mergeMap(() => localStorageService.delete(watchedKey)),
+              mergeMap(() => localStorageService.set(watchedKey, values[3])),
+              mergeMap(() => localStorageService.clear()),
+            ).subscribe();
+
+          }
+
+          if (i === values.length) {
+            done();
+          }
+
+        });
+
+      });
+
+      it('with invalid schema', (done) => {
+
+        const watchedKey = 'watched2';
+
+        localStorageService.set(watchedKey, 'test').subscribe(() => {
+
+          localStorageService.watch(watchedKey, { type: 'number' }).subscribe({
+            error: () => {
+              expect().nothing();
+              done();
+            }
+          });
+
+        });
+
+      });
+
+      it('without schema', (done) => {
+
+        const watchedKey = 'watched3';
+        const values = [undefined, 'test1', undefined, 'test2', undefined];
+        let i = 0;
+
+        localStorageService.watch(watchedKey).subscribe((result) => {
+
+          expect(result).toBe(values[i]);
+
+          i += 1;
+
+          if (i === 1) {
+
+            localStorageService.set(watchedKey, values[1]).pipe(
+              mergeMap(() => localStorageService.delete(watchedKey)),
+              mergeMap(() => localStorageService.set(watchedKey, values[3])),
+              mergeMap(() => localStorageService.clear()),
+            ).subscribe();
+
+          }
+
+          if (i === values.length) {
+            done();
+          }
+
+        });
+
+      });
+
+    });
+
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/25
     * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/5 */
     describe('complete', () => {
@@ -651,16 +732,11 @@ describe('StorageMap', () => {
 
   tests('localStorage with prefix', () => new StorageMap(new LocalStorageDatabase(`ls`)));
 
-  tests('localStorage with old prefix', () => new StorageMap(new LocalStorageDatabase(undefined, `old`)));
-
   tests('indexedDB', () => new StorageMap(new IndexedDBDatabase()));
 
   tests('indexedDB with no wrap', () => new StorageMap(new IndexedDBDatabase()));
 
   tests('indexedDB with custom options', () => new StorageMap(new IndexedDBDatabase('customDbTest', 'storeTest', 2)));
-
-  tests('indexedDB with old prefix', () =>
-    new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, undefined, `myapp${Date.now()}`)));
 
   tests(
     'indexedDB with custom database and store names',
@@ -691,7 +767,7 @@ describe('StorageMap', () => {
 
             request.addEventListener('success', () => {
 
-              expect(request.result).toEqual({ value });
+              expect(request.result).toBe(value);
 
               dbOpen.result.close();
 
@@ -729,12 +805,12 @@ describe('StorageMap', () => {
     });
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
-    it('IndexedDb with noWrap (will be pending in Firefox/IE private mode)', (done) => {
+    it('IndexedDb with noWrap to false (will be pending in Firefox/IE private mode)', (done) => {
 
-      const index = `nowrap${Date.now()}`;
+      const index = `wrap${Date.now()}`;
       const value = 'test';
 
-      const localStorageService = new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, true));
+      const localStorageService = new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, false));
 
       localStorageService.set(index, value).subscribe(() => {
 
@@ -750,7 +826,7 @@ describe('StorageMap', () => {
 
             request.addEventListener('success', () => {
 
-              expect(request.result).toEqual(value);
+              expect(request.result).toEqual({ value });
 
               dbOpen.result.close();
 
@@ -848,32 +924,6 @@ describe('StorageMap', () => {
 
     });
 
-    it('indexedDB old prefix (will be pending in Firefox private mode)', (done) => {
-
-      /* Unique name to be sure `indexedDB` `upgradeneeded` event is triggered */
-      const prefix = `myapp${Date.now()}`;
-      const localStorageService = new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, undefined, prefix));
-
-      /* Do a request first to allow localStorage fallback if needed */
-      localStorageService.get('test').subscribe(() => {
-
-        if (localStorageService.backingEngine === 'indexedDB') {
-
-          expect(localStorageService.backingStore.database).toBe(`${prefix}_${DEFAULT_IDB_DB_NAME}`);
-
-          closeAndDeleteDatabase(done, localStorageService);
-
-        } else {
-
-          /* Cases: Firefox private mode */
-          pending();
-
-        }
-
-      });
-
-    });
-
     it('localStorage prefix', () => {
 
       const prefix = `ls_`;
@@ -882,17 +932,6 @@ describe('StorageMap', () => {
 
       // tslint:disable-next-line: no-string-literal
       expect(localStorageService.fallbackBackingStore.prefix).toBe(prefix);
-
-    });
-
-    it('localStorage old prefix', () => {
-
-      const prefix = `old`;
-
-      const localStorageService = new StorageMap(new LocalStorageDatabase(undefined, prefix));
-
-      // tslint:disable-next-line: no-string-literal
-      expect(localStorageService.fallbackBackingStore.prefix).toBe(`${prefix}_`);
 
     });
 

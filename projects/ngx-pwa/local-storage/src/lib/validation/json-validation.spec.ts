@@ -16,11 +16,14 @@ describe(`JSONValidator`, () => {
 
       expect(() => {
 
-        jsonValidator.validate({ test: 'test' }, {
+        const schema = {
           type: 'object',
           properties: { test: { type: 'string' } },
-          additionalProperties: true
-        } as any);
+          additionalProperties: true,
+        };
+
+        // tslint:disable-next-line: no-any
+        jsonValidator.validate({ test: 'test' }, schema as any);
 
       }).not.toThrow();
 

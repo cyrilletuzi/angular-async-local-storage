@@ -5,7 +5,7 @@ import { map, mergeMap, first, takeWhile, tap, mapTo } from 'rxjs/operators';
 import { LocalDatabase } from './local-database';
 import { IDBBrokenError } from './exceptions';
 import {
-  IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, IDB_DB_VERSION, LOCAL_STORAGE_PREFIX,
+  IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, IDB_DB_VERSION,
   DEFAULT_IDB_DB_NAME, DEFAULT_IDB_DB_VERSION, IDB_NO_WRAP, DEFAULT_IDB_NO_WRAP
 } from '../tokens';
 
@@ -50,21 +50,16 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param dbName `indexedDB` database name
    * @param storeName `indexedDB` store name
    * @param dbVersion `indexedDB` database version
-   * @param noWrap `indexedDB` database version
-   * @param oldPrefix Pre-v8 backward compatible prefix
+   * @param noWrap Flag to not wrap `indexedDB` values for interoperability or to wrap for backward compatibility
    */
   constructor(
     @Inject(IDB_DB_NAME) dbName = DEFAULT_IDB_DB_NAME,
     @Inject(IDB_STORE_NAME) storeName = DEFAULT_IDB_STORE_NAME,
     @Inject(IDB_DB_VERSION) dbVersion = DEFAULT_IDB_DB_VERSION,
     @Inject(IDB_NO_WRAP) noWrap = DEFAULT_IDB_NO_WRAP,
-    // tslint:disable-next-line: deprecation
-    @Inject(LOCAL_STORAGE_PREFIX) oldPrefix = '',
   ) {
 
-    /* Initialize `indexedDB` database name, with prefix if provided by the user */
-    this.dbName = oldPrefix ? `${oldPrefix}_${dbName}` : dbName;
-
+    this.dbName = dbName;
     this.storeName = storeName;
     this.dbVersion = dbVersion;
     this.noWrap = noWrap;
@@ -117,7 +112,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, `undefined` otherwise, wrapped in an RxJS `Observable`
    */
-  get<T = any>(key: string): Observable<T | undefined> {
+  get<T = unknown>(key: string): Observable<T | undefined> {
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
@@ -166,7 +161,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns An RxJS `Observable` to wait the end of the operation
    */
-  set(key: string, data: any): Observable<undefined> {
+  set(key: string, data: unknown): Observable<undefined> {
 
     /* Storing `undefined` in `indexedDb` can cause issues in some browsers so removing item instead */
     if (data === undefined) {

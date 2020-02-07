@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
-import { Observable, throwError, of, OperatorFunction } from 'rxjs';
-import { mergeMap, catchError } from 'rxjs/operators';
+import { Observable, throwError, of, OperatorFunction, ReplaySubject } from 'rxjs';
+import { mergeMap, catchError, tap } from 'rxjs/operators';
 
 import { ValidationError } from './exceptions';
 import {
@@ -8,26 +8,25 @@ import {
   JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf, JSONValidator
 } from '../validation';
 import { LocalDatabase, IDB_BROKEN_ERROR, LocalStorageDatabase, IndexedDBDatabase, MemoryDatabase } from '../databases';
-import { LS_PREFIX, LOCAL_STORAGE_PREFIX } from '../tokens';
+import { LS_PREFIX } from '../tokens';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageMap {
 
+  protected notifiers = new Map<string, ReplaySubject<unknown>>();
+
   /**
    * Constructor params are provided by Angular (but can also be passed manually in tests)
    * @param database Storage to use
    * @param jsonValidator Validator service
    * @param LSPrefix Prefix for `localStorage` keys to avoid collision for multiple apps on the same subdomain or for interoperability
-   * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain or for interoperability
    */
   constructor(
     protected database: LocalDatabase,
     protected jsonValidator: JSONValidator = new JSONValidator(),
     @Inject(LS_PREFIX) protected LSPrefix = '',
-    // tslint:disable-next-line: deprecation
-    @Inject(LOCAL_STORAGE_PREFIX) protected oldPrefix = '',
   ) {}
 
   /**
@@ -164,9 +163,9 @@ export class StorageMap {
   get<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
   get<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
   get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
-  get<T = any>(key: string, schema: JSONSchema): Observable<T | undefined>;
+  get<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
   get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
-  get<T = any>(key: string, schema?: JSONSchema) {
+  get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
     /* Get the data in storage */
     return this.database.get<T>(key).pipe(
@@ -210,7 +209,7 @@ export class StorageMap {
    * @example
    * this.storageMap.set('key', 'value').subscribe(() => {});
    */
-  set(key: string, data: any, schema?: JSONSchema): Observable<undefined> {
+  set(key: string, data: unknown, schema?: JSONSchema): Observable<undefined> {
 
     /* Storing `undefined` or `null` is useless and can cause issues in `indexedDb` in some browsers,
      * so removing item instead for all storages to have a consistent API */
@@ -223,10 +222,12 @@ export class StorageMap {
       return throwError(new ValidationError());
     }
 
-    return this.database.set(key, data)
+    return this.database.set(key, data).pipe(
       /* Catch if `indexedDb` is broken */
-      .pipe(this.catchIDBBroken(() => this.database.set(key, data)));
-
+      this.catchIDBBroken(() => this.database.set(key, data)),
+      /* Notify watchers (must be last because it should only happen if the operation succeeds) */
+      tap(() => { this.notify(key, data); }),
+    );
   }
 
   /**
@@ -239,9 +240,12 @@ export class StorageMap {
    */
   delete(key: string): Observable<undefined> {
 
-    return this.database.delete(key)
+    return this.database.delete(key).pipe(
       /* Catch if `indexedDb` is broken */
-      .pipe(this.catchIDBBroken(() => this.database.delete(key)));
+      this.catchIDBBroken(() => this.database.delete(key)),
+      /* Notify watchers (must be last because it should only happen if the operation succeeds) */
+      tap(() => { this.notify(key, undefined); }),
+    );
 
   }
 
@@ -254,9 +258,16 @@ export class StorageMap {
    */
   clear(): Observable<undefined> {
 
-    return this.database.clear()
+    return this.database.clear().pipe(
       /* Catch if `indexedDb` is broken */
-      .pipe(this.catchIDBBroken(() => this.database.clear()));
+      this.catchIDBBroken(() => this.database.clear()),
+      /* Notify watchers (must be last because it should only happen if the operation succeeds) */
+      tap(() => {
+        for (const key of this.notifiers.keys()) {
+          this.notify(key, undefined);
+        }
+      }),
+    );
 
   }
 
@@ -299,6 +310,64 @@ export class StorageMap {
   }
 
   /**
+   * Watch an item value in storage.
+   * **Note only changes done via this lib will be watched**, external changes in storage can't be detected.
+   * The signature has many overloads due to validation, **please refer to the documentation.**
+   * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
+   * @param key The item's key to watch
+   * @param schema Optional JSON schema to validate the initial value
+   * @returns An infinite `Observable` giving the current value
+   */
+  watch<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
+  watch<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
+  watch<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
+  watch<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
+  watch<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
+  watch<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
+  watch<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
+  watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
+  watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
+
+    /* Check if there is already a notifier and cast according to schema */
+    let notifier = this.notifiers.get(key) as ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>;
+
+    if (!notifier) {
+
+      /* Create a notifier and cast according to schema */
+      notifier = new ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>(1);
+
+      /* Memorize the notifier */
+      this.notifiers.set(key, notifier);
+
+      /* Get the current item value */
+      this.get<T>(key, schema).subscribe({
+        next: (result) => notifier.next(result),
+        error: (error) => notifier.error(error),
+      });
+
+    }
+
+    /* Only the public API of the `Observable` should be returned */
+    return notifier.asObservable();
+
+  }
+
+  /**
+   * Notify when a value changes
+   * @param key The item's key
+   * @param data The new value
+   */
+  protected notify(key: string, value: unknown): void {
+
+    const notifier = this.notifiers.get(key);
+
+    if (notifier) {
+      notifier.next(value);
+    }
+
+  }
+
+  /**
    * RxJS operator to catch if `indexedDB` is broken
    * @param operationCallback Callback with the operation to redo
    */
@@ -318,7 +387,7 @@ export class StorageMap {
           if ('getItem' in localStorage) {
 
             /* Fallback to `localStorage` if available */
-            this.database = new LocalStorageDatabase(this.LSPrefix, this.oldPrefix);
+            this.database = new LocalStorageDatabase(this.LSPrefix);
 
           } else {
 

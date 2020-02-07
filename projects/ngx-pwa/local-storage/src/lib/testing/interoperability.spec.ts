@@ -13,7 +13,7 @@ const index = 'test';
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param value Value to store
  */
-function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: DoneFn, value: any) {
+function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: DoneFn, value: unknown): void {
 
   try {
 
@@ -105,7 +105,7 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param value Value to set and get
  */
-function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: DoneFn, value: any, schema?: JSONSchema) {
+function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: DoneFn, value: unknown, schema?: JSONSchema): void {
 
   try {
 
@@ -218,7 +218,7 @@ describe('Interoperability', () => {
 
   }
 
-  const getTestValues: [any, JSONSchema | undefined][] = [
+  const getTestValues: [unknown, JSONSchema | undefined][] = [
     ['hello', { type: 'string' }],
     ['', { type: 'string' }],
     [0, { type: 'number' }],

@@ -58,7 +58,7 @@ to be homogeneous with other Angular modules.
 Install the package, according to your Angular version:
 
 ```bash
-# For Angular 8:
+# For Angular 8 & 9:
 ng add @ngx-pwa/local-storage
 
 # For Angular 6 & 7:
@@ -69,7 +69,7 @@ npm install @ngx-pwa/local-storage@6
 
 You should **stick to these commands**. If for any reason `ng add` does not work,
 be sure to follow the [manual installation guide](./docs/MANUAL_INSTALLATION.md),
-as there are additionnal steps to do in addition to the package installation.
+as there are additionnal steps to do in addition to the package installation for some versions.
 
 For version >= 8, if you have multiple applications in the same project, as usual, you need to choose the project:
 ```bash
@@ -203,11 +203,8 @@ this.storage.get('notexisting').subscribe((data) => {
 ```
 
 Note you'll only get *one* value: the `Observable` is here for asynchrony but is not meant to
-emit again when the stored data is changed. And it's normal: if app data change, it's the role of your app
-to keep track of it, not of this lib. See [#16](https://github.com/cyrilletuzi/angular-async-local-storage/issues/16) 
-for more context and [#4](https://github.com/cyrilletuzi/angular-async-local-storage/issues/4)
-for an example. A `watch()` method may come soon
-(see [#108](https://github.com/cyrilletuzi/angular-async-local-storage/pull/108))
+emit again when the stored data is changed. If you need to watch the value,
+version 9 introduced a `watch()` method, see the [watching guide](./docs/WATCHING.md).
 
 ### Checking data
 
@@ -276,7 +273,7 @@ For example, it allows to implement a multiple databases scenario.
 ### Angular support
 
 We follow [Angular LTS support](https://angular.io/guide/releases),
-meaning we support Angular >= 6, until November 2019.
+meaning we support Angular >= 7, until April 2020.
 
 This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler) and Ivy.
 

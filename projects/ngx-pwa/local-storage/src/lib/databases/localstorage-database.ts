@@ -4,7 +4,7 @@ import { observeOn } from 'rxjs/operators';
 
 import { LocalDatabase } from './local-database';
 import { SerializationError } from './exceptions';
-import { LOCAL_STORAGE_PREFIX, LS_PREFIX } from '../tokens';
+import { LS_PREFIX } from '../tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -19,16 +19,13 @@ export class LocalStorageDatabase implements LocalDatabase {
   /**
    * Constructor params are provided by Angular (but can also be passed manually in tests)
    * @param prefix Prefix option to avoid collision for multiple apps on the same subdomain or for interoperability
-   * @param oldPrefix Prefix option prior to v8 to avoid collision for multiple apps on the same subdomain or for interoperability
    */
   constructor(
     @Inject(LS_PREFIX) prefix = '',
-    // tslint:disable-next-line: deprecation
-    @Inject(LOCAL_STORAGE_PREFIX) oldPrefix = '',
   ) {
 
-    /* Priority for the new prefix option, otherwise old prefix with separator, or no prefix */
-    this.prefix = prefix || (oldPrefix ? `${oldPrefix}_` : '');
+    /* Prefix if asked, or no prefix otherwise */
+    this.prefix = prefix || '';
 
   }
 
@@ -47,7 +44,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
    */
-  get<T = any>(key: string): Observable<T | undefined> {
+  get<T = unknown>(key: string): Observable<T | undefined> {
 
     /* Get raw data */
     const unparsedData = localStorage.getItem(this.prefixKey(key));
@@ -77,7 +74,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-  set(key: string, data: any): Observable<undefined> {
+  set(key: string, data: unknown): Observable<undefined> {
 
     let serializedData: string | null = null;
 

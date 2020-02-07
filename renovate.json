@@ -15,7 +15,11 @@
   "packageRules": [
     {
       "packageNames": ["typescript"],
-      "allowedVersions": "<3.6"
+      "allowedVersions": "<3.8"
+    },
+    {
+      "packageNames": ["@types/node"],
+      "allowedVersions": "<13"
     },
     {
       "packagePatterns": ["^@angular"],

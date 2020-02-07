@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
 
   constructor(private localStorage: LocalStorage, private storageMap: StorageMap, private dataService: DataService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     const schema: JSONSchema = {
       type: 'object',
@@ -62,7 +62,8 @@ export class AppComponent implements OnInit {
       );
 
       this.schemaError$ = this.localStorage.setItem('schemaError', { wrong: 'test' }).pipe(
-        mergeMap(() => this.localStorage.getItem('schemaError', schema)),
+        // tslint:disable-next-line: no-any
+        mergeMap(() => this.localStorage.getItem('schemaError', schema as any)),
         catchError(() => of('schema error')),
       );
 

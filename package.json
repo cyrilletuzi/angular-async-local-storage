@@ -1,6 +1,6 @@
 {
   "name": "@ngx-pwa/local-storage",
-  "version": "8.2.4",
+  "version": "9.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve demo",
@@ -21,27 +21,27 @@
     "webdriver": "webdriver-manager update",
     "lint": "ng lint",
     "schematics": "tsc -p projects/ngx-pwa/local-storage/tsconfig.schematics.json && copyfiles --up 3 projects/ngx-pwa/local-storage/schematics/collection.json projects/ngx-pwa/local-storage/schematics/migration.json projects/ngx-pwa/local-storage/schematics/**/schema.json dist/ngx-pwa/local-storage",
-    "publish": "npm run lint && npm run build && npm test && npm publish dist/ngx-pwa/local-storage --access public"
+    "publish": "npm run build && npm publish dist/ngx-pwa/local-storage --access public"
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "8.2.14",
-    "@angular/compiler": "8.2.14",
-    "@angular/core": "8.2.14",
-    "@angular/platform-browser": "8.2.14",
-    "@angular/platform-browser-dynamic": "8.2.14",
-    "@angular/router": "8.2.14",
+    "@angular/common": "9.0.0",
+    "@angular/compiler": "9.0.0",
+    "@angular/core": "9.0.0",
+    "@angular/platform-browser": "9.0.0",
+    "@angular/platform-browser-dynamic": "9.0.0",
+    "@angular/router": "9.0.0",
     "rxjs": "6.5.4",
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.803.24",
-    "@angular-devkit/build-ng-packagr": "0.803.24",
-    "@angular/cli": "8.3.24",
-    "@angular/compiler-cli": "8.2.14",
-    "@types/jasmine": "3.5.2",
+    "@angular-devkit/build-angular": "0.900.1",
+    "@angular-devkit/build-ng-packagr": "0.900.1",
+    "@angular/cli": "9.0.1",
+    "@angular/compiler-cli": "9.0.0",
+    "@types/jasmine": "3.5.3",
     "@types/jasminewd2": "2.0.8",
-    "@types/node": "10.17.14",
+    "@types/node": "12.12.26",
     "codelyzer": "5.2.1",
     "copyfiles": "2.2.0",
     "jasmine-core": "3.5.0",
@@ -53,15 +53,15 @@
     "karma-firefox-launcher": "1.3.0",
     "karma-ie-launcher": "1.0.0",
     "karma-jasmine": "3.1.0",
-    "karma-jasmine-html-reporter": "1.5.1",
+    "karma-jasmine-html-reporter": "1.5.2",
     "karma-safari-private-launcher": "1.0.0",
     "karma-safarinative-launcher": "1.1.0",
     "localforage": "1.7.3",
-    "ng-packagr": "5.7.1",
+    "ng-packagr": "9.0.0",
     "protractor": "5.4.3",
     "ts-node": "8.6.2",
     "tslint": "5.20.1",
-    "typescript": "3.5.3",
+    "typescript": "3.7.5",
     "zone.js": "0.10.2"
   }
 }
