@@ -9,6 +9,12 @@ export const packageVersionLatest = '^9.0.0';
 export const packageVersionLTS8 = '^8.2.4';
 export const packageVersionLTS7 = '^6.2.5';
 
+function getMajorVersion(version: string): number {
+
+  return Number.parseInt(version.replace('~', '').replace('^', '').substr(0, 1), 10);
+
+}
+
 export function getAngularMajorVersion(host: Tree): number {
 
   const angularDependency = getPackageJsonDependency(host, '@angular/core');
@@ -18,8 +24,20 @@ export function getAngularMajorVersion(host: Tree): number {
     throw new SchematicsException(`@angular/core is required to install ${packageName}`);
   }
 
-  /* Remove semver signs if present and keep only the first number (major) */
-  return Number.parseInt(angularDependency.version.replace('~', '').replace('^', '').substr(0, 1), 10);
+  return getMajorVersion(angularDependency.version);
+
+}
+
+export function getLibMajorVersion(host: Tree): number {
+
+  const libDependency = getPackageJsonDependency(host, packageName);
+
+  /* Throw if Angular is not installed */
+  if (libDependency === null) {
+    throw new SchematicsException(`${packageName} is required to update it`);
+  }
+
+  return getMajorVersion(libDependency.version);
 
 }
 
