@@ -69,14 +69,14 @@ export function addModule(angularMajorVersion: number, mainPath: string): Rule {
 /**
  * @param mainPath Path of the project `main.ts` file
  */
-export function updateModule(libMajorVersion: number, mainPath: string): Rule {
+export function updateModule(mainPath: string): Rule {
   return (host: Tree) => {
 
     const { appModulePath, appModuleFile } = getAppModule(host, mainPath);
 
     /* If `IDBNoWrap` is already set, it **must not** be changed, otherwise previously stored data would be lost.
      * Also, projects already updated to v9 don't need migration */
-    if (!appModuleFile.includes('IDBNoWrap') && libMajorVersion < 9) {
+    if (!appModuleFile.includes('IDBNoWrap')) {
 
       if (appModuleFile.includes(packageName)) {
 

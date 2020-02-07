@@ -5,15 +5,9 @@ import { getWorkspace as getWorkspaceConfig } from '@schematics/angular/utility/
 
 export const packageName = '@ngx-pwa/local-storage';
 // TODO: Automate this
-export const packageVersionLatest = '^9.0.1';
+export const packageVersionLatest = '^9.0.2';
 export const packageVersionLTS8 = '^8.2.4';
 export const packageVersionLTS7 = '^6.2.5';
-
-function getMajorVersion(version: string): number {
-
-  return Number.parseInt(version.replace('~', '').replace('^', '').substr(0, 1), 10);
-
-}
 
 export function getAngularMajorVersion(host: Tree): number {
 
@@ -24,20 +18,7 @@ export function getAngularMajorVersion(host: Tree): number {
     throw new SchematicsException(`@angular/core is required to install ${packageName}`);
   }
 
-  return getMajorVersion(angularDependency.version);
-
-}
-
-export function getLibMajorVersion(host: Tree): number {
-
-  const libDependency = getPackageJsonDependency(host, packageName);
-
-  /* Throw if Angular is not installed */
-  if (libDependency === null) {
-    throw new SchematicsException(`${packageName} is required to update it`);
-  }
-
-  return getMajorVersion(libDependency.version);
+  return Number.parseInt(angularDependency.version.replace('~', '').replace('^', '').substr(0, 1), 10);
 
 }
 

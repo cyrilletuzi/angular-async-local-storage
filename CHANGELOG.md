@@ -2,11 +2,11 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 9.0.1 (2020-02-07)
+## 9.0.2 (2020-02-07)
 
 ### Bug fix
 
-- Do not run migration for projects already updated to v9
+- Fix a migration schematics issue
 
 ## 9.0.0 (2020-02-07)
 
