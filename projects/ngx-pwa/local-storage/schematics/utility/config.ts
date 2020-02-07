@@ -18,6 +18,7 @@ export function getAngularMajorVersion(host: Tree): number {
     throw new SchematicsException(`@angular/core is required to install ${packageName}`);
   }
 
+  /* Remove semver signs if present and keep only the first number (major) */
   return Number.parseInt(angularDependency.version.replace('~', '').replace('^', '').substr(0, 1), 10);
 
 }
