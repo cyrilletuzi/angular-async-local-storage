@@ -1,7 +1,7 @@
 # Migration guide to version 9
 
 ```
-ng update @ngx-pwa/local-storage --next
+ng update @ngx-pwa/local-storage
 ```
 
 If you've already completed the full [v8 migration](./MIGRATION_TO_V8.md), you're done!

@@ -2,11 +2,11 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 9.0.0-rc.3 (2020-01-24)
+## 9.0.0 (2020-02-07)
 
-To update: `ng update @ngx-pwa/local-storage@next`
+To update: `ng update @ngx-pwa/local-storage`
 
-A [full migration guide to version 9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/v9beta/docs/MIGRATION_TO_V9.md) is available.
+A [full migration guide to version 9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V9.md) is available.
 
 ### Angular 9
 
@@ -17,12 +17,12 @@ v9 requires Angular 9.
 Doing `ng update` should have managed backward compatibility.
 But it's not easy to be sure schematics work in all cases,
 so **be sure to check the migration was done correctly** by following the
-[migration guide to v9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/v9beta/docs/MIGRATION_TO_V9.md), **otherwise you would lost previously stored data**.
+[migration guide to v9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V9.md), **otherwise you would lost previously stored data**.
 
 ### Feature
 
 - New `.watch()` method on `StorageMap` service
-(see [#108](https://github.com/cyrilletuzi/angular-async-local-storage/pull/108/))
+(see [documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/WATCHING.md))
 
 ### Breaking changes: removal of deprecated features
 
