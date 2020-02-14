@@ -46,7 +46,7 @@ jobs:
     - name: Run unit tests in private mode
       run: npm run test:unit:${{ matrix.os }}:private
     - name: Install matching webdriver version
-      run: ./node_modules/.bin/webdriver-manager update --versions.chrome 78.0.3904.70
+      run: ./node_modules/.bin/webdriver-manager update --versions.chrome 79.0.3945.36
       if: matrix.os == 'ubuntu-latest'
     - name: Run general e2e tests
       run: npm run test:e2e:demo
@@ -84,7 +84,7 @@ jobs:
     - name: Run unit tests in private mode
       run: npm run test:unit:ubuntu-latest:private
     - name: Install matching webdriver version
-      run: ./node_modules/.bin/webdriver-manager update --versions.chrome 78.0.3904.70
+      run: ./node_modules/.bin/webdriver-manager update --versions.chrome 79.0.3945.36
     - name: Run general e2e tests
       run: npm run test:e2e:demo
     - name: Run interoperability e2e tests
@@ -118,7 +118,7 @@ jobs:
     - name: Run unit tests in private mode
       run: npm run test:unit:ubuntu-latest:private
     - name: Install matching webdriver version
-      run: ./node_modules/.bin/webdriver-manager update --versions.chrome 78.0.3904.70
+      run: ./node_modules/.bin/webdriver-manager update --versions.chrome 79.0.3945.36
     - name: Run general e2e tests
       run: npm run test:e2e:demo
     - name: Run interoperability e2e tests
