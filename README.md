@@ -1,6 +1,6 @@
 # Async local storage for Angular
 
-Efficient client-side storage module for Angular apps and Progressive Wep Apps (PWA):
+Efficient client-side storage module for Angular:
 - **simplicity**: based on native `localStorage` API,
 - **perfomance**: internally stored via the asynchronous `indexedDB` API,
 - **Angular-like**: wrapped in RxJS `Observable`s,
