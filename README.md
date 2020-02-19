@@ -14,12 +14,7 @@ What started as a personal project is now one of the most used Angular library
 for client-side storage, with more than 10 000 downloads
 [on npm](https://www.npmjs.com/package/@ngx-pwa/local-storage) each week.
 
-The lib may seem easy to use, but it's a lot of *free* work.
-Both client-side storage (with all vendors issues...)
-and maintaining a reliable Angular library (up to date with the framework releases),
-are difficult topics.
-
-So if your company earns money with projects using this lib,
+It's a lot of *free* work. So if your company earns money with projects using this lib,
 it would be nice to **consider becoming [a sponsor](https://github.com/sponsors/cyrilletuzi)**.
 
 ## By the same author
