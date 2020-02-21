@@ -32,7 +32,7 @@
     "@angular/platform-browser-dynamic": "9.0.2",
     "@angular/router": "9.0.2",
     "rxjs": "6.5.4",
-    "tslib": "1.10.0"
+    "tslib": "1.11.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.900.2",
