@@ -60,7 +60,7 @@
     "ng-packagr": "9.0.2",
     "protractor": "5.4.3",
     "ts-node": "8.6.2",
-    "tslint": "5.20.1",
+    "tslint": "6.1.0",
     "typescript": "3.7.5",
     "zone.js": "0.10.2"
   }
