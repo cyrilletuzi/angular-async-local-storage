@@ -3,6 +3,7 @@ name: CI
 on: pull_request
 
 jobs:
+
   test-latest:
 
     strategy:
@@ -25,7 +26,7 @@ jobs:
     - name: Build the lib
       run: npm run build
     - name: Install matching webdriver version
-      run: ./node_modules/.bin/webdriver-manager update --versions.chrome $(google-chrome --version)
+      run: ./node_modules/.bin/webdriver-manager update --versions.chrome $(google-chrome --version | cut -f 3 -d ' ')
       if: matrix.os == 'ubuntu-latest'
     - name: Run general e2e tests
       run: npm run e2e:demo
