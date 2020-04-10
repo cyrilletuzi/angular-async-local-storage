@@ -20,8 +20,6 @@ exports.config = {
     },
   ],
   directConnect: true,
-  chromeDriver: process.env.CHROMEWEBDRIVER,
-  geckoDriver: process.env.GECKOWEBDRIVER,
   baseUrl: 'http://localhost:4200/',
   framework: 'jasmine',
   jasmineNodeOpts: {
