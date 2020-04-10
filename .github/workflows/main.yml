@@ -42,20 +42,20 @@ jobs:
     - name: Build the lib
       run: npm run build
     - name: Run unit tests
-      run: npm run test:unit:${{ matrix.os }}
+      run: npm run unit:${{ matrix.os }}
     - name: Run unit tests in private mode
-      run: npm run test:unit:${{ matrix.os }}:private
+      run: npm run unit:${{ matrix.os }}:private
     - name: Install matching webdriver version
-      run: ./node_modules/.bin/webdriver-manager update
+      run: ./node_modules/.bin/webdriver-manager update --versions.chrome $(google-chrome --version | cut -f 3 -d ' ')
       if: matrix.os == 'ubuntu-latest'
     - name: Run general e2e tests
-      run: npm run test:e2e:demo
+      run: npm run e2e:demo
       if: matrix.os == 'ubuntu-latest'
     - name: Run interoperability e2e tests
-      run: npm run test:e2e:interoperability
+      run: npm run e2e:interoperability
       if: matrix.os == 'ubuntu-latest'
     - name: Run Ivy e2e tests
-      run: npm run test:ivy
+      run: npm run e2e:ivy
       if: matrix.os == 'ubuntu-latest'
 
   test-next:
@@ -80,17 +80,17 @@ jobs:
       env:
         CI: true
     - name: Run unit tests
-      run: npm run test:unit:ubuntu-latest
+      run: npm run unit:ubuntu-latest
     - name: Run unit tests in private mode
-      run: npm run test:unit:ubuntu-latest:private
+      run: npm run unit:ubuntu-latest:private
     - name: Install matching webdriver version
-      run: ./node_modules/.bin/webdriver-manager update
+      run: ./node_modules/.bin/webdriver-manager update --versions.chrome $(google-chrome --version | cut -f 3 -d ' ')
     - name: Run general e2e tests
-      run: npm run test:e2e:demo
+      run: npm run e2e:demo
     - name: Run interoperability e2e tests
-      run: npm run test:e2e:interoperability
+      run: npm run e2e:interoperability
     - name: Run Ivy e2e tests
-      run: npm run test:ivy
+      run: npm run e2e:ivy
 
   test-minimum:
 
@@ -114,14 +114,14 @@ jobs:
       env:
         CI: true
     - name: Run unit tests
-      run: npm run test:unit:ubuntu-latest
+      run: npm run unit:ubuntu-latest
     - name: Run unit tests in private mode
-      run: npm run test:unit:ubuntu-latest:private
+      run: npm run unit:ubuntu-latest:private
     - name: Install matching webdriver version
-      run: ./node_modules/.bin/webdriver-manager update
+      run: ./node_modules/.bin/webdriver-manager update --versions.chrome $(google-chrome --version | cut -f 3 -d ' ')
     - name: Run general e2e tests
-      run: npm run test:e2e:demo
+      run: npm run e2e:demo
     - name: Run interoperability e2e tests
-      run: npm run test:e2e:interoperability
+      run: npm run e2e:interoperability
     - name: Run Ivy e2e tests
-      run: npm run test:ivy
+      run: npm run e2e:ivy
