@@ -4,6 +4,22 @@ on: pull_request
 
 jobs:
 
+  lint:
+    name: Lint check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    - name: Install dependencies
+      run: npm ci
+      env:
+        CI: true
+    - name: Lint check
+      run: npm run lint
+
   test-latest:
 
     strategy:
@@ -25,6 +41,10 @@ jobs:
         CI: true
     - name: Build the lib
       run: npm run build
+    - name: Run unit tests
+      run: npm run unit:${{ matrix.os }}
+    - name: Run unit tests in private mode
+      run: npm run unit:${{ matrix.os }}:private
     - name: Install matching webdriver version
       run: ./node_modules/.bin/webdriver-manager update --versions.chrome $(google-chrome --version | cut -f 3 -d ' ')
       if: matrix.os == 'ubuntu-latest'
