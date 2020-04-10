@@ -2,6 +2,7 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
+const process = require('process');
 const { SpecReporter, StacktraceOption } = require('jasmine-spec-reporter');
 
 /**
@@ -19,6 +20,8 @@ exports.config = {
     },
   ],
   directConnect: true,
+  chromeDriver: process.env.CHROMEWEBDRIVER,
+  geckoDriver: process.env.GECKOWEBDRIVER,
   baseUrl: 'http://localhost:4200/',
   framework: 'jasmine',
   jasmineNodeOpts: {
