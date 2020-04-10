@@ -46,7 +46,7 @@ jobs:
     - name: Run unit tests in private mode
       run: npm run unit:${{ matrix.os }}:private
     - name: Run general e2e tests
-      run: npm run e2e:demo
+      run: sudo npm run e2e:demo
       if: matrix.os == 'ubuntu-latest'
     - name: Run interoperability e2e tests
       run: npm run e2e:interoperability
