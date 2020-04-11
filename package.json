@@ -21,9 +21,9 @@
     "webdriver": "webdriver-manager update",
     "lint": "ng lint",
     "schematics": "tsc -p projects/ngx-pwa/local-storage/tsconfig.schematics.json && copyfiles --up 3 projects/ngx-pwa/local-storage/schematics/collection.json projects/ngx-pwa/local-storage/schematics/migration.json projects/ngx-pwa/local-storage/schematics/**/schema.json dist/ngx-pwa/local-storage",
-    "release:patch": "cd projects/ngx-pwa/local-storage && npm version patch && cd ../../.. && npm version patch && npm run build && npm publish dist/ngx-pwa/local-storage --access public && git push && git push --tags",
-    "release:minor": "cd projects/ngx-pwa/local-storage && npm version minor && cd ../../.. && npm version minor && npm run build && npm publish dist/ngx-pwa/local-storage --access public && git push && git push --tags",
-    "release:major": "cd projects/ngx-pwa/local-storage && npm version major && cd ../../.. && npm version major && npm run build && npm publish dist/ngx-pwa/local-storage --access public && git push && git push --tags"
+    "release:patch": "npm run build && cd projects/ngx-pwa/local-storage && npm version patch && cd ../../.. && npm version patch && npm run build && npm publish dist/ngx-pwa/local-storage --access public && git push && git push --tags",
+    "release:minor": "npm run build && cd projects/ngx-pwa/local-storage && npm version minor && cd ../../.. && npm version minor && npm run build && npm publish dist/ngx-pwa/local-storage --access public && git push && git push --tags",
+    "release:major": "npm run build && cd projects/ngx-pwa/local-storage && npm version major && cd ../../.. && npm version major && npm run build && npm publish dist/ngx-pwa/local-storage --access public && git push && git push --tags"
   },
   "private": true,
   "dependencies": {
