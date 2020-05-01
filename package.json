@@ -61,7 +61,7 @@
     "localforage": "1.7.3",
     "ng-packagr": "9.1.1",
     "protractor": "5.4.4",
-    "ts-node": "8.9.0",
+    "ts-node": "8.9.1",
     "tslint": "6.1.2",
     "typescript": "3.8.3",
     "zone.js": "0.10.3"
