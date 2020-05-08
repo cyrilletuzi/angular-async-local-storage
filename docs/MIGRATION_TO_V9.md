@@ -31,7 +31,8 @@ in all cases, so be sure the migration was done correctly, **otherwise you would
 (ie. you already set `IDBNoWrap` to `true` or used `ng add`),
 you should see `StorageModale.forRoot({ IDBNoWrap: true })` or no `IDBNoWrap` option at all.
 
-If `ng update` didn't work as expected, please file an issue.
+**If `ng update` didn't work as expected, please delay the update and file an issue.**
+Again, all previously stored data may be lost otherwise.
 
 ## Removed deprecated features
 
