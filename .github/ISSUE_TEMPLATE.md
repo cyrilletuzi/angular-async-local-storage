@@ -1,11 +1,14 @@
-<!--
-Friendly reminder: it is an open source project done on my free time.
-So please be polite, respectful and, if possible, grateful. :)
+# Checks before posting an issue
 
-Also, I put a lot of effort in the documentation of this library. So if you have a question,
-please first check:
-- README: https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/README.md
-- CHANGELOG: https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/CHANGELOG.md
-- migration guides: https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/MIGRATION.md
-- questions already answered in closed issues: https://github.com/cyrilletuzi/angular-async-local-storage/issues?q=is%3Aissue+is%3Aclosed
--->
+- [ ] I have read all the library's documentation (README, CHANGELOG, MIGRATION and /docs)
+- [ ] I understand I am writing to a *human being*, doing this open source project on his *free* time
+
+<!-- Otherwise the issue will be closed. -->
+
+# Description of the issue
+
+<!-- Be precise, a vague description will not allow to find the problem. -->
+
+# How to reproduce the issue
+
+<!-- Hundred of tests are already checking most scenarios work, so without reproduction steps I will not be able to help. -->
