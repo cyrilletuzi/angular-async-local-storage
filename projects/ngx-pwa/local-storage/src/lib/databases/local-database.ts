@@ -2,10 +2,10 @@ import { Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 
+import { IDB_STORE_NAME, IDB_DB_NAME, LS_PREFIX, IDB_DB_VERSION, IDB_NO_WRAP } from '../tokens';
 import { IndexedDBDatabase } from './indexeddb-database';
 import { LocalStorageDatabase } from './localstorage-database';
 import { MemoryDatabase } from './memory-database';
-import { IDB_STORE_NAME, IDB_DB_NAME, LS_PREFIX, IDB_DB_VERSION, IDB_NO_WRAP } from '../tokens';
 
 /**
  * Factory to create a storage according to browser support

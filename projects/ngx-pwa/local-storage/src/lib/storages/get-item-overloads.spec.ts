@@ -1,9 +1,9 @@
 import { map } from 'rxjs/operators';
 
+import { MemoryDatabase } from '../databases/memory-database';
+import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from '../validation/json-schema';
 import { LocalStorage } from './local-storage.service';
 import { StorageMap } from './storage-map.service';
-import { MemoryDatabase } from '../databases';
-import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from '../validation';
 
 /* For now, `unknown` and `any` cases must be checked manually as any type can be converted to them. */
 // TODO: Find a way to automate this: TS 3.7 asserts or https://github.com/dsherret/conditional-type-checks

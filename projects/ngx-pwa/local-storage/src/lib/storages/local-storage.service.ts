@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { mapTo, map } from 'rxjs/operators';
 
+import {
+  JSONSchema, JSONSchemaBoolean, JSONSchemaInteger,
+  JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf
+} from '../validation/json-schema';
 import { StorageMap } from './storage-map.service';
-import { JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf } from '../validation';
 
 @Injectable({
   providedIn: 'root'

@@ -2,12 +2,12 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
 import { map, mergeMap, first, takeWhile, tap, mapTo } from 'rxjs/operators';
 
-import { LocalDatabase } from './local-database';
-import { IDBBrokenError } from './exceptions';
 import {
   IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, IDB_DB_VERSION,
   DEFAULT_IDB_DB_NAME, DEFAULT_IDB_DB_VERSION, IDB_NO_WRAP, DEFAULT_IDB_NO_WRAP
 } from '../tokens';
+import { IDBBrokenError } from './exceptions';
+import { LocalDatabase } from './local-database';
 
 @Injectable({
   providedIn: 'root'

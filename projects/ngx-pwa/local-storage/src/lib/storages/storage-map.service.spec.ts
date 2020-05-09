@@ -1,11 +1,13 @@
 import { mergeMap, tap, filter } from 'rxjs/operators';
 
-import { StorageMap } from './storage-map.service';
-import { VALIDATION_ERROR } from './exceptions';
-import { IndexedDBDatabase, LocalStorageDatabase, MemoryDatabase } from '../databases';
-import { JSONSchema } from '../validation';
+import { IndexedDBDatabase } from '../databases/indexeddb-database';
+import { LocalStorageDatabase } from '../databases/localstorage-database';
+import { MemoryDatabase } from '../databases/memory-database';
+import { JSONSchema } from '../validation/json-schema';
 import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_DB_VERSION } from '../tokens';
 import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
+import { StorageMap } from './storage-map.service';
+import { VALIDATION_ERROR } from './exceptions';
 
 function tests(description: string, localStorageServiceFactory: () => StorageMap): void {
 
