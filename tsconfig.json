@@ -23,6 +23,7 @@
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
     "paths": {
       "@ngx-pwa/local-storage": [
         "dist/ngx-pwa/local-storage"
@@ -33,7 +34,6 @@
     }
   },
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
     "strictTemplates": true
   }
