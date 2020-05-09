@@ -27,8 +27,8 @@
     "url": "https://github.com/cyrilletuzi/angular-async-local-storage/issues"
   },
   "peerDependencies": {
-    "@angular/common": "^9.0.0",
-    "@angular/core": "^9.0.0",
+    "@angular/common": "^10.0.0 || ^10.0.0-next || ^10.0.0-rc",
+    "@angular/core": "^10.0.0 || ^10.0.0-next || ^10.0.0-rc",
     "rxjs": "^6.5.3",
     "tslib": "^1.10.0"
   },
