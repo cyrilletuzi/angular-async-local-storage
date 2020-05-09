@@ -52,11 +52,11 @@ to be homogeneous with other Angular modules.
 Install the package, according to your Angular version:
 
 ```bash
-# For Angular 8 & 9:
-ng add @ngx-pwa/local-storage
+# For Angular 10 (beta):
+ng add @ngx-pwa/local-storage@next
 
-# For Angular 6 & 7:
-npm install @ngx-pwa/local-storage@6
+# For Angular LTS (Angular >= 8):
+ng add @ngx-pwa/local-storage
 ```
 
 *Done!*
@@ -65,7 +65,7 @@ You should **stick to these commands**. If for any reason `ng add` does not work
 be sure to follow the [manual installation guide](./docs/MANUAL_INSTALLATION.md),
 as there are additionnal steps to do in addition to the package installation for some versions.
 
-For version >= 8, if you have multiple applications in the same project, as usual, you need to choose the project:
+If you have multiple applications in the same project, as usual, you need to choose the project:
 ```bash
 ng add @ngx-pwa/local-storage --project yourprojectname
 ```
@@ -271,8 +271,7 @@ For example, it allows to implement a multiple databases scenario.
 
 ### Angular support
 
-We follow [Angular LTS support](https://angular.io/guide/releases),
-meaning we support Angular >= 7, until April 2020.
+We follow [Angular LTS support](https://angular.io/guide/releases).
 
 This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler) and Ivy.
 

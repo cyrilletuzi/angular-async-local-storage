@@ -4,6 +4,7 @@
 - [Migration to version 6](./docs/MIGRATION_TO_V6.md) (for Angular 6 & 7)
 - [Migration to version 8](./docs/MIGRATION_TO_V8.md)
 - [Migration to version 9](./docs/MIGRATION_TO_V9.md)
+- [Migration to version 10](./docs/MIGRATION_TO_V10.md)
 
 [Full changelog available here.](./CHANGELOG.md)
 

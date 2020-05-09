@@ -12,9 +12,10 @@ but is not required for Angular 4 & 5. **It is only required when upgrading to A
 - v5 for Angular 5,
 - v6 for Angular 6 & 7,
 - v8 for Angular 8,
-- v9 for Angular 9.
+- v9 for Angular 9,
+- v10 for Angular 10.
 
-Note that Angular 4 & 5 LTS support has ended.
+Note that [Angular <= 7 are officially outdated](https://angular.io/guide/releases).
 
 ## Installing the new package
 
@@ -35,15 +36,10 @@ npm install @ngx-pwa/local-storage@5
 npm install @ngx-pwa/local-storage@6
 ```
 
-- for **Angular 8**:
-```bash
-npm install @ngx-pwa/local-storage@8
-```
-
-- for **Angular 9**:
-```bash
-npm install @ngx-pwa/local-storage@9
-```
+- for **Angular >= 8**: you must [update to v6 first](./MIGRATION_TO_V6.md),
+then do the [other migrations](../MIGRATION.md) in an incremental way,
+especially [the version 9 migration](./MIGRATION_TO_V9.md),
+as it can lead to the loss of all previsouly stored data if it is not done correctly.
 
 ## Refactoring
 
