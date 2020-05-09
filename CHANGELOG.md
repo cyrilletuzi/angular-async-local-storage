@@ -2,6 +2,20 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 10.0.0-0 (2020-05-09)
+
+This a pre-release version. **Do NOT use in production.**
+
+### Feature
+
+Supports and **requires** Angular 10.
+
+No lib change.
+
+A [full migration guide to version 10](./docs/MIGRATION_TO_V10.md) is available.
+
+**If you did not update to version 9 yet, be sure to follow it, as otherwise you could lose all previously stored data**.
+
 ## 9.0.3 (2020-03-13)
 
 No code change, just rebuilt with very last Angular 9.0.6 to prevent any `ngcc` issues.
@@ -22,9 +36,9 @@ and loss of previously stored data.
 
 ## 9.0.0 (2020-02-07)
 
-To update: `ng update @ngx-pwa/local-storage`
-
 A [full migration guide to version 9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V9.md) is available.
+
+**Be sure to follow it, as otherwise you could lose all previously stored data**.
 
 ### Angular 9
 
