@@ -6,6 +6,14 @@
 
 <!-- Otherwise the issue will be closed. -->
 
+# Configuration
+
+- `@ngx-pwa/local-storage` version: 
+- Angular version (`ng version`):
+```
+Copy the result here
+```
+
 # Description of the issue
 
 <!-- Be precise, a vague description will not allow to find the problem. -->
