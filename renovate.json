@@ -18,6 +18,10 @@
       "allowedVersions": "<3.9"
     },
     {
+      "packageNames": ["tslib"],
+      "allowedVersions": "<2"
+    },
+    {
       "packageNames": ["@types/node"],
       "allowedVersions": "<13"
     },
