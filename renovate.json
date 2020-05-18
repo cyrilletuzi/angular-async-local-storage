@@ -15,7 +15,11 @@
   "packageRules": [
     {
       "packageNames": ["typescript"],
-      "allowedVersions": "<3.9"
+      "allowedVersions": "<3.10"
+    },
+    {
+      "packageNames": ["tslib"],
+      "allowedVersions": "<2"
     },
     {
       "packageNames": ["@types/node"],
