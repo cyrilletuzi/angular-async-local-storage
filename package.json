@@ -37,7 +37,7 @@
     "@angular/platform-browser-dynamic": "10.0.0-rc.0",
     "@angular/router": "10.0.0-rc.0",
     "rxjs": "6.5.5",
-    "tslib": "1.13.0"
+    "tslib": "2.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.1000.0-rc.0",
