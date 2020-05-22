@@ -46,12 +46,12 @@
     "@angular/compiler-cli": "10.0.0-rc.0",
     "@types/jasmine": "3.5.10",
     "@types/jasminewd2": "2.0.8",
-    "@types/node": "12.12.39",
+    "@types/node": "12.12.42",
     "codelyzer": "5.2.2",
     "copyfiles": "2.2.0",
     "jasmine-core": "3.5.0",
     "jasmine-spec-reporter": "5.0.2",
-    "karma": "5.0.8",
+    "karma": "5.0.9",
     "karma-chrome-launcher": "3.1.0",
     "karma-coverage-istanbul-reporter": "3.0.2",
     "karma-edge-launcher": "0.4.2",
@@ -62,11 +62,11 @@
     "karma-safari-private-launcher": "1.0.0",
     "karma-safarinative-launcher": "1.1.0",
     "localforage": "1.7.3",
-    "ng-packagr": "10.0.0-next.1",
+    "ng-packagr": "10.0.0-next.2",
     "protractor": "7.0.0",
     "ts-node": "8.10.1",
     "tslint": "6.1.2",
-    "typescript": "3.9.2",
+    "typescript": "3.9.3",
     "zone.js": "0.10.3"
   }
 }
