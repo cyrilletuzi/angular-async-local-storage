@@ -58,7 +58,7 @@
     "karma-jasmine-html-reporter": "1.5.4",
     "karma-safari-private-launcher": "1.0.0",
     "karma-safarinative-launcher": "1.1.0",
-    "localforage": "1.7.3",
+    "localforage": "1.7.4",
     "ng-packagr": "9.1.5",
     "protractor": "7.0.0",
     "ts-node": "8.10.2",
