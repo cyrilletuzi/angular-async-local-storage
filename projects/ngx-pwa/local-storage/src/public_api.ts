@@ -2,8 +2,6 @@
  * Public API Surface of local-storage
  */
 
-// TODO: Test with Bazel
-
 export {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger, JSONSchemaNumber, JSONSchemaString,
   JSONSchemaArray, JSONSchemaArrayOf, JSONSchemaObject

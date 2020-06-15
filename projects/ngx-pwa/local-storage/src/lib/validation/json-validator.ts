@@ -5,7 +5,6 @@ import {
   JSONSchemaArray, JSONSchemaObject
 } from './json-schema';
 
-// TODO: detailed error messages?
 @Injectable({
   providedIn: 'root'
 })
