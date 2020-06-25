@@ -1,12 +1,9 @@
 import { map } from 'rxjs/operators';
 
+import { MemoryDatabase } from '../databases/memory-database';
+import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from '../validation/json-schema';
 import { LocalStorage } from './local-storage.service';
 import { StorageMap } from './storage-map.service';
-import { MemoryDatabase } from '../databases';
-import { JSONSchema, JSONSchemaArrayOf, JSONSchemaNumber } from '../validation';
-
-/* For now, `unknown` and `any` cases must be checked manually as any type can be converted to them. */
-// TODO: Find a way to automate this: TS 3.7 asserts or https://github.com/dsherret/conditional-type-checks
 
 describe('getItem() API', () => {
 
@@ -21,7 +18,8 @@ describe('getItem() API', () => {
 
   it('no schema / no cast', (done) => {
 
-    localStorageService.getItem('test').subscribe((_: unknown) => {
+    // @ts-expect-error
+    localStorageService.getItem('test').subscribe((_: number) => {
 
       expect().nothing();
 
@@ -33,7 +31,8 @@ describe('getItem() API', () => {
 
   it('no schema / cast', (done) => {
 
-    localStorageService.getItem<number>('test').subscribe((_: unknown) => {
+    // @ts-expect-error
+    localStorageService.getItem<number>('test').subscribe((_: number) => {
 
       expect().nothing();
 
@@ -263,7 +262,8 @@ describe('getItem() API', () => {
       test: string;
     }
 
-    localStorageService.getItem<Test>('test').subscribe((_: unknown) => {
+    // @ts-expect-error
+    localStorageService.getItem<Test>('test').subscribe((_: Test) => {
 
       expect().nothing();
 
@@ -280,7 +280,8 @@ describe('getItem() API', () => {
       properties: {
         test: { type: 'string' }
       }
-    }).subscribe((_: unknown) => {
+    // @ts-expect-error
+    }).subscribe((_: string) => {
 
       expect().nothing();
 

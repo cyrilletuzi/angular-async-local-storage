@@ -2,7 +2,7 @@ import { Rule, Tree, SchematicsException } from '@angular-devkit/schematics';
 import { addImportToModule } from '@schematics/angular/utility/ast-utils';
 import { InsertChange } from '@schematics/angular/utility/change';
 import { getAppModulePath } from '@schematics/angular/utility/ng-ast-utils';
-import * as ts from 'typescript';
+import { createSourceFile, ScriptTarget } from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';
 
 import { packageName } from './config';
 
@@ -27,7 +27,7 @@ function getAppModule(host: Tree, mainPath: string): { appModulePath: string; ap
 function updateAppModule(host: Tree, appModulePath: string, appModuleFile: string, storageModuleName: string): void {
 
   /* Third param is to disable transpilation, 4rd note sure I just followed other official schematics */
-  const appModuleSource = ts.createSourceFile(appModulePath, appModuleFile, ts.ScriptTarget.Latest, true);
+  const appModuleSource = createSourceFile(appModulePath, appModuleFile, ScriptTarget.Latest, true);
 
   const appModuleChanges = addImportToModule(appModuleSource, appModulePath, storageModuleName, packageName) as InsertChange[];
 

@@ -2,12 +2,12 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable, ReplaySubject, fromEvent, of, throwError, race } from 'rxjs';
 import { map, mergeMap, first, takeWhile, tap, mapTo } from 'rxjs/operators';
 
-import { LocalDatabase } from './local-database';
-import { IDBBrokenError } from './exceptions';
 import {
   IDB_DB_NAME, IDB_STORE_NAME, DEFAULT_IDB_STORE_NAME, IDB_DB_VERSION,
   DEFAULT_IDB_DB_NAME, DEFAULT_IDB_DB_VERSION, IDB_NO_WRAP, DEFAULT_IDB_NO_WRAP
 } from '../tokens';
+import { IDBBrokenError } from './exceptions';
+import { LocalDatabase } from './local-database';
 
 @Injectable({
   providedIn: 'root'
@@ -258,7 +258,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         const { store } = transactionData;
 
         /* Open a cursor on the store
-         * `.openKeyCursor()` is better for performance, but only available in indexedDB v2 (missing in IE/Edge)
+         * `.openKeyCursor()` is better for performance, but only available in indexedDB v2 (missing in IE)
          * Avoid issues like https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
         const request = ('openKeyCursor' in store) ? store.openKeyCursor() : (store as IDBObjectStore).openCursor();
 
@@ -297,7 +297,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         const { store, events } = transactionData;
 
         /* Check if the key exists in the store
-         * `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge).
+         * `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/ Legacy).
          * In older browsers, the value is checked instead, but it could lead to an exception
          * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
          * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69

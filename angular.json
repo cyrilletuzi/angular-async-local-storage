@@ -17,7 +17,6 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/ngx-pwa/local-storage/ng-package.prod.json",
               "tsConfig": "projects/ngx-pwa/local-storage/tsconfig.lib.prod.json"
             }
           }
@@ -46,11 +45,7 @@
     },
     "iframe": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "inlineTemplate": true
-        }
-      },
+      "schematics": {},
       "root": "projects/iframe",
       "sourceRoot": "projects/iframe/src",
       "prefix": "app",
@@ -153,11 +148,7 @@
     },
     "localforage": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "inlineTemplate": true
-        }
-      },
+      "schematics": {},
       "root": "projects/localforage",
       "sourceRoot": "projects/localforage/src",
       "prefix": "app",
@@ -273,11 +264,7 @@
     },
     "demo": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "inlineTemplate": true
-        }
-      },
+      "schematics": {},
       "root": "projects/demo",
       "sourceRoot": "projects/demo/src",
       "prefix": "app",
@@ -393,11 +380,7 @@
     },
     "ivy": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "inlineTemplate": true
-        }
-      },
+      "schematics": {},
       "root": "projects/ivy",
       "sourceRoot": "projects/ivy/src",
       "prefix": "app",
@@ -510,6 +493,14 @@
           }
         }
       }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "inlineTemplate": true
+    },
+    "@schematics/angular:application": {
+      "strict": true
     }
   },
   "defaultProject": "ngx-pwa-local-storage"

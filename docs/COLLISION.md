@@ -5,13 +5,6 @@ so there is no risk of collision in most cases.
 *Only* if you have multiple apps on the same *sub*domain *and* you don't want to share data between them,
 you need to add a prefix.
 
-## Version
-
-**This is the up to date guide about collision for version >= 8 of this lib.**
-
-The old guide about collision in versions < 8 is available [here](./COLLISION_BEFORE_V8.md),
-but is not recommended as there was breaking changes in v8.
-
 ## Configuration
 
 For example:

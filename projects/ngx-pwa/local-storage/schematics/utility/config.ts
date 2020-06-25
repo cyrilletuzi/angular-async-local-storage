@@ -4,10 +4,6 @@ import { getWorkspace } from '@schematics/angular/utility/workspace';
 import { getWorkspace as getWorkspaceConfig } from '@schematics/angular/utility/config';
 
 export const packageName = '@ngx-pwa/local-storage';
-// TODO: Automate this
-export const packageVersionLatest = '^9.0.3';
-export const packageVersionLTS8 = '^8.2.4';
-export const packageVersionLTS7 = '^6.2.5';
 
 export function getAngularMajorVersion(host: Tree): number {
 
@@ -19,7 +15,7 @@ export function getAngularMajorVersion(host: Tree): number {
   }
 
   /* Remove semver signs if present and keep only the first number (major) */
-  return Number.parseInt(angularDependency.version.replace('~', '').replace('^', '').substr(0, 1), 10);
+  return Number.parseInt(angularDependency.version.replace('~', '').replace('^', '').split('.')[0], 10);
 
 }
 

@@ -2,13 +2,18 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable, throwError, of, OperatorFunction, ReplaySubject } from 'rxjs';
 import { mergeMap, catchError, tap } from 'rxjs/operators';
 
-import { ValidationError } from './exceptions';
 import {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger,
-  JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf, JSONValidator
-} from '../validation';
-import { LocalDatabase, IDB_BROKEN_ERROR, LocalStorageDatabase, IndexedDBDatabase, MemoryDatabase } from '../databases';
+  JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf,
+} from '../validation/json-schema';
+import { JSONValidator } from '../validation/json-validator';
+import { IndexedDBDatabase } from '../databases/indexeddb-database';
+import { LocalStorageDatabase } from '../databases/localstorage-database';
+import { MemoryDatabase } from '../databases/memory-database';
+import { LocalDatabase } from '../databases/local-database';
+import { IDB_BROKEN_ERROR } from '../databases/exceptions';
 import { LS_PREFIX } from '../tokens';
+import { ValidationError } from './exceptions';
 
 @Injectable({
   providedIn: 'root'

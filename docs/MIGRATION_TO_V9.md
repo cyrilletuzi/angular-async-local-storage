@@ -1,13 +1,24 @@
 # Migration guide to version 9
 
+## Requirements
+
+First, be sure to:
+- fully upgrade *all* your Angular packages (check with `ng version`)
+- as stated in the official [Angular documentation](https://angular.io/guide/releases):
+
+> If you are updating from one major version to another, then we recommend that you don't skip major versions. Follow the instructions to incrementally update to the next major version, testing and validating at each step. For example, if you want to update from version 7.x.x to version 9.x.x, we recommend that you update to the latest 8.x.x release first. After successfully updating to 8.x.x, you can then update to 9.x.x.
+
+**So if you update from version < 8, please do the [other migrations](../MIGRATION.md) first**.
+
+## How to update
+
+Then:
+
 ```
 ng update @ngx-pwa/local-storage
 ```
 
-If you've already completed the full [v8 migration](./MIGRATION_TO_V8.md), you're done!
-We asked you a lot in the previous major versions migrations, but now the lib is clean!
-
-However, **please check the following point was done successfully**. Otherwise you would lost previously stored data.
+**Please check the following point was done successfully**. Otherwise you would lost previously stored data.
 
 ## IMPORTANT: new `IDBNoWrap` default
 
@@ -53,3 +64,9 @@ Please follow the [migration guide to v8](./MIGRATION_TO_V8.md) for more details
   - `.setItemSubscribe()` (use `.setItem().subscribe()` instead)
   - `.removeItemSubscribe()` (use `.removeItem().subscribe()` instead)
   - `.clearSubscribe()` (use `.clear().subscribe()` instead)
+
+## More documentation
+
+- [Full changelog for v9](../CHANGELOG.md)
+- [Other migration guides](../MIGRATION.md)
+- [Main documentation](../README.md)

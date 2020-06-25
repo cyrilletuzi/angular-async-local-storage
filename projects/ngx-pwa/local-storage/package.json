@@ -1,6 +1,6 @@
 {
   "name": "@ngx-pwa/local-storage",
-  "version": "9.0.3",
+  "version": "10.0.0-2",
   "funding": {
     "type": "github",
     "url": "https://github.com/sponsors/cyrilletuzi"
@@ -14,8 +14,8 @@
     "local storage",
     "storage",
     "indexeddb",
-    "angular9",
-    "angular 9",
+    "angular10",
+    "angular 10",
     "rxjs"
   ],
   "repository": {
@@ -26,11 +26,13 @@
   "bugs": {
     "url": "https://github.com/cyrilletuzi/angular-async-local-storage/issues"
   },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
   "peerDependencies": {
-    "@angular/common": "^9.0.0",
-    "@angular/core": "^9.0.0",
-    "rxjs": "^6.5.3",
-    "tslib": "^1.10.0"
+    "@angular/common": "^10.0.0",
+    "@angular/core": "^10.0.0",
+    "rxjs": "^6.5.3"
   },
   "schematics": "./schematics/collection.json",
   "ng-update": {

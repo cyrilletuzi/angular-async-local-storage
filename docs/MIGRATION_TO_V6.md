@@ -1,6 +1,10 @@
 # Migration guide to version 6
 
-## Previous migrations
+## LTS support ended
+
+[Angular version 6 is officially outdated](https://angular.io/guide/releases).
+
+## Requirements
 
 If you come from the old `angular-async-local-storage` package,
 you'll need to **[migrate to the new `@ngx-pwa/local-storage` package](./MIGRATION_TO_NEW_PACKAGE.md)**

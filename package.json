@@ -1,6 +1,6 @@
 {
   "name": "@ngx-pwa/local-storage",
-  "version": "9.0.3",
+  "version": "10.0.0-2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve demo",
@@ -21,26 +21,29 @@
     "webdriver": "webdriver-manager update",
     "lint": "ng lint",
     "schematics": "tsc -p projects/ngx-pwa/local-storage/tsconfig.schematics.json && copyfiles --up 3 projects/ngx-pwa/local-storage/schematics/collection.json projects/ngx-pwa/local-storage/schematics/migration.json projects/ngx-pwa/local-storage/schematics/**/schema.json dist/ngx-pwa/local-storage",
-    "release:patch": "npm run build && cd projects/ngx-pwa/local-storage && npm version patch && cd ../../.. && npm version patch && npm run build && npm publish dist/ngx-pwa/local-storage --access public && git push && git push --tags",
-    "release:minor": "npm run build && cd projects/ngx-pwa/local-storage && npm version minor && cd ../../.. && npm version minor && npm run build && npm publish dist/ngx-pwa/local-storage --access public && git push && git push --tags",
-    "release:major": "npm run build && cd projects/ngx-pwa/local-storage && npm version major && cd ../../.. && npm version major && npm run build && npm publish dist/ngx-pwa/local-storage --access public && git push && git push --tags"
+    "release:patch": "VERSION=patch npm run release",
+    "release:minor": "VERSION=minor npm run release",
+    "release:major": "VERSION=major npm run release",
+    "release:premajor": "VERSION=premajor TAG=next npm run release",
+    "release:prerelease": "VERSION=prerelease TAG=next npm run release",
+    "release": "if test $VERSION; then npm run build && cd projects/ngx-pwa/local-storage && npm version $VERSION --git-tag-version false && git add package.json && cd ../../.. && git commit -m \"release\" && npm version $VERSION && npm run build && npm publish dist/ngx-pwa/local-storage --access public --tag ${TAG:-latest} && git push && git push --tags; fi"
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "9.1.11",
-    "@angular/compiler": "9.1.11",
-    "@angular/core": "9.1.11",
-    "@angular/platform-browser": "9.1.11",
-    "@angular/platform-browser-dynamic": "9.1.11",
-    "@angular/router": "9.1.11",
+    "@angular/common": "10.0.0",
+    "@angular/compiler": "10.0.0",
+    "@angular/core": "10.0.0",
+    "@angular/platform-browser": "10.0.0",
+    "@angular/platform-browser-dynamic": "10.0.0",
+    "@angular/router": "10.0.0",
     "rxjs": "6.5.5",
-    "tslib": "1.13.0"
+    "tslib": "2.0.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.901.9",
-    "@angular-devkit/build-ng-packagr": "0.901.9",
-    "@angular/cli": "9.1.9",
-    "@angular/compiler-cli": "9.1.11",
+    "@angular-devkit/build-angular": "0.1000.0",
+    "@angular-devkit/build-ng-packagr": "0.1000.0",
+    "@angular/cli": "10.0.0",
+    "@angular/compiler-cli": "10.0.0",
     "@types/jasmine": "3.5.10",
     "@types/jasminewd2": "2.0.8",
     "@types/node": "12.12.47",
@@ -58,12 +61,12 @@
     "karma-jasmine-html-reporter": "1.5.4",
     "karma-safari-private-launcher": "1.0.0",
     "karma-safarinative-launcher": "1.1.0",
-    "localforage": "1.7.4",
-    "ng-packagr": "9.1.5",
+    "localforage": "1.7.3",
+    "ng-packagr": "10.0.0",
     "protractor": "7.0.0",
     "ts-node": "8.10.2",
     "tslint": "6.1.2",
-    "typescript": "3.8.3",
+    "typescript": "3.9.3",
     "zone.js": "0.10.3"
   }
 }

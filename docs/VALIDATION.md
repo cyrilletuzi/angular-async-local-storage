@@ -2,10 +2,6 @@
 
 ## Version
 
-**This is the up to date guide about validation for versions >= 8 of this lib.**
-The old guide for validation in versions < 8 is available [here](./VALIDATION_BEFORE_V8.md),
-but is not recommended as there was breaking changes in v8.
-
 ## Examples
 
 The examples will use the recommended `StorageMap` service.

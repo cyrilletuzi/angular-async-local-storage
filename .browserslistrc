@@ -8,9 +8,10 @@
 # Googlebot uses an older version of Chrome
 # For additional information see: https://developers.google.com/search/docs/guides/rendering
 
-> 0.5%
-last 2 versions
+last 1 Chrome version
+last 1 Firefox version
+last 2 Edge major versions
+last 2 Safari major version
+last 2 iOS major versions
 Firefox ESR
-Chrome 41 # Support for Googlebot
-not dead
-IE 9-11 # For IE 9-11 support, remove 'not'.
+IE 9-11

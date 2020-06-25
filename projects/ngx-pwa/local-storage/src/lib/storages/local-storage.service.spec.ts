@@ -1,11 +1,13 @@
 import { mergeMap, tap } from 'rxjs/operators';
 
+import { IndexedDBDatabase } from '../databases/indexeddb-database';
+import { LocalStorageDatabase } from '../databases/localstorage-database';
+import { MemoryDatabase } from '../databases/memory-database';
+import { JSONSchema } from '../validation/json-schema';
+import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
 import { LocalStorage } from './local-storage.service';
 import { StorageMap } from './storage-map.service';
 import { VALIDATION_ERROR } from './exceptions';
-import { IndexedDBDatabase, LocalStorageDatabase, MemoryDatabase } from '../databases';
-import { JSONSchema } from '../validation';
-import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
 
 function tests(description: string, localStorageServiceFactory: () => LocalStorage): void {
 

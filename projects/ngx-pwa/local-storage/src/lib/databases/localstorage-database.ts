@@ -2,9 +2,9 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable, of, throwError, asyncScheduler } from 'rxjs';
 import { observeOn } from 'rxjs/operators';
 
+import { LS_PREFIX } from '../tokens';
 import { LocalDatabase } from './local-database';
 import { SerializationError } from './exceptions';
-import { LS_PREFIX } from '../tokens';
 
 @Injectable({
   providedIn: 'root'

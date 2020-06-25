@@ -20,10 +20,9 @@ it would be nice to **consider becoming [a sponsor](https://github.com/sponsors/
 ## By the same author
 
 - [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics) (GUI for Angular CLI commands)
-- [typescript-strictly-typed](https://github.com/cyrilletuzi/typescript-strictly-typed): strict config for TypeScript, ESLint/TSLint and Angular
 - Popular [Angular posts on Medium](https://medium.com/@cyrilletuzi)
 - Follow updates of this lib on [Twitter](https://twitter.com/cyrilletuzi)
-- **[Angular onsite trainings](https://formationjavascript.com/formation-angular/)** (based in Paris, so the website is in French, but [my English bio is here](https://www.cyrilletuzi.com/en/) and I'm open to travel)
+- **[Angular onsite trainings](https://formationjavascript.com/formation-angular/)** (based in Paris, so the website is in French, but [my English bio is here](https://www.cyrilletuzi.com/en/))
 
 ## Why this module?
 
@@ -52,11 +51,8 @@ to be homogeneous with other Angular modules.
 Install the package, according to your Angular version:
 
 ```bash
-# For Angular 8 & 9:
+# For Angular LTS (Angular >= 8):
 ng add @ngx-pwa/local-storage
-
-# For Angular 6 & 7:
-npm install @ngx-pwa/local-storage@6
 ```
 
 *Done!*
@@ -65,7 +61,7 @@ You should **stick to these commands**. If for any reason `ng add` does not work
 be sure to follow the [manual installation guide](./docs/MANUAL_INSTALLATION.md),
 as there are additionnal steps to do in addition to the package installation for some versions.
 
-For version >= 8, if you have multiple applications in the same project, as usual, you need to choose the project:
+If you have multiple applications in the same project, as usual, you need to choose the project:
 ```bash
 ng add @ngx-pwa/local-storage --project yourprojectname
 ```
@@ -271,8 +267,7 @@ For example, it allows to implement a multiple databases scenario.
 
 ### Angular support
 
-We follow [Angular LTS support](https://angular.io/guide/releases),
-meaning we support Angular >= 7, until April 2020.
+We follow [Angular LTS support](https://angular.io/guide/releases).
 
 This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler) and Ivy.
 

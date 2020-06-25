@@ -26,29 +26,34 @@ But relax, to ease the migration:
 - but there are a lot of deprecations, so preparing for v9
 (were deprecations of v8 will be removed) will take more time.
 
-## Previous migrations
+## Requirements
 
-If you were using previous versions and skipped v6, do [the migration guide to version 6](./MIGRATION_TO_V6.md) first.
+First, be sure to:
+- fully upgrade *all* your Angular packages (check with `ng version`)
+- as stated in the official [Angular documentation](https://angular.io/guide/releases):
 
-[Migration to version 7](./MIGRATION_TO_V7.md) is not required,
-as it is replaced by the new and easier validation syntax explained below,
-but be aware that since v7, **validation is now required in `getItem()`**.
+> If you are updating from one major version to another, then we recommend that you don't skip major versions. Follow the instructions to incrementally update to the next major version, testing and validating at each step. For example, if you want to update from version 6.x.x to version 8.x.x, we recommend that you update to the latest 7.x.x release first. After successfully updating to 7.x.x, you can then update to 8.x.x.
+
+Exceptionally, this lib deprecated the v7 version, so migration to version 7 is not required.
+But be aware that since v7, **validation is now required in `getItem()`**.
 A full [validation guide](./VALIDATION.md) is available.
 
-## How to migrate?
+Conversely, migration to version 6 is important.
 
-As usual, be sure to update Angular and Angular CLI first.
+**So if you update from version < 7, please do the [other migrations](../MIGRATION.md) first**.
+
+## How to update
+
+Then:
 
 1. Update the lib:
 ```
 ng update @ngx-pwa/local-storage
 ```
 
-Check that the following steps succeeded:
-- `package.json` updated (as if you did `npm install @ngx-pwa/local-storage@8`)
-- `StorageModule.forRoot({ IDBNoWrap: false })` added in `AppModule` imports of each project (for backward compatibility)
+Check that `StorageModule.forRoot({ IDBNoWrap: false })` was added in `AppModule` imports of each project (for backward compatibility)
 
-If there is an error, you can do the 2 steps manually, but please file an issue.
+**If `ng update` didn't work as expected, please delay the update and file an issue.**
 
 If you have multiple applications in your project but you do not use this lib in all projects,
 remove `StorageModule.forRoot({ IDBNoWrap: false })` and the import in the unconcerned `AppModule`s.

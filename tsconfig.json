@@ -1,40 +1,46 @@
+// This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
+// It is not intended to be used to perform a compilation.
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ],
-    "strict": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "paths": {
-      "@ngx-pwa/local-storage": [
-        "dist/ngx-pwa/local-storage"
-      ],
-      "@ngx-pwa/local-storage/*": [
-        "dist/ngx-pwa/local-storage/*"
-      ]
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/demo/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/demo/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/demo/e2e/tsconfig.json"
+    },
+    {
+      "path": "./projects/iframe/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/iframe/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ivy/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/ivy/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ivy/e2e/tsconfig.json"
+    },
+    {
+      "path": "./projects/localforage/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/localforage/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/localforage/e2e/tsconfig.json"
+    },
+    {
+      "path": "./projects/ngx-pwa/local-storage/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ngx-pwa/local-storage/tsconfig.spec.json"
     }
-  },
-  "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true,
-    "strictTemplates": true
-  }
+  ]
 }

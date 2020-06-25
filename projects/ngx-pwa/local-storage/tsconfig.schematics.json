@@ -20,11 +20,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "target": "es6",
-    "types": [
-      "jasmine",
-      "node"
-    ]
+    "target": "es6"
   },
   "include": [
     "schematics/**/*"
