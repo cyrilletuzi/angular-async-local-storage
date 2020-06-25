@@ -55,7 +55,7 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
               dbOpen.result.close();
 
-              /* Cases : Edge/IE because of `undefined` */
+              /* Cases : IE because of `undefined` */
               pending();
 
             },
@@ -77,7 +77,7 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
         dbOpen.result.close();
 
-        /* Cases : Edge/IE because of `null` */
+        /* Cases : IE because of `null` */
         pending();
 
       }
@@ -161,7 +161,7 @@ function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
         dbOpen.result.close();
 
-        /* Cases : Edge/IE because of `null` */
+        /* Cases: IE because of `null` */
         pending();
 
       }
@@ -211,7 +211,7 @@ describe('Interoperability', () => {
   for (const setTestValue of setTestValues) {
 
     it(`setItem() after external API
-      (will be pending in IE/Firefox private mode and 2 pending in Edge/IE because of null and undefined)`, (done) => {
+      (will be pending in IE/Firefox private mode and 2 pending in IE because of null and undefined)`, (done) => {
 
       testSetCompatibilityWithNativeAPI(localStorageService, done, setTestValue);
 
@@ -235,7 +235,7 @@ describe('Interoperability', () => {
   for (const [getTestValue, getTestSchema] of getTestValues) {
 
     it(`getItem() after external API
-      (will be pending in IE/Firefox private mode and in Edge/IE because of null)`, (done) => {
+      (will be pending in IE/Firefox private mode and in IE because of null)`, (done) => {
 
       testGetCompatibilityWithNativeAPI(localStorageService, done, getTestValue, getTestSchema);
 

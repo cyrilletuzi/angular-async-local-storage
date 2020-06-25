@@ -221,7 +221,7 @@ Should not concern you as it was internal stuff.
 
 ### Feature
 
-- `has()` and `keys()` now work in Edge/IE too
+- `has()` and `keys()` now work in IE too
 (fixes [#69](https://github.com/cyrilletuzi/angular-async-local-storage/issues/69))
 
 Do *not* use: it's deprecated in v8.
@@ -256,7 +256,7 @@ Do *not* use: it's deprecated in v8.
   - `.has(key)` method
   - `.size` property
 
-In v7.2, `has()` and `keys()` were not supported in Internet Explorer and Edge. Update to v7.4.
+In v7.2, `has()` and `keys()` were not supported in Internet Explorer. Update to v7.4.
 
 Do *not* use: it's deprecated in v8.
 

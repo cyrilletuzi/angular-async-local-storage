@@ -8,8 +8,9 @@ current browsers support is far enough.
 
 Even so, IE9 is supported but use native `localStorage` as a fallback, 
 so internal operations are synchronous (the public API remains asynchronous-like).
+But be aware that IE9 support is deprecated since Angular 10 and may be removed in v11.
 
-This module is not impacted by IE/Edge missing `indexedDB` features.
+This module is not impacted by IE/Edge Legacy missing `indexedDB` features.
 
 It also works in tools based on browser engines (like Electron, WebViews, Ionic...),
 but not in non-browser tools (like NativeScript, see
@@ -23,7 +24,7 @@ It's not a real issue as client-side storage is only useful for apps, and apps s
 
 In some scenarios, `indexedDB`  is not available, so the lib fallbacks to (synchronous) `localStorage`. It happens in:
 - Firefox private mode (see [#26](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26))
-- IE/Edge private mode
+- IE/Edge Legacy private mode
 - Safari, when in a cross-origin iframe (see
 [#42](https://github.com/cyrilletuzi/angular-async-local-storage/issues/42))
 
