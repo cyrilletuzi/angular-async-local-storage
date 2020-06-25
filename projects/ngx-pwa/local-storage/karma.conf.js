@@ -21,7 +21,7 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, '../../../coverage'),
+      dir: require('path').join(__dirname, '../../../coverage/ngx-pwa/local-storage'),
       reports: ['html', 'lcovonly', 'text-summary'],
       fixWebpackSourcePaths: true
     },
@@ -58,6 +58,7 @@ module.exports = function (config) {
     // browsers: ['Chrome', 'Firefox', 'Edge', 'IE'],
     /* Tests on Windows 10 in private mode (not sure the private option for Edge is working) */
     // browsers: ['ChromePrivate', 'FirefoxPrivate', 'EdgePrivate', 'IEPrivate'],
-    singleRun: false
+    singleRun: false,
+    restartOnFileChange: true
   });
 };

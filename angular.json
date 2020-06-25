@@ -17,7 +17,6 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/ngx-pwa/local-storage/ng-package.prod.json",
               "tsConfig": "projects/ngx-pwa/local-storage/tsconfig.lib.prod.json"
             }
           }

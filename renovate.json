@@ -19,7 +19,7 @@
     },
     {
       "packageNames": ["tslib"],
-      "allowedVersions": "<2"
+      "allowedVersions": "<3"
     },
     {
       "packageNames": ["@types/node"],
