@@ -47,7 +47,7 @@
     "@types/jasmine": "3.5.11",
     "@types/jasminewd2": "2.0.8",
     "@types/node": "12.12.47",
-    "codelyzer": "5.2.2",
+    "codelyzer": "6.0.0",
     "copyfiles": "2.3.0",
     "jasmine-core": "3.5.0",
     "jasmine-spec-reporter": "5.0.2",
