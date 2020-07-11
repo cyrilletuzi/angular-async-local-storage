@@ -19,7 +19,9 @@ this.storage.get('color').pipe(
 ```
 
 Could happen to anyone:
-- `.set()`: storage is full (`DOMException` with name `'QuotaExceededError`)
+- `.set()`: storage is full (`DOMException` with name `QuotaExceededError`)
+- `.set()`: value is too big (`DOMException` with name `UnknownError`),
+for example Chromium-based browsers have a 133169152 bytes limit
 
 Could only happen when in `localStorage` fallback:
 - `.set()`: error in JSON serialization because of circular references (`TypeError`)
