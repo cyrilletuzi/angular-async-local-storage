@@ -2,6 +2,12 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 10.0.1 (2020-07-11)
+
+### Bug fix
+
+Correctly propagate the browser error when trying to store a value exceeding the browser size limit.
+
 ## 10.0.0 (2020-06-25)
 
 ### Feature
