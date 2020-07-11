@@ -436,8 +436,10 @@ export class IndexedDBDatabase implements LocalDatabase {
   protected listenError(transactionOrRequest: IDBTransaction | IDBRequest): Observable<never> {
 
     return fromEvent(transactionOrRequest, 'error').pipe(
-      /* Throw on error to be able to catch errors in RxJS way */
-      mergeMap(() => throwError(transactionOrRequest.error)),
+      /* Throw on error to be able to catch errors in RxJS way.
+       * Here `event.target` must be used, as `transactionOrRequest.error` will be `null`
+       * if we are on the request and the error is only triggered later by the transaction */
+      mergeMap((event) => throwError((event.target as IDBTransaction | IDBRequest).error)),
     );
 
   }
