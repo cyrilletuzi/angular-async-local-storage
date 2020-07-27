@@ -1,3 +1,5 @@
+<!-- Due to summer holidays, expect a longer answer delay. -->
+
 # Checks before posting an issue
 
 - [ ] I have read all the library's documentation (README, CHANGELOG, MIGRATION and /docs)
