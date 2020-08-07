@@ -46,7 +46,7 @@
     "@angular/compiler-cli": "10.0.7",
     "@types/jasmine": "3.5.11",
     "@types/jasminewd2": "2.0.8",
-    "@types/node": "12.12.53",
+    "@types/node": "12.12.54",
     "codelyzer": "6.0.0",
     "copyfiles": "2.3.0",
     "jasmine-core": "3.6.0",
