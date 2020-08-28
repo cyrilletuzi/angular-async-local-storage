@@ -44,7 +44,7 @@
     "@angular-devkit/build-ng-packagr": "0.1000.7",
     "@angular/cli": "10.0.7",
     "@angular/compiler-cli": "10.0.11",
-    "@types/jasmine": "3.5.12",
+    "@types/jasmine": "3.5.14",
     "@types/jasminewd2": "2.0.8",
     "@types/node": "12.12.54",
     "codelyzer": "6.0.0",
