@@ -15,11 +15,15 @@
   "packageRules": [
     {
       "packageNames": ["typescript"],
-      "allowedVersions": "<3.10"
+      "allowedVersions": "<4.1"
     },
     {
       "packageNames": ["tslib"],
       "allowedVersions": "<3"
+    },
+    {
+      "packageNames": ["zone.js"],
+      "allowedVersions": "<0.11"
     },
     {
       "packageNames": ["@types/node"],

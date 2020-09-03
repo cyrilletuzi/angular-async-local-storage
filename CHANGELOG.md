@@ -2,6 +2,10 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 10.1.0 (2020-09-03)
+
+No code change, just rebuilt with Angular 10.1.
+
 ## 10.0.1 (2020-07-11)
 
 ### Bug fix
