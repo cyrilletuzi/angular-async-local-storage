@@ -22,6 +22,10 @@
       "allowedVersions": "<3"
     },
     {
+      "packageNames": ["zone.js"],
+      "allowedVersions": "<0.11"
+    },
+    {
       "packageNames": ["@types/node"],
       "allowedVersions": "<13"
     },
