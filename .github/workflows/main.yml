@@ -115,7 +115,7 @@ jobs:
     - name: Build the lib (with the current version, as it is what is published on npm)
       run: npm run build
     - name: Update dependencies to next version
-      run: npm install @angular/common@next @angular/compiler@next @angular/core@next @angular/platform-browser@next @angular/platform-browser-dynamic@next @angular/router@next @angular/cli@next @angular/compiler-cli@next @angular-devkit/build-angular@next @angular-devkit/build-ng-packagr@next
+      run: npm install @angular/common@next @angular/compiler@next @angular/core@next @angular/platform-browser@next @angular/platform-browser-dynamic@next @angular/router@next @angular/cli@next @angular/compiler-cli@next @angular-devkit/build-angular@next
       env:
         CI: true
     - name: Run unit tests
