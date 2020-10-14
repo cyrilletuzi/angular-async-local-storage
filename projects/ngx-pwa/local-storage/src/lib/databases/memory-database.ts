@@ -28,7 +28,7 @@ export class MemoryDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
    */
-   get<T = unknown>(key: string): Observable<T | undefined> {
+  get<T = unknown>(key: string): Observable<T | undefined> {
 
     const rawData = this.memoryStorage.get(key) as T | undefined;
 
@@ -43,7 +43,7 @@ export class MemoryDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-   set(key: string, data: unknown): Observable<undefined> {
+  set(key: string, data: unknown): Observable<undefined> {
 
     this.memoryStorage.set(key, data);
 
@@ -57,7 +57,7 @@ export class MemoryDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-   delete(key: string): Observable<undefined> {
+  delete(key: string): Observable<undefined> {
 
     this.memoryStorage.delete(key);
 
@@ -70,7 +70,7 @@ export class MemoryDatabase implements LocalDatabase {
    * Deletes all items in memory
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-   clear(): Observable<undefined> {
+  clear(): Observable<undefined> {
 
     this.memoryStorage.clear();
 

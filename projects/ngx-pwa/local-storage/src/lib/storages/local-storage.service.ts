@@ -74,8 +74,8 @@ export class LocalStorage {
   getItem<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | null>;
   getItem<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | null>;
   getItem<T = unknown>(key: string, schema: JSONSchema | { schema: JSONSchema }): Observable<T | null>;
-  getItem<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
-  getItem<T = unknown>(key: string, schema?: JSONSchema | { schema: JSONSchema } | undefined): Observable<unknown> {
+  getItem<T = unknown>(key: string, schema?: JSONSchema): Observable<T>;
+  getItem<T = unknown>(key: string, schema?: JSONSchema | { schema: JSONSchema } | undefined): Observable<T> {
 
     if (schema) {
 
@@ -84,14 +84,16 @@ export class LocalStorage {
 
       return this.storageMap.get<T>(key, schemaFinal).pipe(
         /* Transform `undefined` into `null` to align with `localStorage` API */
-        map((value) => (value !== undefined) ? value : null),
+        // tslint:disable-next-line: no-non-null-assertion
+        map((value) => (value !== undefined) ? value : null!),
       );
 
     } else {
 
       return this.storageMap.get(key).pipe(
         /* Transform `undefined` into `null` to align with `localStorage` API */
-        map((value) => (value !== undefined) ? value : null),
+        // tslint:disable-next-line: no-non-null-assertion
+        map((value) => (value !== undefined) ? value as T : null!),
       );
 
     }

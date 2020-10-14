@@ -169,8 +169,8 @@ export class StorageMap {
   get<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
   get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
   get<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
-  get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
-  get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
+  get<T = unknown>(key: string, schema?: JSONSchema): Observable<T>;
+  get<T = unknown>(key: string, schema?: JSONSchema): Observable<T> {
 
     /* Get the data in storage */
     return this.database.get<T>(key).pipe(
@@ -181,7 +181,8 @@ export class StorageMap {
         /* No need to validate if the data is empty */
         if ((data === undefined) || (data === null)) {
 
-          return of(undefined);
+      // tslint:disable-next-line: no-non-null-assertion
+          return of(undefined!);
 
         } else if (schema) {
 
@@ -191,12 +192,12 @@ export class StorageMap {
           }
 
           /* Data have been checked, so it's OK to cast */
-          return of(data as T | undefined);
+          return of(data as T);
 
         }
 
         /* Cast to unknown as the data wasn't checked */
-        return of(data as unknown);
+        return of(data as T);
 
       }),
     );
@@ -330,8 +331,8 @@ export class StorageMap {
   watch<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
   watch<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
   watch<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
-  watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
-  watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
+  watch<T = unknown>(key: string, schema?: JSONSchema): Observable<T>;
+  watch<T = unknown>(key: string, schema?: JSONSchema): Observable<T> {
 
     /* Check if there is already a notifier and cast according to schema */
     let notifier = this.notifiers.get(key) as ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>;
@@ -353,7 +354,7 @@ export class StorageMap {
     }
 
     /* Only the public API of the `Observable` should be returned */
-    return notifier.asObservable();
+    return notifier.asObservable() as Observable<T>;
 
   }
 
