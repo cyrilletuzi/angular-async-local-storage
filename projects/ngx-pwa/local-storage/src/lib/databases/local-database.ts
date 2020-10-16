@@ -30,11 +30,10 @@ export function localDatabaseFactory(
 
       /* Check:
       * - if we are in a browser context (issue: server-side rendering)
-      * - if `indexedDB` exists (issue: IE9)
       * - it could exist but be `undefined` or `null` (issue: IE private mode)
       * - it could exists but not having a working API
       * Will be the case for:
-      * - IE10+ and all other browsers in normal mode
+      * - All other browsers in normal mode
       * - Chromium / Safari private mode, but in this case, data will be swiped when the user leaves the app */
       return new IndexedDBDatabase(IDBDBName, IDBStoreName, IDBDBVersion, IDBNoWrap);
 
@@ -46,7 +45,6 @@ export function localDatabaseFactory(
       * - if `localStorage` exists (to be sure)
       * - it could exists but not having a working API
       * Will be the case for:
-      * - IE9
       * - Safari cross-origin iframes, detected later in `IndexedDBDatabase.connect()`
       * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/42}
       * - IE / Firefox private mode, but in this case, data will be swiped when the user leaves the app
