@@ -16,8 +16,6 @@ as there are important things to do and to be aware of to achieve interoperabili
 
 ## Requirements
 
-Interoperability can be achieved **since v8 of this lib**.
-
 In versions >= 9, no requirement, the new configuration is now the default.
 
 In version 8, you need to add this config:

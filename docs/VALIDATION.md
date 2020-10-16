@@ -1,16 +1,5 @@
 # Validation guide
 
-## Version
-
-## Examples
-
-The examples will use the recommended `StorageMap` service.
-But everything in this guide can be done in the same way with the `LocalStorage` service:
-- `this.storage.get()` is the same as `this.localStorage.getItem()`
-- `this.storage.set()` is the same as `this.localStorage.setItem()`
-- `this.storage.delete()` is the same as `this.localStorage.removeItem()`
-- `this.storage.clear()` is the same as `this.localStorage.clear()`
-
 ## Why validation?
 
 Any client-side storage (cookies, `localStorage`, `indexedDb`...) is not secure by nature,

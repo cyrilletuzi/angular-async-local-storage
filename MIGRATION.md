@@ -5,6 +5,7 @@
 - [Migration to version 8](./docs/MIGRATION_TO_V8.md)
 - [Migration to version 9](./docs/MIGRATION_TO_V9.md)
 - [Migration to version 10](./docs/MIGRATION_TO_V10.md)
+- [Migration to version 10](./docs/MIGRATION_TO_V11.md)
 
 [Full changelog available here.](./CHANGELOG.md)
 

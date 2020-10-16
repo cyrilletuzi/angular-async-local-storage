@@ -1,6 +1,6 @@
 # Manual installation
 
-**With Angular >= 8, you should install this library with this command:**
+**You should install this library with this command:**
 
 ```bash
 ng add @ngx-pwa/local-storage
@@ -15,6 +15,9 @@ In the meantime, you can proceed to a manual installation, but be sure to follow
 Install the right version according to your Angular one via [`npm`](http://npmjs.com):
 
 ```bash
+# For Angular 11:
+npm install @ngx-pwa/local-storage@next
+
 # For Angular 10:
 npm install @ngx-pwa/local-storage@10
 
