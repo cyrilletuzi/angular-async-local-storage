@@ -77,24 +77,23 @@ export class LocalStorage {
   getItem<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
   getItem<T = unknown>(key: string, schema?: JSONSchema | { schema: JSONSchema } | undefined): Observable<unknown> {
 
+    let schemaFinal: JSONSchema | undefined;
+
     if (schema) {
 
       /* Backward compatibility with version <= 7 */
-      const schemaFinal: JSONSchema = ('schema' in schema) ? schema.schema : schema;
-
-      return this.storageMap.get<T>(key, schemaFinal).pipe(
-        /* Transform `undefined` into `null` to align with `localStorage` API */
-        map((value) => (value !== undefined) ? value : null),
-      );
-
-    } else {
-
-      return this.storageMap.get(key).pipe(
-        /* Transform `undefined` into `null` to align with `localStorage` API */
-        map((value) => (value !== undefined) ? value : null),
-      );
+      schemaFinal = ('schema' in schema) ? schema.schema : schema;
 
     }
+
+    return (
+      !schemaFinal ? this.storageMap.get(key) :
+      (schemaFinal.type !== 'array' && schemaFinal.type !== 'object') ? this.storageMap.get(key, schemaFinal) :
+      this.storageMap.get<T>(key, schemaFinal)
+    ).pipe(
+      /* Transform `undefined` into `null` to align with `localStorage` API */
+      map((value) => (value !== undefined) ? value : null),
+    );
 
   }
 

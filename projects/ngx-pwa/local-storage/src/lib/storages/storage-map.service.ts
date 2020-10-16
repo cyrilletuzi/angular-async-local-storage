@@ -4,7 +4,7 @@ import { mergeMap, catchError, tap } from 'rxjs/operators';
 
 import {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger,
-  JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf,
+  JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf, JSONSchemaArray, JSONSchemaObject,
 } from '../validation/json-schema';
 import { JSONValidator } from '../validation/json-validator';
 import { IndexedDBDatabase } from '../databases/indexeddb-database';
@@ -162,14 +162,14 @@ export class StorageMap {
    *   }
    * });
    */
-  get<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
-  get<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
-  get<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
-  get<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
-  get<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
-  get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
-  get<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
-  get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
+  get<T extends string = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
+  get<T extends number = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
+  get<T extends boolean = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
+  get<T extends string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
+  get<T extends number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
+  get<T extends boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
+  get<T = unknown>(key: string, schema: JSONSchemaArray | JSONSchemaObject): Observable<T | undefined>;
+  get(key: string, schema?: JSONSchema): Observable<unknown>;
   get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
     /* Get the data in storage */
@@ -323,14 +323,14 @@ export class StorageMap {
    * @param schema Optional JSON schema to validate the initial value
    * @returns An infinite `Observable` giving the current value
    */
-  watch<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
-  watch<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
-  watch<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
-  watch<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
-  watch<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
-  watch<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
+  watch<T extends string = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
+  watch<T extends number = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
+  watch<T extends boolean = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
+  watch<T extends string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
+  watch<T extends number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
+  watch<T extends boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
   watch<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
-  watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
+  watch(key: string, schema?: JSONSchema): Observable<unknown>;
   watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
     /* Check if there is already a notifier and cast according to schema */
@@ -345,7 +345,7 @@ export class StorageMap {
       this.notifiers.set(key, notifier);
 
       /* Get the current item value */
-      this.get<T>(key, schema).subscribe({
+      this.get(key, schema).subscribe({
         next: (result) => notifier.next(result),
         error: (error) => notifier.error(error),
       });
