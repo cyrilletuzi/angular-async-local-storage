@@ -17,6 +17,7 @@ exports.config = {
     'goog:chromeOptions': { args: [ "--headless" ] },
   },
   directConnect: true,
+  SELENIUM_PROMISE_MANAGER: false,
   baseUrl: 'http://localhost:4200/',
   framework: 'jasmine',
   jasmineNodeOpts: {
