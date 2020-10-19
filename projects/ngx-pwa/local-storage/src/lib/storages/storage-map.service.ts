@@ -369,7 +369,7 @@ export class StorageMap {
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
-  watch<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
+  watch<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
   watch<T extends boolean = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
@@ -387,7 +387,7 @@ export class StorageMap {
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
-  watch<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
+  watch<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
   watch<T extends boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
