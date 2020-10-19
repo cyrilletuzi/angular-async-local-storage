@@ -86,8 +86,7 @@ export class LocalStorage {
 
     }
 
-    // tslint:disable-next-line: deprecation
-    return this.storageMap.get<T>(key, schemaFinal).pipe(
+    return (schemaFinal ? this.storageMap.get<T>(key, schemaFinal): this.storageMap.get(key)).pipe(
       /* Transform `undefined` into `null` to align with `localStorage` API */
       map((value) => (value !== undefined) ? value : null),
     );
