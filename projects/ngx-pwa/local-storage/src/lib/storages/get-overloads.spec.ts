@@ -31,7 +31,8 @@ describe('get() API', () => {
   it('no schema / cast', (done) => {
 
     // @ts-expect-error
-    storageService.get<number>('test').subscribe((_) => {
+    // tslint:disable-next-line: deprecation
+    storageService.get<number>('test').subscribe((_: number) => {
 
       expect().nothing();
 
@@ -44,7 +45,8 @@ describe('get() API', () => {
   it('schema / wrong cast', (done) => {
 
     // @ts-expect-error
-    storageService.get<number>('test', { type: 'string' }).subscribe((_) => {
+    // tslint:disable-next-line: deprecation
+    storageService.get<number>('test', { type: 'string' }).subscribe((_: number) => {
 
       expect().nothing();
 
@@ -275,6 +277,7 @@ describe('get() API', () => {
     }
 
     // @ts-expect-error
+    // tslint:disable-next-line: deprecation
     storageService.get<Test>('test').subscribe((_: Test) => {
 
       expect().nothing();

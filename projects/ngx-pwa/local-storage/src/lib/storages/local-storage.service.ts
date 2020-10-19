@@ -86,11 +86,8 @@ export class LocalStorage {
 
     }
 
-    return (
-      !schemaFinal ? this.storageMap.get(key) :
-      (schemaFinal.type !== 'array' && schemaFinal.type !== 'object') ? this.storageMap.get(key, schemaFinal) :
-      this.storageMap.get<T>(key, schemaFinal)
-    ).pipe(
+    // tslint:disable-next-line: deprecation
+    return this.storageMap.get<T>(key, schemaFinal).pipe(
       /* Transform `undefined` into `null` to align with `localStorage` API */
       map((value) => (value !== undefined) ? value : null),
     );
