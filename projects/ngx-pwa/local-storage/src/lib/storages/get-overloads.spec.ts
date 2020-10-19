@@ -132,6 +132,20 @@ describe('get() API', () => {
 
   });
 
+  it('special string', (done) => {
+
+    type Theme = 'dark' | 'light';
+
+    storageService.get<Theme>('test', { type: 'string' }).subscribe((_: Theme | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
   it('number', (done) => {
 
     storageService.get('test', { type: 'number' }).subscribe((_: number | undefined) => {
@@ -144,9 +158,37 @@ describe('get() API', () => {
 
   });
 
+  it('special number', (done) => {
+
+    type SomeNumbers = 1.5 | 2.5;
+
+    storageService.get<SomeNumbers>('test', { type: 'number' }).subscribe((_: SomeNumbers | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
   it('integer', (done) => {
 
     storageService.get('test', { type: 'integer' }).subscribe((_: number | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('integer', (done) => {
+
+    type SpecialIntegers = 1 | 2;
+
+    storageService.get<SpecialIntegers>('test', { type: 'integer' }).subscribe((_: SpecialIntegers | undefined) => {
 
       expect().nothing();
 
@@ -183,12 +225,80 @@ describe('get() API', () => {
 
   });
 
+  it('special array of strings', (done) => {
+
+    type Themes = ('dark' | 'light')[];
+
+    storageService.get<Themes>('test', {
+      type: 'array',
+      items: { type: 'string' }
+    }).subscribe((_: Themes | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('special readonly array of strings', (done) => {
+
+    type Themes = readonly ('dark' | 'light')[];
+
+    storageService.get<Themes>('test', {
+      type: 'array',
+      items: { type: 'string' }
+    }).subscribe((_: Themes | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
   it('array of numbers', (done) => {
 
     storageService.get('test', {
       type: 'array',
       items: { type: 'number' }
     }).subscribe((_: number[] | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('special array of numbers', (done) => {
+
+    type NumbersArray = (1 | 2)[];
+
+    storageService.get<NumbersArray>('test', {
+      type: 'array',
+      items: { type: 'number' }
+    }).subscribe((_: NumbersArray | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('special readonly array of numbers', (done) => {
+
+    type NumbersArray = readonly (1 | 2)[];
+
+    storageService.get<NumbersArray>('test', {
+      type: 'array',
+      items: { type: 'number' }
+    }).subscribe((_: NumbersArray | undefined) => {
 
       expect().nothing();
 
