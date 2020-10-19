@@ -14,8 +14,8 @@
     "local storage",
     "storage",
     "indexeddb",
-    "angular10",
-    "angular 10",
+    "angular11",
+    "angular 11",
     "rxjs"
   ],
   "repository": {
@@ -30,8 +30,8 @@
     "tslib": "^2.0.0"
   },
   "peerDependencies": {
-    "@angular/common": "^10.0.0",
-    "@angular/core": "^10.0.0",
+    "@angular/common": "^11.0.0 || ^11.0.0-next || ^11.0.0-rc",
+    "@angular/core": "^11.0.0 || ^11.0.0-next || ^11.0.0-rc",
     "rxjs": "^6.5.3"
   },
   "schematics": "./schematics/collection.json",
