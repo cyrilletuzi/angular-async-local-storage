@@ -193,11 +193,15 @@ export class JSONValidator {
 
     }
 
-    /* Validate all the values in array */
-    for (const value of data) {
+    if (!Array.isArray(schema.items)) {
 
-      if (!this.validate(value, schema.items)) {
-        return false;
+      /* Validate all the values in array */
+      for (const value of data) {
+
+        if (!this.validate(value, schema.items)) {
+          return false;
+        }
+
       }
 
     }

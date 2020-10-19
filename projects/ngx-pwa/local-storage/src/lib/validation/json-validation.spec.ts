@@ -99,6 +99,16 @@ describe(`JSONValidator`, () => {
 
       });
 
+      it('special case: readonly', () => {
+
+        const schema = { type: 'string', enum: ['', 'hello'] } as const;
+
+        const test = jsonValidator.validate('', schema);
+
+        expect(test).toBe(true);
+
+      });
+
     });
 
     describe(`maxLength`, () => {
