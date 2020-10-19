@@ -242,6 +242,23 @@ describe('get() API', () => {
 
   });
 
+  it('special readonly array of strings', (done) => {
+
+    type Themes = readonly ('dark' | 'light')[];
+
+    storageService.get<Themes>('test', {
+      type: 'array',
+      items: { type: 'string' }
+    }).subscribe((_: Themes | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
   it('array of numbers', (done) => {
 
     storageService.get('test', {
@@ -260,6 +277,23 @@ describe('get() API', () => {
   it('special array of numbers', (done) => {
 
     type NumbersArray = (1 | 2)[];
+
+    storageService.get<NumbersArray>('test', {
+      type: 'array',
+      items: { type: 'number' }
+    }).subscribe((_: NumbersArray | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('special readonly array of numbers', (done) => {
+
+    type NumbersArray = readonly (1 | 2)[];
 
     storageService.get<NumbersArray>('test', {
       type: 'array',
