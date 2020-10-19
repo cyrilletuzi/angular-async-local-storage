@@ -2,6 +2,54 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 11.0.0-1 (2020-10-19)
+
+**This is a pre-release version. Do NOT use in production.**
+
+### Feature
+
+Supports and **requires** Angular 11.
+
+### Typings
+
+TypeScript typings for `.get()` and `.watch()` has been modified to better match the library behavior.
+
+For now, wrong usages are just marked as deprecated, so there is **no breaking change**
+and it will just be reported by linters. But they may be removed in future releases.
+
+1. Cast without a JSON schema:
+```ts
+this.storage.get<User>('user');
+```
+was allowed but the result was still `unknown`.
+
+This is a very common misconception of client-side storage:
+you can store and get anything in storage, so many people think that casting as above
+is enough to get the right result type. It's not.
+
+Why? Because you're getting data from *client-side* storage:
+so it may have been modified (just go to your browser developer tools and hack what you want).
+
+A cast is just an information for *compilation*:
+it basically says to TypeScript: "believe me, it will be a `User`".
+But **that's not true: you're not sure you'll get a `User`**.
+
+This is why this library provides a *runtime* validation system,
+via a JSON schema as the second parameter.
+
+Be sure to read the [validation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/WATCHING.md) for all the why and how of validation.
+
+2. Mismatch between cast and simple JSON schema:
+```ts
+this.storage.get<number>('name', { type: 'string' });
+```
+was allowed but is of course an error. Now the match between the cast and simple JSON schemas (string, number, boolean and array of these) is checked.
+
+Note that in this scenario, the cast is not needed at all, it will be automatically inferred by the lib, so just do:
+```ts
+this.storage.get('name', { type: 'string' });
+```
+
 ## 10.1.0 (2020-09-03)
 
 No code change, just rebuilt with Angular 10.1.
