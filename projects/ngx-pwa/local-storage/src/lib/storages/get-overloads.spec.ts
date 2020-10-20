@@ -136,7 +136,33 @@ describe('get() API', () => {
 
     type Theme = 'dark' | 'light';
 
+    // TODO: checl
+    // @ts-expect-error
     storageService.get<Theme>('test', { type: 'string' }).subscribe((_: Theme | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('string with const', (done) => {
+
+    storageService.get('test', { type: 'string', const: 'hello' } as const).subscribe((_: 'hello' | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('string with enum', (done) => {
+
+    storageService.get('test', { type: 'string', enum: ['hello', 'world'] } as const).subscribe((_: 'hello' | 'world' | undefined) => {
 
       expect().nothing();
 
@@ -229,9 +255,11 @@ describe('get() API', () => {
 
     type Themes = ('dark' | 'light')[];
 
+    // TODO: check
     storageService.get<Themes>('test', {
       type: 'array',
       items: { type: 'string' }
+    // @ts-expect-error
     }).subscribe((_: Themes | undefined) => {
 
       expect().nothing();
@@ -246,9 +274,11 @@ describe('get() API', () => {
 
     type Themes = readonly ('dark' | 'light')[];
 
+    // TODO: check
     storageService.get<Themes>('test', {
       type: 'array',
       items: { type: 'string' }
+    // @ts-expect-error
     }).subscribe((_: Themes | undefined) => {
 
       expect().nothing();
@@ -329,6 +359,24 @@ describe('get() API', () => {
       type: 'array',
       items: { type: 'boolean' }
     }).subscribe((_: boolean[] | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('array of arrays', (done) => {
+
+    storageService.get('test', {
+      type: 'array',
+      items: {
+        type: 'array',
+        items: { type: 'string' }
+      }
+    }).subscribe((_: string[][] | undefined) => {
 
       expect().nothing();
 
@@ -427,7 +475,7 @@ describe('get() API', () => {
       properties: {
         test: { type: 'string' }
       }
-    }).subscribe((_: Test | undefined) => {
+    } as const).subscribe((_: Test | undefined) => {
 
       expect().nothing();
 

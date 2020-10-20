@@ -198,7 +198,8 @@ export class JSONValidator {
       /* Validate all the values in array */
       for (const value of data) {
 
-        if (!this.validate(value, schema.items)) {
+        /* TODO: delete the cast when TS 4.1 https://github.com/microsoft/TypeScript/pull/39258 */
+        if (!this.validate(value, schema.items as JSONSchema)) {
           return false;
         }
 

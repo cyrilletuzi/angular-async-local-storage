@@ -14,6 +14,7 @@ import { LocalDatabase } from '../databases/local-database';
 import { IDB_BROKEN_ERROR } from '../databases/exceptions';
 import { LS_PREFIX } from '../tokens';
 import { ValidationError } from './exceptions';
+import { InferFromJsonSchema } from '../validation/infer-from-json-schema';
 
 @Injectable({
   providedIn: 'root'
@@ -162,7 +163,8 @@ export class StorageMap {
    *   }
    * });
    */
-  get<T extends string = string>(key: string, schema: JSONSchemaString): Observable<T | undefined>;
+  get<DataType extends string = string, SchemaType extends JSONSchemaString = JSONSchemaString>(key: string, schema: SchemaType):
+    Observable<InferFromJsonSchema<SchemaType, DataType> | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
@@ -180,7 +182,8 @@ export class StorageMap {
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
-  get<T extends readonly string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<T | undefined>;
+  get<DataType extends readonly string[] = string[], SchemaType extends JSONSchemaArrayOf<JSONSchemaString> = JSONSchemaArrayOf<JSONSchemaString>>(key: string, schema: SchemaType):
+    Observable<InferFromJsonSchema<SchemaType, DataType> | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
@@ -198,7 +201,8 @@ export class StorageMap {
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
-  get<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
+  get<DataType = unknown, SchemaType extends JSONSchema = JSONSchema>(key: string, schema: SchemaType):
+    Observable<InferFromJsonSchema<SchemaType, DataType> | undefined>;
   get(key: string): Observable<unknown>;
   /**
    * @deprecated The cast is useless here: as no JSON schema was provided for validation, the result will still be `unknown`.
