@@ -64,6 +64,19 @@ Note that in this scenario, the cast is not needed at all, it will be automatica
 this.storage.get('name', { type: 'string' });
 ```
 
+3. JSON schema `as const`
+
+Given how JSON schema works, it is better to set them `as const`:
+
+```ts
+this.storage.get('name', { type: 'string' } as const);
+```
+
+But before v11, it was not possible when the JSON schema was using properties of array type
+(`enum`, `items`, `required`). This is now fixed, and is a first step toward
+auto-inferring the type from the JSON schema in all scenarios
+((#463)[https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]).
+
 ## More documentation
 
 - [Full changelog for v11](../CHANGELOG.md)
