@@ -477,4 +477,33 @@ describe('get() API', () => {
 
   });
 
+  it('schema as const', (done) => {
+
+    interface Test {
+      test: string;
+    }
+
+    storageService.get<Test>('test', {
+      type: 'object',
+      properties: {
+        test: {
+          type: 'string',
+          enum: ['hello', 'world'],
+        },
+        list: {
+          type: 'array',
+          items: [{ type: 'string' }, { type: 'number' }],
+        },
+      },
+      required: ['test'],
+    } as const).subscribe((_: Test | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
 });
