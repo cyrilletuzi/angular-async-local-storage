@@ -197,7 +197,7 @@ export class JSONValidator {
     for (const value of data) {
 
       // TODO: remove when TypeScript 4.1 is available
-      // (currently the type narrowed type from `Array.isArray()` is lost on readonly arrays)
+      // (currently the narrowed type from `Array.isArray()` is lost on readonly arrays)
       if (!this.validate(value, schema.items as JSONSchema)) {
         return false;
       }
