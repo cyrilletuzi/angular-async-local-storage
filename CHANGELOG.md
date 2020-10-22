@@ -2,7 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 11.0.0-2 (2020-10-22)
+## 11.0.0-1 (2020-10-22)
 
 **This is a pre-release version. Do NOT use in production.**
 
