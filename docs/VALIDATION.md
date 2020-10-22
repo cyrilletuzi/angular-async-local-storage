@@ -134,7 +134,8 @@ see the [serialization guide](./SERIALIZATION.md).
 You may ask why we have to define a TypeScript cast with `get<User>()` *and* a JSON schema with `schema`.
 
 It's because they happen at different steps:
-- a cast (`get<User>()`) just says "TypeScript, trust me, I'm telling you it will be a `User`", but it only happens at *compilation* time (it won't be checked at runtime)
+- a cast (`get<User>()`) just says "TypeScript, trust me, I'm telling you it will be a `User`", but it only happens at *compilation* time,
+and given it's client-side storage (reminder: it can be forged), **it's not true you known it will be a `User`**.
 - the JSON schema (`schema`) will be used at *runtime* when getting data in local storage for real.
 
 So they each serve a different purpose:
@@ -142,10 +143,11 @@ So they each serve a different purpose:
 - the schema allows the lib to validate the data at runtime
 
 For previous basic types, as they are static, we can infer automatically.
-But as objects properties are dynamic, we can't do the same for objects.
+But as objects properties are dynamic, it's very difficult to do the same for objects
+(but a trial is planned in [#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463])).
 
 Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
-The lib can't check that.
+For the same reason, the lib can't check that.
 
 ### Validation when writing
 
@@ -261,7 +263,7 @@ this.storage.get('existing', { type: 'string' })
 ```
 
 But as usual (like when you do a database request), not finding an item is not an error.
-It succeeds but returns `undefined` (or `null` with legacy `LocalStorage` service):
+It succeeds but returns `undefined`:
 ```typescript
 this.storage.get('notExisting', { type: 'string' })
 .subscribe({

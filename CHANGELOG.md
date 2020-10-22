@@ -61,7 +61,7 @@ this.storage.get('name', { type: 'string' } as const);
 But before v11, it was not possible when the JSON schema was using properties of array type
 (`enum`, `items`, `required`). This is now fixed, and is a first step toward
 auto-inferring the type from the JSON schema in all scenarios
-((#463)[https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]).
+([#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463])).
 
 ## 10.1.0 (2020-09-03)
 
