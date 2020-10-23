@@ -129,6 +129,7 @@ export class StorageMap {
 
   }
 
+  // TODO: decide if the generic signature is deprecated or not
   /**
    * Get an item value in storage.
    * The signature has many overloads due to validation, **please refer to the documentation.**
@@ -138,16 +139,11 @@ export class StorageMap {
    * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
    *
    * @example
-   * this.storageMap.get('key', { type: 'string' }).subscribe((result) => {
+   * this.storageMap.get('key', { type: 'string' } as const).subscribe((result) => {
    *   result; // string or undefined
    * });
    *
    * @example
-   * interface User {
-   *   firstName: string;
-   *   lastName?: string;
-   * }
-   *
    * const schema = {
    *   type: 'object',
    *   properties: {
@@ -155,7 +151,7 @@ export class StorageMap {
    *     lastName: { type: 'string' },
    *   },
    *   required: ['firstName']
-   * };
+   * } as const;
    *
    * this.storageMap.get<User>('user', schema).subscribe((user) => {
    *   if (user) {
@@ -163,64 +159,34 @@ export class StorageMap {
    *   }
    * });
    */
-  get<SchemaType extends JSONSchema>(key: string, schema: SchemaType): Observable<InferFromJSONSchema<SchemaType> | undefined>;
+  get<Schema extends JSONSchema>(key: string, schema: Schema): Observable<InferFromJSONSchema<Schema> | undefined>;
   /**
-   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T extends string = string>(key: string, schema: JSONSchemaString): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
+   * @deprecated The cast is useless here and may not match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
   /**
-   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T extends number = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
+   * @deprecated The cast is useless here and may not match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
   /**
-   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T extends boolean = boolean>(key: string, schema: JSONSchemaBoolean): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
+   * @deprecated The cast is useless here and may not match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
   /**
-   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T extends readonly string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
+   * @deprecated The cast is useless here and may not match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
   /**
-   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
+   * @deprecated The cast is useless here and may not match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
   /**
-   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
+   * @deprecated The cast is useless here and may not match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
@@ -379,6 +345,7 @@ export class StorageMap {
 
   }
 
+  // TODO: same overloads as `.get()`
   /**
    * Watch an item value in storage.
    * **Note only changes done via this lib will be watched**, external changes in storage can't be detected.
