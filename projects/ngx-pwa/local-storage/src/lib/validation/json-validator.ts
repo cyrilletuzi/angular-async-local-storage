@@ -193,16 +193,13 @@ export class JSONValidator {
 
     }
 
-    if (!Array.isArray(schema.items)) {
+    /* Validate all the values in array */
+    for (const value of data) {
 
-      /* Validate all the values in array */
-      for (const value of data) {
-
-        /* TODO: delete the cast when TS 4.1 https://github.com/microsoft/TypeScript/pull/39258 */
-        if (!this.validate(value, schema.items as JSONSchema)) {
-          return false;
-        }
-
+      // TODO: remove when TypeScript 4.1 is available
+      // (currently the narrowed type from `Array.isArray()` is lost on readonly arrays)
+      if (!this.validate(value, schema.items as JSONSchema)) {
+        return false;
       }
 
     }

@@ -62,7 +62,7 @@ jobs:
 
   test-minimum:
 
-    name: Test with Angular@10.0.0 and minimum dependencies requirements
+    name: Test with Angular@11.0.0 and minimum dependencies requirements
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -79,7 +79,7 @@ jobs:
     - name: Build the lib (with the current version, as it is what is published on npm)
       run: npm run build
     - name: Downgrade dependencies to minimal required version
-      run: npm install typescript@3.9.2 tslib@2.0.0 rxjs@6.5.3 zone.js@0.10.3 @angular/common@10.0.0 @angular/compiler@10.0.0 @angular/core@10.0.0 @angular/platform-browser@10.0.0 @angular/platform-browser-dynamic@10.0.0 @angular/router@10.0.0 @angular/cli@10.0.0 @angular/compiler-cli@10.0.0 @angular-devkit/build-angular@0.1000.0
+      run: npm install typescript@4.0.2 tslib@2.0.0 rxjs@6.5.3 zone.js@0.10.3 @angular/common@next @angular/compiler@next @angular/core@next @angular/platform-browser@next @angular/platform-browser-dynamic@next @angular/router@next @angular/cli@next @angular/compiler-cli@next @angular-devkit/build-angular@next
       env:
         CI: true
     - name: Run unit tests
