@@ -635,7 +635,7 @@ describe('get() API', () => {
       test: string;
     }
 
-    storageService.get<Test>('test', {
+    storageService.get('test', {
       type: 'object',
       properties: {
         test: {
