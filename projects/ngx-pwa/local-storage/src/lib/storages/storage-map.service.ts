@@ -7,6 +7,7 @@ import {
   JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf
 } from '../validation/json-schema';
 import { JSONValidator } from '../validation/json-validator';
+import { InferFromJSONSchema } from '../validation/infer-from-json-schema';
 import { IndexedDBDatabase } from '../databases/indexeddb-database';
 import { LocalStorageDatabase } from '../databases/localstorage-database';
 import { MemoryDatabase } from '../databases/memory-database';
@@ -14,7 +15,6 @@ import { LocalDatabase } from '../databases/local-database';
 import { IDB_BROKEN_ERROR } from '../databases/exceptions';
 import { LS_PREFIX } from '../tokens';
 import { ValidationError } from './exceptions';
-import { InferFromJsonSchema } from '../validation/infer-from-json-schema';
 
 @Injectable({
   providedIn: 'root'
@@ -163,46 +163,72 @@ export class StorageMap {
    *   }
    * });
    */
-  get<DataType extends string = string, SchemaType extends JSONSchemaString = JSONSchemaString>(key: string, schema: SchemaType):
-    Observable<InferFromJsonSchema<SchemaType, DataType> | undefined>;
+  get<SchemaType extends JSONSchema>(key: string, schema: SchemaType): Observable<InferFromJSONSchema<SchemaType> | undefined>;
+  /**
+   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   */
+  get<T extends string = string>(key: string, schema: JSONSchemaString): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
+  /**
+   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   */
   get<T extends number = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
+  /**
+   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   */
   get<T extends boolean = boolean>(key: string, schema: JSONSchemaBoolean): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
-  get<DataType extends readonly string[] = string[], SchemaType extends JSONSchemaArrayOf<JSONSchemaString> = JSONSchemaArrayOf<JSONSchemaString>>(key: string, schema: SchemaType):
-    Observable<InferFromJsonSchema<SchemaType, DataType> | undefined>;
+  /**
+   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   */
+  get<T extends readonly string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
+  /**
+   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   */
   get<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
+  /**
+   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   */
   get<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
-  get<DataType = unknown, SchemaType extends JSONSchema = JSONSchema>(key: string, schema: SchemaType):
-    Observable<InferFromJsonSchema<SchemaType, DataType> | undefined>;
+  /**
+   * @deprecated The cast may not match the JSON schema. Just remove the cast, the return type will be inferred.
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   */
+  get<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
   get(key: string): Observable<unknown>;
   /**
    * @deprecated The cast is useless here: as no JSON schema was provided for validation, the result will still be `unknown`.
@@ -419,7 +445,7 @@ export class StorageMap {
       this.notifiers.set(key, notifier);
 
       /* Get the current item value */
-      (schema ? this.get<T>(key, schema) : this.get(key)).subscribe({
+      (schema ? this.get(key, schema) : this.get(key)).subscribe({
         next: (result) => notifier.next(result),
         error: (error) => notifier.error(error),
       });

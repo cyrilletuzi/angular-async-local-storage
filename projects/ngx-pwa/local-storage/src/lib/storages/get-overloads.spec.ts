@@ -70,6 +70,7 @@ describe('get() API', () => {
 
   it('literal basic schema / cast', (done) => {
 
+    // tslint:disable-next-line: deprecation
     storageService.get<number>('test', { type: 'number' }).subscribe((_: number | undefined) => {
 
       expect().nothing();
@@ -136,8 +137,7 @@ describe('get() API', () => {
 
     type Theme = 'dark' | 'light';
 
-    // TODO: checl
-    // @ts-expect-error
+    // tslint:disable-next-line: deprecation
     storageService.get<Theme>('test', { type: 'string' }).subscribe((_: Theme | undefined) => {
 
       expect().nothing();
@@ -188,7 +188,7 @@ describe('get() API', () => {
 
     type SomeNumbers = 1.5 | 2.5;
 
-    storageService.get<SomeNumbers>('test', { type: 'number' }).subscribe((_: SomeNumbers | undefined) => {
+    storageService.get('test', { type: 'number', enum: [1.5, 2.5] } as const).subscribe((_: SomeNumbers | undefined) => {
 
       expect().nothing();
 
@@ -210,11 +210,77 @@ describe('get() API', () => {
 
   });
 
-  it('integer', (done) => {
+  it('special integer', (done) => {
 
     type SpecialIntegers = 1 | 2;
 
-    storageService.get<SpecialIntegers>('test', { type: 'integer' }).subscribe((_: SpecialIntegers | undefined) => {
+    storageService.get('test', { type: 'integer', enum: [1, 2] } as const).subscribe((_: SpecialIntegers | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('number with const', (done) => {
+
+    storageService.get('test', { type: 'number', const: 1 } as const).subscribe((_: 1 | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('number with enum', (done) => {
+
+    storageService.get('test', { type: 'number', enum: [1, 2] } as const).subscribe((_: 1 | 2 | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('number with enum but no const', (done) => {
+
+    storageService.get('test', { type: 'number', enum: [1, 2] }).subscribe((_: number | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('number with enum predefined', (done) => {
+
+    const schema: JSONSchema = { type: 'number', enum: [1, 2] };
+
+    storageService.get('test', schema).subscribe((_: number | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('number with enum predefined but not typed', (done) => {
+
+    const schema = { type: 'number', enum: [1, 2] };
+
+    // TODO: check this behavior
+    // @ts-expect-error
+    storageService.get('test', schema).subscribe((_: number | undefined) => {
 
       expect().nothing();
 
@@ -256,11 +322,10 @@ describe('get() API', () => {
     type Themes = ('dark' | 'light')[];
 
     // TODO: check
-    storageService.get<Themes>('test', {
+    storageService.get('test', {
       type: 'array',
-      items: { type: 'string' }
-    // @ts-expect-error
-    }).subscribe((_: Themes | undefined) => {
+      items: { type: 'string', enum: ['dark', 'light'] }
+    } as const).subscribe((_: Themes | undefined) => {
 
       expect().nothing();
 
@@ -275,11 +340,10 @@ describe('get() API', () => {
     type Themes = readonly ('dark' | 'light')[];
 
     // TODO: check
-    storageService.get<Themes>('test', {
+    storageService.get('test', {
       type: 'array',
-      items: { type: 'string' }
-    // @ts-expect-error
-    }).subscribe((_: Themes | undefined) => {
+      items: { type: 'string', enum: ['dark', 'light'] }
+    } as const).subscribe((_: Themes | undefined) => {
 
       expect().nothing();
 
@@ -308,10 +372,10 @@ describe('get() API', () => {
 
     type NumbersArray = (1 | 2)[];
 
-    storageService.get<NumbersArray>('test', {
+    storageService.get('test', {
       type: 'array',
-      items: { type: 'number' }
-    }).subscribe((_: NumbersArray | undefined) => {
+      items: { type: 'number', enum: [1, 2] }
+    } as const).subscribe((_: NumbersArray | undefined) => {
 
       expect().nothing();
 
@@ -325,10 +389,10 @@ describe('get() API', () => {
 
     type NumbersArray = readonly (1 | 2)[];
 
-    storageService.get<NumbersArray>('test', {
+    storageService.get('test', {
       type: 'array',
-      items: { type: 'number' }
-    }).subscribe((_: NumbersArray | undefined) => {
+      items: { type: 'number', enum: [1, 2] }
+    } as const).subscribe((_: NumbersArray | undefined) => {
 
       expect().nothing();
 
@@ -410,15 +474,16 @@ describe('get() API', () => {
       test: string;
     }
 
-    storageService.get<Test[]>('test', {
+    storageService.get('test', {
       type: 'array',
       items: {
         type: 'object',
         properties: {
           test: { type: 'string' }
-        }
+        },
+        required: ['test']
       }
-    }).subscribe((_: Test[] | undefined) => {
+    } as const).subscribe((_: Test[] | undefined) => {
 
       expect().nothing();
 
@@ -466,16 +531,55 @@ describe('get() API', () => {
 
   it('objects / cast / schema', (done) => {
 
-    interface Test {
-      test: string;
+    interface TestOptional {
+      test?: string;
     }
 
-    storageService.get<Test>('test', {
+    storageService.get('test', {
       type: 'object',
       properties: {
         test: { type: 'string' }
       }
-    } as const).subscribe((_: Test | undefined) => {
+    } as const).subscribe((_: TestOptional | undefined) => {
+
+      if (_) {
+        _.test = 'dd';
+      }
+
+      expect().nothing();
+
+      done();
+
+    });
+
+    storageService.get('test', {
+      type: 'object',
+      properties: {
+        test: { type: 'string' }
+      }
+    } as const).subscribe((_) => {
+
+      if (_) {
+        _.test = 'dd';
+      }
+
+      expect().nothing();
+
+      done();
+
+    });
+
+    interface TestRequired {
+      test: string;
+    }
+
+    storageService.get('test', {
+      type: 'object',
+      properties: {
+        test: { type: 'string' }
+      },
+      required: ['test']
+    } as const).subscribe((_: TestRequired | undefined) => {
 
       expect().nothing();
 
@@ -487,7 +591,7 @@ describe('get() API', () => {
 
   it('Map', (done) => {
 
-    storageService.get<[string, number][]>('test', {
+    storageService.get('test', {
       type: 'array',
       items: {
         type: 'array',
@@ -496,8 +600,8 @@ describe('get() API', () => {
           { type: 'number' },
         ],
       },
-    }).pipe(
-      map((result) => new Map(result))
+    } as const).pipe(
+      map((result: [string, number][] | undefined) => new Map(result ?? []))
     ).subscribe((_: Map<string, number>) => {
 
       expect().nothing();
