@@ -360,6 +360,8 @@ describe('get() API', () => {
 
     const schema = { type: 'number', enum: [1, 2] };
 
+    // TODO: documentation needed
+    // @ts-expect-error
     storageService.get('test', schema).subscribe((_: number | undefined) => {
 
       expect().nothing();
@@ -729,7 +731,8 @@ describe('get() API', () => {
       world?: string;
     }
 
-    storageService.get('test', {
+    // tslint:disable-next-line: deprecation
+    storageService.get<Test>('test', {
       type: 'object',
       properties: {
         hello: { type: 'string' },
@@ -752,7 +755,7 @@ describe('get() API', () => {
 
   });
 
-  it('objects / cast / schema / as const', (done) => {
+  it('objects / no cast / schema / as const', (done) => {
 
     interface Test {
       hello: string;
@@ -784,7 +787,8 @@ describe('get() API', () => {
 
   it('Map', (done) => {
 
-    storageService.get('test', {
+    // tslint:disable-next-line: deprecation
+    storageService.get<[string, number][]>('test', {
       type: 'array',
       items: {
         type: 'array',
