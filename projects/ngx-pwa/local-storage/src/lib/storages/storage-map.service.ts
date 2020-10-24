@@ -406,7 +406,7 @@ export class StorageMap {
       this.notifiers.set(key, notifier);
 
       /* Get the current item value */
-      (schema ? this.get(key, schema) : this.get(key)).subscribe({
+      (schema ? this.get<T>(key, schema) : this.get(key)).subscribe({
         next: (result) => notifier.next(result),
         error: (error) => notifier.error(error),
       });
