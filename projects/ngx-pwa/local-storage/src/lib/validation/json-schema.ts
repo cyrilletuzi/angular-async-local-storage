@@ -242,6 +242,7 @@ export interface JSONSchemaObject<Properties extends { [key: string]: JSONSchema
    */
   properties: Properties;
 
+  // TODO: add to changelog
   /**
    * Array of names of the required properties for an object.
    * Properties set as required should be present in `properties` too.

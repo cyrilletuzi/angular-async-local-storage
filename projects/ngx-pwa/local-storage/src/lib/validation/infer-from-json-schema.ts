@@ -27,12 +27,6 @@ export type InferFromJSONSchemaTuple<Schemas extends readonly JSONSchema[]> =
 ;
 
 /**
- * Pick properties set as required,
- * and add the other properties as optional.
- */
-export type ObjectFromJSONSchema<ObjectType, RequiredKeys extends keyof ObjectType> = Pick<ObjectType, RequiredKeys> & Partial<Omit<ObjectType, RequiredKeys>>;
-
-/**
  * Infer the data type from a JSON schema.
  */
 export type InferFromJSONSchema<Schema extends JSONSchema> =
@@ -54,7 +48,12 @@ export type InferFromJSONSchema<Schema extends JSONSchema> =
     unknown[] :
   /* Infer objects */
   Schema extends { type: 'object', properties: infer Properties, required?: readonly (infer RequiredProperties)[] } ?
-    ObjectFromJSONSchema<{ -readonly [Key in keyof Properties]: Properties[Key] extends JSONSchema ? InferFromJSONSchema<Properties[Key]> : unknown },
-                         RequiredProperties extends keyof Properties ? RequiredProperties : never> :
+    {
+      -readonly [Key in keyof Pick<Properties, RequiredProperties extends keyof Properties ? RequiredProperties : never>]:
+      Properties[Key] extends JSONSchema ? InferFromJSONSchema<Properties[Key]> : unknown;
+    } & {
+      -readonly [Key in keyof Omit<Properties, RequiredProperties extends keyof Properties ? RequiredProperties : never>]?:
+      Properties[Key] extends JSONSchema ? InferFromJSONSchema<Properties[Key]> : unknown;
+    } :
   /* Default type if inference failed */
   unknown;

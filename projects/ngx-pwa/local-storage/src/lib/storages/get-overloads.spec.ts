@@ -344,9 +344,10 @@ describe('get() API', () => {
 
   it('number with enum predefined / as const', (done) => {
 
+    // TODO: documentation, `as const` must not be used with explicit type
     const schema: JSONSchema = { type: 'number', enum: [1, 2] } as const;
 
-    storageService.get('test', schema).subscribe((_: 1 | 2 | undefined) => {
+    storageService.get('test', schema).subscribe((_: number | undefined) => {
 
       expect().nothing();
 
@@ -565,6 +566,37 @@ describe('get() API', () => {
 
   });
 
+  it('tuple', (done) => {
+
+    // TODO: documentation, as const required
+    storageService.get<[boolean, number]>('test', {
+      type: 'array',
+      items: [{ type: 'boolean' }, { type: 'number' }],
+    }).subscribe((_: [boolean, number] | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('tuple / as const', (done) => {
+
+    storageService.get('test', {
+      type: 'array',
+      items: [{ type: 'boolean' }, { type: 'number' }],
+    } as const).subscribe((_: [boolean, number] | undefined) => {
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
   it('array of arrays', (done) => {
 
     storageService.get('test', {
@@ -643,7 +675,6 @@ describe('get() API', () => {
       test: string;
     }
 
-    // tslint:disable-next-line: deprecation
     storageService.get<Test[]>('test', {
       type: 'array',
       items: {
@@ -731,7 +762,7 @@ describe('get() API', () => {
       world?: string;
     }
 
-    // tslint:disable-next-line: deprecation
+    // TODO: documentation, as const required (because of `required`)
     storageService.get<Test>('test', {
       type: 'object',
       properties: {
@@ -785,9 +816,67 @@ describe('get() API', () => {
 
   });
 
+  it('objects / no cast / schema / no required', (done) => {
+
+    interface Test {
+      hello?: string;
+      world?: string;
+    }
+
+    storageService.get('test', {
+      type: 'object',
+      properties: {
+        hello: { type: 'string' },
+        world: { type: 'string' },
+      },
+    }).subscribe((data: Test | undefined) => {
+
+      if (data) {
+        data.hello = 'dd';
+        // @ts-expect-error
+        data.unexisting = '';
+      }
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
+  it('objects / no cast / schema / as const / no required', (done) => {
+
+    interface Test {
+      hello?: string;
+      world?: string;
+    }
+
+    storageService.get('test', {
+      type: 'object',
+      properties: {
+        hello: { type: 'string' },
+        world: { type: 'string' },
+      },
+    } as const).subscribe((data: Test | undefined) => {
+
+      if (data) {
+        data.hello = 'dd';
+        // @ts-expect-error
+        data.unexisting = '';
+      }
+
+      expect().nothing();
+
+      done();
+
+    });
+
+  });
+
   it('Map', (done) => {
 
-    // tslint:disable-next-line: deprecation
+    // TODO: documentation, as const required (tuple)
     storageService.get<[string, number][]>('test', {
       type: 'array',
       items: {
