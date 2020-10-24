@@ -405,6 +405,7 @@ export class StorageMap {
       /* Memorize the notifier */
       this.notifiers.set(key, notifier);
 
+      // TODO: check infinite type recursion issue without `<T>`
       /* Get the current item value */
       (schema ? this.get<T>(key, schema) : this.get(key)).subscribe({
         next: (result) => notifier.next(result),
