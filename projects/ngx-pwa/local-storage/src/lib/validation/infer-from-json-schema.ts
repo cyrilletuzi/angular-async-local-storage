@@ -1,5 +1,6 @@
 import { JSONSchema } from './json-schema';
 
+// TODO: documentation about the limit
 /**
  * Infer the data type from a tuple JSON schema.
  * Unfortunately, TypeScript doesn't provide yet a dynamic way to handle this,
