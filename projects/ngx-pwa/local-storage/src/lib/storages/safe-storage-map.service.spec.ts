@@ -7,8 +7,14 @@ import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_DB_VERSION } f
 import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
 import { SafeStorageMap } from './safe-storage-map.service';
 import { VALIDATION_ERROR } from './exceptions';
+import { JSONSchema } from '../validation/json-schema';
 
 function tests(description: string, localStorageServiceFactory: () => SafeStorageMap): void {
+
+  interface Monster {
+    name: string;
+    address?: string;
+  }
 
   const key = 'test';
   let localStorageService: SafeStorageMap;
@@ -34,226 +40,982 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
       closeAndDeleteDatabase(done, localStorageService);
     });
 
-    describe(('set() + get()'), () => {
+    describe(`get()`, () => {
 
-      it('unexisting key', (done) => {
+      describe(`string`, () => {
 
-        const schema = { type: 'string' } as const;
+        it('with value', (done) => {
 
-        localStorageService.get(`unknown${Date.now()}`, schema).subscribe((data) => {
+          const value = 'blue';
+          const schema = { type: 'string' } as const;
 
-          expect(data).toBeUndefined();
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: string | undefined) => {
 
-          done();
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('empty', (done) => {
+
+          const value = '';
+          const schema = { type: 'string' } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: string | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('const', (done) => {
+
+          // TODO: documentation, `as const` must not be used with explicit type
+          // TODO: documentation needed, not working at all without `as const` AND without cast
+          const value = 'hello';
+          const schema = {
+            type: 'string',
+            const: 'hello',
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: 'hello' | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('const without assertion', (done) => {
+
+          const value = 'hello';
+          const schema: JSONSchema = {
+            type: 'string',
+            const: 'hello',
+          };
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: string | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('enum', (done) => {
+
+          const value = 'world';
+          const schema = {
+            type: 'string',
+            enum: ['hello', 'world'],
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: 'hello' | 'world' | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('enum without assertion', (done) => {
+
+          const value = 'world';
+          const schema: JSONSchema = {
+            type: 'string',
+            enum: ['hello', 'world'],
+          };
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: string | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
 
         });
 
       });
 
-      it('string', (done) => {
+      describe(`number`, () => {
 
-        const value = 'blue';
-        const schema = { type: 'string' } as const;
+        it('with value', (done) => {
 
-        localStorageService.set(key, value, schema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe((result) => {
+          const value = 1.5;
+          const schema = { type: 'number' } as const;
 
-          expect(result).toBe(value);
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: number | undefined) => {
 
-          done();
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('zero', (done) => {
+
+          const value = 0;
+          const schema = { type: 'number' } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: number | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('const', (done) => {
+
+          const value = 1.5;
+          const schema = {
+            type: 'number',
+            const: 1.5,
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: 1.5 | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('const without assertion', (done) => {
+
+          const value = 1.5;
+          const schema: JSONSchema = {
+            type: 'number',
+            const: 1.5,
+          };
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: number | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('enum', (done) => {
+
+          const value = 2.4;
+          const schema = {
+            type: 'number',
+            enum: [1.5, 2.4],
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: 1.5 | 2.4 | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('enum without assertion', (done) => {
+
+          const value = 2.4;
+          const schema: JSONSchema = {
+            type: 'number',
+            enum: [1.5, 2.4],
+          };
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: number | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
 
         });
 
       });
 
-      it('empty string', (done) => {
+      describe(`integer`, () => {
 
-        const value = '';
-        const schema = { type: 'string' } as const;
+        it('with value', (done) => {
 
-        localStorageService.set(key, value, schema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe((result) => {
+          const value = 1;
+          const schema = { type: 'integer' } as const;
 
-          expect(result).toBe(value);
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: number | undefined) => {
 
-          done();
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('zero', (done) => {
+
+          const value = 0;
+          const schema = { type: 'integer' } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: number | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('const', (done) => {
+
+          const value = 1;
+          const schema = {
+            type: 'integer',
+            const: 1,
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: 1 | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('const without assertion', (done) => {
+
+          const value = 1;
+          const schema: JSONSchema = {
+            type: 'integer',
+            const: 1,
+          };
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: number | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('enum', (done) => {
+
+          const value = 2;
+          const schema = {
+            type: 'integer',
+            enum: [1, 2],
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: 1 | 2 | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('enum without assertion', (done) => {
+
+          const value = 2;
+          const schema: JSONSchema = {
+            type: 'integer',
+            enum: [1, 2],
+          };
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: number | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
 
         });
 
       });
 
-      it('integer', (done) => {
+      describe(`boolean`, () => {
 
-        const value = 1;
-        const schema = { type: 'integer' } as const;
+        it('true', (done) => {
 
-        localStorageService.set(key, value, schema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe((result) => {
+          const value = true;
+          const schema = { type: 'boolean' } as const;
 
-          expect(result).toBe(value);
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: boolean | undefined) => {
 
-          done();
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('false', (done) => {
+
+          const value = false;
+          const schema = { type: 'boolean' } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: boolean | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('const', (done) => {
+
+          const value = true;
+          const schema = {
+            type: 'boolean',
+            const: true,
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: true | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
+
+        });
+
+        it('const without assertion', (done) => {
+
+          const value = true;
+          const schema: JSONSchema = {
+            type: 'boolean',
+            const: true,
+          };
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: boolean | undefined) => {
+
+            expect(result).toBe(value);
+
+            done();
+
+          });
 
         });
 
       });
 
-      it('number', (done) => {
+      describe('array', () => {
 
-        const value = 1.5;
-        const schema = { type: 'number' } as const;
+        it('of strings', (done) => {
 
-        localStorageService.set(key, value, schema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe((result) => {
+          const value = ['hello', 'world', '!'];
+          const schema = {
+            type: 'array',
+            items: { type: 'string' },
+          } as const;
 
-          expect(result).toBe(value);
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: string[] | undefined) => {
 
-          done();
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
+        it('of integers', (done) => {
+
+          const value = [1, 2, 3];
+          const schema = {
+            type: 'array',
+            items: { type: 'integer' },
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: number[] | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
+        it('of numbers', (done) => {
+
+          const value = [1.5, 2.4, 3.67];
+          const schema = {
+            type: 'array',
+            items: { type: 'number' },
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: number[] | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
+        it('of booleans', (done) => {
+
+          const value = [true, false, true];
+          const schema = {
+            type: 'array',
+            items: { type: 'boolean' },
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: boolean[] | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
+        it('of arrays', (done) => {
+
+          const value = [['hello', 'world'], ['my', 'name'], ['is', 'Elmo']];
+          const schema = {
+            type: 'array',
+            items: {
+              type: 'array',
+              items: { type: 'string' },
+            },
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: string[][] | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
+        it('of objects', (done) => {
+
+          const value = [{
+            name: 'Elmo',
+            address:  'Sesame street',
+          }, {
+            name: 'Cookie',
+          }, {
+            name: 'Chester',
+          }];
+          const schema = {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+                address: { type: 'string' },
+              },
+              required: ['name'],
+            },
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: Monster[] | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
+        it('Set', (done) => {
+
+          const array = ['hello', 'world'];
+          const value = new Set<string>(['hello', 'world']);
+          const schema = {
+            type: 'array',
+            items: { type: 'string' },
+            uniqueItems: true,
+          } as const;
+
+          localStorageService.set(key, Array.from(value), schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema)),
+          ).subscribe((result: string[] | undefined) => {
+
+            expect(result).toEqual(array);
+
+            done();
+
+          });
 
         });
 
       });
 
-      it('zero', (done) => {
+      describe('tuple', () => {
 
-        const value = 0;
-        const schema = { type: 'number' } as const;
+        it('with 1 value', (done) => {
 
-        localStorageService.set(key, value, schema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe((result) => {
+          // TODO: documente, type required
+          const value: [Monster] = [{
+            name: 'Elmo',
+            address:  'Sesame street',
+          }];
+          const schema = {
+            type: 'array',
+            items: [{
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+                address: { type: 'string' },
+              },
+              required: ['name'],
+            }],
+          } as const;
 
-          expect(result).toBe(value);
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: [Monster] | undefined) => {
 
-          done();
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
+        it('with 2 values', (done) => {
+
+          const value: [string, Monster] = ['hello', {
+            name: 'Elmo',
+            address:  'Sesame street',
+          }];
+          const schema = {
+            type: 'array',
+            items: [{
+              type: 'string'
+            }, {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+                address: { type: 'string' },
+              },
+              required: ['name'],
+            }],
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: [string, Monster] | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
+        it('Map', (done) => {
+
+          const array: [string, Monster][] = [
+            ['Elmo', {
+              name: 'Elmo',
+              address:  'Sesame street',
+            }],
+            ['Cookie', {
+              name: 'Cookie',
+            }],
+          ];
+          const value = new Map<string, Monster>(array);
+          const schema = {
+            type: 'array',
+            items: {
+              type: 'array',
+              items: [{
+                type: 'string'
+              }, {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                  address: { type: 'string' },
+                },
+                required: ['name'],
+              }],
+            },
+          } as const;
+
+          localStorageService.set(key, Array.from(value), schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema)),
+          ).subscribe((result: [string, Monster][] | undefined) => {
+
+            expect(result).toEqual(array);
+
+            done();
+
+          });
+
+        });
+
+        it('with 3 primitive values', (done) => {
+
+          const value: [string, number, boolean] = ['hello', 2, true];
+          const schema = {
+            type: 'array',
+            items: [
+              { type: 'string' },
+              { type: 'number' },
+              { type: 'boolean' },
+            ],
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: [string, number, boolean] | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
+        it('with 3 complex values', (done) => {
+
+          const value: [string, number, Monster] = ['hello', 2, {
+            name: 'Elmo',
+            address:  'Sesame street',
+          }];
+          const schema = {
+            type: 'array',
+            items: [
+              { type: 'string' },
+              { type: 'number' },
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                  address: { type: 'string' },
+                },
+                required: ['name'],
+              }
+            ],
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: unknown[] | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
 
         });
 
       });
 
-      it('true', (done) => {
+      describe('object', () => {
 
-        const value = true;
-        const schema = { type: 'boolean' } as const;
+        it('with all subtypes', (done) => {
 
-        localStorageService.set(key, value, schema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe((result) => {
+          interface User {
+            name: string;
+            age: number;
+            philosopher: boolean;
+            books: string[];
+            family: {
+              brothers: number;
+              sisters: number;
+            };
+            creditCard?: number;
+          }
 
-          expect(result).toBe(value);
+          const value: User = {
+            name: 'Henri Bergson',
+            age: 81,
+            philosopher: true,
+            books: [`Essai sur les données immédiates de la conscience`, `Matière et mémoire`],
+            family: {
+              brothers: 5,
+              sisters: 3,
+            },
+          };
+          const schema = {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              age: { type: 'number' },
+              philosopher: { type: 'boolean' },
+              books: {
+                type: 'array',
+                items: { type: 'string' },
+              },
+              family: {
+                type: 'object',
+                properties: {
+                  brothers: { type: 'integer' },
+                  sisters: { type: 'integer' },
+                },
+                required: ['brothers', 'sisters']
+              },
+              creditCard: { type: 'number' },
+            },
+            required: ['name', 'age', 'philosopher', 'books', 'family'],
+          } as const;
 
-          done();
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: User | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
+        it('without required properties', (done) => {
+
+          interface User {
+            name?: string;
+            age?: number;
+          }
+
+          const value: User = {
+            name: 'Henri Bergson',
+          };
+          const schema = {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              age: { type: 'number' },
+            },
+          } as const;
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: User | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
+        it('without const assertion', (done) => {
+
+          interface User {
+            name: string;
+            age: number;
+            philosopher: boolean;
+            books: string[];
+            family: {
+              brothers: number;
+              sisters: number;
+            };
+            creditCard?: number;
+          }
+
+          // TODO: documentation, `as const` needed, and no type on value
+          const value = {
+            name: 'Henri Bergson',
+            age: 81,
+            philosopher: true,
+            books: [`Essai sur les données immédiates de la conscience`, `Matière et mémoire`],
+            family: {
+              brothers: 5,
+              sisters: 3,
+            },
+          };
+          const schema: JSONSchema = {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              age: { type: 'number' },
+              philosopher: { type: 'boolean' },
+              books: {
+                type: 'array',
+                items: { type: 'string' },
+              },
+              family: {
+                type: 'object',
+                properties: {
+                  brothers: { type: 'integer' },
+                  sisters: { type: 'integer' },
+                },
+                required: ['brothers', 'sisters']
+              },
+              creditCard: { type: 'number' },
+            },
+            required: ['name', 'age', 'philosopher', 'books', 'family'],
+          };
+
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((result: Partial<User> | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
 
         });
 
       });
 
-      it('false', (done) => {
+      describe('specials', () => {
 
-        const value = false;
-        const schema = { type: 'boolean' } as const;
+        it('unexisting key', (done) => {
 
-        localStorageService.set(key, value, schema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe((result) => {
+          const schema = { type: 'string' } as const;
 
-          expect(result).toBe(value);
+          localStorageService.get(`unknown${Date.now()}`, schema).subscribe((data: string | undefined) => {
 
-          done();
+            expect(data).toBeUndefined();
 
-        });
+            done();
 
-      });
-
-      it('null', (done) => {
-
-        const schema = { type: 'string' } as const;
-
-        localStorageService.set(key, 'test', schema).pipe(
-          mergeMap(() => localStorageService.set(key, null, schema)),
-          mergeMap(() => localStorageService.get(key, schema)),
-        ).subscribe((result) => {
-
-          expect(result).toBeUndefined();
-
-          done();
+          });
 
         });
 
-      });
+        it('null', (done) => {
 
-      it('undefined', (done) => {
+          const schema = { type: 'string' } as const;
 
-        const schema = { type: 'string' } as const;
+          localStorageService.set(key, 'test', schema).pipe(
+            mergeMap(() => localStorageService.set(key, null, schema)),
+            mergeMap(() => localStorageService.get(key, schema)),
+          ).subscribe((result: string | undefined) => {
 
-        localStorageService.set(key, 'test', schema).pipe(
-          mergeMap(() => localStorageService.set(key, undefined, schema)),
-          mergeMap(() => localStorageService.get(key, schema)),
-        ).subscribe((result) => {
+            expect(result).toBeUndefined();
 
-          expect(result).toBeUndefined();
+            done();
 
-          done();
-
-        });
-
-      });
-
-      it('array', (done) => {
-
-        const value = [1, 2, 3];
-        const schema = {
-          type: 'array',
-          items: { type: 'number' }
-        } as const;
-
-        localStorageService.set(key, value, schema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe((result) => {
-
-          expect(result).toEqual(value);
-
-          done();
+          });
 
         });
 
-      });
+        it('undefined', (done) => {
 
-      it('object', (done) => {
+          const schema = { type: 'string' } as const;
 
-        const value = { name: 'test' };
-        const schema = {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-          },
-          required: ['name']
-        } as const;
+          localStorageService.set(key, 'test', schema).pipe(
+            mergeMap(() => localStorageService.set(key, undefined, schema)),
+            mergeMap(() => localStorageService.get(key, schema)),
+          ).subscribe((result: string | undefined) => {
 
-        localStorageService.set(key, value, schema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe((result) => {
+            expect(result).toBeUndefined();
 
-          expect(result).toEqual(value);
+            done();
 
-          done();
+          });
 
         });
 
-      });
+        it('blob (will be pending in Safari private)', (done) => {
 
-      // TODO: add blob type in JSON schema?
-      it('blob (will be pending in Safari private)', (done) => {
+          const value = new Blob();
+          const schema = { type: 'unknown' } as const;
 
-        const value = new Blob();
-        const schema = { type: 'unknown' } as const;
-
-        const observer = (localStorageService.backingEngine === 'localStorage') ?
-          {
+          localStorageService.set(key, value, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
+          ).subscribe((localStorageService.backingEngine === 'localStorage') ? {
             next: () => {},
             error: () => {
               expect().nothing();
@@ -269,13 +1031,30 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
               pending();
               done();
             }
-          };
+          });
 
-        localStorageService.set(key, value, schema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe(observer);
+        });
+
+        it('unknown schema', (done) => {
+
+          const schema = { type: 'unknown' } as const;
+
+          // @ts-expect-error
+          localStorageService.get(key, schema).subscribe((result: string | undefined) => {
+
+            expect().nothing();
+
+            done();
+
+          });
+
+        });
 
       });
+
+    });
+
+    describe(('set()'), () => {
 
       it('update', (done) => {
 
@@ -319,9 +1098,9 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
     });
 
-    describe('delete()', () => {
+    describe('deletion', () => {
 
-      it('existing key', (done) => {
+      it('delete() with existing key', (done) => {
 
         const schema = { type: 'string' } as const;
 
@@ -338,13 +1117,30 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
       });
 
-      it('unexisting key', (done) => {
+      it('delete() with unexisting key', (done) => {
 
         localStorageService.delete(`unexisting${Date.now()}`).subscribe(() => {
 
             expect().nothing();
 
             done();
+
+        });
+
+      });
+
+      it('clear()', (done) => {
+
+        const schema = { type: 'string' } as const;
+
+        localStorageService.set(key, 'test', schema).pipe(
+          mergeMap(() => localStorageService.clear()),
+          mergeMap(() => localStorageService.get(key, schema))
+        ).subscribe((result) => {
+
+          expect(result).toBeUndefined();
+
+          done();
 
         });
 
@@ -396,14 +1192,11 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
           complete: () => {
             done();
           },
-          error: () => {
-            done();
-          },
         });
 
       });
 
-      it('getKey() when no items', (done) => {
+      it('keys() when no items', (done) => {
 
         localStorageService.keys().subscribe({
           next: () => {
@@ -475,80 +1268,9 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
     });
 
-    describe('JSON schema', () => {
-
-      const schema = {
-        type: 'object',
-        properties: {
-          expected: {
-            type: 'string'
-          }
-        },
-        required: ['expected']
-      } as const;
-
-      it('valid', (done) => {
-
-        const value = { expected: 'value' };
-
-        localStorageService.set(key, value, schema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe((data) => {
-
-          expect(data).toEqual(value);
-
-          done();
-
-        });
-
-      });
-
-      it('invalid in get()', (done) => {
-
-        const unmatchedSchema = { type: 'string' } as const;
-
-        localStorageService.set(key, 'test', unmatchedSchema).pipe(
-          mergeMap(() => localStorageService.get(key, schema))
-        ).subscribe({ error: (error) => {
-
-          expect(error.message).toBe(VALIDATION_ERROR);
-
-          done();
-
-        } });
-
-      });
-
-      it('invalid in set()', (done) => {
-
-        // @ts-expect-error
-        localStorageService.set(key, 'test', schema).subscribe(() => {
-
-          expect().nothing();
-
-          done();
-
-        });
-
-      });
-
-      it('null: no validation', (done) => {
-
-        localStorageService.get(`noassociateddata${Date.now()}`, schema).subscribe(() => {
-
-          expect().nothing();
-
-          done();
-
-        });
-
-      });
-
-    });
-
     describe('watch()', () => {
 
-      it('with valid schema', (done) => {
+      it('valid', (done) => {
 
         const watchedKey = 'watched1';
         const values = [undefined, 'test1', undefined, 'test2', undefined];
@@ -579,7 +1301,84 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
       });
 
-      it('with invalid schema', (done) => {
+    });
+
+    describe('validation', () => {
+
+      const schema = {
+        type: 'object',
+        properties: {
+          expected: {
+            type: 'string'
+          }
+        },
+        required: ['expected']
+      } as const;
+
+      it('valid schema with options', (done) => {
+
+        const value = 5;
+        const schemaWithOptions = { type: 'number', maximum: 10 } as const;
+
+        localStorageService.set(key, value, schemaWithOptions).pipe(
+          mergeMap(() => localStorageService.get(key, schemaWithOptions)),
+        ).subscribe((result: number | undefined) => {
+
+          expect(result).toBe(value);
+
+          done();
+
+        });
+
+      });
+
+      it('invalid schema with options', (done) => {
+
+        const value = 15;
+        const schemaWithOptions = { type: 'number', maximum: 10 } as const;
+
+        localStorageService.set(key, value, { type: 'number' } as const).pipe(
+          mergeMap(() => localStorageService.get(key, schemaWithOptions)),
+        ).subscribe({
+          error: (error) => {
+
+            expect(error.message).toBe(VALIDATION_ERROR);
+
+            done();
+
+          }
+        });
+
+      });
+
+      it('invalid in get()', (done) => {
+
+        localStorageService.set(key, 'test', { type: 'string' } as const).pipe(
+          mergeMap(() => localStorageService.get(key, schema))
+        ).subscribe({ error: (error) => {
+
+          expect(error.message).toBe(VALIDATION_ERROR);
+
+          done();
+
+        } });
+
+      });
+
+      it('invalid in set()', (done) => {
+
+        // @ts-expect-error
+        localStorageService.set(key, 'test', schema).subscribe(() => {
+
+          expect().nothing();
+
+          done();
+
+        });
+
+      });
+
+      it('invalid in watch()', (done) => {
 
         const watchedKey = 'watched2';
 
@@ -596,37 +1395,43 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
       });
 
-    });
+      it('null: no validation', (done) => {
 
-    /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/25
-    * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/5 */
-    describe('complete', () => {
+        localStorageService.get(`noassociateddata${Date.now()}`, schema).subscribe(() => {
 
-      const schema = { type: 'string' } as const;
+          expect().nothing();
 
-      it('set()', (done) => {
+          done();
 
-        localStorageService.set('index', 'value', schema).subscribe({
-          complete: () => {
-
-            expect().nothing();
-
-            done();
-
-          }
         });
 
       });
+
+    });
+
+    /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/25
+     * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/5 */
+    describe('complete', () => {
+
+      const schema = { type: 'string' } as const;
 
       it('get()', (done) => {
 
         localStorageService.get(key, schema).subscribe({
           complete: () => {
-
             expect().nothing();
-
             done();
+          }
+        });
 
+      });
+
+      it('set()', (done) => {
+
+        localStorageService.set('index', 'value', schema).subscribe({
+          complete: () => {
+            expect().nothing();
+            done();
           }
         });
 
@@ -636,12 +1441,9 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
         localStorageService.delete(key).subscribe({
           complete: () => {
-
             expect().nothing();
-
             done();
           }
-
         });
 
       });
@@ -650,11 +1452,8 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
         localStorageService.clear().subscribe({
           complete: () => {
-
             expect().nothing();
-
             done();
-
           }
         });
 
@@ -664,11 +1463,8 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
         localStorageService.size.subscribe({
           complete: () => {
-
             expect().nothing();
-
             done();
-
           }
         });
 
@@ -678,11 +1474,8 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
         localStorageService.keys().subscribe({
           complete: () => {
-
             expect().nothing();
-
             done();
-
           }
         });
 
@@ -692,11 +1485,8 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
         localStorageService.has(key).subscribe({
           complete: () => {
-
             expect().nothing();
-
             done();
-
           }
         });
 
@@ -704,7 +1494,7 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
     });
 
-    describe('compatibility', () => {
+    describe('compatibility with Promise', () => {
 
       const schema = { type: 'string' } as const;
 
@@ -714,7 +1504,7 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
         localStorageService.set(key, value, schema).toPromise()
           .then(() => localStorageService.get(key, schema).toPromise())
-          .then((result) => {
+          .then((result: string | undefined) => {
             expect(result).toBe(value);
             done();
           });
@@ -727,7 +1517,7 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
         await localStorageService.set(key, value, schema).toPromise();
 
-        const result = await localStorageService.get(key, schema).toPromise();
+        const result: string | undefined = await localStorageService.get(key, schema).toPromise();
 
         expect(result).toBe(value);
 
@@ -749,19 +1539,12 @@ describe('StorageMap', () => {
 
   tests('indexedDB', () => new SafeStorageMap(new IndexedDBDatabase()));
 
-  tests('indexedDB with no wrap', () => new SafeStorageMap(new IndexedDBDatabase()));
+  tests('indexedDB with custom options', () => new SafeStorageMap(new IndexedDBDatabase('customDbTest', 'storeTest', 2, false)));
 
-  tests('indexedDB with custom options', () => new SafeStorageMap(new IndexedDBDatabase('customDbTest', 'storeTest', 2)));
-
-  tests(
-    'indexedDB with custom database and store names',
-    () => new SafeStorageMap(new IndexedDBDatabase(`dbCustom${Date.now()}`, `storeCustom${Date.now()}`))
-  );
-
-  describe('specials', () => {
+  describe('browser APIs', () => {
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
-    it('check use of IndexedDb (will be pending in Firefox/IE private mode)', (done) => {
+    it('IndexedDb is used (will be pending in Firefox/IE private mode)', (done) => {
 
       const index = `test${Date.now()}`;
       const value = 'test';
@@ -820,8 +1603,37 @@ describe('StorageMap', () => {
 
     });
 
+    it('indexedDb with default options (will be pending in Firefox private mode)', (done) => {
+
+      const localStorageService = new SafeStorageMap(new IndexedDBDatabase());
+      const schema = { type: 'string' } as const;
+
+      /* Do a request first as a first transaction is needed to set the store name */
+      localStorageService.get('test', schema).subscribe(() => {
+
+        if (localStorageService.backingEngine === 'indexedDB') {
+
+          const { database, store, version } = localStorageService.backingStore;
+
+          expect(database).toBe(DEFAULT_IDB_DB_NAME);
+          expect(store).toBe(DEFAULT_IDB_STORE_NAME);
+          expect(version).toBe(DEFAULT_IDB_DB_VERSION);
+
+          closeAndDeleteDatabase(done, localStorageService);
+
+        } else {
+
+          /* Cases: Firefox private mode */
+          pending();
+
+        }
+
+      });
+
+    });
+
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
-    it('IndexedDb with noWrap to false (will be pending in Firefox/IE private mode)', (done) => {
+    it('indexedDb with noWrap to false (will be pending in Firefox/IE private mode)', (done) => {
 
       const index = `wrap${Date.now()}`;
       const value = 'test';
@@ -880,44 +1692,16 @@ describe('StorageMap', () => {
 
     });
 
-    it('indexedDB default options (will be pending in Firefox private mode)', (done) => {
-
-      const localStorageService = new SafeStorageMap(new IndexedDBDatabase());
-      const schema = { type: 'string' } as const;
-
-      /* Do a request first as a first transaction is needed to set the store name */
-      localStorageService.get('test', schema).subscribe(() => {
-
-        if (localStorageService.backingEngine === 'indexedDB') {
-
-          const { database, store, version } = localStorageService.backingStore;
-
-          expect(database).toBe(DEFAULT_IDB_DB_NAME);
-          expect(store).toBe(DEFAULT_IDB_STORE_NAME);
-          expect(version).toBe(DEFAULT_IDB_DB_VERSION);
-
-          closeAndDeleteDatabase(done, localStorageService);
-
-        } else {
-
-          /* Cases: Firefox private mode */
-          pending();
-
-        }
-
-      });
-
-    });
-
-    it('indexedDB custom options (will be pending in Firefox private mode)', (done) => {
+    it('indexedDb with custom options (will be pending in Firefox private mode)', (done) => {
 
       /* Unique names to be sure `indexedDB` `upgradeneeded` event is triggered */
       const dbName = `dbCustom${Date.now()}`;
       const storeName = `storeCustom${Date.now()}`;
       const schema = { type: 'string' } as const;
       const dbVersion = 2;
+      const noWrap = false;
 
-      const localStorageService = new SafeStorageMap(new IndexedDBDatabase(dbName, storeName, dbVersion));
+      const localStorageService = new SafeStorageMap(new IndexedDBDatabase(dbName, storeName, dbVersion, noWrap));
 
       /* Do a request first as a first transaction is needed to set the store name */
       localStorageService.get('test', schema).subscribe(() => {
@@ -943,13 +1727,12 @@ describe('StorageMap', () => {
 
     });
 
-    it('localStorage prefix', () => {
+    it('localStorage with prefix', () => {
 
       const prefix = `ls_`;
 
       const localStorageService = new SafeStorageMap(new LocalStorageDatabase(prefix));
 
-      // tslint:disable-next-line: no-string-literal
       expect(localStorageService.fallbackBackingStore.prefix).toBe(prefix);
 
     });

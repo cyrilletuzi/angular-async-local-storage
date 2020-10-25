@@ -203,7 +203,7 @@ export class SafeStorageMap {
    * @example
    * this.storageMap.set('key', 'value', { type: 'string' }).subscribe(() => {});
    */
-  set<Schema extends JSONSchema>(key: string, data: InferFromJSONSchema<Schema> | undefined | null, _: Schema): Observable<undefined> {
+  set<Schema extends JSONSchema>(key: string, data: Readonly<InferFromJSONSchema<Schema>> | undefined | null, _: Schema): Observable<undefined> {
 
     /* Schema is not required here as the compliance of the data is already checked at compilation */
     return this.setAndValidate(key, data);

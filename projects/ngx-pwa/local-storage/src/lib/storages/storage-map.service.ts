@@ -12,6 +12,7 @@ import { SafeStorageMap } from './safe-storage-map.service';
 })
 export class StorageMap extends SafeStorageMap {
 
+  // TODO: reorder overloads to try to put deprecated ones last
   /**
    * Get an item value in storage.
    * The signature has many overloads due to validation, **please refer to the documentation.**
