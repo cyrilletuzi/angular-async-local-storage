@@ -33,6 +33,7 @@ export class JSONValidator {
         return this.validateArray(data, schema);
       case 'object':
         return this.validateObject(data, schema);
+      // TODO: check how we handle this case (do not allow to bypass validation, or add a test)
       case 'unknown':
         return true;
 
