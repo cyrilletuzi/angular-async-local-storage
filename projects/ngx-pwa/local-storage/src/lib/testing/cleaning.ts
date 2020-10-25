@@ -1,18 +1,19 @@
 import { StorageMap } from '../storages/storage-map.service';
 import { IndexedDBDatabase } from '../databases/indexeddb-database';
 import { MemoryDatabase } from '../databases/memory-database';
+import { SafeStorageMap } from '../storages/safe-storage-map.service';
 
 /**
  * Helper to clear all data in storage to avoid tests overlap
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param storageService Service
  */
-export function clearStorage(done: DoneFn, storageService: StorageMap): void {
+export function clearStorage(done: DoneFn, storageService: StorageMap | SafeStorageMap): void {
 
   if (storageService.backingEngine === 'indexedDB') {
 
     // tslint:disable-next-line: no-string-literal
-    const indexedDBService = storageService['database'] as IndexedDBDatabase;
+    const indexedDBService = (storageService as SafeStorageMap)['database'] as IndexedDBDatabase;
 
     try {
 
@@ -82,7 +83,7 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
   } else if (storageService.backingEngine === 'memory') {
 
     // tslint:disable-next-line: no-string-literal
-    (storageService['database'] as MemoryDatabase)['memoryStorage'].clear();
+    ((storageService as SafeStorageMap)['database'] as MemoryDatabase)['memoryStorage'].clear();
 
     done();
 
@@ -103,13 +104,13 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
  * @param doneJasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param storageService Service
  */
-export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap): void {
+export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap | SafeStorageMap): void {
 
   /* Only `indexedDB` is concerned */
   if (storageService.backingEngine === 'indexedDB') {
 
     // tslint:disable-next-line: no-string-literal
-    const indexedDBService = storageService['database'] as IndexedDBDatabase;
+    const indexedDBService = (storageService as SafeStorageMap)['database'] as IndexedDBDatabase;
 
     // tslint:disable-next-line: no-string-literal
     indexedDBService['database'].subscribe({

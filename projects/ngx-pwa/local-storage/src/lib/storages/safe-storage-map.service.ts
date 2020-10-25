@@ -187,24 +187,18 @@ export class SafeStorageMap {
    * Note that setting `null` or `undefined` will remove the item to avoid some browsers issues.
    * @param key The item's key
    * @param data The item's value
-   * @param schema Optional JSON schema to validate the data
+   * @param _ JSON schema to validate the data
    * @returns A RxJS `Observable` to wait the end of the operation
    *
    * @example
-   * this.storageMap.set('key', 'value').subscribe(() => {});
+   * this.storageMap.set('key', 'value', { type: 'string' }).subscribe(() => {});
    */
-  set<Schema extends JSONSchema, DataType extends InferFromJSONSchema<Schema> | undefined | null>(key: string, data: DataType, schema: JSONSchema): Observable<undefined> {
+  set<Schema extends JSONSchema>(key: string, data: InferFromJSONSchema<Schema> | undefined | null, _: Schema): Observable<undefined> {
 
     /* Storing `undefined` or `null` is useless and can cause issues in `indexedDb` in some browsers,
      * so removing item instead for all storages to have a consistent API */
     if ((data === undefined) || (data === null)) {
       return this.delete(key);
-    }
-
-    // TODO: may be useless now
-    /* Validate data against a JSON schema if provided */
-    if (!this.jsonValidator.validate(data, schema)) {
-      return throwError(new ValidationError());
     }
 
     return this.database.set(key, data).pipe(
@@ -300,7 +294,7 @@ export class SafeStorageMap {
    * The signature has many overloads due to validation, **please refer to the documentation.**
    * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
    * @param key The item's key to watch
-   * @param schema Optional but recommended JSON schema to validate the initial value
+   * @param schema JSON schema to validate the initial value
    * @returns An infinite `Observable` giving the current value
    */
   watch<Schema extends JSONSchema>(key: string, schema: Schema) { // tslint:disable-line:typedef

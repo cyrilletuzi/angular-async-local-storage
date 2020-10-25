@@ -277,21 +277,6 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
       });
 
-      it('set() with wrong data type', (done) => {
-
-        const schema = { type: 'string' } as const;
-
-        // @ts-expect-error
-        localStorageService.set(key, 1, schema).subscribe(() => {
-
-            expect().nothing();
-
-            done();
-
-          });
-
-      });
-
       it('update', (done) => {
 
         const schema = { type: 'string' } as const;
@@ -520,7 +505,9 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
       it('invalid in get()', (done) => {
 
-        localStorageService.set(key, 'test', schema).pipe(
+        const unmatchedSchema = { type: 'string' } as const;
+
+        localStorageService.set(key, 'test', unmatchedSchema).pipe(
           mergeMap(() => localStorageService.get(key, schema))
         ).subscribe({ error: (error) => {
 
@@ -534,6 +521,7 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
       it('invalid in set()', (done) => {
 
+        // @ts-expect-error
         localStorageService.set(key, 'test', schema).pipe(
           mergeMap(() => localStorageService.get(key, { type: 'string' } as const))
         ).subscribe({ error: (error) => {
