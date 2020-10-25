@@ -251,6 +251,19 @@ export interface JSONSchemaObject<Properties extends { [key: string]: JSONSchema
 
 }
 
+// TODO: documentation
+/**
+ * JSON schema to describe a custom value (useful for `Blob`).
+ */
+export interface JSONSchemaUnknown {
+
+  /**
+   * Type for an unknown value.
+   */
+  type: 'unknown';
+
+}
+
 /**
  * Subset of the JSON Schema standard.
  * Types are enforced to validate everything: each value **must** have a `type`.
@@ -283,5 +296,6 @@ export interface JSONSchemaObject<Properties extends { [key: string]: JSONSchema
  *   },
  *   required: ['firstName'],
  * };
+ *
  */
-export type JSONSchema = JSONSchemaString | JSONSchemaNumber | JSONSchemaInteger | JSONSchemaBoolean | JSONSchemaArray | JSONSchemaObject;
+export type JSONSchema = JSONSchemaString | JSONSchemaNumber | JSONSchemaInteger | JSONSchemaBoolean | JSONSchemaArray | JSONSchemaObject | JSONSchemaUnknown;

@@ -33,6 +33,8 @@ export class JSONValidator {
         return this.validateArray(data, schema);
       case 'object':
         return this.validateObject(data, schema);
+      case 'unknown':
+        return true;
 
     }
 

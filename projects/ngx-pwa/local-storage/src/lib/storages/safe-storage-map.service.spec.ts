@@ -3,16 +3,15 @@ import { mergeMap, tap, filter } from 'rxjs/operators';
 import { IndexedDBDatabase } from '../databases/indexeddb-database';
 import { LocalStorageDatabase } from '../databases/localstorage-database';
 import { MemoryDatabase } from '../databases/memory-database';
-import { JSONSchema } from '../validation/json-schema';
 import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_DB_VERSION } from '../tokens';
 import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
-import { StorageMap } from './storage-map.service';
+import { SafeStorageMap } from './safe-storage-map.service';
 import { VALIDATION_ERROR } from './exceptions';
 
-function tests(description: string, localStorageServiceFactory: () => StorageMap): void {
+function tests(description: string, localStorageServiceFactory: () => SafeStorageMap): void {
 
   const key = 'test';
-  let localStorageService: StorageMap;
+  let localStorageService: SafeStorageMap;
 
   describe(description, () => {
 
@@ -39,7 +38,9 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('unexisting key', (done) => {
 
-        localStorageService.get(`unknown${Date.now()}`).subscribe((data) => {
+        const schema = { type: 'string' } as const;
+
+        localStorageService.get(`unknown${Date.now()}`, schema).subscribe((data) => {
 
           expect(data).toBeUndefined();
 
@@ -52,9 +53,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('string', (done) => {
 
         const value = 'blue';
+        const schema = { type: 'string' } as const;
 
-        localStorageService.set(key, value).pipe(
-          mergeMap(() => localStorageService.get(key))
+        localStorageService.set(key, value, schema).pipe(
+          mergeMap(() => localStorageService.get(key, schema))
         ).subscribe((result) => {
 
           expect(result).toBe(value);
@@ -68,9 +70,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('empty string', (done) => {
 
         const value = '';
+        const schema = { type: 'string' } as const;
 
-        localStorageService.set(key, value).pipe(
-          mergeMap(() => localStorageService.get(key))
+        localStorageService.set(key, value, schema).pipe(
+          mergeMap(() => localStorageService.get(key, schema))
         ).subscribe((result) => {
 
           expect(result).toBe(value);
@@ -84,9 +87,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('integer', (done) => {
 
         const value = 1;
+        const schema = { type: 'integer' } as const;
 
-        localStorageService.set(key, value).pipe(
-          mergeMap(() => localStorageService.get(key))
+        localStorageService.set(key, value, schema).pipe(
+          mergeMap(() => localStorageService.get(key, schema))
         ).subscribe((result) => {
 
           expect(result).toBe(value);
@@ -100,9 +104,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('number', (done) => {
 
         const value = 1.5;
+        const schema = { type: 'number' } as const;
 
-        localStorageService.set(key, value).pipe(
-          mergeMap(() => localStorageService.get(key))
+        localStorageService.set(key, value, schema).pipe(
+          mergeMap(() => localStorageService.get(key, schema))
         ).subscribe((result) => {
 
           expect(result).toBe(value);
@@ -116,9 +121,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('zero', (done) => {
 
         const value = 0;
+        const schema = { type: 'number' } as const;
 
-        localStorageService.set(key, value).pipe(
-          mergeMap(() => localStorageService.get(key))
+        localStorageService.set(key, value, schema).pipe(
+          mergeMap(() => localStorageService.get(key, schema))
         ).subscribe((result) => {
 
           expect(result).toBe(value);
@@ -132,9 +138,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('true', (done) => {
 
         const value = true;
+        const schema = { type: 'boolean' } as const;
 
-        localStorageService.set(key, value).pipe(
-          mergeMap(() => localStorageService.get(key))
+        localStorageService.set(key, value, schema).pipe(
+          mergeMap(() => localStorageService.get(key, schema))
         ).subscribe((result) => {
 
           expect(result).toBe(value);
@@ -148,9 +155,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('false', (done) => {
 
         const value = false;
+        const schema = { type: 'boolean' } as const;
 
-        localStorageService.set(key, value).pipe(
-          mergeMap(() => localStorageService.get(key))
+        localStorageService.set(key, value, schema).pipe(
+          mergeMap(() => localStorageService.get(key, schema))
         ).subscribe((result) => {
 
           expect(result).toBe(value);
@@ -163,9 +171,11 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('null', (done) => {
 
-        localStorageService.set(key, 'test').pipe(
-          mergeMap(() => localStorageService.set(key, null)),
-          mergeMap(() => localStorageService.get(key)),
+        const schema = { type: 'string' } as const;
+
+        localStorageService.set(key, 'test', schema).pipe(
+          mergeMap(() => localStorageService.set(key, null, schema)),
+          mergeMap(() => localStorageService.get(key, schema)),
         ).subscribe((result) => {
 
           expect(result).toBeUndefined();
@@ -178,9 +188,11 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('undefined', (done) => {
 
-        localStorageService.set(key, 'test').pipe(
-          mergeMap(() => localStorageService.set(key, undefined)),
-          mergeMap(() => localStorageService.get(key)),
+        const schema = { type: 'string' } as const;
+
+        localStorageService.set(key, 'test', schema).pipe(
+          mergeMap(() => localStorageService.set(key, undefined, schema)),
+          mergeMap(() => localStorageService.get(key, schema)),
         ).subscribe((result) => {
 
           expect(result).toBeUndefined();
@@ -194,9 +206,13 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('array', (done) => {
 
         const value = [1, 2, 3];
+        const schema = {
+          type: 'array',
+          items: { type: 'number' }
+        } as const;
 
-        localStorageService.set(key, value).pipe(
-          mergeMap(() => localStorageService.get(key))
+        localStorageService.set(key, value, schema).pipe(
+          mergeMap(() => localStorageService.get(key, schema))
         ).subscribe((result) => {
 
           expect(result).toEqual(value);
@@ -210,9 +226,16 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('object', (done) => {
 
         const value = { name: 'test' };
+        const schema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+          required: ['name']
+        } as const;
 
-        localStorageService.set(key, value).pipe(
-          mergeMap(() => localStorageService.get(key))
+        localStorageService.set(key, value, schema).pipe(
+          mergeMap(() => localStorageService.get(key, schema))
         ).subscribe((result) => {
 
           expect(result).toEqual(value);
@@ -223,9 +246,11 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       });
 
+      // TODO: add blob type in JSON schema?
       it('blob (will be pending in Safari private)', (done) => {
 
         const value = new Blob();
+        const schema = { type: 'unknown' } as const;
 
         const observer = (localStorageService.backingEngine === 'localStorage') ?
           {
@@ -235,7 +260,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
               done();
             }
           } : {
-            next: (result: unknown) => {
+            next: (result: unknown | undefined) => {
               expect(result).toEqual(value);
               done();
             },
@@ -246,16 +271,33 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             }
           };
 
-        localStorageService.set(key, value).pipe(
-          mergeMap(() => localStorageService.get(key))
+        localStorageService.set(key, value, schema).pipe(
+          mergeMap(() => localStorageService.get(key, schema))
         ).subscribe(observer);
+
+      });
+
+      it('set() with wrong data type', (done) => {
+
+        const schema = { type: 'string' } as const;
+
+        // @ts-expect-error
+        localStorageService.set(key, 1, schema).subscribe(() => {
+
+            expect().nothing();
+
+            done();
+
+          });
 
       });
 
       it('update', (done) => {
 
-        localStorageService.set(key, 'value').pipe(
-          mergeMap(() => localStorageService.set(key, 'updated'))
+        const schema = { type: 'string' } as const;
+
+        localStorageService.set(key, 'value', schema).pipe(
+          mergeMap(() => localStorageService.set(key, 'updated', schema))
         ).subscribe(() => {
 
             expect().nothing();
@@ -270,13 +312,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         const value1 = 'test1';
         const value2 = 'test2';
+        const schema = { type: 'string' } as const;
 
         expect(() => {
 
-          localStorageService.set(key, value1).subscribe();
+          localStorageService.set(key, value1, schema).subscribe();
 
-          localStorageService.set(key, value2).pipe(
-            mergeMap(() => localStorageService.get(key))
+          localStorageService.set(key, value2, schema).pipe(
+            mergeMap(() => localStorageService.get(key, schema))
           ).subscribe((result) => {
 
             expect(result).toBe(value2);
@@ -295,9 +338,11 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('existing key', (done) => {
 
-        localStorageService.set(key, 'test').pipe(
+        const schema = { type: 'string' } as const;
+
+        localStorageService.set(key, 'test', schema).pipe(
           mergeMap(() => localStorageService.delete(key)),
-          mergeMap(() => localStorageService.get(key))
+          mergeMap(() => localStorageService.get(key, schema))
         ).subscribe((result) => {
 
           expect(result).toBeUndefined();
@@ -326,12 +371,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('size', (done) => {
 
+        const schema = { type: 'string' } as const;
+
         localStorageService.size.pipe(
           tap((length) => { expect(length).toBe(0); }),
-          mergeMap(() => localStorageService.set(key, 'test')),
+          mergeMap(() => localStorageService.set(key, 'test', schema)),
           mergeMap(() => localStorageService.size),
           tap((length) => { expect(length).toBe(1); }),
-          mergeMap(() => localStorageService.set('', 'test')),
+          mergeMap(() => localStorageService.set('', 'test', schema)),
           mergeMap(() => localStorageService.size),
           tap((length) => { expect(length).toBe(2); }),
           mergeMap(() => localStorageService.delete(key)),
@@ -351,9 +398,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         const key1 = 'index1';
         const key2 = 'index2';
         const keys = [key1, key2];
+        const schema = { type: 'string' } as const;
 
-        localStorageService.set(key1, 'test').pipe(
-          mergeMap(() => localStorageService.set(key2, 'test')),
+        localStorageService.set(key1, 'test', schema).pipe(
+          mergeMap(() => localStorageService.set(key2, 'test', schema)),
           mergeMap(() => localStorageService.keys()),
         ).subscribe({
           next: (value) => {
@@ -386,7 +434,9 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('has() on existing', (done) => {
 
-        localStorageService.set(key, 'test').pipe(
+        const schema = { type: 'string' } as const;
+
+        localStorageService.set(key, 'test', schema).pipe(
           mergeMap(() => localStorageService.has(key))
         ).subscribe((result) => {
 
@@ -412,10 +462,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('advanced case: remove only some items', (done) => {
 
-        localStorageService.set('user_firstname', 'test').pipe(
-          mergeMap(() => localStorageService.set('user_lastname', 'test')),
-          mergeMap(() => localStorageService.set('app_data1', 'test')),
-          mergeMap(() => localStorageService.set('app_data2', 'test')),
+        const schema = { type: 'string' } as const;
+
+        localStorageService.set('user_firstname', 'test', schema).pipe(
+          mergeMap(() => localStorageService.set('user_lastname', 'test', schema)),
+          mergeMap(() => localStorageService.set('app_data1', 'test', schema)),
+          mergeMap(() => localStorageService.set('app_data2', 'test', schema)),
           mergeMap(() => localStorageService.keys()),
           filter((currentKey) => currentKey.startsWith('app_')),
           mergeMap((currentKey) => localStorageService.delete(currentKey)),
@@ -440,7 +492,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
     describe('JSON schema', () => {
 
-      const schema: JSONSchema = {
+      const schema = {
         type: 'object',
         properties: {
           expected: {
@@ -448,7 +500,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           }
         },
         required: ['expected']
-      };
+      } as const;
 
       it('valid', (done) => {
 
@@ -468,7 +520,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('invalid in get()', (done) => {
 
-        localStorageService.set(key, 'test').pipe(
+        localStorageService.set(key, 'test', schema).pipe(
           mergeMap(() => localStorageService.get(key, schema))
         ).subscribe({ error: (error) => {
 
@@ -483,7 +535,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('invalid in set()', (done) => {
 
         localStorageService.set(key, 'test', schema).pipe(
-          mergeMap(() => localStorageService.get(key, { type: 'string' }))
+          mergeMap(() => localStorageService.get(key, { type: 'string' } as const))
         ).subscribe({ error: (error) => {
 
           expect(error.message).toBe(VALIDATION_ERROR);
@@ -496,7 +548,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('null: no validation', (done) => {
 
-        localStorageService.get<{ expected: string }>(`noassociateddata${Date.now()}`, schema).subscribe(() => {
+        localStorageService.get(`noassociateddata${Date.now()}`, schema).subscribe(() => {
 
           expect().nothing();
 
@@ -514,9 +566,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         const watchedKey = 'watched1';
         const values = [undefined, 'test1', undefined, 'test2', undefined];
+        const schema = { type: 'string' } as const;
         let i = 0;
 
-        localStorageService.watch(watchedKey, { type: 'string' }).subscribe((result: string | undefined) => {
+        localStorageService.watch(watchedKey, schema).subscribe((result: string | undefined) => {
 
           expect(result).toBe(values[i]);
 
@@ -524,9 +577,9 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           if (i === 1) {
 
-            localStorageService.set(watchedKey, values[1]).pipe(
+            localStorageService.set(watchedKey, values[1], schema).pipe(
               mergeMap(() => localStorageService.delete(watchedKey)),
-              mergeMap(() => localStorageService.set(watchedKey, values[3])),
+              mergeMap(() => localStorageService.set(watchedKey, values[3], schema)),
               mergeMap(() => localStorageService.clear()),
             ).subscribe();
 
@@ -544,44 +597,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         const watchedKey = 'watched2';
 
-        localStorageService.set(watchedKey, 'test').subscribe(() => {
+        localStorageService.set(watchedKey, 'test', { type: 'string' } as const).subscribe(() => {
 
-          localStorageService.watch(watchedKey, { type: 'number' }).subscribe({
+          localStorageService.watch(watchedKey, { type: 'number' } as const).subscribe({
             error: () => {
               expect().nothing();
               done();
             }
           });
-
-        });
-
-      });
-
-      it('without schema', (done) => {
-
-        const watchedKey = 'watched3';
-        const values = [undefined, 'test1', undefined, 'test2', undefined];
-        let i = 0;
-
-        localStorageService.watch(watchedKey).subscribe((result) => {
-
-          expect(result).toBe(values[i]);
-
-          i += 1;
-
-          if (i === 1) {
-
-            localStorageService.set(watchedKey, values[1]).pipe(
-              mergeMap(() => localStorageService.delete(watchedKey)),
-              mergeMap(() => localStorageService.set(watchedKey, values[3])),
-              mergeMap(() => localStorageService.clear()),
-            ).subscribe();
-
-          }
-
-          if (i === values.length) {
-            done();
-          }
 
         });
 
@@ -593,9 +616,11 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
     * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/5 */
     describe('complete', () => {
 
+      const schema = { type: 'string' } as const;
+
       it('set()', (done) => {
 
-        localStorageService.set('index', 'value').subscribe({
+        localStorageService.set('index', 'value', schema).subscribe({
           complete: () => {
 
             expect().nothing();
@@ -609,7 +634,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('get()', (done) => {
 
-        localStorageService.get(key).subscribe({
+        localStorageService.get(key, schema).subscribe({
           complete: () => {
 
             expect().nothing();
@@ -695,12 +720,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
     describe('compatibility', () => {
 
+      const schema = { type: 'string' } as const;
+
       it('Promise', (done) => {
 
         const value = 'test';
 
-        localStorageService.set(key, value).toPromise()
-          .then(() => localStorageService.get(key).toPromise())
+        localStorageService.set(key, value, schema).toPromise()
+          .then(() => localStorageService.get(key, schema).toPromise())
           .then((result) => {
             expect(result).toBe(value);
             done();
@@ -712,9 +739,9 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         const value = 'test';
 
-        await localStorageService.set(key, value).toPromise();
+        await localStorageService.set(key, value, schema).toPromise();
 
-        const result = await localStorageService.get(key).toPromise();
+        const result = await localStorageService.get(key, schema).toPromise();
 
         expect(result).toBe(value);
 
@@ -728,21 +755,21 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
 describe('StorageMap', () => {
 
-  tests('memory', () => new StorageMap(new MemoryDatabase()));
+  tests('memory', () => new SafeStorageMap(new MemoryDatabase()));
 
-  tests('localStorage', () => new StorageMap(new LocalStorageDatabase()));
+  tests('localStorage', () => new SafeStorageMap(new LocalStorageDatabase()));
 
-  tests('localStorage with prefix', () => new StorageMap(new LocalStorageDatabase(`ls`)));
+  tests('localStorage with prefix', () => new SafeStorageMap(new LocalStorageDatabase(`ls`)));
 
-  tests('indexedDB', () => new StorageMap(new IndexedDBDatabase()));
+  tests('indexedDB', () => new SafeStorageMap(new IndexedDBDatabase()));
 
-  tests('indexedDB with no wrap', () => new StorageMap(new IndexedDBDatabase()));
+  tests('indexedDB with no wrap', () => new SafeStorageMap(new IndexedDBDatabase()));
 
-  tests('indexedDB with custom options', () => new StorageMap(new IndexedDBDatabase('customDbTest', 'storeTest', 2)));
+  tests('indexedDB with custom options', () => new SafeStorageMap(new IndexedDBDatabase('customDbTest', 'storeTest', 2)));
 
   tests(
     'indexedDB with custom database and store names',
-    () => new StorageMap(new IndexedDBDatabase(`dbCustom${Date.now()}`, `storeCustom${Date.now()}`))
+    () => new SafeStorageMap(new IndexedDBDatabase(`dbCustom${Date.now()}`, `storeCustom${Date.now()}`))
   );
 
   describe('specials', () => {
@@ -752,10 +779,11 @@ describe('StorageMap', () => {
 
       const index = `test${Date.now()}`;
       const value = 'test';
+      const schema = { type: 'string' } as const;
 
-      const localStorageService = new StorageMap(new IndexedDBDatabase());
+      const localStorageService = new SafeStorageMap(new IndexedDBDatabase());
 
-      localStorageService.set(index, value).subscribe(() => {
+      localStorageService.set(index, value, schema).subscribe(() => {
 
         try {
 
@@ -811,10 +839,11 @@ describe('StorageMap', () => {
 
       const index = `wrap${Date.now()}`;
       const value = 'test';
+      const schema = { type: 'string' } as const;
 
-      const localStorageService = new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, false));
+      const localStorageService = new SafeStorageMap(new IndexedDBDatabase(undefined, undefined, undefined, false));
 
-      localStorageService.set(index, value).subscribe(() => {
+      localStorageService.set(index, value, schema).subscribe(() => {
 
         try {
 
@@ -867,10 +896,11 @@ describe('StorageMap', () => {
 
     it('indexedDB default options (will be pending in Firefox private mode)', (done) => {
 
-      const localStorageService = new StorageMap(new IndexedDBDatabase());
+      const localStorageService = new SafeStorageMap(new IndexedDBDatabase());
+      const schema = { type: 'string' } as const;
 
       /* Do a request first as a first transaction is needed to set the store name */
-      localStorageService.get('test').subscribe(() => {
+      localStorageService.get('test', schema).subscribe(() => {
 
         if (localStorageService.backingEngine === 'indexedDB') {
 
@@ -898,12 +928,13 @@ describe('StorageMap', () => {
       /* Unique names to be sure `indexedDB` `upgradeneeded` event is triggered */
       const dbName = `dbCustom${Date.now()}`;
       const storeName = `storeCustom${Date.now()}`;
+      const schema = { type: 'string' } as const;
       const dbVersion = 2;
 
-      const localStorageService = new StorageMap(new IndexedDBDatabase(dbName, storeName, dbVersion));
+      const localStorageService = new SafeStorageMap(new IndexedDBDatabase(dbName, storeName, dbVersion));
 
       /* Do a request first as a first transaction is needed to set the store name */
-      localStorageService.get('test').subscribe(() => {
+      localStorageService.get('test', schema).subscribe(() => {
 
         if (localStorageService.backingEngine === 'indexedDB') {
 
@@ -930,7 +961,7 @@ describe('StorageMap', () => {
 
       const prefix = `ls_`;
 
-      const localStorageService = new StorageMap(new LocalStorageDatabase(prefix));
+      const localStorageService = new SafeStorageMap(new LocalStorageDatabase(prefix));
 
       // tslint:disable-next-line: no-string-literal
       expect(localStorageService.fallbackBackingStore.prefix).toBe(prefix);

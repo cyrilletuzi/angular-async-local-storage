@@ -44,19 +44,19 @@ export class LocalStorageDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
    */
-  get<T = unknown>(key: string): Observable<T | undefined> {
+  get(key: string): Observable<unknown | undefined> {
 
     /* Get raw data */
     const unparsedData = localStorage.getItem(this.prefixKey(key));
 
-    let parsedData: T | undefined;
+    let parsedData: unknown;
 
     /* No need to parse if data is `null` or `undefined` */
     if ((unparsedData !== undefined) && (unparsedData !== null)) {
 
       /* Try to parse */
       try {
-        parsedData = JSON.parse(unparsedData) as T;
+        parsedData = JSON.parse(unparsedData);
       } catch (error) {
         return throwError(error as SyntaxError);
       }

@@ -82,9 +82,14 @@ export class LocalStorage {
       /* Backward compatibility with version <= 7 */
       schema = ('schema' in schema) ? schema.schema : schema;
 
+      return this.storageMap.get<T>(key, schema).pipe(
+        /* Transform `undefined` into `null` to align with `localStorage` API */
+        map((value) => (value !== undefined) ? value : null),
+      );
+
     }
 
-    return (schema ? this.storageMap.get<T>(key, schema) : this.storageMap.get(key)).pipe(
+    return this.storageMap.get(key).pipe(
       /* Transform `undefined` into `null` to align with `localStorage` API */
       map((value) => (value !== undefined) ? value : null),
     );
