@@ -1050,6 +1050,91 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
         });
 
+        /* Inference from JSON schema is quite heavy, so this is a stress test for the compiler */
+        it('heavy schema', (done) => {
+
+          interface City {
+            country: string;
+            population: number;
+            coordinates: [number, number];
+            monuments?: {
+              name: string;
+              constructionYear?: number;
+            }[];
+          }
+
+          const value: [string, City][] = [
+            ['Paris', {
+              country: 'France',
+              population: 2187526,
+              coordinates: [48.866667, 2.333333],
+              monuments: [{
+                name: `Tour Eiffel`,
+                constructionYear: 1889,
+              }, {
+                name: `Notre-Dame de Paris`,
+                constructionYear: 1345,
+              }],
+            }],
+            ['Kyōto', {
+              country: 'Japan',
+              population: 1467702,
+              coordinates: [35.011665, 135.768326],
+              monuments: [{
+                name: `Sanjūsangen-dō`,
+                constructionYear: 1164,
+              }],
+            }],
+          ];
+
+          const schema = {
+            type: 'array',
+            items: {
+              type: 'array',
+              items: [{
+                type: 'string'
+              }, {
+                type: 'object',
+                properties: {
+                  country: { type: 'string' },
+                  population: { type: 'integer' },
+                  coordinates: {
+                    type: 'array',
+                    items: [
+                      { type: 'number'},
+                      { type: 'number'},
+                    ],
+                  },
+                  monuments: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        name: { type: 'string' },
+                        constructionYear: { type: 'integer' },
+                      },
+                      required: ['name'],
+                    },
+                  },
+                },
+                required: ['country', 'population', 'coordinates'],
+              }]
+            },
+          } as const;
+
+
+          storage.set(key, value, schema).pipe(
+            mergeMap(() => storage.get(key, schema)),
+          ).subscribe((result: [string, City][] | undefined) => {
+
+            expect(result).toEqual(value);
+
+            done();
+
+          });
+
+        });
+
       });
 
     });
