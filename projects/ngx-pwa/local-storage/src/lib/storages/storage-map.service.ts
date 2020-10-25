@@ -400,7 +400,7 @@ export class StorageMap {
 
     /* Check if there is already a notifier and cast according to schema */
     if (!this.notifiers.has(key)) {
-      this.notifiers.set(key, new ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>(1))
+      this.notifiers.set(key, new ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>(1));
     }
 
     const notifier = this.notifiers.get(key) as ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>;

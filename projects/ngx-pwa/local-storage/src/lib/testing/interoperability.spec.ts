@@ -133,6 +133,7 @@ function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
         request.addEventListener('success', () => {
 
+          // tslint:disable-next-line: deprecation
           const request2 = localStorageService.get(index, schema);
 
           request2.subscribe((result) => {
