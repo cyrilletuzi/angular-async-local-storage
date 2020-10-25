@@ -156,6 +156,12 @@ export class SafeStorageMap {
    */
   get<Schema extends JSONSchema>(key: string, schema: Schema) { // tslint:disable-line:typedef
 
+    return this.getAndValidate(key, schema) as Observable<InferFromJSONSchema<Schema> | undefined>;
+
+  }
+
+  protected getAndValidate(key: string, schema?: JSONSchema): Observable<unknown | undefined> {
+
     /* Get the data in storage */
     return this.database.get(key).pipe(
       /* Check if `indexedDb` is broken */
@@ -169,13 +175,17 @@ export class SafeStorageMap {
 
         }
 
-        /* Validate data against a JSON schema if provided */
-        if (!this.jsonValidator.validate(data, schema)) {
-          return throwError(new ValidationError());
+        /* Validate */
+        if (schema) {
+
+          /* Validate data against a JSON schema if provided */
+          if (!this.jsonValidator.validate(data, schema)) {
+            return throwError(new ValidationError());
+          }
+
         }
 
-        /* Data have been checked, so it's OK to cast */
-        return of(data as InferFromJSONSchema<Schema>);
+        return of(data);
 
       }),
     );
@@ -195,10 +205,22 @@ export class SafeStorageMap {
    */
   set<Schema extends JSONSchema>(key: string, data: InferFromJSONSchema<Schema> | undefined | null, _: Schema): Observable<undefined> {
 
+    /* Schema is not required here as the compliance of the data is already checked at compilation */
+    return this.setAndValidate(key, data);
+
+  }
+
+  protected setAndValidate(key: string, data: unknown, schema?: JSONSchema): Observable<undefined> {
+
     /* Storing `undefined` or `null` is useless and can cause issues in `indexedDb` in some browsers,
      * so removing item instead for all storages to have a consistent API */
     if ((data === undefined) || (data === null)) {
       return this.delete(key);
+    }
+
+    /* Validate data against a JSON schema if provided */
+    if (schema && !this.jsonValidator.validate(data, schema)) {
+      return throwError(new ValidationError());
     }
 
     return this.database.set(key, data).pipe(
@@ -207,6 +229,7 @@ export class SafeStorageMap {
       /* Notify watchers (must be last because it should only happen if the operation succeeds) */
       tap(() => { this.notify(key, data); }),
     );
+
   }
 
   /**
@@ -299,6 +322,12 @@ export class SafeStorageMap {
    */
   watch<Schema extends JSONSchema>(key: string, schema: Schema) { // tslint:disable-line:typedef
 
+    return this.watchAndInit(key, schema)  as Observable<InferFromJSONSchema<Schema> | undefined>;
+
+  }
+
+  protected watchAndInit(key: string, schema?: JSONSchema): Observable<unknown | undefined> {
+
     /* Check if there is already a notifier */
     if (!this.notifiers.has(key)) {
       this.notifiers.set(key, new ReplaySubject(1));
@@ -309,13 +338,13 @@ export class SafeStorageMap {
     const notifier = this.notifiers.get(key)!;
 
     /* Get the current item value */
-    this.get(key, schema).subscribe({
+    this.getAndValidate(key, schema).subscribe({
       next: (result) => notifier.next(result),
       error: (error) => notifier.error(error),
     });
 
     /* Only the public API of the `Observable` should be returned */
-    return notifier.asObservable() as Observable<InferFromJSONSchema<Schema> | undefined>;
+    return notifier.asObservable();
 
   }
 

@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError, of, ReplaySubject } from 'rxjs';
-import { mergeMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import {
   JSONSchema, JSONSchemaBoolean, JSONSchemaInteger,
   JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf
 } from '../validation/json-schema';
-import { ValidationError } from './exceptions';
 import { SafeStorageMap } from './safe-storage-map.service';
 
 @Injectable({
@@ -88,33 +86,11 @@ export class StorageMap extends SafeStorageMap {
   get<T>(key: string, schema?: JSONSchema): Observable<unknown>;
   get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
-    /* Get the data in storage */
-    return this.database.get(key).pipe(
-      /* Check if `indexedDb` is broken */
-      this.catchIDBBroken(() => this.database.get(key)),
-      mergeMap((data) => {
-
-        /* No need to validate if the data is empty */
-        if ((data === undefined) || (data === null)) {
-
-          return of(undefined);
-
-        } else if (schema) {
-
-          /* Validate data against a JSON schema if provided */
-          if (!this.jsonValidator.validate(data, schema)) {
-            return throwError(new ValidationError());
-          }
-
-          /* Data have been checked, so it's OK to cast */
-          return of(data as T | undefined);
-
-        }
-
-        /* Cast to unknown as the data wasn't checked */
-        return of(data as unknown);
-
-      }),
+    return (schema ?
+      /* If schema was provided, data has been validated, so it is OK to cast */
+      this.getAndValidate(key, schema) as Observable<T | undefined> :
+      /* Otherwise we don't known what we got */
+      this.getAndValidate(key) as Observable<unknown>
     );
 
   }
@@ -132,23 +108,8 @@ export class StorageMap extends SafeStorageMap {
    */
   set(key: string, data: unknown, schema?: JSONSchema): Observable<undefined> {
 
-    /* Storing `undefined` or `null` is useless and can cause issues in `indexedDb` in some browsers,
-     * so removing item instead for all storages to have a consistent API */
-    if ((data === undefined) || (data === null)) {
-      return this.delete(key);
-    }
+    return this.setAndValidate(key, data, schema);
 
-    /* Validate data against a JSON schema if provided */
-    if (schema && !this.jsonValidator.validate(data, schema)) {
-      return throwError(new ValidationError());
-    }
-
-    return this.database.set(key, data).pipe(
-      /* Catch if `indexedDb` is broken */
-      this.catchIDBBroken(() => this.database.set(key, data)),
-      /* Notify watchers (must be last because it should only happen if the operation succeeds) */
-      tap(() => { this.notify(key, data); }),
-    );
   }
 
   /**
@@ -205,21 +166,12 @@ export class StorageMap extends SafeStorageMap {
   watch<T>(key: string, schema?: JSONSchema): Observable<unknown>;
   watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
-    /* Check if there is already a notifier and cast according to schema */
-    if (!this.notifiers.has(key)) {
-      this.notifiers.set(key, new ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>(1));
-    }
-
-    const notifier = this.notifiers.get(key) as ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>;
-
-    /* Get the current item value */
-    (schema ? this.get<T>(key, schema) : this.get(key)).subscribe({
-      next: (result) => notifier.next(result),
-      error: (error) => notifier.error(error),
-    });
-
-    /* Only the public API of the `Observable` should be returned */
-    return notifier.asObservable();
+    return (schema ?
+      /* If schema was provided, data has been validated, so it is OK to cast */
+      this.watchAndInit(key, schema) as Observable<T | undefined> :
+      /* Otherwise we don't known what we got */
+      this.watchAndInit(key) as Observable<unknown>
+    );
 
   }
 
