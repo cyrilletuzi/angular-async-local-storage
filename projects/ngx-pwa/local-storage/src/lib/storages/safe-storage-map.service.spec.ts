@@ -522,15 +522,13 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
       it('invalid in set()', (done) => {
 
         // @ts-expect-error
-        localStorageService.set(key, 'test', schema).pipe(
-          mergeMap(() => localStorageService.get(key, { type: 'string' } as const))
-        ).subscribe({ error: (error) => {
+        localStorageService.set(key, 'test', schema).subscribe(() => {
 
-          expect(error.message).toBe(VALIDATION_ERROR);
+          expect().nothing();
 
           done();
 
-        } });
+        });
 
       });
 
