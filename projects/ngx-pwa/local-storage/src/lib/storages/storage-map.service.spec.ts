@@ -1433,11 +1433,10 @@ describe('StorageMap', () => {
 
       const index = `test${Date.now()}`;
       const value = 'test';
-      const schema: JSONSchema = { type: 'string' };
 
       const localStorageService = new StorageMap(new IndexedDBDatabase());
 
-      localStorageService.set(index, value, schema).subscribe(() => {
+      localStorageService.set(index, value).subscribe(() => {
 
         try {
 
@@ -1491,10 +1490,9 @@ describe('StorageMap', () => {
     it('indexedDb with default options (will be pending in Firefox private mode)', (done) => {
 
       const localStorageService = new StorageMap(new IndexedDBDatabase());
-      const schema: JSONSchema = { type: 'string' };
 
       /* Do a request first as a first transaction is needed to set the store name */
-      localStorageService.get('test', schema).subscribe(() => {
+      localStorageService.get('test').subscribe(() => {
 
         if (localStorageService.backingEngine === 'indexedDB') {
 
@@ -1522,11 +1520,10 @@ describe('StorageMap', () => {
 
       const index = `wrap${Date.now()}`;
       const value = 'test';
-      const schema: JSONSchema = { type: 'string' };
 
       const localStorageService = new StorageMap(new IndexedDBDatabase(undefined, undefined, undefined, false));
 
-      localStorageService.set(index, value, schema).subscribe(() => {
+      localStorageService.set(index, value).subscribe(() => {
 
         try {
 
@@ -1582,14 +1579,13 @@ describe('StorageMap', () => {
       /* Unique names to be sure `indexedDB` `upgradeneeded` event is triggered */
       const dbName = `dbCustom${Date.now()}`;
       const storeName = `storeCustom${Date.now()}`;
-      const schema: JSONSchema = { type: 'string' };
       const dbVersion = 2;
       const noWrap = false;
 
       const localStorageService = new StorageMap(new IndexedDBDatabase(dbName, storeName, dbVersion, noWrap));
 
       /* Do a request first as a first transaction is needed to set the store name */
-      localStorageService.get('test', schema).subscribe(() => {
+      localStorageService.get('test').subscribe(() => {
 
         if (localStorageService.backingEngine === 'indexedDB') {
 
