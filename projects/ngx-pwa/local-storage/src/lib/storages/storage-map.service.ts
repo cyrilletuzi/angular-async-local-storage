@@ -208,9 +208,9 @@ export class StorageMap {
   get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
     /* Get the data in storage */
-    return this.database.get<T>(key).pipe(
+    return this.database.get(key).pipe(
       /* Check if `indexedDb` is broken */
-      this.catchIDBBroken(() => this.database.get<T>(key)),
+      this.catchIDBBroken(() => this.database.get(key)),
       mergeMap((data) => {
 
         /* No need to validate if the data is empty */
