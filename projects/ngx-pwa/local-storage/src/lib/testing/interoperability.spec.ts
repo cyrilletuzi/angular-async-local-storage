@@ -133,7 +133,7 @@ function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
         request.addEventListener('success', () => {
 
-          const request2 = localStorageService.get(index, schema);
+          const request2 = schema ? localStorageService.get(index, schema) : localStorageService.get(index);
 
           request2.subscribe((result) => {
 
