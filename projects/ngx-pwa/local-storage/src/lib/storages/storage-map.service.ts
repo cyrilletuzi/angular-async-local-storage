@@ -1,179 +1,563 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
-import {
-  JSONSchema, JSONSchemaBoolean, JSONSchemaInteger,
-  JSONSchemaNumber, JSONSchemaString, JSONSchemaArrayOf
-} from '../validation/json-schema';
-import { SafeStorageMap } from './safe-storage-map.service';
+import { MemoryDatabase } from '../databases/memory-database';
+import { JSONSchema, JSONSchemaNumber } from '../validation/json-schema';
+import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
+import { StorageMap } from './storage-map.service';
+import { VALIDATION_ERROR } from './exceptions';
+import { LocalStorageDatabase } from '../databases/localstorage-database';
+import { IndexedDBDatabase } from '../databases/indexeddb-database';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class StorageMap extends SafeStorageMap {
+function tests(description: string, localStorageServiceFactory: () => StorageMap): void {
 
-  /**
-   * Get an item value in storage.
-   * The signature has many overloads due to validation, **please refer to the documentation.**
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   * @param key The item's key
-   * @param schema Optional JSON schema to validate the data. If you use a schema, check the new `SafeStorageMap` service.
-   * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
-   *
-   * @example
-   * this.storageMap.get('key', { type: 'string' }).subscribe((result) => {
-   *   result; // string or undefined
-   * });
-   *
-   * @example
-   * const schema: JSONSchema = {
-   *   type: 'object',
-   *   properties: {
-   *     firstName: { type: 'string' },
-   *     lastName: { type: 'string' },
-   *   },
-   *   required: ['firstName']
-   * };
-   *
-   * this.storageMap.get<User>('user', schema).subscribe((user) => {
-   *   if (user) {
-   *     user.firstName;
-   *   }
-   * });
-   */
-  get(key: string): Observable<unknown>;
-  get<T extends string = string>(key: string, schema: JSONSchemaString): Observable<T | undefined>;
-  get<T extends number = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<T | undefined>;
-  get<T extends boolean = boolean>(key: string, schema: JSONSchemaBoolean): Observable<T | undefined>;
-  get<T extends readonly string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<T | undefined>;
-  get<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>;
-  get<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
-  get<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here: as no JSON schema was provided for validation, the result will still be `unknown`.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  get<T>(key: string, schema?: JSONSchema): Observable<unknown>;
-  get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
+  const key = 'test';
+  let storage: StorageMap;
 
-    return (schema ?
-      /* If schema was provided, data has been validated, so it is OK to cast */
-      this.getAndValidate(key, schema) as Observable<T | undefined> :
-      /* Otherwise we don't known what we got */
-      this.getAndValidate(key) as Observable<unknown>
-    );
+  describe(description, () => {
 
-  }
+    beforeAll(() => {
+      /* Via a factory as the class should be instancied only now, not before, otherwise tests could overlap */
+      storage = localStorageServiceFactory();
+    });
 
-  /**
-   * Set an item in storage.
-   * Note that setting `null` or `undefined` will remove the item to avoid some browsers issues.
-   * @param key The item's key
-   * @param data The item's value
-   * @param schema Optional JSON schema to validate the data
-   * @returns A RxJS `Observable` to wait the end of the operation
-   *
-   * @example
-   * this.storageMap.set('key', 'value').subscribe(() => {});
-   */
-  set(key: string, data: unknown, schema?: JSONSchema): Observable<undefined> {
+    beforeEach((done) => {
+      /* Clear data to avoid tests overlap */
+      clearStorage(done, storage);
+    });
 
-    return this.setAndValidate(key, data, schema);
+    afterAll((done) => {
+      /* Now that `indexedDB` store name can be customized, it's important:
+        * - to delete the database after each tests group,
+        * so the next tests group to will trigger the `indexedDB` `upgradeneeded` event,
+        * as it's where the store is created
+        * - to be able to delete the database, all connections to it must be closed */
+      closeAndDeleteDatabase(done, storage);
+    });
 
-  }
+    describe('overloads', () => {
 
-  /**
-   * Watch an item value in storage.
-   * **Note only changes done via this lib will be watched**, external changes in storage can't be detected.
-   * The signature has many overloads due to validation, **please refer to the documentation.**
-   * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
-   * @param key The item's key to watch
-   * @param schema Optional but recommended JSON schema to validate the initial value
-   * @returns An infinite `Observable` giving the current value
-   */
-  watch(key: string): Observable<unknown>;
-  watch<T extends string = string>(key: string, schema: JSONSchemaString): Observable<T | undefined>;
-  watch<T extends number = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<T | undefined>;
-  watch<T extends boolean = boolean>(key: string, schema: JSONSchemaBoolean): Observable<T | undefined>;
-  watch<T extends readonly string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<T | undefined>;
-  watch<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>;
-  watch<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  watch<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  watch<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  watch<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  watch<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  watch<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  watch<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
-  watch<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
-  watch(key: string): Observable<unknown>;
-  /**
-   * @deprecated The cast is useless here: as no JSON schema was provided for validation, the result will still be `unknown`.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
-   */
-  watch<T>(key: string, schema?: JSONSchema): Observable<unknown>;
-  watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
+      it('no schema / no cast', (done) => {
 
-    return (schema ?
-      /* If schema was provided, data has been validated, so it is OK to cast */
-      this.watchAndInit(key, schema) as Observable<T | undefined> :
-      /* Otherwise we don't known what we got */
-      this.watchAndInit(key) as Observable<unknown>
-    );
+        // @ts-expect-error
+        storage.get('test').subscribe((_: number | undefined) => {
 
-  }
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('no schema / cast', (done) => {
+
+        // @ts-expect-error
+        // tslint:disable-next-line: deprecation
+        storage.get<number>('test').subscribe((_: number | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('schema / cast', (done) => {
+
+        storage.get<string>('test', { type: 'string' }).subscribe((_: string | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('schema / wrong cast', (done) => {
+
+        // tslint:disable-next-line: deprecation
+        storage.get<number>('test', { type: 'string' }).subscribe((_: string | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('schema with options', (done) => {
+
+        storage.get('test', { type: 'number', maximum: 10 }).subscribe((_: number | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('prepared schema with generic interface', (done) => {
+
+        const schema: JSONSchema = { type: 'number' };
+
+        storage.get('test', schema).subscribe((_: number | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('prepared schema with specific interface', (done) => {
+
+        const schema: JSONSchemaNumber = { type: 'number' };
+
+        storage.get('test', schema).subscribe((_: number | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('string', (done) => {
+
+        storage.get('test', { type: 'string' }).subscribe((_: string | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('special string', (done) => {
+
+        type Theme = 'dark' | 'light';
+
+        storage.get<Theme>('test', { type: 'string', enum: ['dark', 'light'] }).subscribe((_: Theme | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('number', (done) => {
+
+        storage.get('test', { type: 'number' }).subscribe((_: number | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('special number', (done) => {
+
+        type SomeNumbers = 1.5 | 2.5;
+
+        storage.get<SomeNumbers>('test', { type: 'number', enum: [1.5, 2.5] }).subscribe((_: SomeNumbers | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('integer', (done) => {
+
+        storage.get('test', { type: 'integer' }).subscribe((_: number | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('special integer', (done) => {
+
+        type SpecialIntegers = 1 | 2;
+
+        storage.get<SpecialIntegers>('test', { type: 'integer', enum: [1, 2] }).subscribe((_: SpecialIntegers | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('boolean', (done) => {
+
+        storage.get('test', { type: 'boolean' }).subscribe((_: boolean | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('array of strings', (done) => {
+
+        storage.get('test', {
+          type: 'array',
+          items: { type: 'string' },
+        }).subscribe((_: string[] | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('special array of strings', (done) => {
+
+        type Themes = ('dark' | 'light')[];
+
+        storage.get<Themes>('test', {
+          type: 'array',
+          items: {
+            type: 'string',
+            enum: ['dark', 'light'],
+          },
+        }).subscribe((_: Themes | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('special readonly array of strings', (done) => {
+
+        type Themes = readonly ('dark' | 'light')[];
+
+        storage.get<Themes>('test', {
+          type: 'array',
+          items: {
+            type: 'string',
+            enum: ['dark', 'light'],
+          },
+        }).subscribe((_: Themes | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('array of numbers', (done) => {
+
+        storage.get('test', {
+          type: 'array',
+          items: { type: 'number' },
+        }).subscribe((_: number[] | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('special array of numbers', (done) => {
+
+        type NumbersArray = (1 | 2)[];
+
+        storage.get<NumbersArray>('test', {
+          type: 'array',
+          items: {
+            type: 'number',
+            enum: [1, 2],
+          },
+        }).subscribe((_: NumbersArray | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('special readonly array of numbers', (done) => {
+
+        type NumbersArray = readonly (1 | 2)[];
+
+        storage.get<NumbersArray>('test', {
+          type: 'array',
+          items: {
+            type: 'number',
+            enum: [1, 2],
+          },
+        }).subscribe((_: NumbersArray | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('array of integers', (done) => {
+
+        storage.get('test', {
+          type: 'array',
+          items: { type: 'integer' },
+        }).subscribe((_: number[] | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('array of booleans', (done) => {
+
+        storage.get('test', {
+          type: 'array',
+          items: { type: 'boolean' },
+        }).subscribe((_: boolean[] | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('tuple', (done) => {
+
+        storage.get<[string, number][]>('test', {
+          type: 'array',
+          items: {
+            type: 'array',
+            items: [
+              { type: 'string' },
+              { type: 'number' },
+            ],
+          },
+        }).subscribe((_: [string, number][] | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('array of objects', (done) => {
+
+        interface Test {
+          test: string;
+        }
+
+        storage.get<Test[]>('test', {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              test: { type: 'string' },
+            },
+            required: ['test'],
+          }
+        }).subscribe((_: Test[] | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('objects / cast / no schema', (done) => {
+
+        interface Test {
+          test: string;
+        }
+
+        // @ts-expect-error
+        // tslint:disable-next-line: deprecation
+        storage.get<Test>('test').subscribe((_: Test | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('objects / no cast / schema', (done) => {
+
+        storage.get('test', {
+          type: 'object',
+          properties: {
+            test: { type: 'string' }
+          }
+        // @ts-expect-error
+        }).subscribe((_: Test | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('objects / cast / schema', (done) => {
+
+        interface Test {
+          test: string;
+        }
+
+        storage.get<Test>('test', {
+          type: 'object',
+          properties: {
+            test: { type: 'string' }
+          }
+        }).subscribe((_: Test | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+      it('with const assertion', (done) => {
+
+        interface Test {
+          test: string;
+        }
+
+        storage.get<Test>('test', {
+          type: 'object',
+          properties: {
+            test: {
+              type: 'string',
+              enum: ['hello', 'world'],
+            },
+            list: {
+              type: 'array',
+              items: [{ type: 'string' }, { type: 'number' }],
+            },
+          },
+          required: ['test'],
+        } as const).subscribe((_: Test | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+    });
+
+    describe('validation', () => {
+
+      const schema: JSONSchema = {
+        type: 'object',
+        properties: {
+          expected: { type: 'string' },
+        },
+        required: ['expected'],
+      };
+
+      it('valid', (done) => {
+
+        const value = { expected: 'value' };
+
+        storage.set(key, value, schema).pipe(
+          mergeMap(() => storage.get(key, schema)),
+        ).subscribe((data) => {
+
+          expect(data).toEqual(value);
+
+          done();
+
+        });
+
+      });
+
+      it('invalid in get()', (done) => {
+
+        storage.set(key, 'test').pipe(
+          mergeMap(() => storage.get(key, schema))
+        ).subscribe({ error: (error) => {
+
+          expect(error.message).toBe(VALIDATION_ERROR);
+
+          done();
+
+        } });
+
+      });
+
+      it('invalid in set()', (done) => {
+
+        storage.set(key, 'test', schema).pipe(
+          mergeMap(() => storage.get(key, { type: 'string' }))
+        ).subscribe({ error: (error) => {
+
+          expect(error.message).toBe(VALIDATION_ERROR);
+
+          done();
+
+        } });
+
+      });
+
+      it('invalid in watch()', (done) => {
+
+        const watchedKey = 'watched2';
+
+        storage.set(watchedKey, 'test').subscribe(() => {
+
+          storage.watch(watchedKey, schema).subscribe({
+            error: () => {
+              expect().nothing();
+              done();
+            }
+          });
+
+        });
+
+      });
+
+      it('null: no validation', (done) => {
+
+        storage.get<{ expected: string }>(`noassociateddata${Date.now()}`, schema).subscribe(() => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
+    });
+
+  });
 
 }
+
+describe('StorageMap', () => {
+
+  tests('memory', () => new StorageMap(new MemoryDatabase()));
+
+  tests('localStorage', () => new StorageMap(new LocalStorageDatabase()));
+
+  tests('indexedDB', () => new StorageMap(new IndexedDBDatabase()));
+
+});
