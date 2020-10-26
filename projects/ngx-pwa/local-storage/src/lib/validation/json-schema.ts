@@ -230,7 +230,7 @@ export interface JSONSchemaArrayOf<T extends JSONSchemaBoolean | JSONSchemaNumbe
 /**
  * JSON schema to describe an object.
  */
-export interface JSONSchemaObject<Properties extends { [key: string]: JSONSchema; } = { [key: string]: JSONSchema; }> {
+export interface JSONSchemaObject {
 
   /**
    * Type for an object.
@@ -240,14 +240,13 @@ export interface JSONSchemaObject<Properties extends { [key: string]: JSONSchema
   /**
    * List of properties of the object and their associated JSON schemas.
    */
-  properties: Properties;
+  properties: { [key: string]: JSONSchema; };
 
-  // TODO: add to changelog
   /**
    * Array of names of the required properties for an object.
    * Properties set as required should be present in `properties` too.
    */
-  required?: readonly (keyof Properties)[];
+  required?: readonly string[];
 
 }
 
