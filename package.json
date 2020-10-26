@@ -41,8 +41,8 @@
     "tslib": "2.0.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.1100.0-next.7",
-    "@angular/cli": "11.0.0-next.7",
+    "@angular-devkit/build-angular": "0.1100.0-rc.0",
+    "@angular/cli": "11.0.0-rc.0",
     "@angular/compiler-cli": "11.0.0-rc.0",
     "@types/jasmine": "3.5.14",
     "@types/node": "14.11.9",
@@ -61,7 +61,7 @@
     "karma-safari-private-launcher": "1.0.0",
     "karma-safarinative-launcher": "1.1.0",
     "localforage": "1.9.0",
-    "ng-packagr": "11.0.0-next.1",
+    "ng-packagr": "11.0.0-next.2",
     "protractor": "7.0.0",
     "ts-node": "9.0.0",
     "tslint": "6.1.3",
