@@ -403,27 +403,26 @@ export class StorageMap {
   watch<T>(key: string, schema?: JSONSchema): Observable<unknown>;
   watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
-    /* Check if there is already a notifier and cast according to schema */
-    let notifier = this.notifiers.get(key) as ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>;
-
-    if (!notifier) {
-
-      /* Create a notifier and cast according to schema */
-      notifier = new ReplaySubject<typeof schema extends JSONSchema ? (T | undefined) : unknown>(1);
-
-      /* Memorize the notifier */
-      this.notifiers.set(key, notifier);
-
-      /* Get the current item value */
-      (schema ? this.get<T>(key, schema) : this.get(key)).subscribe({
-        next: (result) => notifier.next(result),
-        error: (error) => notifier.error(error),
-      });
-
+    /* Check if there is already a notifier */
+    if (!this.notifiers.has(key)) {
+      this.notifiers.set(key, new ReplaySubject(1));
     }
 
+    /* Non-null assertion is required because TypeScript doesn't narrow `.has()` yet */
+    // tslint:disable-next-line: no-non-null-assertion
+    const notifier = this.notifiers.get(key)!;
+
+    /* Get the current item value */
+    (schema ? this.get(key, schema) : this.get(key)).subscribe({
+      next: (result) => notifier.next(result),
+      error: (error) => notifier.error(error),
+    });
+
     /* Only the public API of the `Observable` should be returned */
-    return notifier.asObservable();
+    return (schema ?
+      notifier.asObservable() as Observable<T | undefined> :
+      notifier.asObservable() as Observable<unknown>
+    );
 
   }
 
