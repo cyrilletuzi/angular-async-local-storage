@@ -240,7 +240,9 @@ export interface JSONSchemaObject {
   /**
    * List of properties of the object and their associated JSON schemas.
    */
-  properties: { [key: string]: JSONSchema; };
+  properties: {
+    [k: string]: JSONSchema;
+  };
 
   /**
    * Array of names of the required properties for an object.
