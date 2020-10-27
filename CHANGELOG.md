@@ -17,7 +17,7 @@ TypeScript typings for `.get()` and `.watch()` has been modified to better match
 For now, wrong usages are just marked as deprecated, so there is **no breaking change**
 and it will just be reported by linters. But they may be removed in future releases.
 
-Be sure to read the [validation guide](./docs/VALIDATION.md) for all the why and how of validation.
+Be sure to read the [validation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md) for all the why and how of validation.
 
 1. **Cast without a JSON schema**
 
