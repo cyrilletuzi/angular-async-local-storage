@@ -199,7 +199,12 @@ export class StorageMap {
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
-  get<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
+  /**
+   * @deprecated A cast is required here, otherwise the return will be `unknown` despite a JSON schema was provided.
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   */
+  get(key: string, schema: JSONSchema): Observable<unknown | undefined>;
+  get<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here: as no JSON schema was provided for validation, the result will still be `unknown`.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
@@ -395,7 +400,12 @@ export class StorageMap {
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
    */
   watch<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
-  watch<T = unknown>(key: string, schema: JSONSchema): Observable<T | undefined>;
+  /**
+   * @deprecated A cast is required here, otherwise the return will be `unknown` despite a JSON schema was provided.
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   */
+  watch(key: string, schema: JSONSchema): Observable<unknown | undefined>;
+  watch<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here: as no JSON schema was provided for validation, the result will still be `unknown`.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
@@ -413,7 +423,7 @@ export class StorageMap {
     const notifier = this.notifiers.get(key)!;
 
     /* Get the current item value */
-    (schema ? this.get(key, schema) : this.get(key)).subscribe({
+    (schema ? this.get<T>(key, schema) : this.get(key)).subscribe({
       next: (result) => notifier.next(result),
       error: (error) => notifier.error(error),
     });

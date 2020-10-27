@@ -769,6 +769,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         it('objects / no cast / schema', (done) => {
 
+          // tslint:disable-next-line: deprecation
           storage.get('test', {
             type: 'object',
             properties: {
@@ -1190,6 +1191,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
     describe('validation', () => {
 
+      interface Test {
+        expected: string;
+      }
+
       const schema: JSONSchema = {
         type: 'object',
         properties: {
@@ -1239,7 +1244,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('invalid in get()', (done) => {
 
         storage.set(key, 'test', { type: 'string' }).pipe(
-          mergeMap(() => storage.get(key, schema))
+          mergeMap(() => storage.get<Test>(key, schema))
         ).subscribe({ error: (error) => {
 
           expect(error.message).toBe(VALIDATION_ERROR);
@@ -1282,7 +1287,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('null: no validation', (done) => {
 
-        storage.get(`noassociateddata${Date.now()}`, schema).subscribe(() => {
+        storage.get<string>(`noassociateddata${Date.now()}`, schema).subscribe(() => {
 
           expect().nothing();
 

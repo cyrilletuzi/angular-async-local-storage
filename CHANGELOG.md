@@ -2,7 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 11.0.0-1 (2020-10-22)
+## 11.0.0-3 (2020-10-27)
 
 **This is a pre-release version. Do NOT use in production.**
 
@@ -17,7 +17,10 @@ TypeScript typings for `.get()` and `.watch()` has been modified to better match
 For now, wrong usages are just marked as deprecated, so there is **no breaking change**
 and it will just be reported by linters. But they may be removed in future releases.
 
-1. Cast without a JSON schema:
+Be sure to read the [validation guide](./docs/VALIDATION.md) for all the why and how of validation.
+
+1. **Cast without a JSON schema**
+
 ```ts
 this.storage.get<User>('user');
 ```
@@ -35,33 +38,75 @@ it basically says to TypeScript: "believe me, it will be a `User`".
 But **that's not true: you're not sure you'll get a `User`**.
 
 This is why this library provides a *runtime* validation system,
-via a JSON schema as the second parameter.
+via a JSON schema as the second parameter:
 
-Be sure to read the [validation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/WATCHING.md) for all the why and how of validation.
+```ts
+this.storage.get<User>('user', {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+  },
+  required: ['name'],
+});
+```
 
-2. Mismatch between cast and simple JSON schema:
+2. **Non-primitive JSON schema without a cast**
+
+```ts
+this.storage.get('user', {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+  },
+  required: ['name'],
+});
+```
+was allowed but the result was still `unknown`.
+
+This is because, for now, the library is able to infer the return type based on the JSON schema
+for primitives (`string`, `number`, `integer`, `boolean` and `array` of these),
+but not for more complex structures like objects.
+
+So in this case, both the JSON schema and the cast are required:
+
+```ts
+this.storage.get<User>('user', {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+  },
+  required: ['name'],
+});
+```
+
+Auto-inferring the type from all JSON schemas is in progress in
+[#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]),
+but is currently facing some TypeScript limitations.
+Once it's ready, I'll need your help to heavily test this feature.
+
+3. **Mismatch between cast and primitive JSON schema**
+
 ```ts
 this.storage.get<number>('name', { type: 'string' });
 ```
-was allowed but is of course an error. Now the match between the cast and simple JSON schemas (string, number, boolean and array of these) is checked.
+was allowed but is of course an error. Now the match between the cast and simple JSON schemas (`string`, `number`, `integer`, `boolean` and `array` of these) is checked.
 
 Note that in this scenario, the cast is not needed at all, it will be automatically inferred by the lib, so just do:
+
 ```ts
 this.storage.get('name', { type: 'string' });
 ```
 
-3. JSON schema `as const`
+4. **JSON schema with `as const` assertion**
 
-Given how JSON schema works, it is better to set them `as const`:
+Given how JSON schema works, sometimes it's better to set them `as const`:
 
 ```ts
 this.storage.get('name', { type: 'string' } as const);
 ```
 
 But before v11, it was not possible when the JSON schema was using properties of array type
-(`enum`, `items`, `required`). This is now fixed, and is a first step toward
-auto-inferring the type from the JSON schema in all scenarios
-([#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463])).
+(`enum`, `items`, `required`). This is now fixed.
 
 ## 10.1.0 (2020-09-03)
 
