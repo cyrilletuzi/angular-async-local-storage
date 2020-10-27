@@ -51,7 +51,7 @@ to be homogeneous with other Angular modules.
 Install the package, according to your Angular version:
 
 ```bash
-# For Angular LTS (Angular >= 8):
+# For Angular LTS (Angular >= 9):
 ng add @ngx-pwa/local-storage
 ```
 
@@ -68,8 +68,7 @@ ng add @ngx-pwa/local-storage --project yourprojectname
 
 ### Upgrading
 
-If you still use the old `angular-async-local-storage` package, or to update to new versions,
-see the **[migration guides](./MIGRATION.md).**
+To update to new versions, see the **[migration guides](./MIGRATION.md).**
 
 ## API
 
@@ -158,8 +157,8 @@ this.storage.get('notexisting').subscribe((data) => {
 ```
 
 **Note you will only get *one* value**: the `Observable` is here for asynchrony but
-**is *not* meant to emit again when the stored data is changed**. If you need to watch the value,
-version 9 introduced a `watch()` method, see the [watching guide](./docs/WATCHING.md).
+**is *not* meant to emit again when the stored data is changed**.
+If you need to watch the value, see the [watching guide](./docs/WATCHING.md).
 
 ### Checking data
 

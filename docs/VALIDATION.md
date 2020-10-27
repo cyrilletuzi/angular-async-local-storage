@@ -142,12 +142,16 @@ So they each serve a different purpose:
 - casting allows you to retrieve the data with the good type instead of `any`
 - the schema allows the lib to validate the data at runtime
 
-For previous basic types, as they are static, we can infer automatically.
-But as objects properties are dynamic, it's very difficult to do the same for objects
-(but a trial is planned in [#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463])).
+For now, the library is able to infer the return type based on the JSON schema
+for primitives (`string`, `number`, `integer`, `boolean` and `array` of these),
+but not for more complex structures like objects.
 
 Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
 For the same reason, the lib can't check that.
+
+Auto-inferring the type from all JSON schemas is in progress in
+[#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]),
+but is currently facing some TypeScript limitations.
 
 ### Validation when writing
 

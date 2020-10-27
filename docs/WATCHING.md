@@ -1,7 +1,5 @@
 # Watching guide
 
-*Since version 9 of this lib*, you can now watch an item via the `StorageMap` service.
-
 Notes:
 
 - Client-side storage only makes sense for keeping data when the user *leaves* the application
