@@ -15,7 +15,7 @@ describe('public api', () => {
 
   });
 
-  it('getItem()', async () => {
+  it('get()', async () => {
 
     const data = await $('#get-item').getText();
 
@@ -31,7 +31,7 @@ describe('public api', () => {
 
   });
 
-  it('removeItem()', async () => {
+  it('delete()', async () => {
 
     const data = await $('#remove-item').getText();
 
@@ -47,7 +47,7 @@ describe('public api', () => {
 
   });
 
-  it('length', async () => {
+  it('size', async () => {
 
     const data = Number.parseInt(await $('#length').getText(), 10);
 
@@ -63,11 +63,19 @@ describe('public api', () => {
 
   });
 
-  it('has', async () => {
+  it('has()', async () => {
 
     const data = await $('#has').getAttribute('hidden');
 
     expect(data).toBe('true');
+
+  });
+
+  it('safe get()', async () => {
+
+    const data = await $('#safe-get').getText();
+
+    expect(data).toBe('hello safe world');
 
   });
 

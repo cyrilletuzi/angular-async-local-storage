@@ -1,5 +1,15 @@
 import { InjectionToken } from '@angular/core';
 
+import { DatabaseEntries } from './storages/safe-storage-map.service';
+
+/**
+ * Token to describe the database for `SafeStorageMap` service.
+ */
+export const DATABASE_ENTRIES = new InjectionToken<DatabaseEntries>('localStorageDatabaseEntries', {
+  providedIn: 'root',
+  factory: () => ({}),
+});
+
 /**
  * Token to provide a prefix to `localStorage` keys.
  */
@@ -67,6 +77,11 @@ export const IDB_NO_WRAP = new InjectionToken<boolean>('localStorageIDBWrap', {
 });
 
 export interface StorageConfig {
+
+  /**
+   * Allows to describe the database for `SafeStorageMap` service.
+   */
+  databaseEntries?: DatabaseEntries;
 
   /**
    * Allows to add a prefix before `localStorage` keys.

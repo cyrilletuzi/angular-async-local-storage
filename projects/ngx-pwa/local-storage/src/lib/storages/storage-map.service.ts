@@ -10,7 +10,7 @@ import { SafeStorageMap } from './safe-storage-map.service';
 @Injectable({
   providedIn: 'root'
 })
-export class StorageMap extends SafeStorageMap {
+export class StorageMap extends SafeStorageMap<{}> {
 
   /**
    * Get an item value in storage.
@@ -173,6 +173,28 @@ export class StorageMap extends SafeStorageMap {
       /* Otherwise we don't known what we got */
       this.watchAndInit(key) as Observable<unknown>
     );
+
+  }
+
+  /**
+   * Delete an item in storage
+   * @param key The item's key
+   * @returns A RxJS `Observable` to wait the end of the operation
+   *
+   * @example
+   * this.storageMap.delete('key').subscribe(() => {});
+   */
+  delete(key: string): Observable<undefined> {
+
+    return this.internalDelete(key);
+
+  }
+
+  has(key: string): Observable<boolean> {
+
+    return this.database.has(key)
+      /* Catch if `indexedDb` is broken */
+      .pipe(this.catchIDBBroken(() => this.database.has(key)));
 
   }
 

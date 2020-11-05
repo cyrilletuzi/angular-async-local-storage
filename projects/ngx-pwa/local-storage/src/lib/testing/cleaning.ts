@@ -8,16 +8,16 @@ import { SafeStorageMap } from '../storages/safe-storage-map.service';
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param storageService Service
  */
-export function clearStorage(done: DoneFn, storageService: StorageMap | SafeStorageMap): void {
+export function clearStorage(done: DoneFn, storageService: StorageMap | SafeStorageMap<any>): void { // tslint:disable-line: no-any
 
   if (storageService.backingEngine === 'indexedDB') {
 
     // tslint:disable-next-line: no-string-literal
-    const indexedDBService = (storageService as SafeStorageMap)['database'] as IndexedDBDatabase;
+    const indexedDBService = (storageService as SafeStorageMap<{}>)['database'] as IndexedDBDatabase;
 
     try {
 
-      const dbOpen = indexedDB.open(indexedDBService.backingStore.database);
+      const dbOpen = indexedDB.open(indexedDBService.backingStore.database, indexedDBService.backingStore.version);
 
       dbOpen.addEventListener('success', () => {
 
@@ -83,7 +83,7 @@ export function clearStorage(done: DoneFn, storageService: StorageMap | SafeStor
   } else if (storageService.backingEngine === 'memory') {
 
     // tslint:disable-next-line: no-string-literal
-    ((storageService as SafeStorageMap)['database'] as MemoryDatabase)['memoryStorage'].clear();
+    ((storageService as SafeStorageMap<{}>)['database'] as MemoryDatabase)['memoryStorage'].clear();
 
     done();
 
@@ -104,13 +104,13 @@ export function clearStorage(done: DoneFn, storageService: StorageMap | SafeStor
  * @param doneJasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param storageService Service
  */
-export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap | SafeStorageMap): void {
+export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap | SafeStorageMap<any>): void { // tslint:disable-line: no-any
 
   /* Only `indexedDB` is concerned */
   if (storageService.backingEngine === 'indexedDB') {
 
     // tslint:disable-next-line: no-string-literal
-    const indexedDBService = (storageService as SafeStorageMap)['database'] as IndexedDBDatabase;
+    const indexedDBService = (storageService as SafeStorageMap<{}>)['database'] as IndexedDBDatabase;
 
     // tslint:disable-next-line: no-string-literal
     indexedDBService['database'].subscribe({

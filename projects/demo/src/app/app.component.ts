@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, mergeMap, toArray } from 'rxjs/operators';
-import { LocalStorage, StorageMap, JSONSchema } from '@ngx-pwa/local-storage';
+import { StorageMap, JSONSchema } from '@ngx-pwa/local-storage';
 
 import { DataService } from './data.service';
+import { MyStorageService } from './my-storage.service';
 
 interface Data {
   title: string;
@@ -19,23 +20,30 @@ interface Data {
     <p id="length">{{length$ | async}}</p>
     <p id="keys">{{keys$ | async | json}}</p>
     <p id="has" [hidden]="has$ | async">Should not be seen</p>
+    <p id="safe-get">{{safeGet$ | async}}</p>
     <p id="service">{{service$ | async}}</p>
     <iframe src="http://localhost:8080"></iframe>
   `
 })
 export class AppComponent implements OnInit {
 
-  getItem$!: Observable<Data | null>;
-  schemaError$!: Observable<string | null>;
-  removeItem$!: Observable<string | null>;
-  clear: string | null = 'hello world';
+  getItem$!: Observable<Data | undefined>;
+  schemaError$!: Observable<string | undefined>;
+  removeItem$!: Observable<string | undefined>;
+  clear: string | undefined = 'hello world';
   size$!: Observable<number>;
   length$!: Observable<number>;
   keys$!: Observable<string[]>;
   has$!: Observable<boolean>;
   service$!: Observable<string | undefined>;
 
-  constructor(private localStorage: LocalStorage, private storageMap: StorageMap, private dataService: DataService) {}
+  safeGet$!: Observable<string | undefined>;
+
+  constructor(
+    private storage: StorageMap,
+    private safeStorage: MyStorageService,
+    private dataService: DataService,
+  ) {}
 
   ngOnInit(): void {
 
@@ -47,9 +55,9 @@ export class AppComponent implements OnInit {
       required: ['title'],
     };
 
-    this.localStorage.setItem('clear', 'test').pipe(
-      mergeMap(() => this.localStorage.clear()),
-      mergeMap(() => this.localStorage.getItem('clear', { type: 'string' })),
+    this.storage.set('clear', 'test').pipe(
+      mergeMap(() => this.storage.clear()),
+      mergeMap(() => this.storage.get('clear', { type: 'string' })),
     ).subscribe((result) => {
 
       /* Waiting for the `.clear()` to be done before other operations,
@@ -57,33 +65,37 @@ export class AppComponent implements OnInit {
 
       this.clear = result;
 
-      this.getItem$ = this.localStorage.setItem('getItemTest', { title: 'hello world' }).pipe(
-        mergeMap(() => this.localStorage.getItem<Data>('getItemTest', schema)),
+      this.getItem$ = this.storage.set('getItemTest', { title: 'hello world' }).pipe(
+        mergeMap(() => this.storage.get<Data>('getItemTest', schema)),
       );
 
-      this.schemaError$ = this.localStorage.setItem('schemaError', { wrong: 'test' }).pipe(
+      this.schemaError$ = this.storage.set('schemaError', { wrong: 'test' }).pipe(
         // tslint:disable-next-line: no-any
-        mergeMap(() => this.localStorage.getItem('schemaError', schema as any)),
+        mergeMap(() => this.storage.get('schemaError', schema as any)),
         catchError(() => of('schema error')),
       );
 
-      this.removeItem$ = this.localStorage.setItem('removeItem', 'test').pipe(
-        mergeMap(() => this.localStorage.removeItem('removeItem')),
-        mergeMap(() => this.localStorage.getItem('removeItem', { type: 'string' })),
+      this.removeItem$ = this.storage.set('removeItem', 'test').pipe(
+        mergeMap(() => this.storage.delete('removeItem')),
+        mergeMap(() => this.storage.get('removeItem', { type: 'string' })),
       );
 
-      this.length$ = this.localStorage.setItem('size1', 'test').pipe(
-        mergeMap(() => this.localStorage.setItem('size2', 'test')),
-        mergeMap(() => this.localStorage.length),
+      this.length$ = this.storage.set('size1', 'test').pipe(
+        mergeMap(() => this.storage.set('size2', 'test')),
+        mergeMap(() => this.storage.size),
       );
 
-      this.keys$ = this.storageMap.set('keys', 'test').pipe(
-        mergeMap(() => this.storageMap.keys()),
+      this.keys$ = this.storage.set('keys', 'test').pipe(
+        mergeMap(() => this.storage.keys()),
         toArray(),
       );
 
-      this.has$ = this.localStorage.setItem('has', 'test').pipe(
-        mergeMap(() => this.storageMap.has('has')),
+      this.has$ = this.storage.set('has', 'test').pipe(
+        mergeMap(() => this.storage.has('has')),
+      );
+
+      this.safeGet$ = this.safeStorage.set('testSafeString', 'hello safe world').pipe(
+        mergeMap(() => this.safeStorage.get('testSafeString')),
       );
 
       this.service$ = this.dataService.data$;

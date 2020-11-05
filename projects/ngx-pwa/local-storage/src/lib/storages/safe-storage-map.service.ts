@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Observable, throwError, of, OperatorFunction, ReplaySubject } from 'rxjs';
-import { mergeMap, catchError, tap } from 'rxjs/operators';
+import { mergeMap, catchError, tap, filter } from 'rxjs/operators';
 
 import { JSONSchema } from '../validation/json-schema';
 import { JSONValidator } from '../validation/json-validator';
@@ -10,13 +10,19 @@ import { LocalStorageDatabase } from '../databases/localstorage-database';
 import { MemoryDatabase } from '../databases/memory-database';
 import { LocalDatabase } from '../databases/local-database';
 import { IDB_BROKEN_ERROR } from '../databases/exceptions';
-import { LS_PREFIX } from '../tokens';
-import { ValidationError } from './exceptions';
+import { DATABASE_ENTRIES, LS_PREFIX } from '../tokens';
+import { DatabaseEntriesKeyError, DatabaseEntriesSchemaError, ValidationError } from './exceptions';
+
+export interface DatabaseEntries {
+  [key: string]: {
+    schema: JSONSchema;
+  };
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class SafeStorageMap {
+export class SafeStorageMap<DbSchema extends DatabaseEntries> {
 
   protected notifiers = new Map<string, ReplaySubject<unknown>>();
 
@@ -25,9 +31,11 @@ export class SafeStorageMap {
    * @param database Storage to use
    * @param jsonValidator Validator service
    * @param LSPrefix Prefix for `localStorage` keys to avoid collision for multiple apps on the same subdomain or for interoperability
+   * @param databaseEntries Description of the database
    */
   constructor(
     protected database: LocalDatabase,
+    @Inject(DATABASE_ENTRIES) protected databaseEntries: DatabaseEntries = {},
     protected jsonValidator: JSONValidator = new JSONValidator(),
     @Inject(LS_PREFIX) protected LSPrefix = '',
   ) {}
@@ -154,9 +162,13 @@ export class SafeStorageMap {
    *   }
    * });
    */
-  get<Schema extends JSONSchema>(key: string, schema: Schema) { // tslint:disable-line:typedef
+  get<Key extends string & keyof DbSchema>(key: Key) { // tslint:disable-line:typedef
 
-    return this.getAndValidate(key, schema) as Observable<InferFromJSONSchema<Schema> | undefined>;
+    if (!(key in this.databaseEntries)) {
+      return throwError(new DatabaseEntriesKeyError());
+    }
+
+    return this.getAndValidate(key, this.getSchema(key)) as Observable<InferFromJSONSchema<DbSchema[Key]['schema']> | undefined>;
 
   }
 
@@ -203,10 +215,17 @@ export class SafeStorageMap {
    * @example
    * this.storageMap.set('key', 'value', { type: 'string' }).subscribe(() => {});
    */
-  set<Schema extends JSONSchema>(key: string, data: Readonly<InferFromJSONSchema<Schema>> | undefined | null, _: Schema): Observable<undefined> {
+  set<Key extends string & keyof DbSchema>(
+    key: Key,
+    data: Readonly<InferFromJSONSchema<DbSchema[Key]['schema']>> | undefined | null,
+  ): Observable<undefined> {
+
+    if (!(key in this.databaseEntries)) {
+      return throwError(new DatabaseEntriesKeyError());
+    }
 
     /* Schema is not required here as the compliance of the data is already checked at compilation */
-    return this.setAndValidate(key, data);
+    return this.setAndValidate(key as string, data, this.getSchema(key));
 
   }
 
@@ -240,7 +259,17 @@ export class SafeStorageMap {
    * @example
    * this.storageMap.delete('key').subscribe(() => {});
    */
-  delete(key: string): Observable<undefined> {
+  delete(key: string & keyof DbSchema): Observable<undefined> {
+
+    if (!(key in this.databaseEntries)) {
+      return throwError(new DatabaseEntriesKeyError());
+    }
+
+    return this.internalDelete(key);
+
+  }
+
+  protected internalDelete(key: string): Observable<undefined> {
 
     return this.database.delete(key).pipe(
       /* Catch if `indexedDb` is broken */
@@ -286,11 +315,15 @@ export class SafeStorageMap {
    *   complete: () => { console.log('Done'); },
    * });
    */
-  keys(): Observable<string> {
+  keys(): Observable<keyof DbSchema> {
 
     return this.database.keys()
       /* Catch if `indexedDb` is broken */
-      .pipe(this.catchIDBBroken(() => this.database.keys()));
+      .pipe(
+        this.catchIDBBroken(() => this.database.keys()),
+        // TODO: check if accurate, and test
+        filter((key) => key in this.databaseEntries),
+      );
 
   }
 
@@ -303,13 +336,13 @@ export class SafeStorageMap {
    *   if (hasKey) {}
    * });
    */
-  has(key: string): Observable<boolean> {
+  // has(key: string & keyof DbSchema): Observable<boolean> {
 
-    return this.database.has(key)
-      /* Catch if `indexedDb` is broken */
-      .pipe(this.catchIDBBroken(() => this.database.has(key)));
+  //   return this.database.has(key)
+  //     /* Catch if `indexedDb` is broken */
+  //     .pipe(this.catchIDBBroken(() => this.database.has(key)));
 
-  }
+  // }
 
   /**
    * Watch an item value in storage.
@@ -320,9 +353,13 @@ export class SafeStorageMap {
    * @param schema JSON schema to validate the initial value
    * @returns An infinite `Observable` giving the current value
    */
-  watch<Schema extends JSONSchema>(key: string, schema: Schema) { // tslint:disable-line:typedef
+  watch<Key extends string & keyof DbSchema>(key: Key) { // tslint:disable-line:typedef
 
-    return this.watchAndInit(key, schema)  as Observable<InferFromJSONSchema<Schema> | undefined>;
+    if (!(key in this.databaseEntries)) {
+      return throwError(new DatabaseEntriesKeyError());
+    }
+
+    return this.watchAndInit(key, this.getSchema(key)) as Observable<InferFromJSONSchema<DbSchema[Key]['schema']> | undefined>;
 
   }
 
@@ -356,6 +393,18 @@ export class SafeStorageMap {
   protected notify(key: string, value: unknown): void {
 
     this.notifiers.get(key)?.next(value);
+
+  }
+
+  protected getSchema(key: string): JSONSchema {
+
+    const schema = this.databaseEntries[key].schema;
+
+    if (!schema) {
+      throw new DatabaseEntriesSchemaError();
+    }
+
+    return schema;
 
   }
 

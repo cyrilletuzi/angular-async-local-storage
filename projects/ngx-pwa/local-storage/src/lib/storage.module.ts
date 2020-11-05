@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
-import { LS_PREFIX, IDB_DB_NAME, IDB_STORE_NAME, IDB_DB_VERSION, IDB_NO_WRAP, StorageConfig } from './tokens';
+import { DATABASE_ENTRIES, LS_PREFIX, IDB_DB_NAME, IDB_STORE_NAME, IDB_DB_VERSION, IDB_NO_WRAP, StorageConfig } from './tokens';
 
 /**
  * This module does not contain anything, it's only useful to provide options via `.forRoot()`.
@@ -24,6 +24,7 @@ export class StorageModule {
     return {
       ngModule: StorageModule,
       providers: [
+        config.databaseEntries ? { provide: DATABASE_ENTRIES, useValue: config.databaseEntries } : [],
         config.LSPrefix ? { provide: LS_PREFIX, useValue: config.LSPrefix } : [],
         config.IDBDBName ? { provide: IDB_DB_NAME, useValue: config.IDBDBName } : [],
         config.IDBStoreName ? { provide: IDB_STORE_NAME, useValue: config.IDBStoreName } : [],
