@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import {
   JSONSchema, JSONSchemaString, JSONSchemaInteger, JSONSchemaNumber, JSONSchemaBoolean,
-  JSONSchemaArray, JSONSchemaObject
+  JSONSchemaArray, JSONSchemaObject, JSONSchemaSet
 } from './json-schema';
 
 @Injectable({
@@ -33,6 +33,10 @@ export class JSONValidator {
         return this.validateArray(data, schema);
       case 'object':
         return this.validateObject(data, schema);
+      case 'date':
+        return this.validateDate(data);
+      case 'set':
+        return this.validateSet(data, schema);
       // TODO: check how we handle this case (do not allow to bypass validation, or add a test)
       case 'unknown':
         return true;
@@ -239,6 +243,41 @@ export class JSONValidator {
   }
 
   /**
+   * Validate a set
+   * @param data Data to validate
+   * @param schema Schema describing the set
+   * @returns If data is valid: `true`, if it is invalid: `false`
+   */
+  protected validateSet(data: unknown, schema: JSONSchemaSet): boolean {
+
+    if (data instanceof Set) {
+
+      if ((schema.maxItems !== undefined) && (data.size > schema.maxItems)) {
+        return false;
+      }
+
+      if ((schema.minItems !== undefined) && (data.size < schema.minItems)) {
+        return false;
+      }
+
+      /* Validate all the values in array */
+      for (const value of data) {
+
+        if (!this.validate(value, schema.items)) {
+          return false;
+        }
+
+      }
+
+      return true;
+
+    }
+
+    return this.validateArray(data, { ...schema, type: 'array', uniqueItems: true });
+
+  }
+
+  /**
    * Validate an object
    * @param data Data to validate
    * @param schema JSON schema describing the object
@@ -319,6 +358,21 @@ export class JSONValidator {
 
     /* Cast as the data can be of multiple types, and so TypeScript is lost */
     return ((schema.enum as unknown[]).includes(data));
+
+  }
+
+  /**
+   * Validate a date
+   * @param data Data to validate
+   * @returns If data is valid: `true`, if it is invalid: `false`
+   */
+  protected validateDate(data: unknown): boolean {
+
+    if (data instanceof Date) {
+      return true;
+    }
+
+    return this.validateString(data, { type: 'string' });
 
   }
 

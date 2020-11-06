@@ -254,6 +254,49 @@ export interface JSONSchemaObject {
 
 // TODO: documentation
 /**
+ * JSON schema to describe a `Date`.
+ */
+export interface JSONSchemaDate {
+
+  /**
+   * Type for a `Date` value.
+   */
+  type: 'date';
+
+}
+
+// TODO: documentation
+/**
+ * JSON schema to describe a `Set`.
+ */
+export interface JSONSchemaSet {
+
+  /**
+   * Type for a `Set` value.
+   */
+  type: 'set';
+
+  /**
+   * Schema for the values of an array.
+   */
+  items: JSONSchema;
+
+  /**
+   * Check if an array length is lower or equal to this value.
+   * Must be a non negative integer.
+   */
+  maxItems?: number;
+
+  /**
+   * Check if an array length is greater or equal to this value.
+   * Must be a non negative integer.
+   */
+  minItems?: number;
+
+}
+
+// TODO: documentation
+/**
  * JSON schema to describe a custom value (useful for `Blob`).
  */
 export interface JSONSchemaUnknown {
@@ -299,4 +342,4 @@ export interface JSONSchemaUnknown {
  * };
  *
  */
-export type JSONSchema = JSONSchemaString | JSONSchemaNumber | JSONSchemaInteger | JSONSchemaBoolean | JSONSchemaArray | JSONSchemaObject | JSONSchemaUnknown;
+export type JSONSchema = JSONSchemaString | JSONSchemaNumber | JSONSchemaInteger | JSONSchemaBoolean | JSONSchemaArray | JSONSchemaObject | JSONSchemaDate | JSONSchemaSet | JSONSchemaUnknown;

@@ -25,6 +25,11 @@ const dbSchema = {
       enum: ['hello', 'world'],
     },
   },
+  testDate: {
+    schema: {
+      type: 'date',
+    },
+  },
   testNumber: {
     schema: { type: 'number' },
   },
@@ -112,9 +117,8 @@ const dbSchema = {
   },
   testSet: {
     schema: {
-      type: 'array',
+      type: 'set',
       items: { type: 'string' },
-      uniqueItems: true,
     },
   },
   testTuple: {
@@ -371,6 +375,22 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
         ).subscribe((result: string | undefined) => {
 
           expect(result).toBe(value);
+
+          done();
+
+        });
+
+      });
+
+      it('Date', (done) => {
+
+        const value = new Date(Date.now());
+
+        storage.set('testDate', value).pipe(
+          mergeMap(() => storage.get('testDate'))
+        ).subscribe((result: Date | undefined) => {
+
+          expect(result).toEqual(value);
 
           done();
 
@@ -738,16 +758,15 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
       });
 
-      it('array Set', (done) => {
+      it('Set', (done) => {
 
-        const array = ['hello', 'world'];
         const value = new Set<string>(['hello', 'world']);
 
-        storage.set('testSet', Array.from(value)).pipe(
+        storage.set('testSet', value).pipe(
           mergeMap(() => storage.get('testSet')),
-        ).subscribe((result: string[] | undefined) => {
+        ).subscribe((result: Set<string> | undefined) => {
 
-          expect(result).toEqual(array);
+          expect(result).toEqual(value);
 
           done();
 

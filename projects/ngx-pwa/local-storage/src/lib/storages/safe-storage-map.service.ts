@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Observable, throwError, of, OperatorFunction, ReplaySubject } from 'rxjs';
-import { mergeMap, catchError, tap, filter } from 'rxjs/operators';
+import { mergeMap, catchError, tap, filter, map } from 'rxjs/operators';
 
 import { JSONSchema } from '../validation/json-schema';
 import { JSONValidator } from '../validation/json-validator';
@@ -168,7 +168,28 @@ export class SafeStorageMap<DbSchema extends DatabaseEntries> {
       return throwError(new DatabaseEntriesKeyError());
     }
 
-    return this.getAndValidate(key, this.getSchema(key)) as Observable<InferFromJSONSchema<DbSchema[Key]['schema']> | undefined>;
+    const schema = this.getSchema(key);
+
+    return this.getAndValidate(key, schema).pipe(
+      map((value) => {
+
+        if (value && (this.backingEngine === 'localStorage')) {
+
+          switch (schema.type) {
+            case 'set':
+              // tslint:disable-next-line: no-any
+              return new Set(value as any);
+            case 'date':
+              // tslint:disable-next-line: no-any
+              return new Date(value as any);
+          }
+
+        }
+
+        return value;
+
+      }),
+    ) as Observable<InferFromJSONSchema<DbSchema[Key]['schema']> | undefined>;
 
   }
 
@@ -224,8 +245,25 @@ export class SafeStorageMap<DbSchema extends DatabaseEntries> {
       return throwError(new DatabaseEntriesKeyError());
     }
 
+    let finalData: unknown = data;
+    const schema = this.getSchema(key);
+
+    if (this.backingEngine === 'localStorage') {
+
+      switch (schema.type) {
+        case 'set':
+          // tslint:disable-next-line: no-any
+          finalData = Array.from(data as any);
+          break;
+        case 'date':
+          finalData = (data as unknown as Date).toJSON();
+          break;
+      }
+
+    }
+
     /* Schema is not required here as the compliance of the data is already checked at compilation */
-    return this.setAndValidate(key as string, data, this.getSchema(key));
+    return this.setAndValidate(key as string, finalData, schema);
 
   }
 

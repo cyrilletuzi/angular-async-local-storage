@@ -3,7 +3,7 @@ import { JSONSchema } from './json-schema';
 /**
  * JSON schemas of primitive types
  */
-type JSONSchemaPrimitive = { type: 'string' | 'integer' | 'number' | 'boolean' };
+type JSONSchemaPrimitive = { type: 'string' | 'integer' | 'number' | 'boolean' | 'date' };
 
 /**
  * Infer data from a JSON schemas describing a primitive type.
@@ -17,6 +17,7 @@ type InferFromJSONSchemaPrimitive<Schema extends JSONSchemaPrimitive> =
   Schema extends { type: 'integer' } ? number :
   Schema extends { type: 'number' } ? number :
   Schema extends { type: 'boolean' } ? boolean :
+  Schema extends { type: 'date' } ? Date :
   /* Default value, but not supposed to happen given the `JSONSchema` interface */
   unknown;
 
@@ -47,6 +48,9 @@ type InferFromJSONSchemaTuple<Schemas extends readonly JSONSchema[]> =
 export type InferFromJSONSchema<Schema extends JSONSchema> =
   /* Infer primitive types */
   Schema extends JSONSchemaPrimitive ? InferFromJSONSchemaPrimitive<Schema> :
+  /* Infer Set */
+  Schema extends { type: 'set', items: infer SetType } ?
+    SetType extends JSONSchema ? Set<InferFromJSONSchema<SetType>> : Set<unknown> :
   /* Infer arrays */
   Schema extends { type: 'array', items: infer ItemsType } ?
     /* Classic array */
