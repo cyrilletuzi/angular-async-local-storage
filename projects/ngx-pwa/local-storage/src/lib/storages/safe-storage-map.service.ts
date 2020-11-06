@@ -315,15 +315,21 @@ export class SafeStorageMap<DbSchema extends DatabaseEntries> {
    *   complete: () => { console.log('Done'); },
    * });
    */
-  keys(): Observable<keyof DbSchema> {
+  keys(): Observable<string> { // TODO: check type keyof DbSchema
 
-    return this.database.keys()
+    return this.internalKeys().pipe(
+      // TODO: check if accurate, and test
+      filter((key) => key in this.databaseEntries),
+    );
+
+  }
+
+  protected internalKeys(): Observable<string> {
+
+    return this.database.keys().pipe(
       /* Catch if `indexedDb` is broken */
-      .pipe(
-        this.catchIDBBroken(() => this.database.keys()),
-        // TODO: check if accurate, and test
-        filter((key) => key in this.databaseEntries),
-      );
+      this.catchIDBBroken(() => this.database.keys()),
+    );
 
   }
 

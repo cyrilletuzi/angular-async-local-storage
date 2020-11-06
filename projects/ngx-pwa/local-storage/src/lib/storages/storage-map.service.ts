@@ -198,4 +198,23 @@ export class StorageMap extends SafeStorageMap<{}> {
 
   }
 
+  /**
+   * Get all keys stored in storage. Note **this is an *iterating* `Observable`**:
+   * * if there is no key, the `next` callback will not be invoked,
+   * * if you need to wait the whole operation to end, be sure to act in the `complete` callback,
+   * as this `Observable` can emit several values and so will invoke the `next` callback several times.
+   * @returns A list of the keys wrapped in a RxJS `Observable`
+   *
+   * @example
+   * this.storageMap.keys().subscribe({
+   *   next: (key) => { console.log(key); },
+   *   complete: () => { console.log('Done'); },
+   * });
+   */
+  keys(): Observable<string> {
+
+    return this.internalKeys();
+
+  }
+
 }

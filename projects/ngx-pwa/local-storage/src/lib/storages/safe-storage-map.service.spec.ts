@@ -237,6 +237,9 @@ const dbSchema = {
   testSchema: {
     schema: { type: 'number', maximum: 10 },
   },
+  testWatch: {
+    schema: { type: 'string' },
+  },
 } as const;
 
 function tests(description: string, localStorageServiceFactory: () => SafeStorageMap<typeof dbSchema>): void {
@@ -1307,7 +1310,8 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
           mergeMap(() => storage.set('prefix2_data2', 'test')),
           mergeMap(() => storage.keys()),
           filter((currentKey) => currentKey.startsWith('prefix2_')),
-          mergeMap((currentKey) => storage.delete(currentKey)),
+          // TODO: fix
+          mergeMap((currentKey) => storage.delete(currentKey as keyof typeof dbSchema)),
         ).subscribe({
           /* So we need to wait for completion of all actions to check */
           complete: () => {
@@ -1340,7 +1344,7 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
         let i = 0;
         let subscription: Subscription;
 
-        subscription = storage.watch('testString').subscribe((result: string | undefined) => {
+        subscription = storage.watch('testWatch').subscribe((result: string | undefined) => {
 
           expect(result).toBe(values[i]);
 
@@ -1348,9 +1352,9 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
           if (i === 1) {
 
-            storage.set('testString', values[1]).pipe(
-              mergeMap(() => storage.delete('testString')),
-              mergeMap(() => storage.set('testString', values[3])),
+            storage.set('testWatch', values[1]).pipe(
+              mergeMap(() => storage.delete('testWatch')),
+              mergeMap(() => storage.set('testWatch', values[3])),
               mergeMap(() => storage.clear()),
             ).subscribe();
 
