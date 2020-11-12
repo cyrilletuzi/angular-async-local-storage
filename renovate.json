@@ -28,10 +28,6 @@
     {
       "packageNames": ["@types/node"],
       "allowedVersions": "<15"
-    },
-    {
-      "packagePatterns": ["^@angular"],
-      "automerge": false
     }
   ],
   "schedule": ["after 9am and before 12am on friday"],
