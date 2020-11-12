@@ -2,9 +2,11 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 11.0.0-3 (2020-10-27)
+## 11.0.0 (2020-10-27)
 
-**This is a pre-release version. Do NOT use in production.**
+A [full migration guide to version 11](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V11.md) is available.
+
+**If you did not update to version 9 yet, be sure to follow it, as otherwise you could lose all previously stored data**.
 
 ### Feature
 
@@ -83,9 +85,7 @@ Be aware **you are responsible the casted type (`User`) describes the same struc
 For the same reason, the lib can't check that.
 
 Auto-inferring the type from all JSON schemas is in progress in
-[#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]),
-but is currently facing some TypeScript limitations.
-Once it's ready, I'll need your help to heavily test this feature.
+[#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]).
 
 3. **Mismatch between cast and primitive JSON schema**
 
@@ -108,7 +108,7 @@ Given how JSON schema works, sometimes it's better to set them `as const`:
 this.storage.get('name', { type: 'string' } as const);
 ```
 
-But before v11, it was not possible when the JSON schema was using properties of array type
+But before v11, it was not possible when using some JSON schema properties
 (`enum`, `items`, `required`). This is now fixed.
 
 ## 10.1.0 (2020-09-03)
@@ -129,7 +129,7 @@ Supports and **requires** Angular 10.
 
 No lib change.
 
-A [full migration guide to version 10](./docs/MIGRATION_TO_V10.md) is available.
+A [full migration guide to version 10](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V10.md) is available.
 
 **If you did not update to version 9 yet, be sure to follow it, as otherwise you could lose all previously stored data**.
 
@@ -176,7 +176,7 @@ so **be sure to check the migration was done correctly** by following the
 ### Breaking changes: removal of deprecated features
 
 The following APIs were already deprecated in v8 and are now removed in v9.
-Please follow the [migration guide to v8](./docs/MIGRATION_TO_V8.md) for more details about how to update to new APIs.
+Please follow the [migration guide to v8](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V8.md) for more details about how to update to new APIs.
 
 - Removed providers for prefix management
   - **If you're concerned, be very careful with this migration, otherwise you could lost previously stored data**

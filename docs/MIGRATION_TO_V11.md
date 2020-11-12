@@ -97,9 +97,7 @@ Be aware **you are responsible the casted type (`User`) describes the same struc
 For the same reason, the lib can't check that.
 
 Auto-inferring the type from all JSON schemas is in progress in
-[#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]),
-but is currently facing some TypeScript limitations.
-Once it's ready, I'll need your help to heavily test this feature.
+[#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]).
 
 3. **Mismatch between cast and primitive JSON schema**
 
@@ -122,7 +120,7 @@ Given how JSON schema works, sometimes it's better to set them `as const`:
 this.storage.get('name', { type: 'string' } as const);
 ```
 
-But before v11, it was not possible when the JSON schema was using properties of array type
+But before v11, it was not possible when using some JSON schema properties
 (`enum`, `items`, `required`). This is now fixed.
 
 ## More documentation

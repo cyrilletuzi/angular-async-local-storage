@@ -150,8 +150,7 @@ Be aware **you are responsible the casted type (`User`) describes the same struc
 For the same reason, the lib can't check that.
 
 Auto-inferring the type from all JSON schemas is in progress in
-[#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]),
-but is currently facing some TypeScript limitations.
+[#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]).
 
 ### Validation when writing
 

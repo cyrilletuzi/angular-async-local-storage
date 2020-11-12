@@ -19,7 +19,7 @@ Install the right version according to your Angular one via [`npm`](http://npmjs
 
 ```bash
 # For Angular 11:
-npm install @ngx-pwa/local-storage@next
+npm install @ngx-pwa/local-storage@11
 
 # For Angular 10:
 npm install @ngx-pwa/local-storage@10
