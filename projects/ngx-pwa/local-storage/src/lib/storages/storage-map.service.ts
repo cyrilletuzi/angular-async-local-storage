@@ -431,7 +431,7 @@ export class StorageMap {
     /* Only the public API of the `Observable` should be returned */
     return (schema ?
       notifier.asObservable() as Observable<T | undefined> :
-      notifier.asObservable() as Observable<unknown>
+      notifier.asObservable()
     );
 
   }
