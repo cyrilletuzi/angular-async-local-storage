@@ -1,14 +1,9 @@
 # Browser support guide
 
-This lib supports [all browsers supporting `indexedDB`](http://caniuse.com/#feat=indexeddb), ie. **all current browsers** :
-Firefox, Chrome, Opera, Safari, Edge, and IE10+.
-
-Client-side storage is required only for apps, and given that you won't do an app in older browsers,
-current browsers support is far enough.
-
-Even so, IE9 is supported but use native `localStorage` as a fallback, 
-so internal operations are synchronous (the public API remains asynchronous-like).
-But be aware that IE9 support is deprecated since Angular 10 and may be removed in v11.
+This lib supports [the same browsers as Angular](https://angular.io/guide/browser-support),
+ie. **all current browsers**:
+- versions <= 10: Firefox, Chrome, Opera, Safari, Edge and IE9+
+- versions >= 11: Firefox, Chrome, Opera, Safari, Edge and IE11+
 
 This module is not impacted by IE/Edge Legacy missing `indexedDB` features.
 

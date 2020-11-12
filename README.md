@@ -1,7 +1,7 @@
 # Async local storage for Angular
 
 Efficient client-side storage module for Angular:
-- **simplicity**: based on native `localStorage` API,
+- **simplicity**: simple API like native `localStorage`,
 - **perfomance**: internally stored via the asynchronous `indexedDB` API,
 - **Angular-like**: wrapped in RxJS `Observable`s,
 - **security**: validate data with a JSON Schema,
@@ -20,6 +20,7 @@ it would be nice to **consider becoming [a sponsor](https://github.com/sponsors/
 ## By the same author
 
 - [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics) (GUI for Angular CLI commands)
+- [typescript-strictly-typed](https://github.com/cyrilletuzi/typescript-strictly-typed): reliable code with TypeScript strictly typed
 - Popular [Angular posts on Medium](https://medium.com/@cyrilletuzi)
 - Follow updates of this lib on [Twitter](https://twitter.com/cyrilletuzi)
 - **[Angular onsite trainings](https://formationjavascript.com/formation-angular/)** (based in Paris, so the website is in French, but [my English bio is here](https://www.cyrilletuzi.com/en/))
@@ -51,7 +52,7 @@ to be homogeneous with other Angular modules.
 Install the package, according to your Angular version:
 
 ```bash
-# For Angular LTS (Angular >= 8):
+# For Angular LTS (Angular >= 9):
 ng add @ngx-pwa/local-storage
 ```
 
@@ -68,16 +69,9 @@ ng add @ngx-pwa/local-storage --project yourprojectname
 
 ### Upgrading
 
-If you still use the old `angular-async-local-storage` package, or to update to new versions,
-see the **[migration guides](./MIGRATION.md).**
+To update to new versions, see the **[migration guides](./MIGRATION.md).**
 
 ## API
-
-2 services are available for client-side storage, you just have to inject one of them where you need it.
-
-### `StorageMap`: recommended
-
-New *since version 8* of this lib, this is the recommended service:
 
 ```typescript
 import { StorageMap } from '@ngx-pwa/local-storage';
@@ -90,7 +84,8 @@ export class YourService {
 
 This service API follows the
 new standard [`kv-storage` API](https://wicg.github.io/kv-storage/),
-which is similar to the standard [`Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map),
+which is similar to the standard [`Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), and close to the
+standard [`localStorage` API](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage),
 except it's based on [RxJS `Observable`s](https://rxjs.dev/) instead of `Promise`s:
 
 ```typescript
@@ -115,45 +110,10 @@ class StorageMap {
 }
 ```
 
-It does the same thing as the `localStorage` API, but also allows more advanced operations.
-
-### `LocalStorage`: legacy
-
-You can keep this legacy service in existing apps, but it's not recommended anymore for new applications.
-
-```typescript
-import { LocalStorage } from '@ngx-pwa/local-storage';
-
-@Injectable()
-export class YourService {
-  constructor(private localStorage: LocalStorage) {}
-}
-```
-
-This service API follows the
-standard [`localStorage` API](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage), 
-except it's asynchronous via [RxJS `Observable`s](https://rxjs.dev/):
-
-```typescript
-class LocalStorage {
-  // Write
-  setItem(index: string, value: any): Observable<true> {}
-  removeItem(index: string): Observable<true> {}
-  clear(): Observable<true> {}
-
-  // Read (one-time)
-  getItem(index: string): Observable<unknown> {}
-  getItem<T>(index: string, schema: JSONSchema): Observable<T> {}
-
-  // Advanced
-  length: Observable<number>;
-}
-```
+Note: there is also a `LocalStorage` service available,
+but only for compatibility with old versions of this lib.
 
 ## How to
-
-The following examples will use the recommended `StorageMap` service.
-But for older versions, you can always do the same with the `LocalStorage` service.
 
 ### Writing data
 
@@ -190,7 +150,7 @@ this.storage.get('user').subscribe((user) => {
 });
 ```
 
-Not finding an item is not an error, it succeeds but returns `undefined` (or `null` with `LocalStorage` legacy service):
+Not finding an item is not an error, it succeeds but returns `undefined`:
 ```typescript
 this.storage.get('notexisting').subscribe((data) => {
   data; // undefined
@@ -198,8 +158,8 @@ this.storage.get('notexisting').subscribe((data) => {
 ```
 
 **Note you will only get *one* value**: the `Observable` is here for asynchrony but
-**is *not* meant to emit again when the stored data is changed**. If you need to watch the value,
-version 9 introduced a `watch()` method, see the [watching guide](./docs/WATCHING.md).
+**is *not* meant to emit again when the stored data is changed**.
+If you need to watch the value, see the [watching guide](./docs/WATCHING.md).
 
 ### Checking data
 
@@ -254,7 +214,7 @@ an application doesn't need that. [More details here](./docs/EXPIRATION.md).
 
 ### `Map`-like operations
 
-Starting *with version >= 8* of this lib, in addition to the classic `localStorage`-like API,
+In addition to the classic `localStorage`-like API,
 this lib also provides a `Map`-like API for advanced operations:
   - `.keys()`
   - `.has(key)`
@@ -276,9 +236,7 @@ via a mock storage.
 
 ### Browser support
 
-[All browsers supporting IndexedDB](https://caniuse.com/#feat=indexeddb), ie. **all current browsers** :
-Firefox, Chrome, Opera, Safari, Edge, and IE10+.
-
+This lib supports [the same browsers as Angular](https://angular.io/guide/browser-support).
 See [the browsers support guide](./docs/BROWSERS_SUPPORT.md) for more details and special cases (like private browsing).
 
 ### Collision

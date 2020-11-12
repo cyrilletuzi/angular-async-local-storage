@@ -16,11 +16,9 @@ as there are important things to do and to be aware of to achieve interoperabili
 
 ## Requirements
 
-Interoperability can be achieved **since v8 of this lib**.
+If you started using this lib since version >= 9, you're good to go.
 
-In versions >= 9, no requirement, the new configuration is now the default.
-
-In version 8, you need to add this config:
+If you started using this lib before version 9, you need to check your `AppModule`:
 
 ```ts
 import { StorageModule } from '@ngx-pwa/local-storage';
@@ -28,16 +26,17 @@ import { StorageModule } from '@ngx-pwa/local-storage';
 @NgModule({
   imports: [
     StorageModule.forRoot({
-      IDBNoWrap: true,
+      IDBNoWrap: false, // Here
     })
   ]
 })
 export class AppModule {}
 ```
 
-Note:
-- it is an initialization step, so as mentioned in the examples below, **it must be done in `AppModule`**,
-- **never change these options in an app already deployed in production, as all previously stored data would be lost**.
+If you see this configuration (`IDBNoWrap` set to `false`),
+unfortunately you can't manage interoperability,
+and you *can't* change the configuration either if your app is already in production,
+as **it would mean the loss of all previously stored data**.
 
 ## Configuration
 

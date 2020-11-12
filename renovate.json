@@ -27,11 +27,7 @@
     },
     {
       "packageNames": ["@types/node"],
-      "allowedVersions": "<13"
-    },
-    {
-      "packagePatterns": ["^@angular"],
-      "automerge": false
+      "allowedVersions": "<15"
     }
   ],
   "schedule": ["after 9am and before 12am on friday"],

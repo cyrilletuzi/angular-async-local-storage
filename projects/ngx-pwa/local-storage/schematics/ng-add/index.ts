@@ -12,8 +12,8 @@ export default function(options: StorageAddOptions): Rule {
     const angularMajorVersion = getAngularMajorVersion(host);
     const mainPath = await getMainPath(host, options.project);
 
-    if (angularMajorVersion <= 7) {
-      throw new SchematicsException('Angular versions <= 7 are no longer supported.');
+    if (angularMajorVersion <= 8) {
+      throw new SchematicsException('Angular versions <= 8 are no longer supported.');
     }
 
     /* Task to run `npm install` (or user package manager) */

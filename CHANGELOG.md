@@ -2,6 +2,115 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 11.0.0 (2020-10-27)
+
+A [full migration guide to version 11](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V11.md) is available.
+
+**If you did not update to version 9 yet, be sure to follow it, as otherwise you could lose all previously stored data**.
+
+### Feature
+
+Supports and **requires** Angular 11.
+
+### Typings
+
+TypeScript typings for `.get()` and `.watch()` has been modified to better match the library behavior.
+
+For now, wrong usages are just marked as deprecated, so there is **no breaking change**
+and it will just be reported by linters. But they may be removed in future releases.
+
+Be sure to read the [validation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md) for all the why and how of validation.
+
+1. **Cast without a JSON schema**
+
+```ts
+this.storage.get<User>('user');
+```
+was allowed but the result was still `unknown`.
+
+This is a very common misconception of client-side storage:
+you can store and get anything in storage, so many people think that casting as above
+is enough to get the right result type. It's not.
+
+Why? Because you're getting data from *client-side* storage:
+so it may have been modified (just go to your browser developer tools and hack what you want).
+
+A cast is just an information for *compilation*:
+it basically says to TypeScript: "believe me, it will be a `User`".
+But **that's not true: you're not sure you'll get a `User`**.
+
+This is why this library provides a *runtime* validation system,
+via a JSON schema as the second parameter:
+
+```ts
+this.storage.get<User>('user', {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+  },
+  required: ['name'],
+});
+```
+
+2. **Non-primitive JSON schema without a cast**
+
+```ts
+this.storage.get('user', {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+  },
+  required: ['name'],
+});
+```
+was allowed but the result was still `unknown`.
+
+This is because, for now, the library is able to infer the return type based on the JSON schema
+for primitives (`string`, `number`, `integer`, `boolean` and `array` of these),
+but not for more complex structures like objects.
+
+So in this case, both the JSON schema and the cast are required:
+
+```ts
+this.storage.get<User>('user', {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+  },
+  required: ['name'],
+});
+```
+
+Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
+For the same reason, the lib can't check that.
+
+Auto-inferring the type from all JSON schemas is in progress in
+[#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]).
+
+3. **Mismatch between cast and primitive JSON schema**
+
+```ts
+this.storage.get<number>('name', { type: 'string' });
+```
+was allowed but is of course an error. Now the match between the cast and simple JSON schemas (`string`, `number`, `integer`, `boolean` and `array` of these) is checked.
+
+Note that in this scenario, the cast is not needed at all, it will be automatically inferred by the lib, so just do:
+
+```ts
+this.storage.get('name', { type: 'string' });
+```
+
+4. **JSON schema with `as const` assertion**
+
+Given how JSON schema works, sometimes it's better to set them `as const`:
+
+```ts
+this.storage.get('name', { type: 'string' } as const);
+```
+
+But before v11, it was not possible when using some JSON schema properties
+(`enum`, `items`, `required`). This is now fixed.
+
 ## 10.1.0 (2020-09-03)
 
 No code change, just rebuilt with Angular 10.1.
@@ -20,7 +129,7 @@ Supports and **requires** Angular 10.
 
 No lib change.
 
-A [full migration guide to version 10](./docs/MIGRATION_TO_V10.md) is available.
+A [full migration guide to version 10](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V10.md) is available.
 
 **If you did not update to version 9 yet, be sure to follow it, as otherwise you could lose all previously stored data**.
 
@@ -67,7 +176,7 @@ so **be sure to check the migration was done correctly** by following the
 ### Breaking changes: removal of deprecated features
 
 The following APIs were already deprecated in v8 and are now removed in v9.
-Please follow the [migration guide to v8](./docs/MIGRATION_TO_V8.md) for more details about how to update to new APIs.
+Please follow the [migration guide to v8](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V8.md) for more details about how to update to new APIs.
 
 - Removed providers for prefix management
   - **If you're concerned, be very careful with this migration, otherwise you could lost previously stored data**

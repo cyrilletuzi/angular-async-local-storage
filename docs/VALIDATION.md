@@ -1,16 +1,5 @@
 # Validation guide
 
-## Version
-
-## Examples
-
-The examples will use the recommended `StorageMap` service.
-But everything in this guide can be done in the same way with the `LocalStorage` service:
-- `this.storage.get()` is the same as `this.localStorage.getItem()`
-- `this.storage.set()` is the same as `this.localStorage.setItem()`
-- `this.storage.delete()` is the same as `this.localStorage.removeItem()`
-- `this.storage.clear()` is the same as `this.localStorage.clear()`
-
 ## Why validation?
 
 Any client-side storage (cookies, `localStorage`, `indexedDb`...) is not secure by nature,
@@ -145,18 +134,23 @@ see the [serialization guide](./SERIALIZATION.md).
 You may ask why we have to define a TypeScript cast with `get<User>()` *and* a JSON schema with `schema`.
 
 It's because they happen at different steps:
-- a cast (`get<User>()`) just says "TypeScript, trust me, I'm telling you it will be a `User`", but it only happens at *compilation* time (it won't be checked at runtime)
+- a cast (`get<User>()`) just says "TypeScript, trust me, I'm telling you it will be a `User`", but it only happens at *compilation* time,
+and given it's client-side storage (reminder: it can be forged), **it's not true you known it will be a `User`**.
 - the JSON schema (`schema`) will be used at *runtime* when getting data in local storage for real.
 
 So they each serve a different purpose:
 - casting allows you to retrieve the data with the good type instead of `any`
 - the schema allows the lib to validate the data at runtime
 
-For previous basic types, as they are static, we can infer automatically.
-But as objects properties are dynamic, we can't do the same for objects.
+For now, the library is able to infer the return type based on the JSON schema
+for primitives (`string`, `number`, `integer`, `boolean` and `array` of these),
+but not for more complex structures like objects.
 
 Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
-The lib can't check that.
+For the same reason, the lib can't check that.
+
+Auto-inferring the type from all JSON schemas is in progress in
+[#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]).
 
 ### Validation when writing
 
@@ -272,7 +266,7 @@ this.storage.get('existing', { type: 'string' })
 ```
 
 But as usual (like when you do a database request), not finding an item is not an error.
-It succeeds but returns `undefined` (or `null` with legacy `LocalStorage` service):
+It succeeds but returns `undefined`:
 ```typescript
 this.storage.get('notExisting', { type: 'string' })
 .subscribe({

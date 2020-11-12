@@ -112,7 +112,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, `undefined` otherwise, wrapped in an RxJS `Observable`
    */
-  get<T = unknown>(key: string): Observable<T | undefined> {
+  get(key: string): Observable<unknown | undefined> {
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
@@ -132,12 +132,12 @@ export class IndexedDBDatabase implements LocalDatabase {
             if (!this.noWrap && (typeof request.result === 'object') && (this.wrapIndex in request.result) &&
             (request.result[this.wrapIndex] !== undefined) && (request.result[this.wrapIndex] !== null)) {
 
-              return (request.result[this.wrapIndex] as T);
+              return request.result[this.wrapIndex];
 
             } else {
 
               /* Cast to the wanted type */
-              return request.result as T;
+              return request.result;
 
             }
 
@@ -297,7 +297,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         const { store, events } = transactionData;
 
         /* Check if the key exists in the store
-         * `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/ Legacy).
+         * `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge Legacy).
          * In older browsers, the value is checked instead, but it could lead to an exception
          * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
          * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69

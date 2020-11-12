@@ -1,5 +1,9 @@
 # Migration guide to version 8
 
+## LTS support ended
+
+[Angular version 8 is officially outdated](https://angular.io/guide/releases).
+
 ## Foreword
 
 Version 8 of this lib is a big update for 2 reasons:

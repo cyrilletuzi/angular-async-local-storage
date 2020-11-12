@@ -37,7 +37,7 @@ export interface JSONSchemaNumber {
   /**
    * Checks if a value is strictly equal to one of the value of enum.
    */
-  enum?: number[];
+  enum?: readonly number[];
 
   /**
    * Check if a number is a multiple of x.
@@ -85,7 +85,7 @@ export interface JSONSchemaInteger {
   /**
    * Checks if a value is strictly equal to one of the value of enum.
    */
-  enum?: number[];
+  enum?: readonly number[];
 
   /**
    * Check if a number is a multiple of x.
@@ -133,7 +133,7 @@ export interface JSONSchemaString {
   /**
    * Checks if a value is strictly equal to one of the value of enum.
    */
-  enum?: string[];
+  enum?: readonly string[];
 
   /**
    * Maxium length for a string.
@@ -168,7 +168,7 @@ export interface JSONSchemaArray {
   /**
    * Schema for the values of an array, or array of schemas for a tuple.
    */
-  items: JSONSchema | JSONSchema[];
+  items: JSONSchema | readonly JSONSchema[];
 
   /**
    * Check if an array length is lower or equal to this value.
@@ -248,7 +248,7 @@ export interface JSONSchemaObject {
    * Array of names of the required properties for an object.
    * Properties set as required should be present in `properties` too.
    */
-  required?: string[];
+  required?: readonly string[];
 
 }
 

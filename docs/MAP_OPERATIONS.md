@@ -1,6 +1,6 @@
 # `Map`-like operations
 
-Starting with version >= 8 of this lib, in addition to the classic `localStorage`-like API,
+In addition to the classic `localStorage`-like API,
 this lib also provides a partial `Map`-like API for advanced operations.
 
 To use it:
