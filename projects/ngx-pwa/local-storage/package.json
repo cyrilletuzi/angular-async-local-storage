@@ -1,6 +1,6 @@
 {
   "name": "@ngx-pwa/local-storage",
-  "version": "11.0.0-3",
+  "version": "11.0.0",
   "funding": {
     "type": "github",
     "url": "https://github.com/sponsors/cyrilletuzi"
