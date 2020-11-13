@@ -33,7 +33,7 @@ export class LocalStorage {
   /**
    * Get an item value in storage.
    * The signature has many overloads due to validation, **please refer to the documentation.**
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    * @param key The item's key
    * @param schema Optional JSON schema to validate the data.
    * **Note you must pass the schema directly as the second argument.**

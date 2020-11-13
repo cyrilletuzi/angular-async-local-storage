@@ -13,7 +13,7 @@ import { MemoryDatabase } from './memory-database';
  * @param LSPrefix Prefix for `localStorage` keys to avoid collision for multiple apps on the same subdomain
  * @param IDBDBName `indexedDB` database name
  * @param IDBstoreName `indexedDB` storeName name
- * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/BROWSERS_SUPPORT.md}
+ * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/BROWSERS_SUPPORT.md}
  */
 export function localDatabaseFactory(
   platformId: string, LSPrefix: string, IDBDBName: string, IDBStoreName: string,

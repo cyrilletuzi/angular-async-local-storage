@@ -16,7 +16,7 @@ export class JSONValidator {
    * @param data JSON data to validate
    * @param schema Subset of JSON Schema. Must have a `type`.
    * @returns If data is valid: `true`, if it is invalid: `false`
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   validate(data: unknown, schema: JSONSchema): boolean {
 

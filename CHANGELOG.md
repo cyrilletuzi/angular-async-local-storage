@@ -2,9 +2,13 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
-## 11.0.0 (2020-10-27)
+## 11.0.1 (2020-11-13)
 
-A [full migration guide to version 11](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V11.md) is available.
+No change, just a release to update link to new `main` branch.
+
+## 11.0.0 (2020-11-12)
+
+A [full migration guide to version 11](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MIGRATION_TO_V11.md) is available.
 
 **If you did not update to version 9 yet, be sure to follow it, as otherwise you could lose all previously stored data**.
 
@@ -19,7 +23,7 @@ TypeScript typings for `.get()` and `.watch()` has been modified to better match
 For now, wrong usages are just marked as deprecated, so there is **no breaking change**
 and it will just be reported by linters. But they may be removed in future releases.
 
-Be sure to read the [validation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md) for all the why and how of validation.
+Be sure to read the [validation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md) for all the why and how of validation.
 
 1. **Cast without a JSON schema**
 
@@ -129,7 +133,7 @@ Supports and **requires** Angular 10.
 
 No lib change.
 
-A [full migration guide to version 10](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V10.md) is available.
+A [full migration guide to version 10](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MIGRATION_TO_V10.md) is available.
 
 **If you did not update to version 9 yet, be sure to follow it, as otherwise you could lose all previously stored data**.
 
@@ -153,7 +157,7 @@ and loss of previously stored data.
 
 ## 9.0.0 (2020-02-07)
 
-A [full migration guide to version 9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V9.md) is available.
+A [full migration guide to version 9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MIGRATION_TO_V9.md) is available.
 
 **Be sure to follow it, as otherwise you could lose all previously stored data**.
 
@@ -166,17 +170,17 @@ v9 requires Angular 9.
 Doing `ng update` should have managed backward compatibility.
 But it's not easy to be sure schematics work in all cases,
 so **be sure to check the migration was done correctly** by following the
-[migration guide to v9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V9.md), **otherwise you would lost previously stored data**.
+[migration guide to v9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MIGRATION_TO_V9.md), **otherwise you would lost previously stored data**.
 
 ### Feature
 
 - New `.watch()` method on `StorageMap` service
-(see [documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/WATCHING.md))
+(see [documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/WATCHING.md))
 
 ### Breaking changes: removal of deprecated features
 
 The following APIs were already deprecated in v8 and are now removed in v9.
-Please follow the [migration guide to v8](https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/MIGRATION_TO_V8.md) for more details about how to update to new APIs.
+Please follow the [migration guide to v8](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MIGRATION_TO_V8.md) for more details about how to update to new APIs.
 
 - Removed providers for prefix management
   - **If you're concerned, be very careful with this migration, otherwise you could lost previously stored data**
@@ -561,7 +565,7 @@ This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-
 
 This lib major version is now aligned to the major version of Angular. Meaning this v4 is for Angular 4. Same as v2.
 
-We follow [Angular LTS support](https://github.com/angular/angular/blob/master/docs/RELEASE_SCHEDULE.md),
+We follow [Angular LTS support](https://github.com/angular/angular/blob/main/docs/RELEASE_SCHEDULE.md),
 meaning we support Angular 4 until October 2018. So we backported some bug fixes:
 
 - Detect if storages are null or undefined (partially fixes (partially fixes [#26](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26))

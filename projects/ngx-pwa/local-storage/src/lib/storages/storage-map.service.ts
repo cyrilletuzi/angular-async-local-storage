@@ -59,7 +59,7 @@ export class StorageMap {
    * only after a first read or write operation.
    * @returns Storage engine used
    *
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/INTEROPERABILITY.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/INTEROPERABILITY.md}
    *
    * @example
    * if (this.storageMap.backingEngine === 'indexedDB') {}
@@ -92,7 +92,7 @@ export class StorageMap {
    * **Values will be empty if the storage is not `indexedDB`,**
    * **so it should be used after an engine check**.
    *
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/INTEROPERABILITY.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/INTEROPERABILITY.md}
    *
    * @example
    * if (this.storageMap.backingEngine === 'indexedDB') {
@@ -113,7 +113,7 @@ export class StorageMap {
    * **Values will be empty if the storage is not `localStorage`,**
    * **so it should be used after an engine check**.
    *
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/INTEROPERABILITY.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/INTEROPERABILITY.md}
    *
    * @example
    * if (this.storageMap.backingEngine === 'localStorage') {
@@ -131,7 +131,7 @@ export class StorageMap {
   /**
    * Get an item value in storage.
    * The signature has many overloads due to validation, **please refer to the documentation.**
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    * @param key The item's key
    * @param schema Optional JSON schema to validate the data
    * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
@@ -171,43 +171,43 @@ export class StorageMap {
   get<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   get<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   get<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   get<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   get<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   get<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
   /**
    * @deprecated A cast is required here, otherwise the return will be `unknown` despite a JSON schema was provided.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   get(key: string, schema: JSONSchema): Observable<unknown | undefined>;
   get<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here: as no JSON schema was provided for validation, the result will still be `unknown`.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   get<T>(key: string, schema?: JSONSchema): Observable<unknown>;
   get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
@@ -358,7 +358,7 @@ export class StorageMap {
    * Watch an item value in storage.
    * **Note only changes done via this lib will be watched**, external changes in storage can't be detected.
    * The signature has many overloads due to validation, **please refer to the documentation.**
-   * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md
+   * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md
    * @param key The item's key to watch
    * @param schema Optional JSON schema to validate the initial value
    * @returns An infinite `Observable` giving the current value
@@ -372,43 +372,43 @@ export class StorageMap {
   watch<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   watch<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   watch<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   watch<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   watch<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   watch<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;
   /**
    * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   watch<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;
   /**
    * @deprecated A cast is required here, otherwise the return will be `unknown` despite a JSON schema was provided.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   watch(key: string, schema: JSONSchema): Observable<unknown | undefined>;
   watch<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
   /**
    * @deprecated The cast is useless here: as no JSON schema was provided for validation, the result will still be `unknown`.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/master/docs/VALIDATION.md}
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    */
   watch<T>(key: string, schema?: JSONSchema): Observable<unknown>;
   watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
