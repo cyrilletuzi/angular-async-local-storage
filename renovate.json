@@ -4,10 +4,7 @@
   ],
   "automerge": true,
   "major": {
-    "automerge": false,
-    "assignees": [
-      "cyrilletuzi"
-    ]
+    "automerge": false
   },
   "ignorePaths": [
     "projects/ngx-pwa/local-storage/package.json"
@@ -30,7 +27,7 @@
       "allowedVersions": "<15"
     }
   ],
-  "schedule": ["after 9am and before 12am on friday"],
+  "schedule": ["after 1am and before 7am on friday"],
   "timezone": "Europe/Paris",
   "prHourlyLimit": 0
 }
