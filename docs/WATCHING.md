@@ -36,7 +36,7 @@ export class SomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy()  {
-    this.dataSubscription.unsubcribe();
+    this.dataSubscription.unsubscribe();
   }
 
 }
