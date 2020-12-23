@@ -1575,15 +1575,15 @@ function tests(description: string, localStorageServiceFactory: () => SafeStorag
 
 describe('SafeStorageMap', () => {
 
-  tests('memory', () => new SafeStorageMap(new MemoryDatabase(), dbSchema));
+  tests('memory', () => new SafeStorageMap<typeof dbSchema>(new MemoryDatabase(), dbSchema));
 
-  tests('localStorage', () => new SafeStorageMap(new LocalStorageDatabase(), dbSchema));
+  tests('localStorage', () => new SafeStorageMap<typeof dbSchema>(new LocalStorageDatabase(), dbSchema));
 
-  tests('localStorage with prefix', () => new SafeStorageMap(new LocalStorageDatabase(`ls`), dbSchema));
+  tests('localStorage with prefix', () => new SafeStorageMap<typeof dbSchema>(new LocalStorageDatabase(`ls`), dbSchema));
 
-  tests('indexedDB', () => new SafeStorageMap(new IndexedDBDatabase(), dbSchema));
+  tests('indexedDB', () => new SafeStorageMap<typeof dbSchema>(new IndexedDBDatabase(), dbSchema));
 
-  tests('indexedDB with custom options', () => new SafeStorageMap(new IndexedDBDatabase('customDbTest', 'storeTest', 2, false), dbSchema));
+  tests('indexedDB with custom options', () => new SafeStorageMap<typeof dbSchema>(new IndexedDBDatabase('customDbTest', 'storeTest', 2, false), dbSchema));
 
   describe('browser APIs', () => {
 
@@ -1592,7 +1592,7 @@ describe('SafeStorageMap', () => {
 
       const value = `${Date.now()}`;
 
-      const localStorageService = new SafeStorageMap(new IndexedDBDatabase(), dbSchema);
+      const localStorageService = new SafeStorageMap<typeof dbSchema>(new IndexedDBDatabase(), dbSchema);
 
       localStorageService.set('testString', value).subscribe(() => {
 
@@ -1647,7 +1647,7 @@ describe('SafeStorageMap', () => {
 
     it('indexedDb with default options (will be pending in Firefox private mode)', (done) => {
 
-      const localStorageService = new SafeStorageMap(new IndexedDBDatabase(), dbSchema);
+      const localStorageService = new SafeStorageMap<typeof dbSchema>(new IndexedDBDatabase(), dbSchema);
 
       /* Do a request first as a first transaction is needed to set the store name */
       localStorageService.get('testString').subscribe(() => {
@@ -1678,7 +1678,7 @@ describe('SafeStorageMap', () => {
 
       const value = `${Date.now()}`;
 
-      const localStorageService = new SafeStorageMap(new IndexedDBDatabase(undefined, undefined, undefined, false), dbSchema);
+      const localStorageService = new SafeStorageMap<typeof dbSchema>(new IndexedDBDatabase(undefined, undefined, undefined, false), dbSchema);
 
       localStorageService.set('testString', value).subscribe(() => {
 
@@ -1739,7 +1739,7 @@ describe('SafeStorageMap', () => {
       const dbVersion = 2;
       const noWrap = false;
 
-      const localStorageService = new SafeStorageMap(new IndexedDBDatabase(dbName, storeName, dbVersion, noWrap), dbSchema);
+      const localStorageService = new SafeStorageMap<typeof dbSchema>(new IndexedDBDatabase(dbName, storeName, dbVersion, noWrap), dbSchema);
 
       /* Do a request first as a first transaction is needed to set the store name */
       localStorageService.get('testString').subscribe(() => {
@@ -1769,7 +1769,7 @@ describe('SafeStorageMap', () => {
 
       const prefix = `ls_`;
 
-      const localStorageService = new SafeStorageMap(new LocalStorageDatabase(prefix), dbSchema);
+      const localStorageService = new SafeStorageMap<typeof dbSchema>(new LocalStorageDatabase(prefix), dbSchema);
 
       expect(localStorageService.fallbackBackingStore.prefix).toBe(prefix);
 

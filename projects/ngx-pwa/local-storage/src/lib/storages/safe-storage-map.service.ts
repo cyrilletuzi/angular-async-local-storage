@@ -225,7 +225,7 @@ export class SafeStorageMap<DbSchema extends DatabaseEntries> {
     }
 
     /* Schema is not required here as the compliance of the data is already checked at compilation */
-    return this.setAndValidate(key as string, data, this.getSchema(key));
+    return this.setAndValidate(key, data, this.getSchema(key));
 
   }
 
