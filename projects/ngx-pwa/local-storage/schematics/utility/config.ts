@@ -58,9 +58,6 @@ export async function getMainPath(host: Tree, userProject?: string): Promise<str
   const workspace = await getWorkspace(host);
 
   /* If no project name was provided, use the default project name */
-  if (workspace.projects.size === 1) {
-
-  }
   const projectName = userProject ?? ((workspace.projects.size === 1) ? Array.from(workspace.projects.keys())[0] : '');
   const project = workspace.projects.get(projectName);
 
