@@ -2,6 +2,10 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
 
+## 11.0.2 (2020-12-23)
+
+No lib change, just a fix in schematics to avoid `ng add` breaking with Angular 11.1.
+
 ## 11.0.1 (2020-11-13)
 
 No change, just a release to update link to new `main` branch.
