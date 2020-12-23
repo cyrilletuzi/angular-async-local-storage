@@ -1,7 +1,6 @@
 import { Tree, SchematicsException } from '@angular-devkit/schematics';
 import { getPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
-import { getWorkspace as getWorkspaceConfig } from '@schematics/angular/utility/config';
 
 export const packageName = '@ngx-pwa/local-storage';
 
@@ -57,10 +56,12 @@ export async function getAllMainPaths(host: Tree): Promise<string[]> {
 export async function getMainPath(host: Tree, userProject?: string): Promise<string> {
 
   const workspace = await getWorkspace(host);
-  const workspaceConfig = getWorkspaceConfig(host);
 
   /* If no project name was provided, use the default project name */
-  const projectName = userProject || workspaceConfig.defaultProject || '';
+  if (workspace.projects.size === 1) {
+
+  }
+  const projectName = userProject ?? ((workspace.projects.size === 1) ? Array.from(workspace.projects.keys())[0] : '');
   const project = workspace.projects.get(projectName);
 
   if (userProject && !project) {
