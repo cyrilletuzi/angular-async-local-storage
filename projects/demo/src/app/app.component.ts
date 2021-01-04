@@ -12,21 +12,21 @@ interface Data {
 @Component({
   selector: 'app-root',
   template: `
-    <p id="get-item">{{(getItem$ | async)?.title}}</p>
-    <p id="schema-error">{{schemaError$ | async}}</p>
-    <p id="remove-item">{{removeItem$ | async}}</p>
+    <p id="get-item">{{(getItem$ | async)?.title}}</p>
+    <p id="schema-error">{{schemaError$ | async}}</p>
+    <p id="remove-item">{{removeItem$ | async}}</p>
     <p id="clear">{{clear}}</p>
-    <p id="length">{{length$ | async}}</p>
-    <p id="keys">{{keys$ | async | json}}</p>
+    <p id="length">{{length$ | async}}</p>
+    <p id="keys">{{keys$ | async | json}}</p>
     <p id="has" [hidden]="has$ | async">Should not be seen</p>
-    <p id="service">{{service$ | async}}</p>
+    <p id="service">{{service$ | async}}</p>
     <iframe src="http://localhost:8080"></iframe>
   `
 })
 export class AppComponent implements OnInit {
 
   getItem$!: Observable<Data | null>;
-  schemaError$!: Observable<string | null>;
+  schemaError$!: Observable<string | null>;
   removeItem$!: Observable<string | null>;
   clear: string | null = 'hello world';
   size$!: Observable<number>;
@@ -62,7 +62,7 @@ export class AppComponent implements OnInit {
       );
 
       this.schemaError$ = this.localStorage.setItem('schemaError', { wrong: 'test' }).pipe(
-        // tslint:disable-next-line: no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         mergeMap(() => this.localStorage.getItem('schemaError', schema as any)),
         catchError(() => of('schema error')),
       );

@@ -11,7 +11,7 @@ describe('public api', () => {
         done();
       }, 1000);
 
-    });
+    }).catch(() => {});
 
   });
 
