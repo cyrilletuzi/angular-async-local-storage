@@ -112,7 +112,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param key The item's key
    * @returns The item's value if the key exists, `undefined` otherwise, wrapped in an RxJS `Observable`
    */
-  get(key: string): Observable<unknown | undefined> {
+  get(key: string): Observable<unknown | undefined> {
 
     /* Open a transaction in read-only mode */
     return this.transaction('readonly').pipe(
@@ -124,14 +124,16 @@ export class IndexedDBDatabase implements LocalDatabase {
         const request = store.get(key);
 
         /* Listen events and return the result */
-        return events.pipe(map(() => {
+        return events.pipe(map((): unknown => {
 
           if ((request.result !== undefined) && (request.result !== null)) {
 
             /* Prior to v8, the value was wrapped in an `{ value: ...}` object */
             if (!this.noWrap && (typeof request.result === 'object') && (this.wrapIndex in request.result) &&
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             (request.result[this.wrapIndex] !== undefined) && (request.result[this.wrapIndex] !== null)) {
 
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               return request.result[this.wrapIndex];
 
             } else {
@@ -329,7 +331,7 @@ export class IndexedDBDatabase implements LocalDatabase {
       /* Do NOT explicit `window` here, as `indexedDB` could be used from a web worker too */
       request = indexedDB.open(this.dbName, this.dbVersion);
 
-    } catch {
+    } catch {
 
       this.database.error(new IDBBrokenError());
 

@@ -3,6 +3,7 @@ import { JSONSchema } from './json-schema';
 describe('JSONSchema', () => {
 
   function test(schema: JSONSchema): void {
+    // eslint-disable-next-line no-empty
     if (schema) {}
     expect().nothing();
   }
@@ -189,7 +190,7 @@ describe('JSONSchema', () => {
 
       const schema: JSONSchema = {
         type: 'string',
-        // @ts-expect-error
+        // @ts-expect-error Failure test
         required: ['hello'],
       };
 
@@ -201,7 +202,7 @@ describe('JSONSchema', () => {
 
       const schema: JSONSchema = {
         type: 'string',
-        // @ts-expect-error
+        // @ts-expect-error Failure test
         maxLength: '1',
       };
 
@@ -213,7 +214,7 @@ describe('JSONSchema', () => {
 
       const schema: JSONSchema = {
         type: 'string',
-        // @ts-expect-error
+        // @ts-expect-error Failure test
         maxLength: '1',
       };
 

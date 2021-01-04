@@ -90,7 +90,7 @@ export class JSONValidator {
    * @param schema Schema describing the number or integer
    * @returns If data is valid: `true`, if it is invalid: `false`
    */
-  protected validateNumber(data: unknown, schema: JSONSchemaNumber | JSONSchemaInteger): boolean {
+  protected validateNumber(data: unknown, schema: JSONSchemaNumber | JSONSchemaInteger): boolean {
 
     if (typeof data !== 'number') {
       return false;
@@ -260,7 +260,7 @@ export class JSONValidator {
 
       for (const requiredProp of schema.required) {
 
-        if (!data.hasOwnProperty(requiredProp)) {
+        if (!Object.prototype.hasOwnProperty.call(data, requiredProp)) {
           return false;
         }
 
@@ -272,7 +272,7 @@ export class JSONValidator {
     for (const property in schema.properties) {
 
       /* Filter to keep only real properties (no internal JS stuff) and check if the data has the property too */
-      if (schema.properties.hasOwnProperty(property) && data.hasOwnProperty(property)) {
+      if (Object.prototype.hasOwnProperty.call(schema.properties, property) && Object.prototype.hasOwnProperty.call(data, property)) {
 
         if (!this.validate((data as { [k: string]: unknown; })[property], schema.properties[property])) {
           return false;

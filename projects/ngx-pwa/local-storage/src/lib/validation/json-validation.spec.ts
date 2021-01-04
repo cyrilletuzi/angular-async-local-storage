@@ -14,7 +14,7 @@ describe(`JSONValidator`, () => {
 
     it(`should not throw with options unsupported by the lib but allowed in the standard`, () => {
 
-      expect(() => {
+      expect(() => {
 
         const schema = {
           type: 'object',

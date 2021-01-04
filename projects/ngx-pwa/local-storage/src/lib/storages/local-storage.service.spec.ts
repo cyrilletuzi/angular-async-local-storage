@@ -89,8 +89,8 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
         storage.setItem(key, value).pipe(
           mergeMap(() => storage.getItem<Test>(key))
-        // @ts-expect-error
-        ).subscribe((result: Test | undefined) => {
+        // @ts-expect-error Failture test
+        ).subscribe((_: Test | undefined) => {
 
           expect().nothing();
           done();
@@ -105,6 +105,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
           mergeMap(() => storage.getItem(key, schema))
         ).subscribe({ error: (error) => {
 
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           expect(error.message).toBe(VALIDATION_ERROR);
 
           done();
@@ -119,6 +120,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
           mergeMap(() => storage.getItem(key, { schema }))
         ).subscribe({ error: (error) => {
 
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           expect(error.message).toBe(VALIDATION_ERROR);
 
           done();
