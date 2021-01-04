@@ -15,7 +15,7 @@ export class PageComponent implements OnInit {
   ngOnInit(): void {
 
     this.storageMap.get('key', { type: 'string' }).subscribe((result) => {
-      this.text = result || 'not ok';
+      this.text = result || 'not ok';
     });
 
   }

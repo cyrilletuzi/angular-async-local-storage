@@ -1,0 +1,25 @@
+{
+  "extends": "../../.eslintrc.json",
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "projects/demo/tsconfig.app.json",
+          "projects/demo/tsconfig.spec.json",
+          "projects/demo/e2e/tsconfig.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "rules": {}
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "rules": {}
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "root": true,
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:@angular-eslint/all",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
+      "rules": {
+        "quotes": [
+          "error",
+          "single",
+          {
+            "allowTemplateLiterals": true
+          }
+        ],
+        "max-len": [
+          "error",
+          {
+            "code": 140,
+            "ignoreTrailingComments": true
+          }
+        ],
+        "no-empty": [
+          "error",
+          {
+            "allowEmptyCatch": true
+          }
+        ],
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_"
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/explicit-function-return-type": [
+          "error",
+          {
+            "allowExpressions": true
+          }
+        ],
+        "@angular-eslint/prefer-on-push-component-change-detection": "off",
+        "@angular-eslint/component-max-inline-declarations": "off",
+        "@angular-eslint/use-component-selector": "off"
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/all"
+      ],
+      "rules": {
+        "@angular-eslint/template/i18n": "off"
+      }
+    }
+  ]
+}

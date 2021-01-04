@@ -18,6 +18,8 @@ jobs:
       run: npm ci
       env:
         CI: true
+    - name: Build the lib so lint can check types
+      run: npm run build
     - name: Lint check
       run: npm run lint
 

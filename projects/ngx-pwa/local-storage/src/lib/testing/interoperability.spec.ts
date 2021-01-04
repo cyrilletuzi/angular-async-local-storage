@@ -2,7 +2,7 @@ import { StorageMap } from '../storages/storage-map.service';
 import { IndexedDBDatabase } from '../databases/indexeddb-database';
 import { JSONSchema } from '../validation/json-schema';
 import { DEFAULT_IDB_STORE_NAME } from '../tokens';
-import { clearStorage, closeAndDeleteDatabase } from './cleaning';
+import { clearStorage, closeAndDeleteDatabase } from './cleaning.spec';
 
 
 const dbName = `interopStore${Date.now()}`;

@@ -79,7 +79,7 @@ export class LocalStorageDatabase implements LocalDatabase {
     let serializedData: string | null = null;
 
     /* Check if data can be serialized */
-    const dataPrototype = Object.getPrototypeOf(data);
+    const dataPrototype: unknown = Object.getPrototypeOf(data);
     if ((typeof data === 'object') && (data !== null) && !Array.isArray(data) &&
     !((dataPrototype === Object.prototype) || (dataPrototype === null))) {
       return throwError(new SerializationError());
@@ -168,7 +168,7 @@ export class LocalStorageDatabase implements LocalDatabase {
     /* Itérate over all indexes in storage */
     for (let index = 0; index < localStorage.length; index += 1) {
 
-      if (key === this.getUnprefixedKey(index)) {
+      if (key === this.getUnprefixedKey(index)) {
 
         /* Wrap in a RxJS `Observable` to be consistent with other storages */
         return of(true);

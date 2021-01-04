@@ -67,14 +67,14 @@ export class LocalStorage {
    *   }
    * });
    */
-  getItem<T = string>(key: string, schema: JSONSchemaString): Observable<string | null>;
-  getItem<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | null>;
-  getItem<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | null>;
-  getItem<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | null>;
-  getItem<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | null>;
-  getItem<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | null>;
-  getItem<T = unknown>(key: string, schema: JSONSchema | { schema: JSONSchema }): Observable<T | null>;
-  getItem<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>;
+  getItem<T = string>(key: string, schema: JSONSchemaString): Observable<string | null>; // eslint-disable-line @typescript-eslint/no-unused-vars
+  getItem<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | null>; // eslint-disable-line @typescript-eslint/no-unused-vars
+  getItem<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | null>; // eslint-disable-line @typescript-eslint/no-unused-vars
+  getItem<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | null>; // eslint-disable-line @typescript-eslint/no-unused-vars
+  getItem<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | null>; // eslint-disable-line @typescript-eslint/no-unused-vars
+  getItem<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | null>; // eslint-disable-line @typescript-eslint/no-unused-vars
+  getItem<T = unknown>(key: string, schema: JSONSchema | { schema: JSONSchema }): Observable<T | null>; // eslint-disable-line @typescript-eslint/no-unused-vars
+  getItem<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown>; // eslint-disable-line @typescript-eslint/no-unused-vars
   getItem<T = unknown>(key: string, schema?: JSONSchema | { schema: JSONSchema } | undefined): Observable<unknown> {
 
     if (schema) {

@@ -4,7 +4,7 @@ import { IndexedDBDatabase } from '../databases/indexeddb-database';
 import { LocalStorageDatabase } from '../databases/localstorage-database';
 import { MemoryDatabase } from '../databases/memory-database';
 import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_DB_VERSION } from '../tokens';
-import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
+import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning.spec';
 import { StorageMap } from './storage-map.service';
 import { VALIDATION_ERROR } from './exceptions';
 import { JSONSchema, JSONSchemaNumber } from '../validation/json-schema';
@@ -44,7 +44,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('no schema / no cast', (done) => {
 
-        // @ts-expect-error
+        // @ts-expect-error Failure test
         storage.get('test').subscribe((_: number | undefined) => {
 
           expect().nothing();
@@ -56,8 +56,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('no schema / cast', (done) => {
 
-        // @ts-expect-error
-        // tslint:disable-next-line: deprecation
+        // @ts-expect-error Failure test
         storage.get<number>('test').subscribe((_: number | undefined) => {
 
           expect().nothing();
@@ -80,7 +79,6 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('schema / wrong cast', (done) => {
 
-        // tslint:disable-next-line: deprecation
         storage.get<number>('test', { type: 'string' }).subscribe((_: string | undefined) => {
 
           expect().nothing();
@@ -756,8 +754,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             test: string;
           }
 
-          // @ts-expect-error
-          // tslint:disable-next-line: deprecation
+          // @ts-expect-error Failure test
           storage.get<Test>('test').subscribe((_: Test | undefined) => {
 
             expect().nothing();
@@ -769,13 +766,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         it('objects / no cast / schema', (done) => {
 
-          // tslint:disable-next-line: deprecation
           storage.get('test', {
             type: 'object',
             properties: {
               test: { type: 'string' }
             }
-          // @ts-expect-error
+          // @ts-expect-error Failure test
           }).subscribe((_: Test | undefined) => {
 
             expect().nothing();
@@ -1232,6 +1228,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         ).subscribe({
           error: (error) => {
 
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
 
             done();
@@ -1247,6 +1244,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           mergeMap(() => storage.get<Test>(key, schema))
         ).subscribe({ error: (error) => {
 
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           expect(error.message).toBe(VALIDATION_ERROR);
 
           done();
@@ -1260,6 +1258,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         storage.set(key, 'test', schema).subscribe({
           error: (error) => {
 
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
             done();
 
@@ -1397,6 +1396,9 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           .then((result: string | undefined) => {
             expect(result).toBe(value);
             done();
+          })
+          .catch(() => {
+            fail();
           });
 
       });

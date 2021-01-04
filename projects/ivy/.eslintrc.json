@@ -1,0 +1,25 @@
+{
+  "extends": "../../.eslintrc.json",
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "projects/ivy/tsconfig.app.json",
+          "projects/ivy/tsconfig.spec.json",
+          "projects/ivy/e2e/tsconfig.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "rules": {}
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "rules": {}
+    }
+  ]
+}

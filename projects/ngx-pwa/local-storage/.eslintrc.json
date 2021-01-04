@@ -1,0 +1,17 @@
+{
+  "extends": "../../../.eslintrc.json",
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "projects/ngx-pwa/local-storage/tsconfig.lib.json",
+          "projects/ngx-pwa/local-storage/tsconfig.spec.json"
+        ]
+      },
+      "rules": {}
+    }
+  ]
+}

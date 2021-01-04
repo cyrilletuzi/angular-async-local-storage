@@ -14,7 +14,7 @@ describe(`JSONValidator`, () => {
 
     it(`should not throw with options unsupported by the lib but allowed in the standard`, () => {
 
-      expect(() => {
+      expect(() => {
 
         const schema = {
           type: 'object',
@@ -22,7 +22,7 @@ describe(`JSONValidator`, () => {
           additionalProperties: true,
         };
 
-        // tslint:disable-next-line: no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         jsonValidator.validate({ test: 'test' }, schema as any);
 
       }).not.toThrow();

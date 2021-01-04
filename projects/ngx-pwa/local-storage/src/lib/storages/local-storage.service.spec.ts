@@ -4,7 +4,7 @@ import { IndexedDBDatabase } from '../databases/indexeddb-database';
 import { LocalStorageDatabase } from '../databases/localstorage-database';
 import { MemoryDatabase } from '../databases/memory-database';
 import { JSONSchema } from '../validation/json-schema';
-import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
+import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning.spec';
 import { LocalStorage } from './local-storage.service';
 import { StorageMap } from './storage-map.service';
 import { VALIDATION_ERROR } from './exceptions';
@@ -23,7 +23,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
     beforeEach((done) => {
       /* Clear data to avoid tests overlap */
-      // tslint:disable-next-line: no-string-literal
+      // eslint-disable-next-line @typescript-eslint/dot-notation
       clearStorage(done, storage['storageMap']);
     });
 
@@ -33,7 +33,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
        * so the next tests group to will trigger the `indexedDB` `upgradeneeded` event,
        * as it's where the store is created
        * - to be able to delete the database, all connections to it must be closed */
-      // tslint:disable-next-line: no-string-literal
+      // eslint-disable-next-line @typescript-eslint/dot-notation
       closeAndDeleteDatabase(done, storage['storageMap']);
     });
 
@@ -89,8 +89,8 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
         storage.setItem(key, value).pipe(
           mergeMap(() => storage.getItem<Test>(key))
-        // @ts-expect-error
-        ).subscribe((result: Test | undefined) => {
+        // @ts-expect-error Failture test
+        ).subscribe((_: Test | undefined) => {
 
           expect().nothing();
           done();
@@ -105,6 +105,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
           mergeMap(() => storage.getItem(key, schema))
         ).subscribe({ error: (error) => {
 
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           expect(error.message).toBe(VALIDATION_ERROR);
 
           done();
@@ -119,6 +120,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
           mergeMap(() => storage.getItem(key, { schema }))
         ).subscribe({ error: (error) => {
 
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           expect(error.message).toBe(VALIDATION_ERROR);
 
           done();

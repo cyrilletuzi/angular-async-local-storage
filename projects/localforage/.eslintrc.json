@@ -1,0 +1,25 @@
+{
+  "extends": "../../.eslintrc.json",
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "projects/localforage/tsconfig.app.json",
+          "projects/localforage/tsconfig.spec.json",
+          "projects/localforage/e2e/tsconfig.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "rules": {}
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "rules": {}
+    }
+  ]
+}

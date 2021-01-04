@@ -23,10 +23,10 @@ export class AppComponent implements OnInit {
     localForage.setItem(key, value).then(() => {
 
       this.storageMap.get(key, { type: 'string' }).subscribe((result) => {
-        this.title = result || 'not ok';
+        this.title = result || 'not ok';
       });
 
-    });
+    }).catch(() => {});
 
   }
 

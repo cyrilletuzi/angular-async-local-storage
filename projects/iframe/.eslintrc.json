@@ -1,0 +1,24 @@
+{
+  "extends": "../../.eslintrc.json",
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "projects/iframe/tsconfig.app.json",
+          "projects/iframe/tsconfig.spec.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "rules": {}
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "rules": {}
+    }
+  ]
+}
