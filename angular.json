@@ -454,15 +454,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/ivy/tsconfig.app.json",
-              "projects/ivy/tsconfig.spec.json",
-              "projects/ivy/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "projects/ivy/**/*.ts",
+              "projects/ivy/**/*.html"
             ]
           }
         },
