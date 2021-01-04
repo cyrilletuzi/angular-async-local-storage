@@ -4,7 +4,7 @@ import { IndexedDBDatabase } from '../databases/indexeddb-database';
 import { LocalStorageDatabase } from '../databases/localstorage-database';
 import { MemoryDatabase } from '../databases/memory-database';
 import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_STORE_NAME, DEFAULT_IDB_DB_VERSION } from '../tokens';
-import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning';
+import { clearStorage, closeAndDeleteDatabase } from '../testing/cleaning.spec';
 import { StorageMap } from './storage-map.service';
 import { VALIDATION_ERROR } from './exceptions';
 import { JSONSchema, JSONSchemaNumber } from '../validation/json-schema';
