@@ -30,14 +30,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/ngx-pwa/local-storage/tsconfig.lib.json",
-              "projects/ngx-pwa/local-storage/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "projects/ngx-pwa/local-storage/**/*.ts",
+              "projects/ngx-pwa/local-storage/**/*.html"
             ]
           }
         }

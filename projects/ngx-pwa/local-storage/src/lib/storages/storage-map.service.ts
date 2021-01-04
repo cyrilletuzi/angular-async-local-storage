@@ -419,7 +419,7 @@ export class StorageMap {
     }
 
     /* Non-null assertion is required because TypeScript doesn't narrow `.has()` yet */
-    // tslint:disable-next-line: no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const notifier = this.notifiers.get(key)!;
 
     /* Get the current item value */

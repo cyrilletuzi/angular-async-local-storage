@@ -11,7 +11,7 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
 
   if (storageService.backingEngine === 'indexedDB') {
 
-    // tslint:disable-next-line: no-string-literal
+    // eslint-disable-next-line @typescript-eslint/dot-notation
     const indexedDBService = storageService['database'] as IndexedDBDatabase;
 
     try {
@@ -81,7 +81,7 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
 
   } else if (storageService.backingEngine === 'memory') {
 
-    // tslint:disable-next-line: no-string-literal
+    // eslint-disable-next-line @typescript-eslint/dot-notation
     (storageService['database'] as MemoryDatabase)['memoryStorage'].clear();
 
     done();
@@ -108,10 +108,10 @@ export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap)
   /* Only `indexedDB` is concerned */
   if (storageService.backingEngine === 'indexedDB') {
 
-    // tslint:disable-next-line: no-string-literal
+    // eslint-disable-next-line @typescript-eslint/dot-notation
     const indexedDBService = storageService['database'] as IndexedDBDatabase;
 
-    // tslint:disable-next-line: no-string-literal
+    // eslint-disable-next-line @typescript-eslint/dot-notation
     indexedDBService['database'].subscribe({
       next: (database) => {
 

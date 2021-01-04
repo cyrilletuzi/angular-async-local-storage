@@ -23,7 +23,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
 
     beforeEach((done) => {
       /* Clear data to avoid tests overlap */
-      // tslint:disable-next-line: no-string-literal
+      // eslint-disable-next-line @typescript-eslint/dot-notation
       clearStorage(done, storage['storageMap']);
     });
 
@@ -33,7 +33,7 @@ function tests(description: string, localStorageServiceFactory: () => LocalStora
        * so the next tests group to will trigger the `indexedDB` `upgradeneeded` event,
        * as it's where the store is created
        * - to be able to delete the database, all connections to it must be closed */
-      // tslint:disable-next-line: no-string-literal
+      // eslint-disable-next-line @typescript-eslint/dot-notation
       closeAndDeleteDatabase(done, storage['storageMap']);
     });
 

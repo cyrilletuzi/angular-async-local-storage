@@ -57,7 +57,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('no schema / cast', (done) => {
 
         // @ts-expect-error
-        // tslint:disable-next-line: deprecation
+        // eslint-disable-next-line import/no-deprecated
         storage.get<number>('test').subscribe((_: number | undefined) => {
 
           expect().nothing();
@@ -80,7 +80,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it('schema / wrong cast', (done) => {
 
-        // tslint:disable-next-line: deprecation
+        // eslint-disable-next-line import/no-deprecated
         storage.get<number>('test', { type: 'string' }).subscribe((_: string | undefined) => {
 
           expect().nothing();
@@ -757,7 +757,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           }
 
           // @ts-expect-error
-          // tslint:disable-next-line: deprecation
+          // eslint-disable-next-line import/no-deprecated
           storage.get<Test>('test').subscribe((_: Test | undefined) => {
 
             expect().nothing();
@@ -769,7 +769,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         it('objects / no cast / schema', (done) => {
 
-          // tslint:disable-next-line: deprecation
+          // eslint-disable-next-line import/no-deprecated
           storage.get('test', {
             type: 'object',
             properties: {
