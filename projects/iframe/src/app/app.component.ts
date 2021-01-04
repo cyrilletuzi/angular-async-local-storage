@@ -10,7 +10,7 @@ interface Data {
 @Component({
   selector: 'app-root',
   template: `
-    <h1>{{(data$ | async)?.title}}</h1>
+    <h1>{{(data$ | async)?.title}}</h1>
     <router-outlet></router-outlet>
   `
 })

@@ -18,7 +18,8 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:@angular-eslint/all"
+        "plugin:@angular-eslint/all",
+        "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
         "quotes": [
@@ -54,7 +55,8 @@
           {
             "allowExpressions": true
           }
-        ]
+        ],
+        "@angular-eslint/prefer-on-push-component-change-detection": "off"
       }
     },
     {
@@ -64,7 +66,9 @@
       "extends": [
         "plugin:@angular-eslint/template/all"
       ],
-      "rules": {}
+      "rules": {
+        "@angular-eslint/template/i18n": "off"
+      }
     }
   ]
 }
