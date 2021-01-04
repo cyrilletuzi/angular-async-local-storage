@@ -228,15 +228,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/localforage/tsconfig.app.json",
-              "projects/localforage/tsconfig.spec.json",
-              "projects/localforage/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "projects/localforage/**/*.ts",
+              "projects/localforage/**/*.html"
             ]
           }
         },

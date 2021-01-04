@@ -10,8 +10,12 @@ describe('interoperability', () => {
         $('h1').getText().then((title) => {
           expect(title).toBe('hello world');
           done();
+        }).catch(() => {
+          fail();
         });
       }, 1000);
+    }).catch(() => {
+      fail();
     });
 
   });
@@ -27,10 +31,16 @@ describe('interoperability', () => {
             $('#lazy').getText().then((title) => {
               expect(title).toBe('hello world');
               done();
+            }).catch(() => {
+              fail();
             });
           }, 1000);
+        }).catch(() => {
+          fail();
         });
       }, 1000);
+    }).catch(() => {
+      fail();
     });
 
   });

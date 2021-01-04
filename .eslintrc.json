@@ -57,7 +57,8 @@
           }
         ],
         "@angular-eslint/prefer-on-push-component-change-detection": "off",
-        "@angular-eslint/component-max-inline-declarations": "off"
+        "@angular-eslint/component-max-inline-declarations": "off",
+        "@angular-eslint/use-component-selector": "off"
       }
     },
     {
