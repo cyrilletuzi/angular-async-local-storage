@@ -19,7 +19,6 @@
       "dom"
     ],
     "strict": true,
-    "noUncheckedIndexedAccess": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "noImplicitReturns": true,
