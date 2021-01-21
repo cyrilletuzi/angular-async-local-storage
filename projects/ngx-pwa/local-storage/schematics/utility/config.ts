@@ -14,7 +14,8 @@ export function getAngularMajorVersion(host: Tree): number {
   }
 
   /* Remove semver signs if present and keep only the first number (major) */
-  return Number.parseInt(angularDependency.version.replace('~', '').replace('^', '').split('.')[0], 10);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return Number.parseInt(angularDependency.version.replace('~', '').replace('^', '').split('.')[0]!, 10);
 
 }
 
@@ -58,7 +59,8 @@ export async function getMainPath(host: Tree, userProject?: string): Promise<str
   const workspace = await getWorkspace(host);
 
   /* If no project name was provided, use the default project name */
-  const projectName = userProject ?? ((workspace.projects.size === 1) ? Array.from(workspace.projects.keys())[0] : '');
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const projectName = userProject ?? ((workspace.projects.size === 1) ? Array.from(workspace.projects.keys())[0]! : '');
   const project = workspace.projects.get(projectName);
 
   if (userProject && !project) {

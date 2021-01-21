@@ -225,7 +225,8 @@ export class JSONValidator {
 
     for (let i = 0; i < schemas.length; i += 1) {
 
-      if (!this.validate(data[i], schemas[i])) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      if (!this.validate(data[i], schemas[i]!)) {
         return false;
       }
 
@@ -274,7 +275,8 @@ export class JSONValidator {
       /* Filter to keep only real properties (no internal JS stuff) and check if the data has the property too */
       if (Object.prototype.hasOwnProperty.call(schema.properties, property) && Object.prototype.hasOwnProperty.call(data, property)) {
 
-        if (!this.validate((data as { [k: string]: unknown; })[property], schema.properties[property])) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        if (!this.validate((data as { [k: string]: unknown; })[property], schema.properties[property]!)) {
           return false;
         }
 
