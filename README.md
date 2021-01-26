@@ -99,7 +99,7 @@ class StorageMap {
   get(index: string): Observable<unknown> {}
   get<T>(index: string, schema: JSONSchema): Observable<T> {}
 
-  // Observe (version >= 9)
+  // Observe
   watch(index: string): Observable<unknown> {}
   watch<T>(index: string, schema: JSONSchema): Observable<T> {}
 

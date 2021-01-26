@@ -11,7 +11,7 @@ Everything can be serialized (`JSON.stringify()`), but when you unserialize (`JS
 you'll only get a JSON, ie. a primitive type, an array or a *literal* object.
 
 So if you store an instance of a specific class in `localStorage`, like `Date`, `Map`, `Set` or `Blob`,
-what you'll get then with `.setItem()` won't be a `Map`, `Set` or `Blob`, but just a literal object.
+what you'll get then with `.get()` won't be a `Map`, `Set` or `Blob`, but just a literal object.
 
 So, it's safer to **stick to JSON-compatible values**.
 
