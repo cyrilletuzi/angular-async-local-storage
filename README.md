@@ -24,7 +24,7 @@ It's a lot of *unpaid* work. So please consider:
 - [typescript-strictly-typed](https://github.com/cyrilletuzi/typescript-strictly-typed): reliable code with TypeScript strictly typed
 - Popular [Angular posts on Medium](https://medium.com/@cyrilletuzi)
 - Follow updates of this lib on [Twitter](https://twitter.com/cyrilletuzi)
-- **[Angular trainings](https://formationjavascript.com/formation-angular/)** (based in Paris, so the website is in French, but [my English bio is here](https://www.cyrilletuzi.com/en/) and it can be done remotely)
+- **[Angular trainings](https://formationjavascript.com/formation-angular/)** (in French, as I'm based in Paris, but [my English bio is here](https://www.cyrilletuzi.com/en/) and it can be done remotely)
 
 ## Why this module?
 
