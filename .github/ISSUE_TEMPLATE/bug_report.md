@@ -7,11 +7,11 @@ assignees: ''
 
 ---
 
+<!-- Switch to the "Preview" tab to be able to click on links directly -->
+
 Hi,
 
 # Checks before posting an issue
-
-<!-- Switch to the "Preview" tab to be able to click on links directly -->
 
 - [ ] I have read _all_ the library's documentation:
   - [README](https://github.com/cyrilletuzi/angular-async-local-storage)
