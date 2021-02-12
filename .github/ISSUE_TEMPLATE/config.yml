@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and support
+    url: https://github.com/cyrilletuzi/angular-async-local-storage/discussions/categories/q-a
+    about: The GitHub "Issues" tab is not intended for questions and support. A new "Discussions" tab, with a Questions & Answers category, is available for that purpose.
+  - name: Feature requests
+    url: https://github.com/cyrilletuzi/angular-async-local-storage/discussions/categories/ideas
+    about: Feature requests must be posted and discussed first in the new GitHub "Discussions" tab, in "Ideas" category.
