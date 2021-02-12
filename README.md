@@ -18,9 +18,6 @@ It's a lot of *unpaid* work. So please consider:
 - **becoming [a sponsor](https://github.com/sponsors/cyrilletuzi)**, if your company earns money with projects using this lib
 - at least, taking 2 minutes to [show your love](https://github.com/cyrilletuzi/angular-async-local-storage/discussions/categories/wall-of-love)
 
-It's a lot of *unpaid* work. So if your company earns money with projects using this lib,
-it would be nice to **consider becoming [a sponsor](https://github.com/sponsors/cyrilletuzi)**.
-
 ## By the same author
 
 - [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics) (GUI for Angular CLI commands)
