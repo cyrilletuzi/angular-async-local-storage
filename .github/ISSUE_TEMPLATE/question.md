@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-<!-- Switch to the "Preview" tab to be able to click on links directly -->
+<!-- Switch to the "Preview" tab to read the instructions more easily and be able to click on links directly -->
 
 Hi,
 
