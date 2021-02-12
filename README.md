@@ -14,7 +14,11 @@ What started as a personal project is now one of the most used Angular library
 for client-side storage, with more than 10 000 downloads
 [on npm](https://www.npmjs.com/package/@ngx-pwa/local-storage) each week.
 
-It's a lot of *free* work. So if your company earns money with projects using this lib,
+It's a lot of *unpaid* work. So please consider:
+- **becoming [a sponsor](https://github.com/sponsors/cyrilletuzi)**, if your company earns money with projects using this lib
+- at least, taking 2 minutes to [show your love](https://github.com/cyrilletuzi/angular-async-local-storage/discussions/categories/wall-of-love)
+
+It's a lot of *unpaid* work. So if your company earns money with projects using this lib,
 it would be nice to **consider becoming [a sponsor](https://github.com/sponsors/cyrilletuzi)**.
 
 ## By the same author
@@ -59,7 +63,7 @@ ng add @ngx-pwa/local-storage
 *Done!*
 
 You should **stick to these commands**. If for any reason `ng add` does not work,
-be sure to follow the [manual installation guide](./docs/MANUAL_INSTALLATION.md),
+be sure to follow the [manual installation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MANUAL_INSTALLATION.md),
 as there are additionnal steps to do in addition to the package installation for some versions.
 
 If you have multiple applications in the same project, as usual, you need to choose the project:
@@ -69,7 +73,7 @@ ng add @ngx-pwa/local-storage --project yourprojectname
 
 ### Upgrading
 
-To update to new versions, see the **[migration guides](./MIGRATION.md).**
+To update to new versions, see the **[migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).**
 
 ## API
 
@@ -127,7 +131,7 @@ You can store any value, without worrying about serializing. But note that:
 - storing `null` or `undefined` makes no sense and can cause issues in some browsers, so the item will be removed instead,
 - you should stick to JSON data, ie. primitive types, arrays and *literal* objects.
 `Date`, `Map`, `Set`, `Blob` and other special structures can cause issues in some scenarios.
-See the [serialization guide](./docs/SERIALIZATION.md) for more details.
+See the [serialization guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/SERIALIZATION.md) for more details.
 
 ### Deleting data
 
@@ -159,7 +163,7 @@ this.storage.get('notexisting').subscribe((data) => {
 
 **Note you will only get *one* value**: the `Observable` is here for asynchrony but
 **is *not* meant to emit again when the stored data is changed**.
-If you need to watch the value, see the [watching guide](./docs/WATCHING.md).
+If you need to watch the value, see the [watching guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/WATCHING.md).
 
 ### Checking data
 
@@ -174,7 +178,7 @@ this.storage.get('test', { type: 'string' }).subscribe({
 });
 ```
 
-**See the [full validation guide](./docs/VALIDATION.md) to see how to validate all common scenarios.**
+**See the [full validation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md) to see how to validate all common scenarios.**
 
 ### Subscription
 
@@ -203,14 +207,14 @@ this.storage.get('color').pipe(
 ).subscribe((result) => {});
 ```
 
-See the [errors guide](./docs/ERRORS.md) for some details about what errors can happen.
+See the [errors guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/ERRORS.md) for some details about what errors can happen.
 
 ### Expiration
 
 This lib, as native `localStorage` and `indexedDb`, is about *persistent* storage.
 
 Wanting *temporary* storage (like `sessionStorage`) is a very common misconception:
-an application doesn't need that. [More details here](./docs/EXPIRATION.md).
+an application doesn't need that. [More details here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/EXPIRATION.md).
 
 ### `Map`-like operations
 
@@ -220,7 +224,7 @@ this lib also provides a `Map`-like API for advanced operations:
   - `.has(key)`
   - `.size`
 
-See the [documentation](./docs/MAP_OPERATIONS.md) for more info and some recipes.
+See the [documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MAP_OPERATIONS.md) for more info and some recipes.
 For example, it allows to implement a multiple databases scenario.
 
 ## Support
@@ -237,22 +241,22 @@ via a mock storage.
 ### Browser support
 
 This lib supports [the same browsers as Angular](https://angular.io/guide/browser-support).
-See [the browsers support guide](./docs/BROWSERS_SUPPORT.md) for more details and special cases (like private browsing).
+See [the browsers support guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/BROWSERS_SUPPORT.md) for more details and special cases (like private browsing).
 
 ### Collision
 
 If you have multiple apps on the same *sub*domain *and* you don't want to share data between them,
-see the [prefix guide](./docs/COLLISION.md).
+see the [prefix guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/COLLISION.md).
 
 ### Interoperability
 
 For interoperability when mixing this lib with direct usage of native APIs or other libs like `localForage`
 (which doesn't make sense in most cases),
-see the [interoperability documentation](./docs/INTEROPERABILITY.md).
+see the [interoperability documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/INTEROPERABILITY.md).
 
 ### Changelog
 
-[Changelog available here](./CHANGELOG.md), and [migration guides here](./MIGRATION.md).
+[Changelog available here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/CHANGELOG.md), and [migration guides here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
 ## License
 
