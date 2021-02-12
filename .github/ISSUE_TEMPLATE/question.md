@@ -14,5 +14,5 @@ Hi,
 The GitHub "Issues" tab is not intended for questions and support. A new "Discussions" tab, with a Questions & Answers category, is available for that purpose.
 - [Questions & Answers](https://github.com/cyrilletuzi/angular-async-local-storage/discussions/categories/q-a)
 
-Note the author is *unpaid* for his work on this lib and thus will answer based on his availability. Sponsoring is welcomed if you want to dedicated help.
+Note the author is *unpaid* for his work on this lib and thus will answer based on his availability. Sponsoring is welcomed if you want dedicated help.
 - [Sponsoring](https://github.com/sponsors/cyrilletuzi/)
