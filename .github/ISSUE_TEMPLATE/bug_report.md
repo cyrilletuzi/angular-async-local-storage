@@ -14,7 +14,7 @@ Hi,
 # Checks before posting an issue
 
 - [ ] I have read _all_ the library's documentation:
-  - [README](https://github.com/cyrilletuzi/angular-async-local-storage)
+  - [README](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/README.md)
   - [CHANGELOG](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/CHANGELOG.md)
   - [MIGRATION](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md)
   - [/docs](https://github.com/cyrilletuzi/angular-async-local-storage/tree/main/docs)
