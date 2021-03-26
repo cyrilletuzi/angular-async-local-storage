@@ -7,7 +7,7 @@ jobs:
   lint:
     name: Lint check
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
     - uses: actions/checkout@v2
     - name: Setup Node
@@ -33,7 +33,7 @@ jobs:
 
     name: Test with Angular@latest on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 8
+    timeout-minutes: 10
 
     steps:
     - uses: actions/checkout@v2
@@ -70,7 +70,7 @@ jobs:
 
     name: Test with Angular@11.0.0 and minimum dependencies requirements
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
     - uses: actions/checkout@v2
