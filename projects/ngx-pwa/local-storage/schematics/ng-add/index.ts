@@ -2,15 +2,13 @@ import { Rule, SchematicContext, Tree, chain, SchematicsException } from '@angul
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 import { Schema as StorageAddOptions } from './schema';
-import { getAngularMajorVersion, getMainPath } from '../utility/config';
-import { addModule } from '../utility/module';
+import { getAngularMajorVersion } from '../utility/config';
 
-export default function(options: StorageAddOptions): Rule {
-  return async (host: Tree, context: SchematicContext) => {
+export default function(_: StorageAddOptions): Rule {
+  return (host: Tree, context: SchematicContext) => {
 
     /* Get config */
     const angularMajorVersion = getAngularMajorVersion(host);
-    const mainPath = await getMainPath(host, options.project);
 
     if (angularMajorVersion <= 8) {
       throw new SchematicsException('Angular versions <= 8 are no longer supported.');
@@ -19,9 +17,7 @@ export default function(options: StorageAddOptions): Rule {
     /* Task to run `npm install` (or user package manager) */
     context.addTask(new NodePackageInstallTask());
 
-    return chain([
-      addModule(angularMajorVersion, mainPath),
-    ]);
+    return chain([]);
 
   };
 }

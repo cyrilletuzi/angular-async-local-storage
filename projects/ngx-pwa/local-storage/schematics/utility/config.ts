@@ -53,32 +53,3 @@ export async function getAllMainPaths(host: Tree): Promise<string[]> {
   return mainPaths;
 
 }
-
-export async function getMainPath(host: Tree, userProject?: string): Promise<string> {
-
-  const workspace = await getWorkspace(host);
-
-  /* If no project name was provided, use the default project name */
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const projectName = userProject ?? ((workspace.projects.size === 1) ? Array.from(workspace.projects.keys())[0]! : '');
-  const project = workspace.projects.get(projectName);
-
-  if (userProject && !project) {
-    throw new SchematicsException(`Invalid project name '${projectName}'`);
-  }
-  if (!project) {
-    throw new SchematicsException(`Can't find a default project, try 'ng add ${packageName} --project yourprojectname'`);
-  }
-  if (project.extensions.projectType !== 'application') {
-    throw new SchematicsException(`'ng add ${packageName}' can only be used for projects with 'projectType': 'application'`);
-  }
-
-  /* Get `main` option in angular.json project config */
-  const buildTarget = project.targets.get('build');
-  if (!buildTarget || !buildTarget.options || !buildTarget.options.main) {
-    throw new SchematicsException(`Your angular.json project config is broken, can't find 'architect.build.options.main'`);
-  }
-
-  return buildTarget.options.main as string;
-
-}
