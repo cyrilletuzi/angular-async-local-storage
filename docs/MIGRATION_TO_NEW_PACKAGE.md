@@ -14,7 +14,8 @@ but is not required for Angular 4 & 5. **It is only required when upgrading to A
 - v8 for Angular 8,
 - v9 for Angular 9,
 - v10 for Angular 10,
-- v11 for Angular 11.
+- v11 for Angular 11,
+- v12 for Angular 12.
 
 Note that [Angular <= 8 are officially outdated](https://angular.io/guide/releases).
 

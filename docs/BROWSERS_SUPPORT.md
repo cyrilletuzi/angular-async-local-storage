@@ -3,7 +3,8 @@
 This lib supports [the same browsers as Angular](https://angular.io/guide/browser-support),
 ie. **all current browsers**:
 - versions <= 10: Firefox, Chrome, Opera, Safari, Edge and IE9+
-- versions >= 11: Firefox, Chrome, Opera, Safari, Edge and IE11+
+- version 11: Firefox, Chrome, Opera, Safari, Edge and IE11+
+- version 12: IE11+ is still supported, but deprecated
 
 This module is not impacted by IE/Edge Legacy missing `indexedDB` features.
 
