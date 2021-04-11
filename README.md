@@ -230,8 +230,6 @@ For example, it allows to implement a multiple databases scenario.
 
 We follow [Angular LTS support](https://angular.io/guide/releases).
 
-This module supports [AoT pre-compiling](https://angular.io/guide/aot-compiler) and Ivy.
-
 This module supports [Universal server-side rendering](https://github.com/angular/universal)
 via a mock storage.
 

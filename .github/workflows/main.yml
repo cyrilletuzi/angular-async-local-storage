@@ -62,9 +62,6 @@ jobs:
     - name: Run interoperability e2e tests
       run: npm run e2e:interoperability
       if: matrix.os == 'ubuntu-latest'
-    - name: Run Ivy e2e tests
-      run: npm run e2e:ivy
-      if: matrix.os == 'ubuntu-latest'
 
   test-minimum:
 
@@ -98,5 +95,4 @@ jobs:
       run: npm run e2e:demo
     - name: Run interoperability e2e tests
       run: npm run e2e:interoperability
-    - name: Run Ivy e2e tests
-      run: npm run e2e:ivy
+

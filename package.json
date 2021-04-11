@@ -17,7 +17,6 @@
     "e2e": "npm run webdriver && npm run e2e:demo && npm run e2e:interoperability",
     "e2e:demo": "ng e2e demo --webdriver-update false",
     "e2e:interoperability": "ng e2e localforage --webdriver-update false",
-    "e2e:ivy": "ng e2e ivy --webdriver-update false",
     "webdriver": "webdriver-manager update",
     "lint": "ng lint",
     "schematics": "tsc -p projects/ngx-pwa/local-storage/tsconfig.schematics.json && copyfiles --up 3 projects/ngx-pwa/local-storage/schematics/collection.json projects/ngx-pwa/local-storage/schematics/migration.json projects/ngx-pwa/local-storage/schematics/**/schema.json dist/ngx-pwa/local-storage",
