@@ -77,17 +77,6 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       });
 
-      it('schema / wrong cast', (done) => {
-
-        storage.get<number>('test', { type: 'string' }).subscribe((_: string | undefined) => {
-
-          expect().nothing();
-          done();
-
-        });
-
-      });
-
       it('schema with options', (done) => {
 
         storage.get('test', { type: 'number', maximum: 10 }).subscribe((_: number | undefined) => {
