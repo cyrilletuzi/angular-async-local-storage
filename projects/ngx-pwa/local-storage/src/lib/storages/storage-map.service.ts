@@ -169,47 +169,7 @@ export class StorageMap {
   get<T extends readonly string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<T | undefined>;
   get<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>; // eslint-disable-line max-len
   get<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  get<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>; // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  get<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>; // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  get<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>; // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  get<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>;  // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  get<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>;  // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  get<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>;  // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated A cast is required here, otherwise the return will be `unknown` despite a JSON schema was provided.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  get(key: string, schema: JSONSchema): Observable<unknown | undefined>;
   get<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here: as no JSON schema was provided for validation, the result will still be `unknown`.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  get<T>(key: string, schema?: JSONSchema): Observable<unknown>;  // eslint-disable-line @typescript-eslint/no-unused-vars
   get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
     /* Get the data in storage */
@@ -370,47 +330,7 @@ export class StorageMap {
   watch<T extends readonly string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<T | undefined>;
   watch<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>; // eslint-disable-line max-len
   watch<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  watch<T = string>(key: string, schema: JSONSchemaString): Observable<string | undefined>; // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  watch<T = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<number | undefined>; // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  watch<T = boolean>(key: string, schema: JSONSchemaBoolean): Observable<boolean | undefined>; // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  watch<T = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<string[] | undefined>; // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  watch<T = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<number[] | undefined>; // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated The cast is useless here and doesn't match the JSON schema. Just remove the cast.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  watch<T = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<boolean[] | undefined>; // eslint-disable-line @typescript-eslint/no-unused-vars
-  /**
-   * @deprecated A cast is required here, otherwise the return will be `unknown` despite a JSON schema was provided.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  watch(key: string, schema: JSONSchema): Observable<unknown | undefined>;
   watch<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
-  /**
-   * @deprecated The cast is useless here: as no JSON schema was provided for validation, the result will still be `unknown`.
-   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
-   */
-  watch<T>(key: string, schema?: JSONSchema): Observable<unknown>; // eslint-disable-line @typescript-eslint/no-unused-vars
   watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
     /* Check if there is already a notifier */

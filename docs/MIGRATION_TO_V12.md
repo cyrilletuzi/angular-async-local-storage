@@ -22,7 +22,16 @@ ng update @ngx-pwa/local-storage --next
 
 Done!
 
-## Changes
+## Breaking changes
+
+### Typings
+
+Incorrect typings that were deprecated in v11 for `.get()` and `.watch()` are now removed:
+- `this.storage.get<User>('user')` (add a JSON schema or remove the cast)
+- `this.storage.get('user', { type: 'object' })` (cast is required in addition to the JSON schema for non-primitive types)
+- `this.storage.get<number>('name', { type: 'string' })` (and all other primitive mismatches)
+
+See the [migration guide for v11](./MIGRATION_TO_V11.md) for detailed instructions.
 
 ### ViewEngine support removed
 
@@ -32,6 +41,8 @@ It was replaced by a new engine called Ivy in Angular 9.
 While Angular 9-11 still allowed to manually switch back to ViewEngine,
 Angular 12 has removed ViewEngine support.
 So now libraries are compiled directly for Ivy.
+
+## Other changes
 
 ### Internet Explorer 11 support deprecated
 
