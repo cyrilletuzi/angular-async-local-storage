@@ -1,10 +1,9 @@
 import { Rule, SchematicContext, Tree, chain, SchematicsException } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
-import { Schema as StorageAddOptions } from './schema';
 import { getAngularMajorVersion } from '../utility/config';
 
-export default function(_: StorageAddOptions): Rule {
+export default function(): Rule {
   return (host: Tree, context: SchematicContext) => {
 
     /* Get config */
