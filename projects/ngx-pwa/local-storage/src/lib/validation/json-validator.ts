@@ -72,7 +72,9 @@ export class JSONValidator {
 
       try {
         regularExpression = new RegExp(schema.pattern);
-      } catch {}
+      } catch {
+        // Nothing to do
+      }
 
       if (regularExpression && !regularExpression.test(data)) {
         return false;
