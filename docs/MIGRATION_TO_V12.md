@@ -47,7 +47,7 @@ So now libraries are compiled directly for Ivy.
 ### Internet Explorer 11 support deprecated
 
 Angular 12 deprecates IE 11 support. Meaning it's still supported,
-but it should be removed in a future version.
+but it will be removed in version 13.
 
 ## More documentation
 

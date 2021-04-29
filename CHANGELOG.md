@@ -39,8 +39,7 @@ While Angular 9-11 still allowed to manually switch back to ViewEngine, Angular 
 
 #### Internet Explorer 11 support deprecated
 
-Angular 12 deprecates IE 11 support. Meaning it's still supported,
-but it should be removed in a future version.
+Angular 12 deprecates IE 11 support. Meaning it's still supported, but it will be removed in version 13.
 
 ## 11.1.0 (2021-01-21)
 
