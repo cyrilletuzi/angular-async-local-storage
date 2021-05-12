@@ -4,9 +4,9 @@
   "newProjectRoot": "projects",
   "projects": {
     "ngx-pwa-local-storage": {
+      "projectType": "library",
       "root": "projects/ngx-pwa/local-storage",
       "sourceRoot": "projects/ngx-pwa/local-storage/src",
-      "projectType": "library",
       "prefix": "ngx-pwa",
       "architect": {
         "build": {
@@ -45,7 +45,11 @@
     },
     "demo": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "root": "projects/demo",
       "sourceRoot": "projects/demo/src",
       "prefix": "app",
@@ -69,24 +73,25 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "projects/demo/src/environments/environment.ts",
                   "with": "projects/demo/src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all",
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ]
+              "outputHashing": "all"
             },
             "development": {
               "buildOptimizer": false,
@@ -101,8 +106,6 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
           "configurations": {
             "production": {
               "browserTarget": "demo:build:production"
@@ -164,7 +167,11 @@
     },
     "iframe": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "root": "projects/iframe",
       "sourceRoot": "projects/iframe/src",
       "prefix": "app",
@@ -188,24 +195,25 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "projects/iframe/src/environments/environment.ts",
                   "with": "projects/iframe/src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all",
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ]
+              "outputHashing": "all"
             },
             "development": {
               "buildOptimizer": false,
@@ -220,8 +228,6 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
           "configurations": {
             "production": {
               "browserTarget": "iframe:build:production"
@@ -268,7 +274,11 @@
     },
     "localforage": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "root": "projects/localforage",
       "sourceRoot": "projects/localforage/src",
       "prefix": "app",
@@ -292,24 +302,25 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "projects/localforage/src/environments/environment.ts",
                   "with": "projects/localforage/src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all",
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ]
+              "outputHashing": "all"
             },
             "development": {
               "buildOptimizer": false,
@@ -324,8 +335,6 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
           "configurations": {
             "production": {
               "browserTarget": "localforage:build:production"
@@ -386,13 +395,10 @@
       }
     }
   },
+  "defaultProject": "ngx-pwa-local-storage",
   "schematics": {
     "@schematics/angular:component": {
       "inlineTemplate": true
-    },
-    "@schematics/angular:application": {
-      "strict": true
     }
-  },
-  "defaultProject": "ngx-pwa-local-storage"
+  }
 }
