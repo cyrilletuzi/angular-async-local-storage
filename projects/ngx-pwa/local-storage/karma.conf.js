@@ -30,7 +30,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '../../coverage/ngx-pwa-local-storage'),
+      dir: require('path').join(__dirname, '../../../coverage/ngx-pwa/local-storage'),
       subdir: '.',
       reporters: [
         { type: 'html' },
