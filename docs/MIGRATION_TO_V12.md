@@ -17,7 +17,7 @@ the loss of all previously stored data.
 Then:
 
 ```
-ng update @ngx-pwa/local-storage --next
+ng update @ngx-pwa/local-storage
 ```
 
 Done!

@@ -2,12 +2,10 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
-## 12.0.0-0 (2021-04-26)
-
-It is a *beta* version. **Do NOT use in production.** To test:
+## 12.0.0 (2021-05-13)
 
 ```
-ng update @ngx-pwa/local-storage --next
+ng update @ngx-pwa/local-storage
 ```
 
 A [full migration guide to version 12](https://github.com/cyrilletuzi/angular-async-local-storage/blob/v12/docs/MIGRATION_TO_V12.md) is available.
