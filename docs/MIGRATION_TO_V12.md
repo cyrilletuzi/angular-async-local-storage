@@ -36,11 +36,9 @@ See the [migration guide for v11](./MIGRATION_TO_V11.md) for detailed instructio
 ### ViewEngine support removed
 
 Angular 2-8 internal engine was named ViewEngine.
-It was replaced by a new engine called Ivy in Angular 9.
+It was replaced automatically by a new engine called Ivy in Angular 9.
 
-While Angular 9-11 still allowed to manually switch back to ViewEngine,
-Angular 12 has removed ViewEngine support.
-So now libraries are compiled directly for Ivy.
+While Angular 9-11 still allowed to manually switch back to ViewEngine, Angular 12 has removed ViewEngine support. So now libraries are compiled directly for Ivy.
 
 ## Other changes
 
