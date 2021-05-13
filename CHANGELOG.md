@@ -1,6 +1,44 @@
 # Changelog
 
-This lib is fully documented and so you'll find detailed [migration guides](./MIGRATION.md).
+This lib is fully documented and so you'll find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
+
+## 12.0.0 (2021-05-13)
+
+```
+ng update @ngx-pwa/local-storage
+```
+
+A [full migration guide to version 12](https://github.com/cyrilletuzi/angular-async-local-storage/blob/v12/docs/MIGRATION_TO_V12.md) is available.
+
+**If you did not update to version 9 yet, be sure to follow the migration guide, as otherwise you could lose all previously stored data**.
+
+### Feature
+
+Supports and **requires** Angular 12.
+
+### Breaking changes
+
+#### Typings
+
+Incorrect typings that were deprecated in v11 for `.get()` and `.watch()` are now removed:
+- `this.storage.get<User>('user')` (add a JSON schema or remove the cast)
+- `this.storage.get('user', { type: 'object' })` (cast is required in addition to the JSON schema for non-primitive types)
+- `this.storage.get<number>('name', { type: 'string' })` (and all other primitive mismatches)
+
+See the [migration guide for v11](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MIGRATION_TO_V11.md) for detailed instructions.
+
+#### ViewEngine support removed
+
+Angular 2-8 internal engine was named ViewEngine.
+It was replaced automatically by a new engine called Ivy in Angular 9.
+
+While Angular 9-11 still allowed to manually switch back to ViewEngine, Angular 12 has removed ViewEngine support. So now libraries are compiled directly for Ivy.
+
+### Other changes
+
+#### Internet Explorer 11 support deprecated
+
+Angular 12 deprecates IE 11 support. Meaning it's still supported, but it will be removed in version 13.
 
 ## 11.1.0 (2021-01-21)
 

@@ -26,7 +26,9 @@ export class AppComponent implements OnInit {
         this.title = result || 'not ok';
       });
 
-    }).catch(() => {});
+    }).catch(() => {
+      // Nothing do to
+    });
 
   }
 

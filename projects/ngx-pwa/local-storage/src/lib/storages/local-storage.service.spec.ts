@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { mergeMap } from 'rxjs/operators';
 
 import { IndexedDBDatabase } from '../databases/indexeddb-database';

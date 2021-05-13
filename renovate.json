@@ -12,7 +12,7 @@
   "packageRules": [
     {
       "packageNames": ["typescript"],
-      "allowedVersions": "<4.2"
+      "allowedVersions": "<4.3"
     },
     {
       "packageNames": ["tslib"],

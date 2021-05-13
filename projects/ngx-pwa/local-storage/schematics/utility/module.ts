@@ -43,32 +43,6 @@ function updateAppModule(host: Tree, appModulePath: string, appModuleFile: strin
 /**
  * @param mainPath Path of the project `main.ts` file
  */
-export function addModule(angularMajorVersion: number, mainPath: string): Rule {
-  return (host: Tree) => {
-
-    /* Versions < 8 didn't have `StorageModule` and versions > 9 don't need it */
-    if (angularMajorVersion === 8) {
-
-      const { appModulePath, appModuleFile } = getAppModule(host, mainPath);
-      /* New applications should have `IDBNoWrap` to `true` to be future-proof, as it will become the default */
-      const storageModuleName = `StorageModule.forRoot({ IDBNoWrap: true })`;
-
-      if (appModuleFile.includes(packageName)) {
-        throw new SchematicsException(`This project already uses ${packageName}, please use 'ng update ${packageName}' instead`);
-      }
-
-      updateAppModule(host, appModulePath, appModuleFile, storageModuleName);
-
-    }
-
-    return host;
-
-  };
-}
-
-/**
- * @param mainPath Path of the project `main.ts` file
- */
 export function updateModule(mainPath: string): Rule {
   return (host: Tree) => {
 

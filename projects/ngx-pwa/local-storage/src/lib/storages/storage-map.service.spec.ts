@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { mergeMap, tap, filter } from 'rxjs/operators';
 
 import { IndexedDBDatabase } from '../databases/indexeddb-database';
@@ -69,17 +70,6 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it('schema / cast', (done) => {
 
         storage.get<string>('test', { type: 'string' }).subscribe((_: string | undefined) => {
-
-          expect().nothing();
-          done();
-
-        });
-
-      });
-
-      it('schema / wrong cast', (done) => {
-
-        storage.get<number>('test', { type: 'string' }).subscribe((_: string | undefined) => {
 
           expect().nothing();
           done();
@@ -840,7 +830,9 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           storage.set(key, value).pipe(
             mergeMap(() => storage.get(key))
           ).subscribe((storage.backingEngine === 'localStorage') ? {
-            next: () => {},
+            next: () => {
+              // Nothing to do
+            },
             error: () => {
               expect().nothing();
               done();
