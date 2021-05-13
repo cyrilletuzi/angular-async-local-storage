@@ -25,6 +25,10 @@
     {
       "packageNames": ["@types/node"],
       "allowedVersions": "<15"
+    },
+    {
+      "packageNames": ["rxjs"],
+      "allowedVersions": "<7"
     }
   ],
   "schedule": ["after 1am and before 7am every weekday"],
