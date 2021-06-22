@@ -10,7 +10,7 @@ Efficient client-side storage module for Angular:
 
 ## Sponsorship
 
-You like this library downloaded more than 17 000 times each week
+You like this library downloaded more than 15 000 times each week
 [on npm](https://www.npmjs.com/package/@ngx-pwa/local-storage)?
 You like the serious open source work
 (full documentation, lib ready on day one of Angular major updates,...)?
