@@ -17,7 +17,7 @@ You like the serious open source work
 And your company is using it in projects generating money?
 
 Well, on my side, it's a lot of *unpaid* work. So please consider:
-- becoming a **regular [sponsor](https://github.com/sponsors/cyrilletuzi)**
+- becoming a **[regular sponsor](https://github.com/sponsors/cyrilletuzi)**
 - doing a **[one-time donation](https://github.com/sponsors/cyrilletuzi?frequency=one-time)**
 - at least, taking 2 minutes to [show your love](https://github.com/cyrilletuzi/angular-async-local-storage/discussions/categories/wall-of-love)
 
