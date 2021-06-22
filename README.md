@@ -10,12 +10,15 @@ Efficient client-side storage module for Angular:
 
 ## Sponsorship
 
-What started as a personal project is now one of the most used Angular library
-for client-side storage, with more than 10 000 downloads
-[on npm](https://www.npmjs.com/package/@ngx-pwa/local-storage) each week.
+You like this library downloaded more than 17 000 times each week
+[on npm](https://www.npmjs.com/package/@ngx-pwa/local-storage)?
+You like the serious open source work
+(full documentation, updates ready on day one of Angular major updates,...)?
+And your company is using it in projects generating money?
 
-It's a lot of *unpaid* work. So please consider:
-- **becoming [a sponsor](https://github.com/sponsors/cyrilletuzi)**, if your company earns money with projects using this lib
+Well, on my side, it's a lot of *unpaid* work. So please consider:
+- becoming a **regular [sponsor](https://github.com/sponsors/cyrilletuzi)**
+- doing a **[one-time donation](https://github.com/sponsors/cyrilletuzi?frequency=one-time)**
 - at least, taking 2 minutes to [show your love](https://github.com/cyrilletuzi/angular-async-local-storage/discussions/categories/wall-of-love)
 
 ## By the same author
