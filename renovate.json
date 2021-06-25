@@ -16,7 +16,7 @@
     },
     {
       "packageNames": ["tslib"],
-      "allowedVersions": "<3"
+      "allowedVersions": "<2.3"
     },
     {
       "packageNames": ["zone.js"],
