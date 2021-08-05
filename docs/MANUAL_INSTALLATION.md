@@ -26,9 +26,6 @@ npm install @ngx-pwa/local-storage@11
 
 # For Angular 10:
 npm install @ngx-pwa/local-storage@10
-
-# For Angular 9:
-npm install @ngx-pwa/local-storage@9
 ```
 
 [Back to general documentation](../README.md)
