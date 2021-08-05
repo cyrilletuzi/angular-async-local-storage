@@ -2,6 +2,20 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 12.1.0 (2021-08-05)
+
+### Feature
+
+Allow RxJS 7 in peerDependencies, to align with Angular 12.2.
+
+Note that Angular and this lib are still built with RxJS 6,
+so while the tests with RxJS 7 seem to pass,
+be cautious if you want to upgrade RxJS right now without waiting for Angular 13.
+
+### Other change
+
+While it may still work, Angular 9 LTS has ended, so it's not officially supported anymore.
+
 ## 12.0.0 (2021-05-13)
 
 ```

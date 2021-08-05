@@ -56,7 +56,7 @@ to be homogeneous with other Angular modules.
 Install the package, according to your Angular version:
 
 ```bash
-# For Angular LTS (Angular >= 9):
+# For Angular LTS (Angular >= 10):
 ng add @ngx-pwa/local-storage
 ```
 

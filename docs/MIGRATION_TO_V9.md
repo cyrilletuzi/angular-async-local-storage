@@ -1,5 +1,9 @@
 # Migration guide to version 9
 
+## LTS support ended
+
+[Angular version 9 is officially outdated](https://angular.io/guide/releases).
+
 ## Requirements
 
 First, be sure to:

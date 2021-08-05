@@ -9,8 +9,8 @@ export default function(): Rule {
     /* Get config */
     const angularMajorVersion = getAngularMajorVersion(host);
 
-    if (angularMajorVersion <= 8) {
-      throw new SchematicsException('Angular versions <= 8 are no longer supported.');
+    if (angularMajorVersion <= 9) {
+      throw new SchematicsException('Angular versions <= 9 are no longer supported.');
     }
 
     /* Task to run `npm install` (or user package manager) */
