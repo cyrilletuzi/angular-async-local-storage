@@ -62,7 +62,7 @@ export class AppComponent implements OnInit {
       );
 
       this.schemaError$ = this.localStorage.setItem('schemaError', { wrong: 'test' }).pipe(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
         mergeMap(() => this.localStorage.getItem('schemaError', schema as any)),
         catchError(() => of('schema error')),
       );

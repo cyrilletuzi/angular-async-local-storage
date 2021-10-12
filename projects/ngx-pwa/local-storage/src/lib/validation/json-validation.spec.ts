@@ -22,7 +22,7 @@ describe(`JSONValidator`, () => {
           additionalProperties: true,
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
         jsonValidator.validate({ test: 'test' }, schema as any);
 
       }).not.toThrow();
