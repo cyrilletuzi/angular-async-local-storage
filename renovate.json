@@ -28,7 +28,7 @@
     },
     {
       "packageNames": ["rxjs"],
-      "allowedVersions": "<8"
+      "allowedVersions": "<7"
     }
   ],
   "schedule": ["after 1am and before 7am every weekday"],
