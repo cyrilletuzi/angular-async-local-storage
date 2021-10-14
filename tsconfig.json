@@ -31,7 +31,8 @@
       "@ngx-pwa/local-storage/*": [
         "dist/ngx-pwa/local-storage/*"
       ]
-    }
+    },
+    "noImplicitOverride": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -47,7 +47,8 @@
         "@angular-eslint/prefer-on-push-component-change-detection": "off",
         "@angular-eslint/component-max-inline-declarations": "off",
         "@angular-eslint/use-component-selector": "off",
-        "@angular-eslint/sort-ngmodule-metadata-arrays": "off"
+        "@angular-eslint/sort-ngmodule-metadata-arrays": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "error"
       }
     },
     {
@@ -58,7 +59,8 @@
         "plugin:@angular-eslint/template/all"
       ],
       "rules": {
-        "@angular-eslint/template/i18n": "off"
+        "@angular-eslint/template/i18n": "off",
+        "@angular-eslint/template/no-any": "error"
       }
     }
   ]

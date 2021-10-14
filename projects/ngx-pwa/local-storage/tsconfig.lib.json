@@ -6,7 +6,9 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
-    "types": []
+    "types": [],
+    /* Move this to main tsconfig whan angular issue is fixed */
+    "exactOptionalPropertyTypes": true
   },
   "exclude": [
     "src/test.ts",
