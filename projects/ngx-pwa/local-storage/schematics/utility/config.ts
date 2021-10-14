@@ -28,7 +28,7 @@ export async function getAllMainPaths(host: Tree): Promise<string[]> {
   workspace.projects.forEach((project) => {
 
     /* The schematic only work with applications (not librairies) */
-    if (project.extensions.projectType === 'application') {
+    if (project.extensions['projectType'] === 'application') {
 
       /* Get `main` option in angular.json project config */
       const buildTarget = project.targets.get('build');
@@ -36,10 +36,10 @@ export async function getAllMainPaths(host: Tree): Promise<string[]> {
 
       if (buildTarget) {
 
-        if (!buildTarget.options || !buildTarget.options.main) {
+        if (!buildTarget.options || !buildTarget.options['main']) {
           throw new SchematicsException(`angular.json config is broken, can't find 'architect.build.options.main' in one or more projects`);
         }
-        mainPaths.push(buildTarget.options.main as string);
+        mainPaths.push(buildTarget.options['main'] as string);
 
       } else if (!e2eTarget) {
         /* In old CLI projects, e2e where distinct applications project, we don't need to throw for them */
