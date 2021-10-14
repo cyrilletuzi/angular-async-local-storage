@@ -11,7 +11,6 @@ module.exports = function (config) {
       require('karma-firefox-launcher'),
       require('karma-safarinative-launcher'),
       require('karma-safari-private-launcher'),
-      require('karma-edge-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma')
@@ -49,10 +48,6 @@ module.exports = function (config) {
       FirefoxPrivate: {
         base: 'Firefox',
         flags: ['--headless', '-private']
-      },
-      EdgePrivate: {
-        base: 'Edge',
-        flags: ['-private']
       }
     },
     /* Default */
@@ -62,9 +57,9 @@ module.exports = function (config) {
     /* Tests on Mac in private mode */
     // browsers: ['ChromePrivate', 'FirefoxPrivate', 'SafariPrivate'],
     /* Tests on Windows */
-    // browsers: ['Chrome', 'Firefox', 'Edge'],
-    /* Tests on Windows in private mode (not sure the private option for Edge is working) */
-    // browsers: ['ChromePrivate', 'FirefoxPrivate', 'EdgePrivate'],
+    // browsers: ['Chrome', 'Firefox'],
+    /* Tests on Windows in private mode */
+    // browsers: ['ChromePrivate', 'FirefoxPrivate'],
     singleRun: false,
     restartOnFileChange: true
   });
