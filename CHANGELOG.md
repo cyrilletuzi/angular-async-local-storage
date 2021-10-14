@@ -2,6 +2,16 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 13.0.0-0 (2021-10-14)
+
+### Feature
+
+Supports and **requires** Angular 13.
+
+### Breaking changes
+
+Angular 13 dropped Internet Explorer support, and so this lib too.
+
 ## 12.1.0 (2021-08-05)
 
 ### Feature
