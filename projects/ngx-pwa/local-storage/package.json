@@ -14,8 +14,8 @@
     "local storage",
     "storage",
     "indexeddb",
-    "angular12",
-    "angular 12",
+    "angular13",
+    "angular 13",
     "rxjs"
   ],
   "repository": {
@@ -27,12 +27,12 @@
     "url": "https://github.com/cyrilletuzi/angular-async-local-storage/issues"
   },
   "dependencies": {
-    "tslib": "^2.2.0"
+    "tslib": "^2.3.0"
   },
   "peerDependencies": {
-    "@angular/common": "^12.0.0",
-    "@angular/core": "^12.0.0",
-    "rxjs": "^6.5.3 || ^7.0.0"
+    "@angular/common": "^13.0.0",
+    "@angular/core": "^13.0.0",
+    "rxjs": "^6.5.3 || ^7.4.0"
   },
   "schematics": "./schematics/collection.json",
   "ng-update": {
