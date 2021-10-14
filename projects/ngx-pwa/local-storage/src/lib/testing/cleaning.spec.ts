@@ -66,7 +66,6 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
 
     } catch {
 
-      /* Cases: IE private mode where `indexedDb` will exist but not its `open()` method */
       localStorage.clear();
 
       done();
@@ -121,7 +120,6 @@ export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap)
         /* Delete database */
         const deletingDb = indexedDB.deleteDatabase(indexedDBService.backingStore.database);
 
-        /* Use an arrow function for done, otherwise it causes an issue in IE */
         deletingDb.addEventListener('success', () => { done(); });
         deletingDb.addEventListener('error', () => { done(); });
 

@@ -55,7 +55,6 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
               dbOpen.result.close();
 
-              /* Cases : IE because of `undefined` */
               pending();
 
             },
@@ -77,7 +76,6 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
         dbOpen.result.close();
 
-        /* Cases : IE because of `null` */
         pending();
 
       }
@@ -93,7 +91,6 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
   } catch {
 
-      /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
       pending();
 
   }
@@ -161,7 +158,6 @@ function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
         dbOpen.result.close();
 
-        /* Cases: IE because of `null` */
         pending();
 
       }
@@ -177,7 +173,6 @@ function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
   } catch {
 
-    /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
     pending();
 
   }
@@ -211,7 +206,7 @@ describe('Interoperability', () => {
   for (const setTestValue of setTestValues) {
 
     it(`setItem() after external API
-      (will be pending in IE/Firefox private mode and 2 pending in IE because of null and undefined)`, (done) => {
+      (will be pending in Firefox private mode)`, (done) => {
 
       testSetCompatibilityWithNativeAPI(localStorageService, done, setTestValue);
 
@@ -235,7 +230,7 @@ describe('Interoperability', () => {
   for (const [getTestValue, getTestSchema] of getTestValues) {
 
     it(`getItem() after external API
-      (will be pending in IE/Firefox private mode and in IE because of null)`, (done) => {
+      (will be pending in Firefox private mode)`, (done) => {
 
       testGetCompatibilityWithNativeAPI(localStorageService, done, getTestValue, getTestSchema);
 
@@ -243,7 +238,7 @@ describe('Interoperability', () => {
 
   }
 
-  it('keys() should return strings only (will be pending in IE/Firefox private mode)', (done) => {
+  it('keys() should return strings only (will be pending in Firefox private mode)', (done) => {
 
     const key = 1;
 
@@ -302,7 +297,6 @@ describe('Interoperability', () => {
 
     } catch (error) {
 
-        /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
         pending();
 
     }
