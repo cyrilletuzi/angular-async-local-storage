@@ -4,18 +4,18 @@ import { getWorkspace } from '@schematics/angular/utility/workspace';
 
 export const packageName = '@ngx-pwa/local-storage';
 
-export function getAngularMajorVersion(host: Tree): number {
+export function getDependencyMajorVersion(name: string, host: Tree): number | undefined {
 
-  const angularDependency = getPackageJsonDependency(host, '@angular/core');
+  const dependency = getPackageJsonDependency(host, name);
 
   /* Throw if Angular is not installed */
-  if (angularDependency === null) {
-    throw new SchematicsException(`@angular/core is required to install ${packageName}`);
+  if (dependency === null) {
+    return undefined;
   }
 
   /* Remove semver signs if present and keep only the first number (major) */
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return Number.parseInt(angularDependency.version.replace('~', '').replace('^', '').split('.')[0]!, 10);
+  return Number.parseInt(dependency.version.replace('~', '').replace('^', '').split('.')[0]!, 10);
 
 }
 
