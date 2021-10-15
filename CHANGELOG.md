@@ -12,9 +12,9 @@ Supports and **requires** Angular 13.
 
 #### RxJS 7
 
-For some reasons, Angular 13 supports both RxJS 6 & 7. It can be difficult for lib authors to support such multiple versions at the same time.
+For some reasons, Angular 13 supports both RxJS >= 6.5.3 or >= 7.4. It can be difficult for lib authors to support multiple versions at the same time.
 
-So while *for now* the lib still allows RxJS 6 in its `peerDependencies` as CI tests seem to be fine, be aware **we do not guarantee RxJS 6 support**. v13 of the lib is built with RxJS 7, and you should upgrade your app to RxJS 7 too.
+So while *for now* the lib still allows RxJS 6 in its `peerDependencies` as CI tests seem to be fine, be aware **we do not guarantee RxJS 6 support**. v13 of the lib is built with RxJS 7, and you should upgrade your app to RxJS >= 7.4 too.
 
 #### Internet Explorer 11 is dead
 
