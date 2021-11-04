@@ -24,7 +24,7 @@
     },
     {
       "packageNames": ["@types/node"],
-      "allowedVersions": "<15"
+      "allowedVersions": "<17"
     },
     {
       "packageNames": ["rxjs"],
