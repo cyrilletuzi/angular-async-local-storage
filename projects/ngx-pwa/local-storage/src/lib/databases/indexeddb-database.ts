@@ -183,6 +183,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         store.put(dataToStore, key);
 
         /* Listen to events and return `undefined` as no value is expected */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         return events.pipe(mapTo(undefined));
 
       }),
@@ -209,6 +210,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         store.delete(key);
 
         /* Listen to events and return `undefined` as no data is expected here */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         return events.pipe(mapTo(undefined));
 
       }),
@@ -234,6 +236,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         store.clear();
 
         /* Listen to events and return `undefined` as no data is expected here */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         return events.pipe(mapTo(undefined));
 
       }),
