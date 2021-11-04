@@ -12,11 +12,11 @@
   "packageRules": [
     {
       "packageNames": ["typescript"],
-      "allowedVersions": "<4.3"
+      "allowedVersions": "<4.5"
     },
     {
       "packageNames": ["tslib"],
-      "allowedVersions": "<2.3"
+      "allowedVersions": "<2.4"
     },
     {
       "packageNames": ["zone.js"],
@@ -24,11 +24,11 @@
     },
     {
       "packageNames": ["@types/node"],
-      "allowedVersions": "<15"
+      "allowedVersions": "<17"
     },
     {
       "packageNames": ["rxjs"],
-      "allowedVersions": "<7"
+      "allowedVersions": "<8"
     }
   ],
   "schedule": ["after 1am and before 7am every weekday"],

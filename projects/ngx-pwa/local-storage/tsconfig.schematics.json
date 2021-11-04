@@ -10,8 +10,6 @@
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "rootDir": "schematics",
@@ -19,8 +17,13 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "strictNullChecks": true,
-    "target": "es6"
+    "target": "es6",
+    "strict": true,
+    "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": true
   },
   "include": [
     "schematics/**/*"

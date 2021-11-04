@@ -1,6 +1,6 @@
-import { Rule, Tree, chain } from '@angular-devkit/schematics';
+import { Rule, Tree, chain, SchematicContext } from '@angular-devkit/schematics';
 
-import { getAllMainPaths } from '../utility/config';
+import { getAllMainPaths, getDependencyMajorVersion } from '../utility/config';
 import { updateModule } from '../utility/module';
 
 export function updateToV8(): Rule {
@@ -23,6 +23,24 @@ export function updateToV9(): Rule {
 
     /* Update `AppModule` of all projects */
     return chain(mainPaths.map((mainPath) => updateModule(mainPath)));
+
+  };
+}
+
+export function updateToV13(): Rule {
+  return (host: Tree, context: SchematicContext) => {
+
+    const rxjsMajorVersion = getDependencyMajorVersion('rxjs', host);
+
+    if (!rxjsMajorVersion) {
+      context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.4 is recommended for version 13 of this lib.`);
+    }
+
+    if (rxjsMajorVersion && (rxjsMajorVersion < 7)) {
+        context.logger.warn(`rxjs should be updated to version >= 7.4. Support for rxjs version 6 is not guaranteed.`);
+    }
+
+    return host;
 
   };
 }

@@ -8,5 +8,5 @@ Check your JSON schema, otherwise it means data has been corrupted.`;
  * Exception raised when a value is not valid against the JSON schema
  */
 export class ValidationError extends Error {
-  message = VALIDATION_ERROR;
+  override message = VALIDATION_ERROR;
 }

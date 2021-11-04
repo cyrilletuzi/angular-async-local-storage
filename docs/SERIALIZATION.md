@@ -3,7 +3,7 @@
 ## JSON serialization
 
 In most cases, this library uses `indexedDB` storage, which allows any value type.
-But in special cases (like in Firefox / IE private mode,
+But in special cases (like in Firefox private mode,
 see the [browser support guide](./BROWSERS_SUPPORT.md) for details),
 the library will fall back to `localStorage`, where JSON serialization will happen.
 
