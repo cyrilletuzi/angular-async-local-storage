@@ -2,7 +2,7 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
-## 13.0.0-0 (2021-10-14)
+## 13.0.0 (2021-11-04)
 
 ### Feature
 
