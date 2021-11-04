@@ -40,13 +40,13 @@
     "tslib": "2.2.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "12.2.12",
+    "@angular-devkit/build-angular": "12.2.13",
     "@angular-eslint/builder": "12.6.1",
     "@angular-eslint/eslint-plugin": "12.6.1",
     "@angular-eslint/eslint-plugin-template": "12.6.1",
     "@angular-eslint/schematics": "12.6.1",
     "@angular-eslint/template-parser": "12.6.1",
-    "@angular/cli": "12.2.12",
+    "@angular/cli": "12.2.13",
     "@angular/compiler-cli": "12.2.13",
     "@types/jasmine": "3.10.2",
     "@types/node": "14.17.32",
