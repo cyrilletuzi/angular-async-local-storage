@@ -10,24 +10,12 @@ Efficient client-side storage module for Angular:
 
 ## Sponsorship
 
-You like this library downloaded more than 15 000 times each week
-[on npm](https://www.npmjs.com/package/@ngx-pwa/local-storage)?
-You like the serious open source work
-(full documentation, lib ready on day one of Angular major updates,...)?
-And your company is using it in projects generating money?
+This library is downloaded more than **15 000 times each week**
+[on npm](https://www.npmjs.com/package/@ngx-pwa/local-storage),
+and my other major open source project, the [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics),
+is **used by 500 000 users**. It represents *months* of full time *unpaid* work.
 
-Well, on my side, it's a lot of *unpaid* work. So please consider:
-- becoming a **[regular sponsor](https://github.com/sponsors/cyrilletuzi)**
-- doing a **[one-time donation](https://github.com/sponsors/cyrilletuzi?frequency=one-time)**
-- at least, taking 2 minutes to [show your love](https://github.com/cyrilletuzi/angular-async-local-storage/discussions/categories/wall-of-love)
-
-## By the same author
-
-- [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics) (GUI for Angular CLI commands)
-- [typescript-strictly-typed](https://github.com/cyrilletuzi/typescript-strictly-typed): reliable code with TypeScript strictly typed
-- Popular [Angular posts on Medium](https://medium.com/@cyrilletuzi)
-- Follow updates of this lib on [Twitter](https://twitter.com/cyrilletuzi)
-- **[Angular trainings](https://formationjavascript.com/formation-angular/)** (in French, as I'm based in Paris, but [my English bio is here](https://www.cyrilletuzi.com/en/) and it can be done remotely)
+So **please consider to [sponsor](https://github.com/sponsors/cyrilletuzi)** (or ask your company to do so). In addition to support open source, it will grant you access to the **[Schematics Pro](https://www.schematicspro.dev/)** sponsorware, which helps you build optimized and architectured Angular projects in no time.
 
 ## Why this module?
 
