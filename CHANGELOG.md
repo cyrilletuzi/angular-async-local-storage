@@ -2,6 +2,10 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 13.0.2 (2021-11-23)
+
+Fix schematic for "ng add" for Angular 13.
+
 ## 13.0.1 (2021-11-19)
 
 Just a documentation update.
