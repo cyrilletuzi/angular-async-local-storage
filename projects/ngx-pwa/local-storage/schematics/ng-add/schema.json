@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "storageNgAdd",
+  "$id": "storageNgAdd",
   "title": "ng add @ngx-pwa/local-storage options",
   "type": "object",
   "properties": {
