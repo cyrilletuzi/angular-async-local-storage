@@ -15,7 +15,7 @@ This library is downloaded more than **15 000 times each week**
 and my other major open source project, the [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics),
 is **used by 500 000 users**. It represents *months* of full time *unpaid* work.
 
-So **please consider to [sponsor](https://github.com/sponsors/cyrilletuzi)** (or ask your company to do so). In addition to support open source, it will grant you access to the **[Schematics Pro](https://www.schematicspro.dev/)** sponsorware, which helps you build optimized and architectured Angular projects in no time.
+Want to help me by helping yourself? I released **[Schematics Pro](https://www.schematicspro.dev)**, which aims to be **the ultimate Angular developer experience**.
 
 ## Why this module?
 
