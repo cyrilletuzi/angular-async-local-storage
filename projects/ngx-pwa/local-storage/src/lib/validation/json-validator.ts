@@ -191,7 +191,8 @@ export class JSONValidator {
     /* Specific test for tuples */
     if (Array.isArray(schema.items)) {
 
-      return this.validateTuple(data, schema.items);
+      // TODO: cast should not be needed here
+      return this.validateTuple(data, schema.items as JSONSchema[]);
 
     }
 

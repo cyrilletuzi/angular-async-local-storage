@@ -1428,7 +1428,7 @@ describe('StorageMap', () => {
   describe('browser APIs', () => {
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
-    it('IndexedDb is used (will be pending in Firefox/IE private mode)', (done) => {
+    it('IndexedDb is used (will be pending in Firefox private mode)', (done) => {
 
       const index = `test${Date.now()}`;
       const value = 'test';
@@ -1477,7 +1477,6 @@ describe('StorageMap', () => {
 
         } catch {
 
-          /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
           pending();
 
         }
@@ -1515,7 +1514,7 @@ describe('StorageMap', () => {
     });
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
-    it('indexedDb with noWrap to false (will be pending in Firefox/IE private mode)', (done) => {
+    it('indexedDb with noWrap to false (will be pending in Firefox private mode)', (done) => {
 
       const index = `wrap${Date.now()}`;
       const value = 'test';
@@ -1564,7 +1563,6 @@ describe('StorageMap', () => {
 
         } catch {
 
-          /* Cases : IE private mode where `indexedDb` will exist but not its `open()` method */
           pending();
 
         }

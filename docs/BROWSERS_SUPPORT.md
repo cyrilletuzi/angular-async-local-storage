@@ -24,7 +24,6 @@ It's not a real issue as client-side storage is only useful for apps, and apps s
 
 In some scenarios, `indexedDB`  is not available, so the lib fallbacks to (synchronous) `localStorage`. It happens in:
 - Firefox private mode (see [#26](https://github.com/cyrilletuzi/angular-async-local-storage/issues/26))
-- Internet Explorer private mode
 - Safari, when in a cross-origin iframe (see
 [#42](https://github.com/cyrilletuzi/angular-async-local-storage/issues/42))
 

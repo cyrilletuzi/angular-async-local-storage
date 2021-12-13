@@ -106,6 +106,7 @@ export class LocalStorage {
 
     return this.storageMap.set(key, data, schema).pipe(
       /* Transform `undefined` into `true` for backward compatibility with v7 */
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       mapTo(true),
     );
 
@@ -123,6 +124,7 @@ export class LocalStorage {
 
     return this.storageMap.delete(key).pipe(
       /* Transform `undefined` into `true` for backward compatibility with v7 */
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       mapTo(true),
     );
 
@@ -139,6 +141,7 @@ export class LocalStorage {
 
     return this.storageMap.clear().pipe(
       /* Transform `undefined` into `true` for backward compatibility with v7 */
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       mapTo(true),
     );
 

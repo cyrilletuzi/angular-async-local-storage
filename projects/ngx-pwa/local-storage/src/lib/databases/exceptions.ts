@@ -7,7 +7,7 @@ export const IDB_BROKEN_ERROR = 'indexedDB is not working';
  * Exception raised when `indexedDB` is not working
  */
 export class IDBBrokenError extends Error {
-  message = IDB_BROKEN_ERROR;
+  override message = IDB_BROKEN_ERROR;
 }
 
 /**
@@ -20,5 +20,5 @@ where data must be serialized, and the provided data can't be serialized.`;
  * Exception raised when a value can't be serialized for `localStorage`
  */
 export class SerializationError extends Error {
-  message = SERIALIZATION_ERROR;
+  override message = SERIALIZATION_ERROR;
 }

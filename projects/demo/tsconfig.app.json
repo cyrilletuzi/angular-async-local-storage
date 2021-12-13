@@ -2,7 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/app",
-    "types": []
+    "types": [],
+    // TODO: remove when Angular issue is fixed
+    "exactOptionalPropertyTypes": false
   },
   "files": [
     "src/main.ts",

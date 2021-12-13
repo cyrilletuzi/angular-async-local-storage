@@ -2,6 +2,46 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 13.0.2 (2021-11-23)
+
+Fix schematic for "ng add" for Angular 13.
+
+## 13.0.1 (2021-11-19)
+
+Just a documentation update.
+
+## 13.0.0 (2021-11-04)
+
+### Feature
+
+Supports and **requires** Angular 13.
+
+### Breaking changes
+
+#### RxJS 7
+
+For some reasons, Angular 13 supports both RxJS >= 6.5.3 or >= 7.4. It can be difficult for lib authors to support multiple versions at the same time.
+
+So while *for now* the lib still allows RxJS 6 in its `peerDependencies` as CI tests seem to be fine, be aware **we do not guarantee RxJS 6 support**. v13 of the lib is built with RxJS 7, and you should upgrade your app to RxJS >= 7.4 too.
+
+#### Internet Explorer 11 is dead
+
+Angular 13 dropped Internet Explorer support, and so this lib too.
+
+## 12.1.0 (2021-08-05)
+
+### Feature
+
+Allow RxJS 7 in peerDependencies, to align with Angular 12.2.
+
+Note that Angular and this lib are still built with RxJS 6,
+so while the tests with RxJS 7 seem to pass,
+be cautious if you want to upgrade RxJS right now without waiting for Angular 13.
+
+### Other change
+
+While it may still work, Angular 9 LTS has ended, so it's not officially supported anymore.
+
 ## 12.0.0 (2021-05-13)
 
 ```

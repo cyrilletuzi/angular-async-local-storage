@@ -183,6 +183,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         store.put(dataToStore, key);
 
         /* Listen to events and return `undefined` as no value is expected */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         return events.pipe(mapTo(undefined));
 
       }),
@@ -209,6 +210,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         store.delete(key);
 
         /* Listen to events and return `undefined` as no data is expected here */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         return events.pipe(mapTo(undefined));
 
       }),
@@ -234,6 +236,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         store.clear();
 
         /* Listen to events and return `undefined` as no data is expected here */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         return events.pipe(mapTo(undefined));
 
       }),
@@ -260,9 +263,8 @@ export class IndexedDBDatabase implements LocalDatabase {
         const { store } = transactionData;
 
         /* Open a cursor on the store
-         * `.openKeyCursor()` is better for performance, but only available in indexedDB v2 (missing in IE)
          * Avoid issues like https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
-        const request = ('openKeyCursor' in store) ? store.openKeyCursor() : (store as IDBObjectStore).openCursor();
+        const request = store.openKeyCursor();
 
         /* Listen to success event */
         const success$ = fromEvent(request, 'success').pipe(
@@ -299,12 +301,9 @@ export class IndexedDBDatabase implements LocalDatabase {
         const { store, events } = transactionData;
 
         /* Check if the key exists in the store
-         * `getKey()` is better but only available in `indexedDB` v2 (Chrome >= 58, missing in IE/Edge Legacy).
-         * In older browsers, the value is checked instead, but it could lead to an exception
-         * if `undefined` was stored outside of this lib (e.g. directly with the native `indexedDB` API).
          * Fixes https://github.com/cyrilletuzi/angular-async-local-storage/issues/69
          */
-        const request =  ('getKey' in store) ? store.getKey(key) : (store as IDBObjectStore).get(key);
+        const request = store.getKey(key);
 
         /* Listen to events and return `true` or `false` */
         return events.pipe(map(() => (request.result !== undefined) ? true : false));
