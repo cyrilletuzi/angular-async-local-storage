@@ -62,7 +62,7 @@
     "karma-edge-launcher": "0.4.2",
     "karma-firefox-launcher": "2.1.2",
     "karma-ie-launcher": "1.0.0",
-    "karma-jasmine": "4.0.1",
+    "karma-jasmine": "4.0.2",
     "karma-jasmine-html-reporter": "1.7.0",
     "karma-safari-private-launcher": "1.0.0",
     "karma-safarinative-launcher": "1.1.0",
