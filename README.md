@@ -8,14 +8,16 @@ Efficient client-side storage module for Angular:
 - **compatibility**: works around some browsers issues and heavily tested via GitHub Actions,
 - **documentation**: API fully explained, and a changelog!
 
-## Sponsorship
+## Status of this lib
 
-This library is downloaded more than **15 000 times each week**
-[on npm](https://www.npmjs.com/package/@ngx-pwa/local-storage),
-and my other major open source project, the [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics),
-is **used by 600 000 users**. It represents *months* of full time *unpaid* work.
+Given my current professional situation and the lack of support for my open source work, this library is in a frozen state, meaning it is still available on npm but it will no longer get features updates or support.
 
-Want to help me by helping yourself? I released **[Schematics Pro](https://www.schematicspro.dev)**, a code automation tool for Angular, React, Vue, Ionic, Svelte, Stencil, Lit, Nest and more.
+## How to help?
+
+My open source work represents *months* of full time *unpaid* work, with for example the [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics),
+**used by 600 000 developers**.
+
+So if you want to help, I released **[Schematics Pro](https://www.schematicspro.dev)**, a paid code automation tool for Angular, React, Vue, Ionic, Svelte, Stencil, Lit, Nest and more.
 
 ## Why this module?
 
@@ -44,7 +46,7 @@ to be homogeneous with other Angular modules.
 Install the package, according to your Angular version:
 
 ```bash
-# For Angular LTS (Angular >= 10):
+# For Angular LTS (Angular >= 12):
 ng add @ngx-pwa/local-storage
 ```
 
@@ -216,13 +218,6 @@ See the [documentation](https://github.com/cyrilletuzi/angular-async-local-stora
 For example, it allows to implement a multiple databases scenario.
 
 ## Support
-
-### Angular support
-
-We follow [Angular LTS support](https://angular.io/guide/releases).
-
-This module supports [Universal server-side rendering](https://github.com/angular/universal)
-via a mock storage.
 
 ### Browser support
 

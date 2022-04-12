@@ -31,7 +31,7 @@
       "allowedVersions": "<8"
     }
   ],
-  "schedule": ["after 1am and before 7am every weekday"],
+  "schedule": ["after 1am and before 7am on friday"],
   "timezone": "Europe/Paris",
   "prHourlyLimit": 0,
   "dependencyDashboard": false

@@ -4,5 +4,4 @@ contact_links:
     url: https://github.com/cyrilletuzi/angular-async-local-storage/discussions/categories/q-a
     about: The issue tracker is not intended for support. A new GitHub "Discussions" tab, with a Questions & Answers category, is available for that purpose.
   - name: Feature requests
-    url: https://github.com/cyrilletuzi/angular-async-local-storage/discussions/categories/ideas
-    about: Feature requests must be posted and discussed first in the new GitHub "Discussions" tab, in "Ideas" category.
+    about: Feature requests are no longer accepted.
