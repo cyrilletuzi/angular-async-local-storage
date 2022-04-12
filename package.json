@@ -20,13 +20,12 @@
     "webdriver": "webdriver-manager update",
     "lint": "ng lint",
     "schematics": "tsc -p projects/ngx-pwa/local-storage/tsconfig.schematics.json && copyfiles --up 3 projects/ngx-pwa/local-storage/schematics/collection.json projects/ngx-pwa/local-storage/schematics/migration.json projects/ngx-pwa/local-storage/schematics/**/schema.json dist/ngx-pwa/local-storage",
-    "release:patch": "VERSION=patch npm run release && npm run githubrelease",
-    "release:minor": "VERSION=minor npm run release && npm run githubrelease",
-    "release:major": "VERSION=major npm run release && npm run githubrelease",
+    "release:patch": "VERSION=patch npm run release",
+    "release:minor": "VERSION=minor npm run release",
+    "release:major": "VERSION=major npm run release",
     "release:premajor": "VERSION=premajor TAG=next npm run release",
     "release:prerelease": "VERSION=prerelease TAG=next npm run release",
-    "release": "if test $VERSION; then npm run build && cd projects/ngx-pwa/local-storage && npm version $VERSION --git-tag-version false && git add package.json && cd ../../.. && git commit -m \"release\" && npm version $VERSION && npm run build && npm publish ./dist/ngx-pwa/local-storage --access public --tag ${TAG:-latest} && git push && git push --tags; fi",
-    "githubrelease": "CHANGELOG=$(sed -n \"/^## $npm_package_version/,/^## /p\" CHANGELOG.md | sed '1d;$d') && gh release create v$npm_package_version --title v$npm_package_version --notes \"$CHANGELOG\""
+    "release": "if test $VERSION; then npm run build && cd projects/ngx-pwa/local-storage && npm version $VERSION --git-tag-version false && git add package.json && cd ../../.. && git commit -m \"release\" && npm version $VERSION && npm run build && npm publish ./dist/ngx-pwa/local-storage --access public --tag ${TAG:-latest} && git push; fi"
   },
   "private": true,
   "dependencies": {
