@@ -9,7 +9,9 @@ assignees: ''
 
 <!-- Switch to the "Preview" tab to read the instructions more easily and be able to click on links directly -->
 
-Hi,
+Given my current professional situation and the lack of support for my open source work, this library is in a frozen state, meaning the only issues accepted are:
+- *production* security issues
+- Angular or RxJS breaking changes that would make the lib unusable
 
 # Checks before posting an issue
 
