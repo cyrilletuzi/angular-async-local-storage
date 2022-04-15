@@ -48,7 +48,7 @@
     "@angular/cli": "13.3.3",
     "@angular/compiler-cli": "13.3.2",
     "@types/jasmine": "4.0.3",
-    "@types/node": "16.11.26",
+    "@types/node": "16.11.27",
     "@typescript-eslint/eslint-plugin": "5.19.0",
     "@typescript-eslint/parser": "5.19.0",
     "copyfiles": "2.4.1",
