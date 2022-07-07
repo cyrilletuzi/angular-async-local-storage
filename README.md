@@ -17,7 +17,7 @@ Given my current professional situation and the lack of support for my open sour
 My open source work represents *months* of full time *unpaid* work, with for example the [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics),
 **used by 600 000 developers**.
 
-So if you want to help, I released **[Schematics Pro](https://www.schematicspro.dev)**, a paid code automation tool for Angular, React, Vue, Ionic, Svelte, Stencil, Lit, Nest and more.
+So if you want to help, I released **[Schematics Pro](https://www.cyrilletuzi.com/schematics-pro/)**, a paid code automation tool for Angular, React, Vue, Ionic, Svelte, Stencil, Lit, Nest and more.
 
 ## Why this module?
 
