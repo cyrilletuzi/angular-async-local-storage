@@ -10,7 +10,7 @@ Efficient client-side storage module for Angular:
 
 ## Status of this lib
 
-Given my current professional situation and the lack of support for my open source work, this library is in a frozen state, meaning it is still available on npm but it will no longer get features updates or support.
+Given my current situation and the lack of support for my open source work, this library is in a frozen state, meaning feature requests are no longer accepted and free support is no longer provided. You can contact me for paid support and/or development.
 
 ## How to help?
 
