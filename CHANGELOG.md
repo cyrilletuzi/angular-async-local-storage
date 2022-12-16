@@ -2,6 +2,24 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 15.0.0 (2022-12-16)
+
+### Feature
+
+Supports and **requires** Angular 15.
+
+### Deprecation
+
+Advanced configuration via `StorageModule.forRoot()` is deprecated.
+
+Use the new `provideXXX()` methods as shown in the [interoperability](./docs/INTEROPERABILITY.md) or [collision](./docs/COLLISION.md) guides, depending on your case.
+
+This aligns with the new standalone APIs in Angular 15.
+
+## 13.0.3 (2022-12-16)
+
+`peerDependencies` restricted to Angular 13 and 14. Version 15 has been released for Angular 15.
+
 ## 13.0.2 (2021-11-23)
 
 Fix schematic for "ng add" for Angular 13.
