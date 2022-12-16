@@ -48,15 +48,21 @@ so you will need that all APIs use the same names.
 - Option 1 (recommended): change this lib config, according to your other APIs:
 
 ```ts
-import { StorageModule } from '@ngx-pwa/local-storage';
+import { provideIndexedDBDataBaseName, provideIndexedDBStoreName } from '@ngx-pwa/local-storage';
 
+// Standalone application
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideIndexedDBDataBaseName('customDataBaseName'),
+    provideIndexedDBStoreName('customStoreName'),
+  ]
+});
+
+// NgModule application
 @NgModule({
-  imports: [
-    StorageModule.forRoot({
-      IDBNoWrap: true, // Not required in versions >= 9
-      IDBDBName: 'customDataBaseName',
-      IDBStoreName: 'customStoreName',
-    })
+  providers: [
+    provideIndexedDBDataBaseName('customDataBaseName'),
+    provideIndexedDBStoreName('customStoreName'),
   ]
 })
 export class AppModule {}
@@ -87,14 +93,19 @@ but you can add a prefix.
 - Option 1 (recommended):
 
 ```typescript
-import { StorageModule } from '@ngx-pwa/local-storage';
+import { provideLocalStoragePrefix } from '@ngx-pwa/local-storage';
 
+// Standalone application
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideLocalStoragePrefix('myapp_'),
+  ]
+});
+
+// NgModule application
 @NgModule({
-  imports: [
-    StorageModule.forRoot({
-      IDBNoWrap: true, // Not required in versions >= 9
-      LSPrefix: 'myapp_',
-    })
+  providers: [
+    provideLocalStoragePrefix('myapp_'),
   ]
 })
 export class AppModule {}
@@ -113,16 +124,23 @@ if (this.storage.backingEngine === 'localStorage') {
 Interoperability with `localforage` lib can be achieved with this config:
 
 ```typescript
-import { StorageModule } from '@ngx-pwa/local-storage';
+import { provideIndexedDBDataBaseName, provideIndexedDBStoreName, provideLocalStoragePrefix } from '@ngx-pwa/local-storage';
 
+// Standalone application
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideLocalStoragePrefix('localforage/'),
+    provideIndexedDBDataBaseName('localforage'),
+    provideIndexedDBStoreName('keyvaluepairs'),
+  ]
+});
+
+// NgModule application
 @NgModule({
-  imports: [
-    StorageModule.forRoot({
-      IDBNoWrap: true, // Not required in versions >= 9
-      LSPrefix: 'localforage/',
-      IDBDBName: 'localforage',
-      IDBStoreName: 'keyvaluepairs',
-    })
+  providers: [
+    provideLocalStoragePrefix('localforage/'),
+    provideIndexedDBDataBaseName('localforage'),
+    provideIndexedDBStoreName('keyvaluepairs'),
   ]
 })
 export class AppModule {}
