@@ -4,9 +4,10 @@ This lib is fully documented and so you'll find detailed [migration guides](http
 
 ## 15.0.0 (2022-12-16)
 
-### Feature
+### Breaking changes
 
-Supports and **requires** Angular 15.
+- Angular 15 is required.
+- RxJS >= 7.4 is required. RxJS 6 is not supported.
 
 ### Deprecation
 
