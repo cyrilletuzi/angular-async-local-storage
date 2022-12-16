@@ -17,6 +17,10 @@ Use the new `provideXXX()` methods as shown in the [interoperability](./docs/INT
 
 This aligns with the new standalone APIs in Angular 15.
 
+## 14.0.0 (2022-12-16)
+
+Version published by error, use v13 for Angular 13 and 14 and use v15 for Angular 15.
+
 ## 13.0.6 (2022-12-16)
 
 `peerDependencies` restricted to Angular 13 and 14. Version 15 has been released for Angular 15.
