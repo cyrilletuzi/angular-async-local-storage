@@ -8,14 +8,10 @@ Efficient client-side storage module for Angular:
 - **compatibility**: works around some browsers issues and heavily tested via GitHub Actions,
 - **documentation**: API fully explained, and a changelog!
 
-## Status of this lib
-
-Given my current situation and the lack of support for my open source work, this library is in a frozen state, meaning feature requests are no longer accepted and free support is no longer provided. You can contact me for paid support and/or development.
-
 ## How to help?
 
 My open source work represents *months* of full time *unpaid* work, with for example the [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics),
-**used by 600 000 developers**.
+**installed 800 000 times**.
 
 So if you want to help, I released **[Schematics Pro](https://www.cyrilletuzi.com/schematics-pro/)**, a paid code automation tool for Angular, React, Vue, Ionic, Svelte, Stencil, Lit, Nest and more.
 
