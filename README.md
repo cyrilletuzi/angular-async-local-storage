@@ -15,6 +15,8 @@ My open source work represents *months* of full time *unpaid* work, with for exa
 
 So if you want to help, I released **[Schematics Pro](https://www.cyrilletuzi.com/schematics-pro/)**, a paid code automation tool for Angular, React, Vue, Ionic, Svelte, Stencil, Lit, Nest and more.
 
+Thank you! ♥️
+
 ## Why this module?
 
 For now, Angular does not provide a client-side storage module, and almost every app needs some client-side storage. 
