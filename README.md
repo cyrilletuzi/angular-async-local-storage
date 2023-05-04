@@ -157,7 +157,7 @@ If you need to watch the value, see the [watching guide](https://github.com/cyri
 
 Don't forget it's client-side storage: **always check the data**, as it could have been forged.
 
-You should use a [JSON Schema](http://json-schema.org/) to validate the data.
+You **should** use a [JSON Schema](http://json-schema.org/) to validate the data.
 
 ```typescript
 this.storage.get('test', { type: 'string' }).subscribe({
