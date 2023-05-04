@@ -2,6 +2,14 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 16.0.0 (2023-05-03)
+
+### Breaking changes
+
+- Angular 16 is required.
+- RxJS >= 7.4 is required. RxJS 6 is not supported.
+- TypeScript 5.0 is recommended (TypeScript 4.9 should work but is not tested).
+
 ## 15.0.0 (2022-12-16)
 
 ### Breaking changes

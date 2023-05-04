@@ -12,9 +12,10 @@ but is not required for Angular 4 & 5. **It is only required when upgrading to A
 - v11 for Angular 11,
 - v12 for Angular 12,
 - v13 for Angular 13 & 14,
-- v15 for Angular 15.
+- v15 for Angular 15,
+- v16 for Angular 16.
 
-[Angular <= 12 are officially outdated](https://angular.io/guide/releases).
+[Angular <= 13 are officially outdated](https://angular.io/guide/releases).
 
 ## Installing the new package
 

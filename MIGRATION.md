@@ -9,6 +9,7 @@
 - [Migration to version 12](./docs/MIGRATION_TO_V12.md)
 - [Migration to version 13](./docs/MIGRATION_TO_V13.md)
 - [Migration to version 15](./docs/MIGRATION_TO_V15.md)
+- [Migration to version 16](./docs/MIGRATION_TO_V16.md)
 
 [Full changelog available here.](./CHANGELOG.md)
 
