@@ -176,7 +176,7 @@ But **you *DO* need to subscribe**, even if you don't have something specific to
 (because it's how RxJS `Observable`s work).
 
 ```typescript
-this.storage.set('user', user); // Do nothing
+this.storage.set('user', user); // Does nothing
 ```
 
 ### Errors
