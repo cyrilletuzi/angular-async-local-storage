@@ -76,16 +76,14 @@ export class YourService {
 }
 ```
 
-This service API follows the
-new standard [`kv-storage` API](https://wicg.github.io/kv-storage/),
-which is similar to the standard [`Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), and close to the
+This service API is similar to the standard [`Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), and close to the
 standard [`localStorage` API](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage),
 except it's based on [RxJS `Observable`s](https://rxjs.dev/) instead of `Promise`s:
 
 ```typescript
 class StorageMap {
   // Write
-  set(index: string, value: any): Observable<undefined> {}
+  set(index: string, value: unknown): Observable<undefined> {}
   delete(index: string): Observable<undefined> {}
   clear(): Observable<undefined> {}
 
@@ -159,7 +157,7 @@ If you need to watch the value, see the [watching guide](https://github.com/cyri
 
 Don't forget it's client-side storage: **always check the data**, as it could have been forged.
 
-You can use a [JSON Schema](http://json-schema.org/) to validate the data.
+You should use a [JSON Schema](http://json-schema.org/) to validate the data.
 
 ```typescript
 this.storage.get('test', { type: 'string' }).subscribe({
@@ -176,6 +174,10 @@ You *DO NOT* need to unsubscribe: the `Observable` autocompletes (like in the An
 
 But **you *DO* need to subscribe**, even if you don't have something specific to do after writing in storage
 (because it's how RxJS `Observable`s work).
+
+```typescript
+this.storage.set('user', user); // Do nothing
+```
 
 ### Errors
 
