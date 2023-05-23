@@ -82,7 +82,7 @@ Let's say you stored:
 You can then delete only app data:
 
 ```typescript
-import { filter, mergeMap } from 'rxjs/operators';
+import { filter, mergeMap } from 'rxjs';
 
 this.storage.keys().pipe(
 

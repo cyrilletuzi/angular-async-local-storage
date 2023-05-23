@@ -10,8 +10,7 @@ this.storage.set('color', 'red').subscribe({
 
 For read operations, you can also manage errors by providing a default value:
 ```typescript
-import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, of } from 'rxjs';
 
 this.storage.get('color').pipe(
   catchError(() => of('red')),

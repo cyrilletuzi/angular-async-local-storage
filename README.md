@@ -1,7 +1,7 @@
 # Async local storage for Angular
 
-Efficient client-side storage module for Angular:
-- **simplicity**: simple API like native `localStorage`,
+Efficient client-side storage for Angular:
+- **simplicity**: simple API similar to native `localStorage`,
 - **perfomance**: internally stored via the asynchronous `indexedDB` API,
 - **Angular-like**: wrapped in RxJS `Observable`s,
 - **security**: validate data with a JSON Schema,
@@ -10,7 +10,7 @@ Efficient client-side storage module for Angular:
 
 ## How to help?
 
-This library and other tools represent *months* of full time *unpaid* work, with for example the [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics),
+This library and my other tools represent *months* of full time *unpaid* work, with for example the [Angular schematics extension for VS Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics),
 **installed 800 000 times**.
 
 So if you want to help, I released **[Schematics Pro](https://www.cyrilletuzi.com/schematics-pro/)**, a paid code automation tool for Angular, React, Vue, Ionic, Svelte, Stencil, Lit, Nest and more.
@@ -19,9 +19,9 @@ Or you can [sponsor my GitHub account](https://github.com/sponsors/cyrilletuzi).
 
 Thank you! ♥️
 
-## Why this module?
+## Why this lib?
 
-For now, Angular does not provide a client-side storage module, and almost every app needs some client-side storage. 
+Angular does not provide a client-side storage service, and almost every app needs some client-side storage. 
 There are 2 native JavaScript APIs available:
 - [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage)
 - [indexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
@@ -30,16 +30,11 @@ The `localStorage` API is simple to use but synchronous, so if you use it too of
 your app will soon begin to freeze.
 
 The `indexedDB` API is asynchronous and efficient, but it's a mess to use: 
-you'll soon be caught by the callback hell, as it does not support `Promise`s yet.
+you'll soon be caught by the callback hell, as it does not support `Promise`s.
 
-Mozilla has done a very great job with the [`localForage` library](http://localforage.github.io/localForage/): 
-a simple API based on native `localStorage`,
-but internally stored via the asynchronous `indexedDB` for performance.
-But it's built in ES5 old school way and then it's a mess to include into Angular.
-
-This module is based on the same idea as `localForage`, but built in ES6+ 
-and additionally wrapped into [RxJS `Observable`s](http://reactivex.io/rxjs/) 
-to be homogeneous with other Angular modules.
+This lib has a simple API similar to native `localStorage`,
+but internally stores data via the asynchronous `indexedDB` for performance.
+All of this powered by [RxJS](https://rxjs.dev/).
 
 ## Getting started
 
@@ -52,14 +47,7 @@ ng add @ngx-pwa/local-storage
 
 *Done!*
 
-You should **stick to these commands**. If for any reason `ng add` does not work,
-be sure to follow the [manual installation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MANUAL_INSTALLATION.md),
-as there are additionnal steps to do in addition to the package installation for some versions.
-
-If you have multiple applications in the same project, as usual, you need to choose the project:
-```bash
-ng add @ngx-pwa/local-storage --project yourprojectname
-```
+If for any reason `ng add` does not work, follow the [manual installation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MANUAL_INSTALLATION.md).
 
 ### Upgrading
 
@@ -77,8 +65,7 @@ export class YourService {
 ```
 
 This service API is similar to the standard [`Map` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), and close to the
-standard [`localStorage` API](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage),
-except it's based on [RxJS `Observable`s](https://rxjs.dev/) instead of `Promise`s:
+standard [`localStorage` API](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage).
 
 ```typescript
 class StorageMap {
@@ -91,19 +78,16 @@ class StorageMap {
   get(index: string): Observable<unknown> {}
   get<T>(index: string, schema: JSONSchema): Observable<T> {}
 
-  // Observe
+  // Advanced
   watch(index: string): Observable<unknown> {}
   watch<T>(index: string, schema: JSONSchema): Observable<T> {}
-
-  // Advanced
   size: Observable<number>;
   has(index: string): Observable<boolean> {}
   keys(): Observable<string> {}
 }
 ```
 
-Note: there is also a `LocalStorage` service available,
-but only for compatibility with old versions of this lib.
+Note: the lib also exports an old `LocalStorage` service: it is deprecated, do **not** use it.
 
 ## How to
 
@@ -170,7 +154,7 @@ this.storage.get('test', { type: 'string' }).subscribe({
 
 ### Subscription
 
-You *DO NOT* need to unsubscribe: the `Observable` autocompletes (like in the Angular `HttpClient` service).
+You do *NOT* need to unsubscribe: the `Observable` autocompletes (like in the Angular `HttpClient` service).
 
 But **you *DO* need to subscribe**, even if you don't have something specific to do after writing in storage
 (because it's how RxJS `Observable`s work).
@@ -191,8 +175,7 @@ this.storage.set('color', 'red').subscribe({
 
 For read operations, you can also manage errors by providing a default value:
 ```typescript
-import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, of } from 'rxjs';
 
 this.storage.get('color').pipe(
   catchError(() => of('red')),
