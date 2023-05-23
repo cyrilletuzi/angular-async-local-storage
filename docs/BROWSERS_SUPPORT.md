@@ -14,7 +14,7 @@ Following Angular itself:
 - version 12: IE11 support deprecated (but still active)
 - versions >= 13: IE11 support removed
 
-This module is not impacted by IE missing `indexedDB` features.
+This lib is not impacted by IE missing `indexedDB` features.
 
 ## Browsers restrictions
 
