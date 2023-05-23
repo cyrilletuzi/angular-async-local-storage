@@ -2,6 +2,12 @@
 
 This lib is fully documented and so you'll find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 16.1.0 (2023-05-23)
+
+`LocalStorage` service is deprecated and will be removed in v17. The `StorageMap` replacement exists since v8 now, so it is time to move forward. As usual, see the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION_TO_V16.md).
+
+### Breaking changes
+
 ## 16.0.0 (2023-05-03)
 
 ### Breaking changes

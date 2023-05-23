@@ -24,6 +24,57 @@ ng update @ngx-pwa/local-storage
 - RxJS >= 7.4 is required. RxJS 6 is not supported.
 - TypeScript 5.0 is recommended (TypeScript 4.9 should work but is not tested).
 
+## Deprecation
+
+`LocalStorage` service is deprecated and will be removed in v17. The `StorageMap` replacement exists since v8 now, so it is time to move forward.
+
+Migration is very simple:
+
+```typescript
+// Before
+import { LocalStorage } from '@ngx-pwa/local-storage';
+
+@Injectable()
+export class YourService {
+  constructor(private storage: LocalStorage) {
+    this.storage.getItem('key').subscribe();
+    this.storage.setItem('key', 'value').subscribe();
+    this.storage.removeItem('key').subscribe();
+    this.storage.clear().subscribe();
+    this.storage.length;
+  }
+}
+
+// After
+import { StorageMap } from '@ngx-pwa/local-storage';
+
+@Injectable()
+export class YourService {
+  constructor(private storage: StorageMap) {
+    this.storage.get('key').subscribe();
+    this.storage.set('key', 'value').subscribe();
+    this.storage.delete('key').subscribe();
+    this.storage.clear().subscribe();
+    this.storage.size;
+  }
+}
+```
+
+Minor typings differences:
+- the `StorageMap` read method returns `undefined` if the `key` does not exist (the `LocalStorage` one returned `null`), so update any explicit condition:
+```typescript
+// Before
+this.storage.getItem('key').subscribe((data) => {
+  if (data !== null) {}
+});
+
+// After
+this.storage.get('key').subscribe((data) => {
+  if (data !== undefined) {}
+});
+```
+- the `StorageMap` writing methods return `undefined` (the `LocalStorage` ones returned `true`): it is unlikely to concern you, as the return is useless for these methods
+
 ## More documentation
 
 - [Full changelog for v16](../CHANGELOG.md)
