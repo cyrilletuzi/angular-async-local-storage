@@ -91,7 +91,7 @@ this.storage.keys().pipe(
 ).subscribe({
   complete: () => {
 
-    /* Note we don't act in the classic success callback as it will be trigerred for each key,
+    /* Note we do not act in the classic success callback as it will be trigerred for each key,
      * while we want to act only when all the operations are done */
     console.log('Done!');
 

@@ -48,7 +48,7 @@ ng update @ngx-pwa/local-storage
 
 Check that `StorageModule.forRoot({ IDBNoWrap: false })` was added in `AppModule` imports of each project (for backward compatibility).
 
-**If `ng update` didn't work as expected, please delay the update and file an issue.**
+**If `ng update` did not work as expected, please delay the update and file an issue.**
 
 If you have multiple applications in your project but you do not use this lib in all projects, remove `StorageModule.forRoot({ IDBNoWrap: false })` and the import in the unconcerned `AppModule`s.
 

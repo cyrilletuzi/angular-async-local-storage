@@ -42,7 +42,7 @@ Doing `ng update` should have managed backward compatibility. But it is not easy
 - if you started using this lib in versions <= 7, you should see `StorageModale.forRoot({ IDBNoWrap: false })`,
 - if you started using this lib in version 8 and you followed instructions at that time (ie. you already set `IDBNoWrap` to `true` or used `ng add`), you should see `StorageModale.forRoot({ IDBNoWrap: true })` or no `IDBNoWrap` option at all.
 
-**If `ng update` didn't work as expected, please delay the update and file an issue.** Again, all previously stored data may be lost otherwise.
+**If `ng update` did not work as expected, please delay the update and file an issue.** Again, all previously stored data may be lost otherwise.
 
 ## Removed deprecated features
 

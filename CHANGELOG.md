@@ -355,7 +355,7 @@ Previously, the lib was only automatically tested in Chrome and Firefox on Ubunt
 
 - Support for `ng add @ngx-pwa/local-storage` (for versions >= 8)
 - Support for `ng update @ngx-pwa/local-storage`
-(it doesn't mean you don't have work to do when updating, be sure to follow the [migrations guides](./MIGRATION.md))
+(it does not mean you do not have work to do when updating, be sure to follow the [migrations guides](./MIGRATION.md))
 
 ### Error management
 
@@ -430,7 +430,7 @@ It was time to do a full review and refactoring, which results in:
 ### Breaking changes
 
 - **`type` now required for array, object, const and enum validation schemas**
-- `JSONSchemaNull` removed (useless, `null` doesn't require any validation)
+- `JSONSchemaNull` removed (useless, `null` does not require any validation)
 - `JSONSchema` no longer accepts extra properties
 - `getUnsafeItem()` is removed (was already deprecated in v7)
 

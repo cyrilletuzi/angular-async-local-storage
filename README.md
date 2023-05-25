@@ -176,7 +176,7 @@ See the [errors guide](https://github.com/cyrilletuzi/angular-async-local-storag
 
 This lib, as native `localStorage` and `indexedDb`, is about *persistent* storage.
 
-Wanting *temporary* storage (like `sessionStorage`) is a very common misconception: an application doesn't need that. [More details here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/EXPIRATION.md).
+Wanting *temporary* storage (like `sessionStorage`) is a very common misconception: an application does not need that. [More details here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/EXPIRATION.md).
 
 ### `Map`-like operations
 
@@ -199,7 +199,7 @@ If you have multiple apps on the same *sub*domain *and* you do not want to share
 
 ### Interoperability
 
-For interoperability when mixing this lib with direct usage of native APIs or other libs like `localForage` (which doesn't make sense in most cases), see the [interoperability documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/INTEROPERABILITY.md).
+For interoperability when mixing this lib with direct usage of native APIs or other libs like `localForage` (which does not make sense in most cases), see the [interoperability documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/INTEROPERABILITY.md).
 
 ### Changelog
 
