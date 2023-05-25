@@ -1,8 +1,6 @@
 # Migration guide to version 7
 
-The migration guide to v7 is quite long as it explains the issue in details,
-so you understand exactly what you are doing. But relax,
-**the real actions required are not so long and are *for your own good***.
+The migration guide to v7 is quite long as it explains the issue in details, so you understand exactly what you are doing. But relax, **the real actions required are not so long and are *for your own good***.
 
 ## LTS support ended
 
@@ -10,8 +8,7 @@ so you understand exactly what you are doing. But relax,
 
 ## WARNING
 
-Version 7 of this library tried to take a huge step forward by enforcing validation, for security and error management.
-Unfortunately, unforeseen issues happened, some very bad as they were beyond our control
+Version 7 of this library tried to take a huge step forward by enforcing validation, for security and error management. Unfortunately, unforeseen issues happened, some very bad as they were beyond our control
 (like [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)).
 
 Version 8 achieves the goal we tried in v7 the right way. Everything has been cleaned and things are a lot easier for you.
@@ -22,22 +19,19 @@ Then, **v7 is deprecated**. For Angular 7, it is recommended to:
 
 ## Previous migrations
 
-If you were using v4 or v5 and skipped v6, you first need to follow
-[the migration guide to version 6](./MIGRATION_TO_V6.md).
+If you were using v4 or v5 and skipped v6, you first need to follow [the migration guide to version 6](./MIGRATION_TO_V6.md).
 
 ## Why required validation?
 
-Any client-side storage (cookies, `localStorage`, `indexedDb`...) is not secure by nature,
-as the client can forge the value (intentionally to attack your app, or unintentionally because it is affected by a virus or a XSS attack).
+Any client-side storage (cookies, `localStorage`, `indexedDb`...) is not secure by nature, as the client can forge the value (intentionally to attack your app, or unintentionally because it is affected by a virus or a XSS attack).
 
 It can cause obvious **security issues**, but also **errors** and thus crashes (as the received data type may not be what you expected).
 
 Then, **any data coming from client-side storage should be checked before used**, as mentionned in the [README](../README.md).
 
-That's why v5 of this lib introduced a new option for `getItem()` to validate the data against a JSON schema.
-But until now it was optional (to not break with previous versions and to let you use your own validation system), which is bad.
+That is why v5 of this lib introduced a new option for `getItem()` to validate the data against a JSON schema. But until now it was optional (to not break with previous versions and to let you use your own validation system), which is bad.
 
-It's now time to make **validation mandatory**, as it is now possible with the new type `unknown` in TypeScript >= 3, supported by Angular >= 7.
+It is now time to make **validation mandatory**, as it is now possible with the new type `unknown` in TypeScript >= 3, supported by Angular >= 7.
 
 ## What does it mean?
 
@@ -85,13 +79,9 @@ this.localStorage.getItem<string>('test').subscribe((result) => {
 });
 ```
 
-It's only a convenience allowed by the library. It's useful when you're already validating the data with a JSON schema,
-to cast the data type.
+It is only a convenience allowed by the library. It is useful when you are already validating the data with a JSON schema, to cast the data type.
 
-But **when you were not validating the data, it was really bad**.
-Casting like this only means: "TypeScript, trust me, I'm telling you it will be a string".
-But TypeScript won't do any real validation as it can't:
-**TypeScript can only manage checks at compilation time, while client-side storage checks can only happen at runtime**.
+But **when you were not validating the data, it was really bad**. Casting like this only means: "TypeScript, trust me, I am telling you it will be a string". But TypeScript will *not* do any real validation as it cannot: **TypeScript can only manage checks at compilation time, while client-side storage checks can only happen at runtime**.
 
 So you ended up with a `string` type while the real data may not be a `string` at all, leading to security issues and errors.
 
@@ -101,9 +91,7 @@ If you were not already validating your data, there are several options.
 
 ### Solution 1: JSON schema validation with v8 (recommended)
 
-Version 8 of the lib greatly simplifies validation. So if you're not yet on v7,
-we strongly recommend you to to [upgrade to v8 directly](./MIGRATION_TO_V8.md),
-and to follow the [new validation guide](./VALIDATION.md) instead.
+Version 8 of the lib greatly simplifies validation. So if you are not yet on v7, we strongly recommend you to to [upgrade to v8 directly](./MIGRATION_TO_V8.md), and to follow the [new validation guide](./VALIDATION.md) instead.
 
 ### Solution 2: custom validation (very painful)
 
@@ -124,8 +112,7 @@ this.localStorage.getItem('test').subscribe((result) => {
 
 **TypeScript will narrow the data type as you validate**.
 
-You can also use any other library to validate your data. But in this case,
-TypeScript won't be able to narrow the data type automatically. You can help TypeScript like this:
+You can also use any other library to validate your data. But in this case, TypeScript will not be able to narrow the data type automatically. You can help TypeScript like this:
 
 ```typescript
 import { isString } from 'some-library';

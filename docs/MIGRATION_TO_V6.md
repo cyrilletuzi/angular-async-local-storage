@@ -6,9 +6,7 @@
 
 ## Requirements
 
-If you come from the old `angular-async-local-storage` package,
-you'll need to **[migrate to the new `@ngx-pwa/local-storage` package](./MIGRATION_TO_NEW_PACKAGE.md)**
-first before upgrading to v6.
+If you come from the old `angular-async-local-storage` package, you will need to **[migrate to the new `@ngx-pwa/local-storage` package](./MIGRATION_TO_NEW_PACKAGE.md)** first before upgrading to v6.
 
 ## Shorter classes names
 
@@ -19,12 +17,11 @@ You can easily and quickly migrate by doing **a global search/replace of**:
 - `AsyncLocalDatabase` => `LocalDatabase`
 - `ALSGetItemOptions` => `LSGetItemOptions`
 
-In most cases, you're probably only using the first one.
+In most cases, you are probably only using the first one.
 
 ## No more `NgModule`
 
-`LocalStorageModule` is no longer needed and so it is removed.
-Services are provided directly when injected in Angular >=6.
+`LocalStorageModule` is no longer needed and so it is removed. Services are provided directly when injected in Angular >=6.
 
 Just **delete the `LocalStorageModule` import in your `AppModule`**.
 

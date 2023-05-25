@@ -2,15 +2,11 @@
 
 Notes:
 
-- Client-side storage only makes sense for keeping data when the user *leaves* the application
-and comes back later; if you just need to track data when the user stays in the application,
-you do *not* need to watch and not even to use client-side storage: you just need a variable/property.
+- Client-side storage only makes sense for keeping data when the user *leaves* the application and comes back later; if you just need to track data when the user stays in the application, you do *not* need to watch and not even to use client-side storage: you just need a variable/property.
 
-- Unlike all other `Observable`s of this lib, this one won't auto-complete,
-as the purpose is to watch indefinitely. So **be sure to unsubscribe**.
+- Unlike all other `Observable`s of this lib, this one will not auto-complete, as the purpose is to watch indefinitely. So **be sure to unsubscribe**.
 
-- The lib can only detect changes in storage done *with this lib* (ie. via `set()` / `.delete()` or `.clear()`).
-It *cannot* detect external changes (for examples via the native `indexedDB` API or via another lib like `localForage`).
+- The lib can only detect changes in storage done *with this lib* (ie. via `set()` / `.delete()` or `.clear()`). It *cannot* detect external changes (for examples via the native `indexedDB` API or via another lib like `localForage`).
 
 ## Via manual subscription
 
@@ -64,8 +60,7 @@ export class SomeComponent implements OnInit {
 }
 ```
 
-Note as usual in Angular, do *not* use the `async` pipe twice on the same `Observable`.
-If you need the data in several places:
+Note as usual in Angular, do *not* use the `async` pipe twice on the same `Observable`. If you need the data in several places:
 
 ```typescript
 import { Observable } from 'rjxs';

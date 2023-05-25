@@ -1,6 +1,6 @@
 # Changelog
 
-This lib is fully documented and so you'll find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
+This lib is fully documented and so you will find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
 ## 16.1.0 (2023-05-23)
 
@@ -75,7 +75,7 @@ be cautious if you want to upgrade RxJS right now without waiting for Angular 13
 
 ### Other change
 
-While it may still work, Angular 9 LTS has ended, so it's not officially supported anymore.
+While it may still work, Angular 9 LTS has ended, so it is not officially supported anymore.
 
 ## 12.0.0 (2021-05-13)
 
@@ -113,7 +113,7 @@ While Angular 9-11 still allowed to manually switch back to ViewEngine, Angular 
 
 #### Internet Explorer 11 support deprecated
 
-Angular 12 deprecates IE 11 support. Meaning it's still supported, but it will be removed in version 13.
+Angular 12 deprecates IE 11 support. Meaning it is still supported, but it will be removed in version 13.
 
 ## 11.1.0 (2021-01-21)
 
@@ -155,14 +155,14 @@ was allowed but the result was still `unknown`.
 
 This is a very common misconception of client-side storage:
 you can store and get anything in storage, so many people think that casting as above
-is enough to get the right result type. It's not.
+is enough to get the right result type. It is not.
 
-Why? Because you're getting data from *client-side* storage:
+Why? Because you are getting data from *client-side* storage:
 so it may have been modified (just go to your browser developer tools and hack what you want).
 
 A cast is just an information for *compilation*:
 it basically says to TypeScript: "believe me, it will be a `User`".
-But **that's not true: you're not sure you'll get a `User`**.
+But **that's not true: you are not sure you will get a `User`**.
 
 This is why this library provides a *runtime* validation system,
 via a JSON schema as the second parameter:
@@ -207,7 +207,7 @@ this.storage.get<User>('user', {
 ```
 
 Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
-For the same reason, the lib can't check that.
+For the same reason, the lib cannot check that.
 
 Auto-inferring the type from all JSON schemas is in progress in
 [#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]).
@@ -227,7 +227,7 @@ this.storage.get('name', { type: 'string' });
 
 4. **JSON schema with `as const` assertion**
 
-Given how JSON schema works, sometimes it's better to set them `as const`:
+Given how JSON schema works, sometimes it is better to set them `as const`:
 
 ```ts
 this.storage.get('name', { type: 'string' } as const);
@@ -270,7 +270,7 @@ If you were already using version >= v9.0.0-beta.4 or v9.0.0-rc.x of this lib,
 **as a one time exception**, please update with a classic `npm install @ngx-pwa/local-storage@9`,
 to avoid migration happening twice.
 
-For future v9+ updates and if you're coming from v8.0.0 or version v9.0.0-beta.1-3,
+For future v9+ updates and if you are coming from v8.0.0 or version v9.0.0-beta.1-3,
 please stick to `ng update @ngx-pwa/local-storage`.
 
 Following these instructions is very important, otherwise it would result in wrong config
@@ -289,7 +289,7 @@ v9 requires Angular 9.
 ### Breaking change: internal storage change
 
 Doing `ng update` should have managed backward compatibility.
-But it's not easy to be sure schematics work in all cases,
+But it is not easy to be sure schematics work in all cases,
 so **be sure to check the migration was done correctly** by following the
 [migration guide to v9](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MIGRATION_TO_V9.md), **otherwise you would lost previously stored data**.
 
@@ -304,7 +304,7 @@ The following APIs were already deprecated in v8 and are now removed in v9.
 Please follow the [migration guide to v8](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MIGRATION_TO_V8.md) for more details about how to update to new APIs.
 
 - Removed providers for prefix management
-  - **If you're concerned, be very careful with this migration, otherwise you could lost previously stored data**
+  - **If you are concerned, be very careful with this migration, otherwise you could lost previously stored data**
   - `{ provide: LOCAL_STORAGE_PREFIX, useValue: 'myapp' }` and `localStorageProviders()` (use `StorageModule.forRoot({ LSPrefix: 'myapp_', IDBDBName: 'myapp_ngStorage' })` module import instead)
   - `LocalStorageProvidersConfig` interface (useless)
 - Removed APIs in validation
@@ -334,7 +334,7 @@ Also, documentation about [sponsorship](https://github.com/sponsors/cyrilletuzi)
 ### Tests
 
 The repo has moved from CircleCI to GitHub Actions.
-So it's free and a lot easier to test on several configurations, and now the lib is tested for each pull request on:
+So it is free and a lot easier to test on several configurations, and now the lib is tested for each pull request on:
 - Chrome (Ubuntu & Windows)
 - Firefox (Ubuntu & Windows)
 - Safari (macOS)
@@ -360,15 +360,15 @@ Previously, the lib was only automatically tested in Chrome and Firefox on Ubunt
 ### Error management
 
 Before v8.2.0, this lib was listening to `indexedDb` *request* `success` event.
-Now it's listening to *transaction* `complete` event.
+Now it is listening to *transaction* `complete` event.
 
 Except for the special `.keys()` method, all other methods in this lib are doing just one request by transaction.
 So request `success` or transaction `complete` are supposed to be equivalent. But there are rare cases like
 [#162](https://github.com/cyrilletuzi/angular-async-local-storage/issues/162)
-where the transaction could fail even if the request succeeded (meaning the data won't be written on disk).
+where the transaction could fail even if the request succeeded (meaning the data will not be written on disk).
 
 So now it should catch more rare edgy cases, but for nearly everyone it should not change anything.
-But it's still a sensitive change as it concerns asynchrony (the order of operations are not exactly the same).
+But it is still a sensitive change as it concerns asynchrony (the order of operations are not exactly the same).
 
 ## 8.1.0 (2019-08-17)
 
@@ -414,7 +414,7 @@ See the new [validation guide](./docs/VALIDATION.md).
 
 ### Full review
 
-This lib started as a little project and is now the first Angular library used for local storage.
+This lib started as a little project and is now the first Angular library used for client-side storage.
 It was time to do a full review and refactoring, which results in:
 
 - Better error management (see [README](./README.md#errors))
@@ -468,7 +468,7 @@ Should not concern you as it was internal stuff.
 - `has()` and `keys()` now work in IE too
 (fixes [#69](https://github.com/cyrilletuzi/angular-async-local-storage/issues/69))
 
-Do *not* use: it's deprecated in v8.
+Do *not* use: it is deprecated in v8.
 
 ## 7.3.0 (2019-01-03)
 
@@ -502,7 +502,7 @@ Do *not* use: it's deprecated in v8.
 
 In v7.2, `has()` and `keys()` were not supported in Internet Explorer. Update to v7.4.
 
-Do *not* use: it's deprecated in v8.
+Do *not* use: it is deprecated in v8.
 
 See [documentation](./docs/MAP_OPERATIONS.md).
 
@@ -583,7 +583,7 @@ Validation of data is now required when using `getItem()`:
 ### Breaking changes
 
 A [migration guide](./docs/MIGRATION_TO_V6.md)
-is available to ease the update. It's just a couple of refactorings.
+is available to ease the update. It is just a couple of refactorings.
 (If you want to contribute,
 [it could be automated](https://github.com/cyrilletuzi/angular-async-local-storage/issues/31).)
 
@@ -821,7 +821,7 @@ Previous versions were only released under `angular2-async-local-storage`.
 
 ### Features
 
-- Initial release : asynchronous local storage module for Angular
+- Initial release : asynchronous client-side storage module for Angular
 - Up to date with Angular 2.1
 - Compatible with AoT pre-compiling
 - Compatible with Universal server-side rendering

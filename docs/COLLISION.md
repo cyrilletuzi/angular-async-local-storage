@@ -1,9 +1,6 @@
 # Collision guide
 
-**All client-side storages (both `indexedDB` and `localStorage`) are restricted to the same *sub*domain**,
-so there is no risk of collision in most cases.
-*Only* if you have multiple apps on the same *sub*domain *and* you don't want to share data between them,
-you need to add a prefix.
+**All client-side storages (both `indexedDB` and `localStorage`) are restricted to the same *sub*domain**, so there is no risk of collision in most cases. *Only* if you have multiple apps on the same *sub*domain *and* you do not want to share data between them, you need to add a prefix.
 
 ## Configuration
 

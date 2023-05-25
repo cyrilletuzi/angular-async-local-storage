@@ -2,9 +2,7 @@
 
 This lib has been renamed from `angular-async-local-storage` to **`@ngx-pwa/local-storage`**.
 
-But **do not worry: the previous package is still here** and will be as long as npm exists.
-Migration to the new package is recommended as soon as possible to enjoy bug fixes and new features,
-but is not required for Angular 4 & 5. **It is only required when upgrading to Angular >= 6.**
+But **do not worry: the previous package is still here** and will be as long as npm exists. Migration to the new package is recommended as soon as possible to enjoy bug fixes and new features, but is not required for Angular 4 & 5. **It is only required when upgrading to Angular >= 6.**
 
 ## Versions
 
@@ -36,10 +34,7 @@ npm install @ngx-pwa/local-storage@5
 npm install @ngx-pwa/local-storage@6
 ```
 
-- for **Angular >= 8**: you must [update to v6 first](./MIGRATION_TO_V6.md),
-then do the [other migrations](../MIGRATION.md) in an incremental way,
-especially [the version 9 migration](./MIGRATION_TO_V9.md),
-as it can lead to the loss of all previsouly stored data if it is not done correctly.
+- for **Angular >= 8**: you must [update to v6 first](./MIGRATION_TO_V6.md), then do the [other migrations](../MIGRATION.md) in an incremental way, especially [the version 9 migration](./MIGRATION_TO_V9.md), as it can lead to the loss of all previsouly stored data if it is not done correctly.
 
 ## Refactoring
 
@@ -56,7 +51,7 @@ Done.
 
 There is **no code change in v4 and v5**.
 
-There are code changes if you're upgrading to Angular >=6, see [the other migration guides](../MIGRATION.md).
+There are code changes if you are upgrading to Angular >=6, see [the other migration guides](../MIGRATION.md).
 
 ## More documentation
 

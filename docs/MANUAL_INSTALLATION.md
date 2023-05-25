@@ -1,7 +1,6 @@
 # Manual installation
 
-This is the *first* installation guide.
-If you are already using the lib, use the [migrations guides](../MIGRATION.md).
+This is the *first* installation guide. If you are already using the lib, use the [migrations guides](../MIGRATION.md).
 
 **You should install this library with this command:**
 

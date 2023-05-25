@@ -2,24 +2,18 @@
 
 ## JSON serialization
 
-In most cases, this library uses `indexedDB` storage, which allows any value type.
-But in special cases (like in Firefox private mode,
-see the [browser support guide](./BROWSERS_SUPPORT.md) for details),
-the library will fall back to `localStorage`, where JSON serialization will happen.
+In most cases, this library uses `indexedDB` storage, which allows any value type. But in special cases (like in Firefox private mode, see the [browser support guide](./BROWSERS_SUPPORT.md) for details), the library will fall back to `localStorage`, where JSON serialization will happen.
 
-Everything can be serialized (`JSON.stringify()`), but when you unserialize (`JSON.parse()`),
-you'll only get a JSON, ie. a primitive type, an array or a *literal* object.
+Everything can be serialized (`JSON.stringify()`), but when you unserialize (`JSON.parse()`), you will only get a JSON, ie. a primitive type, an array or a *literal* object.
 
 So if you store an instance of a specific class in `localStorage`, like `Date`, `Map`, `Set` or `Blob`,
-what you'll get then with `.get()` won't be a `Map`, `Set` or `Blob`, but just a literal object.
+what you will get then with `.get()` will not be a `Map`, `Set` or `Blob`, but just a literal object.
 
-So, it's safer to **stick to JSON-compatible values**.
+So, it is safer to **stick to JSON-compatible values**.
 
 ## Validation
 
-Also, this library uses JSON schemas for validation, which can only describe JSON-compatible values.
-So if you're storing special structures like `Map`, `Set` or `Blob`,
-you'll have to manage your own validation (which is possible but painful).
+Also, this library uses JSON schemas for validation, which can only describe JSON-compatible values. So if you are storing special structures like `Map`, `Set` or `Blob`, you will have to manage your own validation (which is possible but painful).
 
 ## Examples
 

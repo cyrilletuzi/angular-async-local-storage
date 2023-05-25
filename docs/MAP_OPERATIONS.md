@@ -1,7 +1,6 @@
 # `Map`-like operations
 
-In addition to the classic `localStorage`-like API,
-this lib also provides a partial `Map`-like API for advanced operations.
+In addition to the classic `localStorage`-like API, this lib also provides a partial `Map`-like API for advanced operations.
 
 To use it:
 
@@ -32,8 +31,7 @@ this.storage.keys().subscribe({
 
 Note this is an *iterating* `Observable`:
 - if there is no key, the `next` callback will *not* be invoked,
-- if you need to wait the whole operation to end, be sure to act in the `complete` callback,
-as this `Observable` can emit several values and so will invoke the `next` callback several times.
+- if you need to wait the whole operation to end, be sure to act in the `complete` callback, as this `Observable` can emit several values and so will invoke the `next` callback several times.
 
 ## `.has(key)` method
 
@@ -65,9 +63,7 @@ this.storage.size.subscribe((size) => {
 
 ## Other methods
 
-`.values()` and `.entries()` have not been implemented on purpose,
-because it has few use cases and it would not be a good idea for performance.
-But you can easily do your own implementation via `keys()`. 
+`.values()` and `.entries()` have not been implemented on purpose, because it has few use cases and it would not be a good idea for performance. But you can easily do your own implementation via `keys()`. 
 
 ## Recipes
 
@@ -75,7 +71,7 @@ As a convenience, below are some recipes for advanced operations asked by the co
 
 ### Multiple stores
 
-Let's say you stored:
+Let us say you stored:
 - some app's data with such indexes: `app_data1`, `app_data2`...
 - some user's data with such indexes: `user_data1`, `user_data2`...
 
