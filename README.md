@@ -4,7 +4,7 @@ Efficient client-side storage for Angular:
 - **simplicity**: simple API similar to native `localStorage`,
 - **perfomance**: internally stored via the asynchronous `indexedDB` API,
 - **Angular-like**: wrapped in RxJS `Observable`s,
-- **security**: validate data with a JSON Schema,
+- **security**: validate data with a JSON Schema or with [`typebox`](https://github.com/sinclairzx81/typebox),
 - **compatibility**: works around some browsers issues and heavily tested via GitHub Actions,
 - **documentation**: API fully explained, and a changelog!
 
