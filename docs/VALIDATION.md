@@ -141,7 +141,7 @@ For the same reason, the lib cannot check that.
 
 ### Validation with @sinclair/typebox
 
-`typebox` is a lib to ensure the match between the JSON Schema and the TypeScript type without having to write the code twice. First, install the lib:
+[`typebox`](https://github.com/sinclairzx81/typebox) is a lib to ensure the match between the JSON Schema and the TypeScript type without having to write the code twice. First, install the lib:
 
 ```bash
 npm install @sinclair/typebox
