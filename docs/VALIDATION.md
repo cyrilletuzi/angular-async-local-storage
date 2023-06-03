@@ -195,7 +195,7 @@ So they each serve a different purpose:
 For now, the library is able to infer the return type based on the JSON schema for primitives (`string`, `number`, `integer`, `boolean` and `array` of these), but not for more complex structures like objects.
 
 Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
-For the same reason, the lib cannot check that. This is were the `typebox` solution shines: it ensures the match between the JSON Schema and the TypeScript type without having to write the code twice.
+For the same reason, the lib cannot check that. This is where the `typebox` solution shines: it ensures the match between the JSON Schema and the TypeScript type without having to write the code twice.
 
 ## Validation when writing
 
