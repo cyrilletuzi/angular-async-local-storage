@@ -139,7 +139,29 @@ For now, the library is able to infer the return type based on the JSON schema f
 Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
 For the same reason, the lib cannot check that.
 
-### Validation when writing
+### Validation with @sinclair/typebox
+
+`typebox` is a lib to ensure the match between the JSON Schema and the TypeScript type without having to write the code twice. First, install the lib:
+
+```bash
+npm install @sinclair/typebox
+```
+
+Then, the previous object validation example becomes this:
+
+```typescript
+import { Static, Type } from '@sinclair/typebox';
+
+const schema = Type.Object({
+  firstName: Type.String(),
+  lastName: Type.String(),
+  age: Type.Optional(Type.Number()),
+});
+
+this.storage.get<Static<typeof schema>>('test', schema)
+```
+
+## Validation when writing
 
 While validation is only required when *reading* storage, when the data is complex, you could store a wrongly structured object by error without noticing, and then `get()` will fail.
 
