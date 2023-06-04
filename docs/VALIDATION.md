@@ -14,18 +14,6 @@ Then, **any data coming from client-side storage should be checked before used**
 
 It can have many uses (it is why you have autocompletion in some JSON files in Visual Studio Code). **In this lib, JSON schemas are used to validate the data retrieved from client-side storage.**
 
-### JSON schemas via typebox
-
-There is 2 ways to define the JSON schemas:
-- directly
-- with the [`@sinclair/typebox` library](https://github.com/sinclairzx81/typebox)
-
-`typebox` is recommended because it is simpler and better for advanced cases like object validation. But it requires the installation of an additional library:
-
-```bash
-npm install @sinclair/typebox
-```
-
 ## How to validate simple data
 
 As a general recommendation, we recommend to keep your data structures as simple as possible, as you will see the more complex it is, the more complex is validation too.
@@ -33,96 +21,73 @@ As a general recommendation, we recommend to keep your data structures as simple
 ### Boolean
 
 ```typescript
-// JSON schema
 this.storage.get('test', { type: 'boolean' })
-
-// typebox
-this.storage.get('test', Type.Boolean())
 ```
 
 ### Integer
 
 ```typescript
-// JSON schema
 this.storage.get('test', { type: 'integer' })
-
-// typebox
-this.storage.get('test', Type.Integer())
 ```
 
 ### Number
 
 ```typescript
-// JSON schema
 this.storage.get('test', { type: 'number' })
-
-// typebox
-this.storage.get('test', Type.Number())
 ```
 
 ### String
 
 ```typescript
-// JSON schema
 this.storage.get('test', { type: 'string' })
-
-// typebox
-this.storage.get('test', Type.String())
 ```
 
-### Arrays
+### Arrays of primitives
 
 ```typescript
-// JSON schema
-this.storage.get('test', {
-  type: 'array',
-  items: { type: 'boolean' },
-})
-
-// typebox
-this.storage.get('test', Type.Array(Type.Boolean()))
-```
-
-```typescript
-// JSON schema
 this.storage.get('test', {
   type: 'array',
   items: { type: 'integer' },
 })
-
-// typebox
-this.storage.get('test', Type.Array(Type.Integer()))
 ```
 
 ```typescript
-// JSON schema
 this.storage.get('test', {
   type: 'array',
   items: { type: 'number' },
 })
-
-// typebox
-this.storage.get('test', Type.Array(Type.Number()))
 ```
 
 ```typescript
-// JSON schema
 this.storage.get('test', {
   type: 'array',
   items: { type: 'string' },
 })
-
-// typebox
-this.storage.get('test', Type.Array(Type.String()))
 ```
 
-## Tuples
+### How to validate advanced data
+
+## typebox
+
+There is 2 ways to define the JSON schemas:
+- directly
+- with the [`@sinclair/typebox` library](https://github.com/sinclairzx81/typebox)
+
+`typebox` is recommended for advanced cases, but it requires the installation of an additional library:
+
+```bash
+npm install @sinclair/typebox
+```
+
+Note you will get a warning from Angular CLI when building because the npm version of `@sinclair/typebox` is serving CommonJS instead of ESM, but the impact on bundle size would be similar in ESM for this library.
+
+## Tuple
 
 In most cases, an array is for a list with values of the *same type*. In special cases, it can be useful to use arrays with values of different types. It is called tuples in TypeScript. For example: `['test', 1]`
 
 ```typescript
 // JSON schema
-this.storage.get('test', {
+this.storage.get<[string, number]>('test', {
   type: 'array',
   items: [
     { type: 'string' },
@@ -130,11 +95,15 @@ this.storage.get('test', {
   ],
 })
 
-// typebox (requires a cast to match the lib behavior)
-this.storage.get('test', Type.Tuple([
+// typebox
+import { Static, Type } from '@sinclair/typebox';
+
+const schema = Type.Tuple([
   Type.String(),
   Type.Number(),
-]) as JSONSchemaArray)
+]);
+
+this.storage.get<Static<typeof schema>>('test', schema)
 ```
 
 Note a tuple has a fixed length: the number of values in the array and the number of schemas provided in `items` must be exactly the same, otherwise the validation fails.
@@ -147,19 +116,26 @@ For example:
 import { JSONSchema } from '@ngx-pwa/local-storage';
 
 interface User {
-  firstName: string;
-  lastName: string;
+  name: string;
+  isAuthenticated: boolean;
   age?: number;
+  favoriteColors: string[];
 }
 
 const schema: JSONSchema = {
   type: 'object',
   properties: {
-    firstName: { type: 'string' },
-    lastName: { type: 'string' },
+    name: { type: 'string' },
+    isAuthenticated: { type: 'boolean' },
     age: { type: 'number' },
+    favoriteColors: {
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+    },
   },
-  required: ['firstName', 'lastName']
+  required: ['name', 'isAuthenticated', 'favoriteColors']
 };
 
 this.storage.get<User>('test', schema)
@@ -168,9 +144,10 @@ this.storage.get<User>('test', schema)
 import { Static, Type } from '@sinclair/typebox';
 
 const schema = Type.Object({
-  firstName: Type.String(),
-  lastName: Type.String(),
+  name: Type.String(),
+  isAuthenticated: Type.Boolean(),
   age: Type.Optional(Type.Number()),
+  favoriteColors: Type.Array(Type.String()),
 });
 
 this.storage.get<Static<typeof schema>>('test', schema)
