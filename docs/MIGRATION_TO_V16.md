@@ -22,7 +22,9 @@ ng update @ngx-pwa/local-storage
 - RxJS >= 7.4 is required. RxJS 6 is not supported.
 - TypeScript 5.0 is recommended (TypeScript 4.9 should work but is not tested).
 
-## Deprecation
+## Deprecations
+
+### LocalStorage service
 
 `LocalStorage` service is deprecated and will be removed in v17. The `StorageMap` replacement exists since v8 now, so it is time to move forward.
 
@@ -72,6 +74,31 @@ this.storage.get('key').subscribe((data) => {
 });
 ```
 - the `StorageMap` writing methods return `undefined` (the `LocalStorage` ones returned `true`): it is unlikely to concern you, as the return is useless for these methods
+
+### JSONSchemaXXX specific interfaces
+
+Specific `JSONSchemaXXX` interfaces are deprecated and will be removed in version 17. They were introduced in very old versions of this library as a workaround to some TypeScript issues which are gone for a long time now. Since version 8, you should have used the generic `JSONSchema` interface.
+
+Note that if you are using `JSONSchemaArray` for a tuple schema, you need to switch to `JSONSchema` now because of the fix in version 16.2.0.
+
+Example:
+```typescript
+// Before
+const schema: JSONSchemaString = { type: 'string' };
+
+// After
+const schema: JSONSchema = { type: 'string' };
+```
+
+### JSONValidator
+
+`JSONValidator` is deprecated and will no longer be available in version 17. It is an internal utility class which is limited, could change at any time and is out of scope of this library.
+
+If you need a JSON validator, there are far better and dedicated libraries available like [ajv](https://ajv.js.org/).
+
+### LocalDatabase
+
+- `LocalDatabase` is deprecated and will no longer be available in version 17. It is an internal utility class, and overriding it is an undocumented behavior. If you are doing so, you are basically rewriting your own storage library, so using this one makes no sense, you can your service directly.
 
 ## More documentation
 
