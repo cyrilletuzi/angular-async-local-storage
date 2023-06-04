@@ -70,7 +70,7 @@ this.storage.get('test', {
 ## typebox
 
 There is 2 ways to define the JSON schemas:
-- directly
+- directly as in the previous examples
 - with the [`@sinclair/typebox` library](https://github.com/sinclairzx81/typebox)
 
 `typebox` is recommended for advanced cases, but it requires the installation of an additional library:
