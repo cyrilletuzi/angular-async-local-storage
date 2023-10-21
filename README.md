@@ -80,8 +80,6 @@ class StorageMap {
 }
 ```
 
-Note: the lib also exports an old `LocalStorage` service: it is deprecated and will be removed in v17, do **not** use it.
-
 ## How to
 
 ### Writing data
