@@ -77,6 +77,11 @@ interface Data {
       <p>{{data.hello}}</p>
       <p>{{data.world}}</p>
     <div>
+    <!-- or with new control flow -->
+    @if (data$ | async; as data) {
+      <p>{{data.hello}}</p>
+      <p>{{data.world}}</p>
+    }
   `
 })
 export class SomeComponent implements OnInit {
