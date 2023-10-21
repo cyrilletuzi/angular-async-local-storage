@@ -17,14 +17,14 @@ In the meantime, you can proceed to a manual installation, but be sure to follow
 Install the right version according to your Angular one via [`npm`](http://npmjs.com):
 
 ```bash
+# For Angular 17:
+npm install @ngx-pwa/local-storage@^17.0.0
+
 # For Angular 16:
 npm install @ngx-pwa/local-storage@^16.0.0
 
 # For Angular 15:
 npm install @ngx-pwa/local-storage@^15.0.0
-
-# For Angular 14:
-npm install @ngx-pwa/local-storage@^13.0.0
 ```
 
 [Back to general documentation](../README.md)

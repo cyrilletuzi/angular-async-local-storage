@@ -35,7 +35,7 @@ This lib has a simple API similar to native `localStorage`, but internally store
 Install the package:
 
 ```bash
-# For Angular LTS (Angular >= 14):
+# For Angular LTS (Angular >= 15):
 ng add @ngx-pwa/local-storage
 ```
 
