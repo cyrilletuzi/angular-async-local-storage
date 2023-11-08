@@ -24,14 +24,14 @@ export class SomeComponent implements OnInit, OnDestroy {
 
   constructor(private storageMap: StorageMap) {}
 
-  ngOnInit()  {
+  ngOnInit(): void {
     this.dataSubscription = this.storageMap.watch('somekey', { type: 'string' })
       .subscribe((result) => {
         this.data = result;
       });
   }
 
-  ngOnDestroy()  {
+  ngOnDestroy(): void {
     this.dataSubscription.unsubscribe();
   }
 
@@ -53,7 +53,7 @@ export class SomeComponent implements OnInit {
 
   constructor(private storageMap: StorageMap) {}
 
-  ngOnInit()  {
+  ngOnInit(): void {
     this.data$ = this.storageMap.watch('somekey', { type: 'string' });
   }
 
@@ -73,10 +73,10 @@ interface Data {
 
 @Component({
   template: `
-    <div *ngIf="data$ | async as data">
+    @if (data$ | async; as data) {
       <p>{{data.hello}}</p>
       <p>{{data.world}}</p>
-    <div>
+    }
   `
 })
 export class SomeComponent implements OnInit {
@@ -85,7 +85,7 @@ export class SomeComponent implements OnInit {
 
   constructor(private storageMap: StorageMap) {}
 
-  ngOnInit()  {
+  ngOnInit(): void {
 
     const schema: JSONSchema = {
       type: 'object',

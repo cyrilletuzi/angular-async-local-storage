@@ -9,22 +9,12 @@ For example:
 ```typescript
 import { provideLocalStoragePrefix, provideIndexedDBDataBaseName } from '@ngx-pwa/local-storage';
 
-// Standalone application
 bootstrapApplication(AppComponent, {
   providers: [
     provideLocalStoragePrefix('myapp_'), // prefix when in `localStorage` fallback
     provideIndexedDBDataBaseName('myAppStorage'), // custom database name when in `indexedDB`
   ]
 });
-
-// NgModule application
-@NgModule({
-  providers: [
-    provideLocalStoragePrefix('myapp_'),
-    provideIndexedDBDataBaseName('myAppStorage'),
-  ]
-})
-export class AppModule {}
 ```
 
 Note: **never change these options in an app already deployed in production, as all previously stored data would be lost**.

@@ -40,22 +40,12 @@ When storing in `indexedDB`, names are used for the database and the object stor
 ```ts
 import { provideIndexedDBDataBaseName, provideIndexedDBStoreName } from '@ngx-pwa/local-storage';
 
-// Standalone application
 bootstrapApplication(AppComponent, {
   providers: [
     provideIndexedDBDataBaseName('customDataBaseName'),
     provideIndexedDBStoreName('customStoreName'),
   ]
 });
-
-// NgModule application
-@NgModule({
-  providers: [
-    provideIndexedDBDataBaseName('customDataBaseName'),
-    provideIndexedDBStoreName('customStoreName'),
-  ]
-})
-export class AppModule {}
 ```
 
 - Option 2: keep the config of this lib and change the options in the other APIs, by using the values exported by the lib:
@@ -77,20 +67,11 @@ In some cases (see the [browser support guide](./BROWSERS_SUPPORT)), `indexedDB`
 ```typescript
 import { provideLocalStoragePrefix } from '@ngx-pwa/local-storage';
 
-// Standalone application
 bootstrapApplication(AppComponent, {
   providers: [
     provideLocalStoragePrefix('myapp_'),
   ]
 });
-
-// NgModule application
-@NgModule({
-  providers: [
-    provideLocalStoragePrefix('myapp_'),
-  ]
-})
-export class AppModule {}
 ```
 
 - Option 2:
@@ -108,7 +89,6 @@ Interoperability with `localforage` lib can be achieved with this config:
 ```typescript
 import { provideIndexedDBDataBaseName, provideIndexedDBStoreName, provideLocalStoragePrefix } from '@ngx-pwa/local-storage';
 
-// Standalone application
 bootstrapApplication(AppComponent, {
   providers: [
     provideLocalStoragePrefix('localforage/'),
@@ -116,16 +96,6 @@ bootstrapApplication(AppComponent, {
     provideIndexedDBStoreName('keyvaluepairs'),
   ]
 });
-
-// NgModule application
-@NgModule({
-  providers: [
-    provideLocalStoragePrefix('localforage/'),
-    provideIndexedDBDataBaseName('localforage'),
-    provideIndexedDBStoreName('keyvaluepairs'),
-  ]
-})
-export class AppModule {}
 ```
 
 ### Example with native `indexedDB`

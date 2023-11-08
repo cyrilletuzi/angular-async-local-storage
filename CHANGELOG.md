@@ -2,6 +2,20 @@
 
 This lib is fully documented and so you will find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 17.0.0 (2023-10-21)
+
+### Breaking changes
+
+- Angular 17 is required.
+- RxJS >= 7.4 is required. RxJS 6 is not supported.
+- All things deprecated in v16 are removed in v17:
+  - `LocalStorage` service
+  - specific `JSONSchemaXXX` interfaces
+  - `JSONValidator`
+  - `LocalDatabase`
+
+See the [migration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MIGRATION_TO_V17.md).
+
 ## 16.3.0 (2023-06-04)
 
 - Specific `JSONSchemaXXX` interfaces are deprecated and will be removed in version 17. They were introduced in very old versions of this library as a workaround to some TypeScript issues which are gone for a long time now. Since version 8, you should have used the generic `JSONSchema` interface. Note that if you are using `JSONSchemaArray` for a tuple schema, you need to switch to `JSONSchema` now because of the fix in version 16.2.0.

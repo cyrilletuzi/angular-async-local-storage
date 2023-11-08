@@ -1,5 +1,9 @@
 # Migration guide to version 13
 
+## LTS support ended
+
+[Angular version 13 & 14 are officially outdated](https://angular.io/guide/releases).
+
 ## Requirements
 
 First, be sure to:

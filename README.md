@@ -35,7 +35,7 @@ This lib has a simple API similar to native `localStorage`, but internally store
 Install the package:
 
 ```bash
-# For Angular LTS (Angular >= 14):
+# For Angular LTS (Angular >= 15):
 ng add @ngx-pwa/local-storage
 ```
 
@@ -79,8 +79,6 @@ class StorageMap {
   keys(): Observable<string> {}
 }
 ```
-
-Note: the lib also exports an old `LocalStorage` service: it is deprecated and will be removed in v17, do **not** use it.
 
 ## How to
 
