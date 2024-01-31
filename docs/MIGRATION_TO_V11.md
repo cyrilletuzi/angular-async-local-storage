@@ -2,13 +2,13 @@
 
 ## LTS support ended
 
-[Angular version 11 is officially outdated](https://angular.io/guide/releases).
+[Angular version 11 is officially outdated](https://angular.dev/reference/versions).
 
 ## Requirements
 
 First, be sure to:
 - fully upgrade *all* your Angular packages (check with `ng version`)
-- as stated in the official [Angular documentation](https://angular.io/guide/releases):
+- as stated in the official [Angular documentation](https://angular.dev/reference/versions):
 
 > If you are updating from one major version to another, then we recommend that you do not skip major versions. Follow the instructions to incrementally update to the next major version, testing and validating at each step. For example, if you want to update from version 9.x.x to version 11.x.x, we recommend that you update to the latest 10.x.x release first. After successfully updating to 10.x.x, you can then update to 11.x.x.
 

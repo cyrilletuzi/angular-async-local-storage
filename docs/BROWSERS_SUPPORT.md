@@ -1,6 +1,6 @@
 # Browser support guide
 
-This library supports [the same browsers as Angular](https://angular.io/guide/browser-support).
+This library supports [the same browsers as Angular](https://angular.dev/reference/versions).
 
 It also works in tools based on browser engines (like Electron, WebViews, Ionic...), but not in non-browser tools (like NativeScript, see [#11](https://github.com/cyrilletuzi/angular-async-local-storage/issues/11)).
 

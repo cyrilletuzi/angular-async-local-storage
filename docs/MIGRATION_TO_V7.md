@@ -4,7 +4,7 @@ The migration guide to v7 is quite long as it explains the issue in details, so 
 
 ## LTS support ended
 
-[Angular version 7 is officially outdated](https://angular.io/guide/releases).
+[Angular version 7 is officially outdated](https://angular.dev/reference/versions).
 
 ## WARNING
 

@@ -14,7 +14,7 @@ But **do not worry: the previous package is still here** and will be as long as 
 - v16 for Angular 16,
 - v17 for Angular 17.
 
-[Angular <= 13 are officially outdated](https://angular.io/guide/releases).
+[Angular <= 13 are officially outdated](https://angular.dev/reference/versions#actively-supported-versions).
 
 ## Installing the new package
 

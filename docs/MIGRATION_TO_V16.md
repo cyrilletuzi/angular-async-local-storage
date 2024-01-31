@@ -4,7 +4,7 @@
 
 First, be sure to:
 - fully upgrade *all* your Angular packages (check with `ng version`)
-- as stated in the official [Angular documentation](https://angular.io/guide/releases):
+- as stated in the official [Angular documentation](https://angular.dev/reference/versions):
 
 > If you are updating from one major version to another, then we recommend that you do not skip major versions. Follow the instructions to incrementally update to the next major version, testing and validating at each step. For example, if you want to update from version 14.x.x to version 16.x.x, we recommend that you update to the latest 15.x.x release first. After successfully updating to 15.x.x, you can then update to 16.x.x.
 

@@ -2,7 +2,7 @@
 
 ## LTS support ended
 
-[Angular version 6 is officially outdated](https://angular.io/guide/releases).
+[Angular version 6 is officially outdated](https://angular.dev/reference/versions#actively-supported-versions).
 
 ## Requirements
 
