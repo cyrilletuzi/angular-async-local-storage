@@ -3,56 +3,21 @@
 > [!WARNING]
 > [Angular version 8 is officially outdated](https://angular.dev/reference/versions), so this version is not supported anymore.
 
-## Foreword
-
-Version 8 of this library is a big update for 2 reasons:
-
-1. One was beyond my control: it follows a regression in TypeScript 3.2 (see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)). The worst part was the TS team support: the regression would be solved only in TypeScript 3.4. As a consequence, decision was made to change the `JSONSchema` interface to not be dependent on unreliable edgy TypeScript behavior anymore.
-
-2. This library was born some years ago with Angular 2. What was a little project grew up a lot and is now downloaded dozens of thousands of times on `npm`  each week. It was time to do a full review (and rewrite).
-
-So yes, there are a lot of changes, but it is for good:
-- many things (like validation) have been simplified
-- more advanced and some long-awaited features (like watching an item [#108](https://github.com/cyrilletuzi/angular-async-local-storage/pull/108)) are now possible
-- errors are managed in a better way, fixing many edgy cases
-- and more!
-
-But relax, to ease the migration:
-- **there are few breaking changes, so updating to v8 should be easy**
-- but there are a lot of deprecations, so preparing for v9 (where deprecations of v8 will be removed) will take more time.
-
-## Requirements
-
-First, be sure to:
-- fully upgrade *all* your Angular packages (check with `ng version`)
-- as stated in the official [Angular documentation](https://angular.dev/reference/versions):
-
-> If you are updating from one major version to another, then we recommend that you do not skip major versions. Follow the instructions to incrementally update to the next major version, testing and validating at each step. For example, if you want to update from version 6.x.x to version 8.x.x, we recommend that you update to the latest 7.x.x release first. After successfully updating to 7.x.x, you can then update to 8.x.x.
-
-Exceptionally, this library deprecated the v7 version, so migration to version 7 is not required. But be aware that since v7, **validation is now required in `getItem()`**. A full [validation guide](./VALIDATION.md) is available.
-
-Conversely, migration to version 6 is important.
-
-**So if you update from version < 7, please do the [other migrations](../MIGRATION.md) first**.
-
 ## How to update
-
-Then:
 
 1. Update the lib:
 ```
 ng update @ngx-pwa/local-storage
 ```
 
-Check that `StorageModule.forRoot({ IDBNoWrap: false })` was added in `AppModule` imports of each project (for backward compatibility).
-
-**If `ng update` did not work as expected, please delay the update and file an issue.**
+> [!IMPORTANT]
+> Check that `StorageModule.forRoot({ IDBNoWrap: false })` was added in `AppModule` imports of each project (for backward compatibility). **If `ng update` did not work as expected, please delay the update and file an issue.**
 
 If you have multiple applications in your project but you do not use this library in all projects, remove `StorageModule.forRoot({ IDBNoWrap: false })` and the import in the unconcerned `AppModule`s.
 
 2. Start your project: problems will be seen at compilation. Or you could search for `getItem` as most breaking changes are about its options.
 
-## The bad part: breaking changes
+## Breaking changes
 
 **The following changes may require action from you**.
 
@@ -195,7 +160,7 @@ this.localStorage.getItem('notexisting').subscribe((data) => {
 });
 ```
 
-## The good part: simplification changes
+## Simplification changes
 
 ### Easier API for `get()`
 
@@ -320,7 +285,8 @@ import { StorageModule } from '@ngx-pwa/local-storage';
 export class AppModule {}
 ```
 
-**Be very careful while changing this in applications already deployed in production, as an error could mean the loss of all previously stored data.**
+> [!CAUTION]
+> Be very careful while changing this in applications already deployed in production, as an error could mean the loss of all previously stored data.
 
 ## More documentation
 
