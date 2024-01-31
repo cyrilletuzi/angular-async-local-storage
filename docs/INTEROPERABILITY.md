@@ -8,6 +8,9 @@ In some special cases, it could happen:
 
 If you are concerned by one of these cases, *please read this guide carefully*, as there are important things to do and to be aware of to achieve interoperability.
 
+> [!CAUTION]
+> Never change the following options in an app already deployed in production, as all previously stored data would be lost.
+
 ## Requirements
 
 If you started using this library since version >= 9, you are good to go.
