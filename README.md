@@ -117,7 +117,8 @@ this.storage.get('notexisting').subscribe((data) => {
 });
 ```
 
-**Note you will only get *one* value**: the `Observable` is here for asynchrony but **is *not* meant to emit again when the stored data is changed**. If you need to watch the value, see the [watching guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/WATCHING.md).
+> [!IMPORTANT]
+> **You will only get *one* value**: the `Observable` is here for asynchrony but **is *not* meant to emit again when the stored data is changed**. If you need to watch the value, see the [watching guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/WATCHING.md).
 
 ### Checking data
 
