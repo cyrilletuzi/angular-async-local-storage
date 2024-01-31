@@ -109,7 +109,8 @@ const schema = Type.Tuple([
 this.storage.get<Static<typeof schema>>('test', schema)
 ```
 
-Note a tuple has a fixed length: the number of values in the array and the number of schemas provided in `items` must be exactly the same, otherwise the validation fails.
+> [!NOTE]
+> A tuple has a fixed length: the number of values in the array and the number of schemas provided in `items` must be exactly the same, otherwise the validation fails.
 
 ### Object
 
@@ -174,7 +175,8 @@ So they each serve a different purpose:
 
 For now, the library is able to infer the return type based on the JSON schema for primitives (`string`, `number`, `integer`, `boolean` and `array` of these), but not for more complex structures like objects.
 
-Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
+> [!IMPORTANT]
+> Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
 For the same reason, the library cannot check that. This is where the `typebox` solution shines: it ensures the match between the JSON Schema and the TypeScript type without having to write the code twice.
 
 ## Validation when writing
