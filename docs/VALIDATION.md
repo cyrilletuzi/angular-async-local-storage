@@ -16,7 +16,8 @@ It can have many uses (it is why you have autocompletion in some JSON files in V
 
 ## How to validate simple data
 
-As a general recommendation, we recommend to keep your data structures as simple as possible, as you will see the more complex it is, the more complex is validation too.
+> [!TIP]
+> As a general recommendation, we recommend to keep your data structures as simple as possible, as you will see the more complex it is, the more complex is validation too.
 
 ### Boolean
 
