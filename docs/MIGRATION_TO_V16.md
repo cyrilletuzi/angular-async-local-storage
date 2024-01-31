@@ -2,7 +2,7 @@
 
 ## How to update
 
-```
+```bash
 ng update @ngx-pwa/local-storage
 ```
 

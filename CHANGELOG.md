@@ -109,7 +109,7 @@ While it may still work, Angular 9 LTS has ended, so it is not officially suppor
 
 ## 12.0.0 (2021-05-13)
 
-```
+```bash
 ng update @ngx-pwa/local-storage
 ```
 
