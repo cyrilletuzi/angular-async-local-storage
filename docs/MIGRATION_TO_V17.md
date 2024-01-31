@@ -17,8 +17,6 @@ ng update @ngx-pwa/local-storage
 > [!IMPORTANT]
 > RxJS 6 is *not* supported.
 
-## Breaking changes
-
 All things that were deprecated in version 16 are removed in version 17.
 
 ### LocalStorage service
