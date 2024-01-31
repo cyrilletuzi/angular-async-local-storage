@@ -57,7 +57,8 @@ export class SomeComponent implements OnInit {
 }
 ```
 
-Note as usual in Angular, do *not* use the `async` pipe twice on the same `Observable`. If you need the data in several places:
+> [!NOTE]
+> As usual in Angular, do *not* use the `async` pipe twice on the same `Observable`. If you need the data in several places:
 
 ```typescript
 import { Observable } from 'rjxs';
