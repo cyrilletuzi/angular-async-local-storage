@@ -37,6 +37,9 @@ ng add @ngx-pwa/local-storage
 
 If for any reason `ng add` does not work, follow the [manual installation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MANUAL_INSTALLATION.md).
 
+> [!NOTE]
+> [Angular versions <= 14 are officially outdated](https://angular.dev/reference/versions).
+
 ### Upgrading
 
 To update to new versions, see the **[migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).**
@@ -194,7 +197,7 @@ In addition to the classic `localStorage`-like API, this library also provides a
 This library supports [the same browsers as Angular](https://angular.dev/reference/versions#browser-support).
 
 > [!TIP]
-Read [the browsers support guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/BROWSERS_SUPPORT.md) for more details and special cases (like private browsing).
+Read [the browsers support guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/BROWSERS_SUPPORT.md) for more details and special cases.
 
 ### Collision
 
