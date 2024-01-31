@@ -56,7 +56,7 @@ if (this.storage.backingEngine === 'indexedDB') {
 }
 ```
 
-This second option can be difficult to manage due to some browsers issues in some special contexts (Firefox private mode and Safari cross-origin iframes), as **the information may be wrong at initialization,** as the storage could fallback from `indexedDB` to `localStorage` only after a first read or write operation.
+This second option can be difficult to manage due to some browsers issues in some special contexts (like Safari cross-origin iframes), as **the information may be wrong at initialization,** as the storage could fallback from `indexedDB` to `localStorage` only after a first read or write operation.
 
 ### `localStorage` prefix
 
