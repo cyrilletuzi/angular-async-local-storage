@@ -191,7 +191,7 @@ In addition to the classic `localStorage`-like API, this library also provides a
 
 ### Browser support
 
-This library supports [the same browsers as Angular](https://angular.dev/reference/versions).
+This library supports [the same browsers as Angular](https://angular.dev/reference/versions#browser-support).
 
 > [!TIP]
 Read [the browsers support guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/BROWSERS_SUPPORT.md) for more details and special cases (like private browsing).
