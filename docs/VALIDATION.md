@@ -188,7 +188,8 @@ So when storing complex objects, it is better to check the structure when writin
 this.storage.set('test', user, schema)
 ```
 
-You can also do this check only in development:
+> [!TIP]
+> You can also do this check only in development:
 
 ```typescript
 import { isDevMode } from '@angular/core';
