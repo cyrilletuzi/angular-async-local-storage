@@ -1,0 +1,25 @@
+{
+  "$schema": "../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "migration-v8": {
+      "version": "8",
+      "description": "Updates @ngx-pwa/local-storage to v8",
+      "factory": "./ng-update/index#updateToV8"
+    },
+    "migration-v9": {
+      "version": "9",
+      "description": "Updates @ngx-pwa/local-storage to v9",
+      "factory": "./ng-update/index#updateToV9"
+    },
+    "migration-v13": {
+      "version": "13",
+      "description": "Updates @ngx-pwa/local-storage to v13",
+      "factory": "./ng-update/index#updateToV13"
+    },
+    "migration-v15": {
+      "version": "15",
+      "description": "Updates @ngx-pwa/local-storage to v15",
+      "factory": "./ng-update/index#updateToV15"
+    }
+  }
+}
