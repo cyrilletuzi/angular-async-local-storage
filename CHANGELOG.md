@@ -2,6 +2,10 @@
 
 This library is fully documented and so you will find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## Unreleased
+
+- Made internal properties and methods of `StorageMap` natively private (`#property`) instead of protected. Extending `StorageMap` was undocumented so it is not considered a breaking change.
+
 ## 17.0.0 (2023-11-08)
 
 ### Breaking changes
