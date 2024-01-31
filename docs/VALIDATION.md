@@ -81,9 +81,6 @@ There is 2 ways to define the JSON schemas:
 npm install @sinclair/typebox
 ```
 
-> [!NOTE]
-> You will get a warning from Angular CLI when building because the npm version of `@sinclair/typebox` is serving CommonJS instead of ESM, but the impact on bundle size would be similar in ESM for this library.
-
 ### Tuple
 
 In most cases, an array is for a list with values of the *same type*. In special cases, it can be useful to use arrays with values of different types. It is called tuples in TypeScript. For example: `['test', 1]`

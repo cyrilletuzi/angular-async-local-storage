@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { TestBed } from "@angular/core/testing";
-import { Type, type Static } from "@sinclair/typebox";
+import { String as StringType, Type, type Static } from "@sinclair/typebox";
 import { firstValueFrom } from "rxjs";
 import { filter, mergeMap, tap } from "rxjs/operators";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
@@ -1415,6 +1415,23 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         const value = "blue";
         const schema = Type.String();
+
+        storage.set(key, value, schema).pipe(
+          mergeMap(() => storage.get(key, schema))
+        ).subscribe((result: string | undefined) => {
+
+          expect(result).toBe(value);
+
+          done();
+
+        });
+
+      });
+
+      it("string (standalone import)", (done) => {
+
+        const value = "blue";
+        const schema = StringType();
 
         storage.set(key, value, schema).pipe(
           mergeMap(() => storage.get(key, schema))
