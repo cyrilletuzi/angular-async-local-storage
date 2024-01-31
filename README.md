@@ -38,7 +38,7 @@ ng add @ngx-pwa/local-storage
 If for any reason `ng add` does not work, follow the [manual installation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MANUAL_INSTALLATION.md).
 
 > [!NOTE]
-> [Angular versions <= 14 are officially outdated](https://angular.dev/reference/versions).
+> Angular versions <= 14 are [officially outdated](https://angular.dev/reference/versions).
 
 ### Upgrading
 
