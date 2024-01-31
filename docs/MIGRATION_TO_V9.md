@@ -3,25 +3,14 @@
 > [!WARNING]
 > [Angular version 9 is officially outdated](https://angular.dev/reference/versions), so this version is not supported anymore.
 
-## Requirements
-
-First, be sure to:
-- fully upgrade *all* your Angular packages (check with `ng version`)
-- as stated in the official [Angular documentation](https://angular.dev/reference/versions):
-
-> If you are updating from one major version to another, then we recommend that you do not skip major versions. Follow the instructions to incrementally update to the next major version, testing and validating at each step. For example, if you want to update from version 7.x.x to version 9.x.x, we recommend that you update to the latest 8.x.x release first. After successfully updating to 8.x.x, you can then update to 9.x.x.
-
-**So if you update from version < 8, please do the [other migrations](../MIGRATION.md) first**.
-
 ## How to update
-
-Then:
 
 ```
 ng update @ngx-pwa/local-storage
 ```
 
-**Please check the following point was done successfully**. Otherwise you would lost previously stored data.
+> [!CAUTION]
+> Please check the following point was done successfully. Otherwise you would lost previously stored data.
 
 ## IMPORTANT: new `IDBNoWrap` default
 
