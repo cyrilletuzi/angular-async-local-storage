@@ -8,7 +8,7 @@
 ## Via manual subscription
 
 ```typescript
-import { Subscription } from 'rxjs';
+import type { Subscription } from 'rxjs';
 import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Component({
@@ -38,7 +38,7 @@ export class SomeComponent implements OnInit, OnDestroy {
 ## Via the `async` pipe
 
 ```typescript
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Component({
@@ -61,8 +61,8 @@ export class SomeComponent implements OnInit {
 > As usual in Angular, do *not* use the `async` pipe twice on the same `Observable`. If you need the data in several places:
 
 ```typescript
-import { Observable } from 'rjxs';
-import { StorageMap, JSONSchema } from '@ngx-pwa/local-storage';
+import type { Observable } from 'rjxs';
+import { StorageMap, type JSONSchema } from '@ngx-pwa/local-storage';
 
 interface Data {
   hello: string;

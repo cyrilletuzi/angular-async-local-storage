@@ -96,7 +96,7 @@ this.storage.get<[string, number]>('test', {
 })
 
 // typebox
-import { Static, Type } from '@sinclair/typebox';
+import { Type, type Static } from '@sinclair/typebox';
 
 const schema = Type.Tuple([
   Type.String(),
@@ -114,7 +114,7 @@ this.storage.get<Static<typeof schema>>('test', schema)
 For example:
 ```typescript
 // JSON schema
-import { JSONSchema } from '@ngx-pwa/local-storage';
+import type { JSONSchema } from '@ngx-pwa/local-storage';
 
 interface User {
   name: string;
@@ -142,7 +142,7 @@ const schema: JSONSchema = {
 this.storage.get<User>('test', schema)
 
 // typebox
-import { Static, Type } from '@sinclair/typebox';
+import { Type, type Static } from '@sinclair/typebox';
 
 const schema = Type.Object({
   name: Type.String(),
