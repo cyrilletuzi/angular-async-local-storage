@@ -74,13 +74,15 @@ There is 2 ways to define the JSON schemas:
 - directly as in the previous examples
 - with the [`@sinclair/typebox` library](https://github.com/sinclairzx81/typebox)
 
-`typebox` is recommended for advanced cases, but it requires the installation of an additional library:
+> [!TIP]
+> `typebox` is recommended for advanced cases, but it requires the installation of an additional library:
 
 ```bash
 npm install @sinclair/typebox
 ```
 
-Note you will get a warning from Angular CLI when building because the npm version of `@sinclair/typebox` is serving CommonJS instead of ESM, but the impact on bundle size would be similar in ESM for this library.
+> [!NOTE]
+> You will get a warning from Angular CLI when building because the npm version of `@sinclair/typebox` is serving CommonJS instead of ESM, but the impact on bundle size would be similar in ESM for this library.
 
 ### Tuple
 
