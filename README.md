@@ -185,7 +185,7 @@ In addition to the classic `localStorage`-like API, this lib also provides a `Ma
   - `.size`
 
 > [!TIP]
-> Read the [documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MAP_OPERATIONS.md) for more info and some recipes. For example, it allows to implement a multiple databases scenario.
+> Read the [Map-like operations guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MAP_OPERATIONS.md) for more info and some recipes. For example, it allows to implement a multiple databases scenario.
 
 ## Support
 
