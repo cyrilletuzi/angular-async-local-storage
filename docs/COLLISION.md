@@ -17,6 +17,7 @@ bootstrapApplication(AppComponent, {
 });
 ```
 
-Note: **never change these options in an app already deployed in production, as all previously stored data would be lost**.
+> [!CAUTION]
+> Never change these options in an app already deployed in production, as all previously stored data would be lost.
 
 [Back to general documentation](../README.md)
