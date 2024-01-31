@@ -118,7 +118,7 @@ this.storage.get('notexisting').subscribe((data) => {
 ```
 
 > [!IMPORTANT]
-> **You will only get *one* value**: the `Observable` is here for asynchrony but **is *not* meant to emit again when the stored data is changed**. If you need to watch the value, see the [watching guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/WATCHING.md).
+> You will only get *one* value: the `Observable` is here for asynchrony but is *not* meant to emit again when the stored data is changed. If you need to watch the value, read the [watching guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/WATCHING.md).
 
 ### Checking data
 
@@ -133,7 +133,8 @@ this.storage.get('test', { type: 'string' }).subscribe({
 });
 ```
 
-**See the [full validation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md) to see how to validate all common scenarios.**
+> [!TIP]
+> Read the [full validation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md) to learn how to validate all common scenarios.
 
 ### Subscription
 
@@ -164,13 +165,17 @@ this.storage.get('color').pipe(
 ).subscribe((result) => {});
 ```
 
-See the [errors guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/ERRORS.md) for some details about what errors can happen.
+> [!TIP]
+> Read the [errors guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/ERRORS.md) for some details about what errors can happen.
 
 ### Expiration
 
 This lib, as native `localStorage` and `indexedDb`, is about *persistent* storage.
 
-Wanting *temporary* storage (like `sessionStorage`) is a very common misconception: an application does not need that. [More details here](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/EXPIRATION.md).
+Wanting *temporary* storage (like `sessionStorage`) is a very common misconception: an application does not need that.
+
+> [!TIP]
+> Read [the expiration guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/EXPIRATION.md).
 
 ### `Map`-like operations
 
@@ -179,21 +184,31 @@ In addition to the classic `localStorage`-like API, this lib also provides a `Ma
   - `.has(key)`
   - `.size`
 
-See the [documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MAP_OPERATIONS.md) for more info and some recipes. For example, it allows to implement a multiple databases scenario.
+> [!TIP]
+> Read the [documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MAP_OPERATIONS.md) for more info and some recipes. For example, it allows to implement a multiple databases scenario.
 
 ## Support
 
 ### Browser support
 
-This lib supports [the same browsers as Angular](https://angular.io/guide/browser-support). See [the browsers support guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/BROWSERS_SUPPORT.md) for more details and special cases (like private browsing).
+This lib supports [the same browsers as Angular](https://angular.io/guide/browser-support).
+
+> [!TIP]
+Read [the browsers support guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/BROWSERS_SUPPORT.md) for more details and special cases (like private browsing).
 
 ### Collision
 
-If you have multiple apps on the same *sub*domain *and* you do not want to share data between them, see the [prefix guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/COLLISION.md).
+The library has configurable options if you have multiple apps on the same *sub*domain *and* you do not want to share data between them.
+
+> [!TIP]
+> Read the [prefix guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/COLLISION.md).
 
 ### Interoperability
 
-For interoperability when mixing this lib with direct usage of native APIs or other libs like `localForage` (which does not make sense in most cases), see the [interoperability documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/INTEROPERABILITY.md).
+The library has configurable options for interoperability when mixing this lib with direct usage of native APIs or other libs like `localForage` (which does not make sense in most cases).
+
+> [!TIP]
+> Read the [interoperability documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/INTEROPERABILITY.md).
 
 ### Changelog
 
