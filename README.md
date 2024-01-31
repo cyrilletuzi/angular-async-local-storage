@@ -12,7 +12,7 @@ Efficient client-side storage for Angular:
 
 I am also the author of the [Angular Schematics extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics), installed nearly 1 million times. Feel free to give it a try.
 
-## Why this lib?
+## Why this library?
 
 Angular does not provide a client-side storage service, and almost every app needs some client-side storage. There are 2 native JavaScript APIs available:
 - [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage)

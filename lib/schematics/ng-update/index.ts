@@ -32,7 +32,7 @@ export function updateToV13(): Rule {
     const rxjsMajorVersion = getDependencyMajorVersion("rxjs", host);
 
     if (!rxjsMajorVersion) {
-      context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.4 is recommended for version 13 of this lib.`);
+      context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.4 is recommended for version 13 of this library.`);
     }
 
     if (rxjsMajorVersion && (rxjsMajorVersion < 7)) {
