@@ -157,9 +157,8 @@ const schema = Type.Object({
 this.storage.get<Static<typeof schema>>('test', schema)
 ```
 
-### Special objects
-
-For special structures like `Map`, `Set` or `Blob`, see the [serialization guide](./SERIALIZATION.md).
+> [!NOTE]
+> For special structures like `Map`, `Set` or `Blob`, see the [serialization guide](./SERIALIZATION.md).
 
 ### Why a schema *and* a cast?
 
