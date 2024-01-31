@@ -92,7 +92,7 @@ const schema: JSONSchema = { type: 'string' };
 `JSONValidator` is deprecated and will no longer be available in version 17. It is an internal utility class which is limited, could change at any time and is out of scope of this library.
 
 > [!TIP]
-If you need a JSON validator, there are far better and dedicated libraries available like [ajv](https://ajv.js.org/).
+> If you need a JSON validator, there are far better and dedicated libraries available like [ajv](https://ajv.js.org/).
 
 ### LocalDatabase
 

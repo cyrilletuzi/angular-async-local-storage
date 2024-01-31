@@ -101,7 +101,8 @@ const schema: JSONSchema = { type: "string" };
 `JSONValidator` is removed. It was an internal utility class which is limited,
 could change at any time and is out of scope of this library.
 
-If you need a JSON validator, there are far better and dedicated libraries
+> [!TIP]
+> If you need a JSON validator, there are far better and dedicated libraries
 available like [ajv](https://ajv.js.org/).
 
 ### LocalDatabase
