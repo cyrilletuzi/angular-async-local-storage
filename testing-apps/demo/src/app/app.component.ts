@@ -1,8 +1,7 @@
 import { AsyncPipe, JsonPipe } from "@angular/common";
 import { Component, type OnInit } from "@angular/core";
 import { StorageMap, type JSONSchema } from "@ngx-pwa/local-storage";
-import { Observable, of } from "rxjs";
-import { catchError, mergeMap, toArray } from "rxjs/operators";
+import { Observable, catchError, mergeMap, of, toArray } from "rxjs";
 import { DataService } from "./data.service";
 
 interface Data {
@@ -12,13 +11,16 @@ interface Data {
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [AsyncPipe, JsonPipe],
+  imports: [
+    AsyncPipe,
+    JsonPipe,
+  ],
   template: `
     @if (getItem$ | async; as getItem) {
-      <p id="get-item">{{getItem.title}}</p>
+      <p id="get-item">{{ getItem.title }}</p>
     }
     @if (schemaError$ | async; as schemaError) {
-      <p id="schema-error">{{schemaError}}</p>
+      <p id="schema-error">{{ schemaError }}</p>
     }
     @if (removeItem) {
       <p id="remove-item">removeItem</p>
@@ -27,7 +29,7 @@ interface Data {
       <p id="clear">clear</p>
     }
     @if (length$ | async; as length) {
-      <p id="length">{{length}}</p>
+      <p id="length">{{ length }}</p>
     }
     @if (keys$ | async; as keys) {
       <p id="keys">{{keys | json}}</p>
@@ -36,24 +38,27 @@ interface Data {
       <p id="has">has</p>
     }
     @if (service$ | async; as service) {
-      <p id="service">{{service}}</p>
+      <p id="service">{{ service }}</p>
     }
     <iframe src="http://localhost:4202"></iframe>
   `
 })
 export class AppComponent implements OnInit {
 
-  getItem$!: Observable<Data | undefined>;
-  schemaError$!: Observable<string | undefined>;
+  getItem$?: Observable<Data | undefined>;
+  schemaError$?: Observable<string | undefined>;
   removeItem = false;
   clear = false;
-  size$!: Observable<number>;
-  length$!: Observable<number>;
-  keys$!: Observable<string[]>;
-  has$!: Observable<boolean>;
-  service$!: Observable<string | undefined>;
+  size$?: Observable<number>;
+  length$?: Observable<number>;
+  keys$?: Observable<string[]>;
+  has$?: Observable<boolean>;
+  service$?: Observable<string | undefined>;
 
-  constructor(private readonly storageMap: StorageMap, private readonly dataService: DataService) {}
+  constructor(
+    private readonly storageMap: StorageMap,
+    private readonly dataService: DataService,
+  ) {}
 
   ngOnInit(): void {
 
@@ -92,9 +97,11 @@ export class AppComponent implements OnInit {
         mergeMap(() => this.storageMap.get("removeItem", { type: "string" })),
       // eslint-disable-next-line rxjs/no-nested-subscribe
       ).subscribe((removeResult) => {
+
         if (removeResult === undefined) {
           this.removeItem = true;
         }
+
       });
 
       this.length$ = this.storageMap.set("size1", "test").pipe(

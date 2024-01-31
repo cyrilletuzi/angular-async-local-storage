@@ -15,6 +15,6 @@ bootstrapApplication(AppComponent, {
     provideIndexedDBStoreName("keyvaluepairs"),
   ],
 })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   });

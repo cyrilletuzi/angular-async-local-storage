@@ -20,7 +20,9 @@ export class AppComponent implements OnInit {
 
   title?: string;
 
-  constructor(private readonly storageMap: StorageMap) {}
+  constructor(
+    private readonly storageMap: StorageMap,
+  ) {}
 
   ngOnInit(): void {
 

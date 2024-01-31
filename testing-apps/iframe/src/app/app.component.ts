@@ -15,15 +15,17 @@ interface Data {
     AsyncPipe,
   ],
   template: `
-    <h1>{{(data$ | async)?.title}}</h1>
+    <h1>{{ (data$ | async)?.title }}</h1>
   `
 })
 export class AppComponent implements OnInit {
 
   title = "LocalStorage";
-  data$!: Observable<Data | undefined>;
+  data$?: Observable<Data | undefined>;
 
-  constructor(private readonly storageMap: StorageMap) {}
+  constructor(
+    private readonly storageMap: StorageMap,
+  ) {}
 
   ngOnInit(): void {
 
