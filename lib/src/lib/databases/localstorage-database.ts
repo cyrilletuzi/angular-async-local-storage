@@ -138,7 +138,7 @@ export class LocalStorageDatabase implements LocalDatabase {
       for (let index = 0; index < localStorage.length; index += 1) {
 
         /* Cast as we are sure in this case the key is not `null` */
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Ensured by the logic
         subscriber.next(this.getUnprefixedKey(index)!);
 
       }

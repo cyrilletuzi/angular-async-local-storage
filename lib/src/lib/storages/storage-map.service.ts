@@ -168,9 +168,9 @@ export class StorageMap {
   get<T extends number = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<T | undefined>;
   get<T extends boolean = boolean>(key: string, schema: JSONSchemaBoolean): Observable<T | undefined>;
   get<T extends readonly string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<T | undefined>;
-  // eslint-disable-next-line @typescript-eslint/unified-signatures
-  get<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>; // eslint-disable-line max-len
-  // eslint-disable-next-line @typescript-eslint/unified-signatures
+  // eslint-disable-next-line @typescript-eslint/unified-signatures -- Better for documentation
+  get<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>;
+  // eslint-disable-next-line @typescript-eslint/unified-signatures -- Better for documentation
   get<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
   get<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
   get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
@@ -331,9 +331,9 @@ export class StorageMap {
   watch<T extends number = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<T | undefined>;
   watch<T extends boolean = boolean>(key: string, schema: JSONSchemaBoolean): Observable<T | undefined>;
   watch<T extends readonly string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<T | undefined>;
-  // eslint-disable-next-line @typescript-eslint/unified-signatures
-  watch<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>; // eslint-disable-line max-len
-  // eslint-disable-next-line @typescript-eslint/unified-signatures
+  // eslint-disable-next-line @typescript-eslint/unified-signatures -- Better for documentation
+  watch<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>;
+  // eslint-disable-next-line @typescript-eslint/unified-signatures -- Better for documentation
   watch<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
   watch<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
   watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
@@ -344,7 +344,7 @@ export class StorageMap {
     }
 
     /* Non-null assertion is required because TypeScript doesn't narrow `.has()` yet */
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Ensured by the logic
     const notifier = this.#notifiers.get(key)!;
 
     /* Get the current item value */
@@ -391,7 +391,7 @@ export class StorageMap {
       /* Check if `indexedDB` is broken based on error message (the specific error class seems to be lost in the process) */
       if ((error !== undefined) && (error !== null)
         && (typeof error === "object") && ("message" in error)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Required because TypeScript narrowing is not working here
         && (error.message === IDB_BROKEN_ERROR)) {
 
         /* When storage is fully disabled in browser (via the "Block all cookies" option),
@@ -440,7 +440,7 @@ export class StorageMap {
    * @private
    * @ignore
    */
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error -- Silence the not used error, it is used in tests
   // @ts-ignore
   private ɵinternalGetDatabase(): LocalDatabase {
 

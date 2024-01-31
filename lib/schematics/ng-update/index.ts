@@ -50,7 +50,6 @@ export function updateToV15(): Rule {
     const rxjsMajorVersion = getDependencyMajorVersion("rxjs", host);
 
     if (!rxjsMajorVersion) {
-      // eslint-disable-next-line max-len
       context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.4 is required for version 15 of this lib, rxjs 6 is not supported.`);
     }
 

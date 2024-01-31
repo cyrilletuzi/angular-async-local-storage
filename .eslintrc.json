@@ -82,6 +82,7 @@
         "plugin:@angular-eslint/template/all"
       ],
       "rules": {
+        "@angular-eslint/template/i18n": "off",
         "@angular-eslint/template/no-any": "error"
       }
     }

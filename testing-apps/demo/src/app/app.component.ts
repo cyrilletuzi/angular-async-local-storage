@@ -14,7 +14,6 @@ interface Data {
   standalone: true,
   imports: [AsyncPipe, JsonPipe],
   template: `
-    <!-- eslint-disable @angular-eslint/template/cyclomatic-complexity -->
     @if (getItem$ | async; as getItem) {
       <p id="get-item">{{getItem.title}}</p>
     }

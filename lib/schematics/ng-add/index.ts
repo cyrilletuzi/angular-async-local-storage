@@ -19,7 +19,6 @@ export default function (): Rule {
     const rxjsMajorVersion = getDependencyMajorVersion("rxjs", host);
 
     if (!rxjsMajorVersion) {
-      // eslint-disable-next-line max-len
       context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.4 is recommended for Angular 14 and required for Angular >= 15.`);
     }
 

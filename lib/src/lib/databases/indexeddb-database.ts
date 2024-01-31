@@ -114,10 +114,10 @@ export class IndexedDBDatabase implements LocalDatabase {
 
             /* Prior to v8, the value was wrapped in an `{ value: ...}` object */
             if (!this.noWrap && (typeof request.result === "object") && (this.wrapIndex in request.result) &&
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Required by indexedDb behavior
               (request.result[this.wrapIndex] !== undefined) && (request.result[this.wrapIndex] !== null)) {
 
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Required by indexedDb behavior
               return request.result[this.wrapIndex];
 
             } else {
@@ -250,14 +250,14 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Listen to success event */
         const success$ = fromEvent(request, "success").pipe(
           /* Stop the `Observable` when the cursor is `null` */
-          // eslint-disable-next-line rxjs/no-ignored-takewhile-value -- Due to how indexedDb works, getting the result from the event does not always work
+          // eslint-disable-next-line rxjs/no-ignored-takewhile-value -- Required by indexedDb behavior, getting the result from the event does not always work
           takeWhile(() => (request.result !== null)),
           /* This lib only allows string keys, but user could have added other types of keys from outside
            * It's OK to cast as the cursor as been tested in the previous operator */
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-base-to-string
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-base-to-string -- Required by indexedDb behavior, and strings are enforced by the lib
           map(() => request.result!.key.toString()),
           /* Iterate on the cursor */
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Required by indexedDb behavior
           tap(() => { request.result!.continue(); }),
         );
 

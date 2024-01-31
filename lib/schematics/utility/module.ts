@@ -60,7 +60,6 @@ export function updateModule(mainPath: string): Rule {
         /* If the file is still the same, it means we didn't catch the module
           * (for example, it can happen if the user aliased `StorageModule`) */
         if (updatedAppModuleFile === appModuleFile) {
-          // eslint-disable-next-line max-len
           throw new SchematicsException(`We couldn't update AppModule automatically. Be sure to follow the documentation to update manually, otherwise previsouly stored data could be lost.`);
         }
 

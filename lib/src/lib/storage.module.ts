@@ -5,7 +5,7 @@ import { IDB_DB_NAME, IDB_DB_VERSION, IDB_NO_WRAP, IDB_STORE_NAME, LS_PREFIX, ty
  * This module is only here for backward compatibility, do not add it by yourself
  */
 @NgModule()
-export class StorageModule { // eslint-disable-line @typescript-eslint/no-extraneous-class
+export class StorageModule {
 
   /**
    * Only useful to provide options, otherwise it does nothing.
