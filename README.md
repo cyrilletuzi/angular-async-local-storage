@@ -201,7 +201,7 @@ Read [the browsers support guide](https://github.com/cyrilletuzi/angular-async-l
 The library has configurable options if you have multiple apps on the same *sub*domain *and* you do not want to share data between them.
 
 > [!TIP]
-> Read the [prefix guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/COLLISION.md).
+> Read the [collision guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/COLLISION.md).
 
 ### Interoperability
 
