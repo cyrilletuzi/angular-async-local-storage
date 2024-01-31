@@ -1,12 +1,9 @@
 # Watching guide
 
-Notes:
-
-- Client-side storage only makes sense for keeping data when the user *leaves* the application and comes back later; if you just need to track data when the user stays in the application, you do *not* need to watch and not even to use client-side storage: you just need a variable/property.
-
-- Unlike all other `Observable`s of this lib, this one will not auto-complete, as the purpose is to watch indefinitely. So **be sure to unsubscribe**.
-
-- The library can only detect changes in storage done *with this lib* (ie. via `set()` / `.delete()` or `.clear()`). It *cannot* detect external changes (for examples via the native `indexedDB` API or via another library like `localForage`).
+> [!NOTE]
+> - Client-side storage only makes sense for keeping data when the user *leaves* the application and comes back later; if you just need to track data when the user stays in the application, you do *not* need to watch and not even to use client-side storage: you just need a variable/property.
+> - Unlike other `Observable`s of this lib, this one will not auto-complete, as the purpose is to watch indefinitely. So **be sure to unsubscribe**.
+> - The library can only detect changes in storage done *with this lib* (ie. via `set()` / `.delete()` or `.clear()`). It *cannot* detect external changes (for examples via the native `indexedDB` API or via another library like `localForage`).
 
 ## Via manual subscription
 
