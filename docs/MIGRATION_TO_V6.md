@@ -1,8 +1,7 @@
 # Migration guide to version 6
 
-## LTS support ended
-
-[Angular version 6 is officially outdated](https://angular.dev/reference/versions#actively-supported-versions).
+> [!WARNING]
+> [Angular version 6 is officially outdated](https://angular.dev/reference/versions), so this version is not supported anymore.
 
 ## Requirements
 

@@ -1,20 +1,13 @@
 # Migration guide to version 15
 
-## Requirements
-
-First, be sure to:
-- fully upgrade *all* your Angular packages (check with `ng version`)
-- as stated in the official [Angular documentation](https://angular.dev/reference/versions):
-
-> If you are updating from one major version to another, then we recommend that you do not skip major versions. Follow the instructions to incrementally update to the next major version, testing and validating at each step. For example, if you want to update from version 13.x.x to version 15.x.x, we recommend that you update to the latest 14.x.x release first. After successfully updating to 14.x.x, you can then update to 15.x.x.
-
-**So if you update from version < 9, please do the [other migrations](../MIGRATION.md) first**. The version 9 migration is especially important, as a wrongly done migration could lead to the loss of all previously stored data.
-
 ## How to update
 
 ```
 ng update @ngx-pwa/local-storage
 ```
+
+> [!IMPORTANT]
+> If your project is actually in a version < 14, please do the [other migrations](../MIGRATION.md) first in an incremental way. **The version 9 migration is especially important**, as a wrongly done migration could lead to the loss of all previously stored data.
 
 ## Breaking changes
 

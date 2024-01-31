@@ -1,13 +1,13 @@
 # Migration guide to version 16
 
-> [!IMPORTANT]
-> If your project is actually in a version < 15, please do the [other migrations](../MIGRATION.md) first in an incremental way. **The version 9 migration is especially important**, as a wrongly done migration could lead to the loss of all previously stored data.
-
 ## How to update
 
 ```
 ng update @ngx-pwa/local-storage
 ```
+
+> [!IMPORTANT]
+> If your project is actually in a version < 15, please do the [other migrations](../MIGRATION.md) first in an incremental way. **The version 9 migration is especially important**, as a wrongly done migration could lead to the loss of all previously stored data.
 
 ## Breaking changes
 
