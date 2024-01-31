@@ -19,7 +19,10 @@ ng update @ngx-pwa/local-storage
 ## Breaking changes
 
 - Angular 15 is required.
-- RxJS >= 7.4 is required. RxJS 6 is not supported.
+- RxJS >= 7.4 is required.
+
+> [!IMPORTANT]
+> - RxJS 6 is *not* supported.
 
 ### Deprecation
 

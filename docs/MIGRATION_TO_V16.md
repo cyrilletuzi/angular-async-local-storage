@@ -19,8 +19,12 @@ ng update @ngx-pwa/local-storage
 ## Breaking changes
 
 - Angular 16 is required.
-- RxJS >= 7.4 is required. RxJS 6 is not supported.
-- TypeScript 5.0 is recommended (TypeScript 4.9 should work but is not tested).
+- RxJS >= 7.4 is required.
+- TypeScript 5.0 is recommended.
+
+> [!IMPORTANT]
+> - RxJS 6 is *not* supported.
+> - TypeScript 4.9 should work but is not tested.
 
 ## Deprecations
 

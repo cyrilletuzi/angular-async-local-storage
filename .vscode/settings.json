@@ -2,7 +2,6 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "explorer.compactFolders": false,
   "editor.wordBasedSuggestions": "off",
-  "editor.formatOnSave": true,
   "javascript.preferences.quoteStyle": "double",
   "typescript.preferences.quoteStyle": "double",
   "editor.detectIndentation": false,
@@ -12,6 +11,7 @@
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
   "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
   "[typescript]": {
+    "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
     }
