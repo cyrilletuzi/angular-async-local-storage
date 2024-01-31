@@ -12,8 +12,6 @@ ng update @ngx-pwa/local-storage
 > [!IMPORTANT]
 > If your project is actually in a version < 12, please do the [other migrations](../MIGRATION.md) first in an incremental way. **The version 9 migration is especially important**, as a wrongly done migration could lead to the loss of all previously stored data.
 
-Done!
-
 ## Breaking changes
 
 ### Internet Explorer is dead

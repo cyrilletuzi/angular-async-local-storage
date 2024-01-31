@@ -75,7 +75,7 @@ this.storage.get<User>('user', {
 ```
 
 > [!IMPORTANT]
-> Be aware*you are responsible the casted type (`User`) describes the same structure as the JSON schema. For the same reason, the library cannot check that.
+> Be aware you are responsible the casted type (`User`) describes the same structure as the JSON schema. For the same reason, the library cannot check that.
 
 3. **Mismatch between cast and primitive JSON schema**
 
