@@ -7,8 +7,7 @@
 
 Version 8 of this library is a big update for 2 reasons:
 
-1. One was beyond my control: it follows a regression in TypeScript 3.2 (see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)). The worst part was the TS team support: the regression would be solved only in TypeScript 3.4. As a consequence, decision was made to change the `JSONSchema` interface
-to not be dependent on unreliable edgy TypeScript behavior anymore.
+1. One was beyond my control: it follows a regression in TypeScript 3.2 (see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)). The worst part was the TS team support: the regression would be solved only in TypeScript 3.4. As a consequence, decision was made to change the `JSONSchema` interface to not be dependent on unreliable edgy TypeScript behavior anymore.
 
 2. This library was born some years ago with Angular 2. What was a little project grew up a lot and is now downloaded dozens of thousands of times on `npm`  each week. It was time to do a full review (and rewrite).
 
@@ -20,7 +19,7 @@ So yes, there are a lot of changes, but it is for good:
 
 But relax, to ease the migration:
 - **there are few breaking changes, so updating to v8 should be easy**
-- but there are a lot of deprecations, so preparing for v9 (were deprecations of v8 will be removed) will take more time.
+- but there are a lot of deprecations, so preparing for v9 (where deprecations of v8 will be removed) will take more time.
 
 ## Requirements
 
