@@ -107,10 +107,7 @@ available like [ajv](https://ajv.js.org/).
 
 ### LocalDatabase
 
-- `LocalDatabase` is removed. It was an internal utility class, and overriding
-  it is an undocumented behavior. If you are doing so, you are basically
-  rewriting your own storage library, so using this one makes no sense, you can
-  use your service directly.
+`LocalDatabase` is removed. It was an internal utility class, and overriding it is an undocumented behavior. If you are doing so, you are basically rewriting your own storage library, so using this one makes no sense, you can use your service directly.
 
 ## More documentation
 

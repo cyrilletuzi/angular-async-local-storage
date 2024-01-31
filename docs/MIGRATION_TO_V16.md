@@ -96,7 +96,7 @@ const schema: JSONSchema = { type: 'string' };
 
 ### LocalDatabase
 
-- `LocalDatabase` is deprecated and will no longer be available in version 17. It is an internal utility class, and overriding it is an undocumented behavior. If you are doing so, you are basically rewriting your own storage library, so using this one makes no sense, you can your service directly.
+`LocalDatabase` is deprecated and will no longer be available in version 17. It is an internal utility class, and overriding it is an undocumented behavior. If you are doing so, you are basically rewriting your own storage library, so using this one makes no sense, you can your service directly.
 
 ## More documentation
 
