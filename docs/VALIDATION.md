@@ -167,12 +167,12 @@ It is because they happen at different steps:
 
 So they each serve a different purpose:
 - casting allows you to retrieve the data with the good type instead of `any`
-- the schema allows the lib to validate the data at runtime
+- the schema allows the library to validate the data at runtime
 
 For now, the library is able to infer the return type based on the JSON schema for primitives (`string`, `number`, `integer`, `boolean` and `array` of these), but not for more complex structures like objects.
 
 Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
-For the same reason, the lib cannot check that. This is where the `typebox` solution shines: it ensures the match between the JSON Schema and the TypeScript type without having to write the code twice.
+For the same reason, the library cannot check that. This is where the `typebox` solution shines: it ensures the match between the JSON Schema and the TypeScript type without having to write the code twice.
 
 ## Validation when writing
 
@@ -270,7 +270,7 @@ this.storage.get('notExisting', { type: 'string' })
 
 ## Differences from the standard
 
-The role of the validation feature in this lib is to check the data against corruption, so it needs to be a strict checking. Then there are important differences with the JSON schema standards.
+The role of the validation feature in this library is to check the data against corruption, so it needs to be a strict checking. Then there are important differences with the JSON schema standards.
 
 ### Restrictions
 
@@ -294,7 +294,7 @@ The following features available in the JSON schema standard are *not* available
 
 ## Custom validation
 
-Validating via this lib is recommended but not required. You can use all the native JavaScript operators and functions to validate by yourself. For example:
+Validating via this library is recommended but not required. You can use all the native JavaScript operators and functions to validate by yourself. For example:
 
 ```typescript
 this.storage.get('test').subscribe((result) => {

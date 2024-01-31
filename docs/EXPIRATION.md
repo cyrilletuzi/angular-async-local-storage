@@ -28,7 +28,7 @@ The only case where `sessionStorage` can be legitimate in an application is if y
 
 But it is an uncommon scenario, which can only happen if your app is distributed as a website (it has no sense on mobile or in a desktop app).
 
-If you really are in this case, you will have to stick to the native `sessionStorage` API. No lib can help you on this, as it is not possible to manage temporary data in `indexedDb`, and manually detecting when the user leaves is unreliable (as the browser will not always fire the `unload` event, for privacy reasons).
+If you really are in this case, you will have to stick to the native `sessionStorage` API. No library can help you on this, as it is not possible to manage temporary data in `indexedDb`, and manually detecting when the user leaves is unreliable (as the browser will not always fire the `unload` event, for privacy reasons).
 
 ## Theoretical persistency
 

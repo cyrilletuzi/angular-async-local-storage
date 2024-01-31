@@ -28,7 +28,7 @@ Done!
 
 ### Internet Explorer is dead
 
-Angular 13 dropped IE 11 support, and so this lib too.
+Angular 13 dropped IE 11 support, and so this library too.
 
 ## More documentation
 

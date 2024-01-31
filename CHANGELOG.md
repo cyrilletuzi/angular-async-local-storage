@@ -1,6 +1,6 @@
 # Changelog
 
-This lib is fully documented and so you will find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
+This library is fully documented and so you will find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
 ## 17.0.0 (2023-11-08)
 
@@ -81,13 +81,13 @@ Supports and **requires** Angular 13.
 
 #### RxJS 7
 
-For some reasons, Angular 13 supports both RxJS >= 6.5.3 or >= 7.4. It can be difficult for lib authors to support multiple versions at the same time.
+For some reasons, Angular 13 supports both RxJS >= 6.5.3 or >= 7.4. It can be difficult for library authors to support multiple versions at the same time.
 
-So while *for now* the lib still allows RxJS 6 in its `peerDependencies` as CI tests seem to be fine, be aware **we do not guarantee RxJS 6 support**. v13 of the lib is built with RxJS 7, and you should upgrade your app to RxJS >= 7.4 too.
+So while *for now* the library still allows RxJS 6 in its `peerDependencies` as CI tests seem to be fine, be aware **we do not guarantee RxJS 6 support**. v13 of the library is built with RxJS 7, and you should upgrade your app to RxJS >= 7.4 too.
 
 #### Internet Explorer 11 is dead
 
-Angular 13 dropped Internet Explorer support, and so this lib too.
+Angular 13 dropped Internet Explorer support, and so this library too.
 
 ## 12.1.0 (2021-08-05)
 
@@ -95,7 +95,7 @@ Angular 13 dropped Internet Explorer support, and so this lib too.
 
 Allow RxJS 7 in peerDependencies, to align with Angular 12.2.
 
-Note that Angular and this lib are still built with RxJS 6,
+Note that Angular and this library are still built with RxJS 6,
 so while the tests with RxJS 7 seem to pass,
 be cautious if you want to upgrade RxJS right now without waiting for Angular 13.
 
@@ -143,11 +143,11 @@ Angular 12 deprecates IE 11 support. Meaning it is still supported, but it will 
 
 ## 11.1.0 (2021-01-21)
 
-No lib change, just rebuilt with Angular 11.1 (still compatible with Angular 11.0).
+No library change, just rebuilt with Angular 11.1 (still compatible with Angular 11.0).
 
 ## 11.0.2 (2020-12-23)
 
-No lib change, just a fix in schematics to avoid `ng add` breaking with Angular 11.1.
+No library change, just a fix in schematics to avoid `ng add` breaking with Angular 11.1.
 
 ## 11.0.1 (2020-11-13)
 
@@ -233,7 +233,7 @@ this.storage.get<User>('user', {
 ```
 
 Be aware **you are responsible the casted type (`User`) describes the same structure as the JSON schema**.
-For the same reason, the lib cannot check that.
+For the same reason, the library cannot check that.
 
 Auto-inferring the type from all JSON schemas is in progress in
 [#463](https://github.com/cyrilletuzi/angular-async-local-storage/issues/463]).
@@ -278,7 +278,7 @@ Correctly propagate the browser error when trying to store a value exceeding the
 
 Supports and **requires** Angular 10.
 
-No lib change.
+No library change.
 
 A [full migration guide to version 10](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MIGRATION_TO_V10.md) is available.
 
@@ -360,20 +360,20 @@ Also, documentation about [sponsorship](https://github.com/sponsors/cyrilletuzi)
 ### Tests
 
 The repo has moved from CircleCI to GitHub Actions.
-So it is free and a lot easier to test on several configurations, and now the lib is tested for each pull request on:
+So it is free and a lot easier to test on several configurations, and now the library is tested for each pull request on:
 - Chrome (Ubuntu & Windows)
 - Firefox (Ubuntu & Windows)
 - Safari (macOS)
 - IE (Windows)
 - in private mode of Chrome, Firefox and IE
 
-Previously, the lib was only automatically tested in Chrome and Firefox on Ubuntu, in normal mode (other configs were tested manually).
+Previously, the library was only automatically tested in Chrome and Firefox on Ubuntu, in normal mode (other configs were tested manually).
 
 ## 8.2.2 (2019-09-01)
 
 ### Bug fix
 
-- Fix a regression introduced in 8.2.0, causing the lib to fail instead of falling back to other storages in Firefox private mode
+- Fix a regression introduced in 8.2.0, causing the library to fail instead of falling back to other storages in Firefox private mode
 
 ## 8.2.1 (2019-08-20)
 
@@ -385,10 +385,10 @@ Previously, the lib was only automatically tested in Chrome and Firefox on Ubunt
 
 ### Error management
 
-Before v8.2.0, this lib was listening to `indexedDb` *request* `success` event.
+Before v8.2.0, this library was listening to `indexedDb` *request* `success` event.
 Now it is listening to *transaction* `complete` event.
 
-Except for the special `.keys()` method, all other methods in this lib are doing just one request by transaction.
+Except for the special `.keys()` method, all other methods in this library are doing just one request by transaction.
 So request `success` or transaction `complete` are supposed to be equivalent. But there are rare cases like
 [#162](https://github.com/cyrilletuzi/angular-async-local-storage/issues/162)
 where the transaction could fail even if the request succeeded (meaning the data will not be written on disk).
@@ -415,7 +415,7 @@ But it is still a sensitive change as it concerns asynchrony (the order of opera
 
 - When storage is fully disabled in browser (via the "Block all cookies" option),
 just trying to check `indexedDB` or `localStorage` variables causes a security exception,
-and all Angular code will fail. So the lib is now catching the error,
+and all Angular code will fail. So the library is now catching the error,
 and fallbacks to in-memory storage in this case.
 
 ## 8.0.0 (2019-05-29)
@@ -440,7 +440,7 @@ See the new [validation guide](./docs/VALIDATION.md).
 
 ### Full review
 
-This lib started as a little project and is now the first Angular library used for client-side storage.
+This library started as a little project and is now the first Angular library used for client-side storage.
 It was time to do a full review and refactoring, which results in:
 
 - Better error management (see [README](./README.md#errors))
@@ -501,7 +501,7 @@ Do *not* use: it is deprecated in v8.
 ### Feature
 
 - `getItem()` and `setItem()` will now work with values stored from elsewhere
-(ie. via the native APIs or via another lib like `localForage`), given some limitations and adaptations
+(ie. via the native APIs or via another library like `localForage`), given some limitations and adaptations
 (see the [interoperability documentation](./docs/INTEROPERABILITY.md))
 (fixes [#65](https://github.com/cyrilletuzi/angular-async-local-storage/issues/65))
 
@@ -696,21 +696,21 @@ See the [migration guides](./MIGRATION.md).
 
 ### New package name
 
-This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](./docs/MIGRATION_TO_NEW_PACKAGE.md).
+This library has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](./docs/MIGRATION_TO_NEW_PACKAGE.md).
 
 ### Version alignement
 
-This lib major version is now aligned to the major version of Angular. Meaning this v5 is for Angular 5. Same as v3.1.4.
+This library major version is now aligned to the major version of Angular. Meaning this v5 is for Angular 5. Same as v3.1.4.
 
 ## 4.0.0 (lts) (2018-04-03)
 
 ### New package name
 
-This lib has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](./docs/MIGRATION_TO_NEW_PACKAGE.md).
+This library has been renamed from `angular-async-local-storage` to `@ngx-pwa/local-storage`. See the [migration guide](./docs/MIGRATION_TO_NEW_PACKAGE.md).
 
 ### Version alignement
 
-This lib major version is now aligned to the major version of Angular. Meaning this v4 is for Angular 4. Same as v2.
+This library major version is now aligned to the major version of Angular. Meaning this v4 is for Angular 4. Same as v2.
 
 We follow [Angular LTS support](https://github.com/angular/angular/blob/main/docs/RELEASE_SCHEDULE.md),
 meaning we support Angular 4 until October 2018. So we backported some bug fixes:

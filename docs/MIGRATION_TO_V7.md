@@ -15,7 +15,7 @@ Version 8 achieves the goal we tried in v7 the right way. Everything has been cl
 
 Then, **v7 is deprecated**. For Angular 7, it is recommended to:
 - stay on v6 of the lib,
-- or upgrade to Angular 8 and use v8 of the lib (see the [v8 migration guide](./MIGRATION_TO_V8.md).
+- or upgrade to Angular 8 and use v8 of the library (see the [v8 migration guide](./MIGRATION_TO_V8.md).
 
 ## Previous migrations
 
@@ -29,7 +29,7 @@ It can cause obvious **security issues**, but also **errors** and thus crashes (
 
 Then, **any data coming from client-side storage should be checked before used**, as mentionned in the [README](../README.md).
 
-That is why v5 of this lib introduced a new option for `getItem()` to validate the data against a JSON schema. But until now it was optional (to not break with previous versions and to let you use your own validation system), which is bad.
+That is why v5 of this library introduced a new option for `getItem()` to validate the data against a JSON schema. But until now it was optional (to not break with previous versions and to let you use your own validation system), which is bad.
 
 It is now time to make **validation mandatory**, as it is now possible with the new type `unknown` in TypeScript >= 3, supported by Angular >= 7.
 
@@ -91,7 +91,7 @@ If you were not already validating your data, there are several options.
 
 ### Solution 1: JSON schema validation with v8 (recommended)
 
-Version 8 of the lib greatly simplifies validation. So if you are not yet on v7, we strongly recommend you to to [upgrade to v8 directly](./MIGRATION_TO_V8.md), and to follow the [new validation guide](./VALIDATION.md) instead.
+Version 8 of the library greatly simplifies validation. So if you are not yet on v7, we strongly recommend you to to [upgrade to v8 directly](./MIGRATION_TO_V8.md), and to follow the [new validation guide](./VALIDATION.md) instead.
 
 ### Solution 2: custom validation (very painful)
 

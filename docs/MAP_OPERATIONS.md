@@ -1,6 +1,6 @@
 # `Map`-like operations
 
-In addition to the classic `localStorage`-like API, this lib also provides a partial `Map`-like API for advanced operations.
+In addition to the classic `localStorage`-like API, this library also provides a partial `Map`-like API for advanced operations.
 
 To use it:
 

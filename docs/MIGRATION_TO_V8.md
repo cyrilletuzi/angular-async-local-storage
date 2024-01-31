@@ -6,12 +6,12 @@
 
 ## Foreword
 
-Version 8 of this lib is a big update for 2 reasons:
+Version 8 of this library is a big update for 2 reasons:
 
 1. One was beyond my control: it follows a regression in TypeScript 3.2 (see [#64](https://github.com/cyrilletuzi/angular-async-local-storage/issues/64)). The worst part was the TS team support: the regression would be solved only in TypeScript 3.4. As a consequence, decision was made to change the `JSONSchema` interface
 to not be dependent on unreliable edgy TypeScript behavior anymore.
 
-2. This lib was born some years ago with Angular 2. What was a little project grew up a lot and is now downloaded dozens of thousands of times on `npm`  each week. It was time to do a full review (and rewrite).
+2. This library was born some years ago with Angular 2. What was a little project grew up a lot and is now downloaded dozens of thousands of times on `npm`  each week. It was time to do a full review (and rewrite).
 
 So yes, there are a lot of changes, but it is for good:
 - many things (like validation) have been simplified
@@ -31,7 +31,7 @@ First, be sure to:
 
 > If you are updating from one major version to another, then we recommend that you do not skip major versions. Follow the instructions to incrementally update to the next major version, testing and validating at each step. For example, if you want to update from version 6.x.x to version 8.x.x, we recommend that you update to the latest 7.x.x release first. After successfully updating to 7.x.x, you can then update to 8.x.x.
 
-Exceptionally, this lib deprecated the v7 version, so migration to version 7 is not required. But be aware that since v7, **validation is now required in `getItem()`**. A full [validation guide](./VALIDATION.md) is available.
+Exceptionally, this library deprecated the v7 version, so migration to version 7 is not required. But be aware that since v7, **validation is now required in `getItem()`**. A full [validation guide](./VALIDATION.md) is available.
 
 Conversely, migration to version 6 is important.
 
@@ -50,7 +50,7 @@ Check that `StorageModule.forRoot({ IDBNoWrap: false })` was added in `AppModule
 
 **If `ng update` did not work as expected, please delay the update and file an issue.**
 
-If you have multiple applications in your project but you do not use this lib in all projects, remove `StorageModule.forRoot({ IDBNoWrap: false })` and the import in the unconcerned `AppModule`s.
+If you have multiple applications in your project but you do not use this library in all projects, remove `StorageModule.forRoot({ IDBNoWrap: false })` and the import in the unconcerned `AppModule`s.
 
 2. Start your project: problems will be seen at compilation. Or you could search for `getItem` as most breaking changes are about its options.
 
@@ -144,7 +144,7 @@ Also, `JSONSchemaEnum` interface is removed.
 
 The `schema` option of `getItem()` now only accepts our own `JSONSchema` interface, which is a subset of the JSON Schema standard.
 
-This lib has always discarded some features of the standard, as it uses the schemas for a specific purpose (validation). But before v8, extra properties in the schema were accepted even if not supported. It is no longer possible since v8 due to TypeScript limitations.
+This library has always discarded some features of the standard, as it uses the schemas for a specific purpose (validation). But before v8, extra properties in the schema were accepted even if not supported. It is no longer possible since v8 due to TypeScript limitations.
 
 ## Feature: new `StorageMap` service
 

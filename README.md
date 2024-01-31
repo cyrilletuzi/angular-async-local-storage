@@ -22,7 +22,7 @@ The `localStorage` API is simple to use but synchronous, so if you use it too of
 
 The `indexedDB` API is asynchronous and efficient, but it is a mess to use:  you will soon be caught by the callback hell, as it does not support `Promise`s.
 
-This lib has a simple API similar to native `localStorage`, but internally stores data via the asynchronous `indexedDB` for performance. All of this powered by [RxJS](https://rxjs.dev/).
+This library has a simple API similar to native `localStorage`, but internally stores data via the asynchronous `indexedDB` for performance. All of this powered by [RxJS](https://rxjs.dev/).
 
 ## Getting started
 
@@ -179,7 +179,7 @@ Wanting *temporary* storage (like `sessionStorage`) is a very common misconcepti
 
 ### `Map`-like operations
 
-In addition to the classic `localStorage`-like API, this lib also provides a `Map`-like API for advanced operations:
+In addition to the classic `localStorage`-like API, this library also provides a `Map`-like API for advanced operations:
   - `.keys()`
   - `.has(key)`
   - `.size`
@@ -191,7 +191,7 @@ In addition to the classic `localStorage`-like API, this lib also provides a `Ma
 
 ### Browser support
 
-This lib supports [the same browsers as Angular](https://angular.io/guide/browser-support).
+This library supports [the same browsers as Angular](https://angular.io/guide/browser-support).
 
 > [!TIP]
 Read [the browsers support guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/BROWSERS_SUPPORT.md) for more details and special cases (like private browsing).
@@ -205,7 +205,7 @@ The library has configurable options if you have multiple apps on the same *sub*
 
 ### Interoperability
 
-The library has configurable options for interoperability when mixing this lib with direct usage of native APIs or other libs like `localForage` (which does not make sense in most cases).
+The library has configurable options for interoperability when mixing this library with direct usage of native APIs or other libraries like `localForage` (which does not make sense in most cases).
 
 > [!TIP]
 > Read the [interoperability documentation](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/INTEROPERABILITY.md).

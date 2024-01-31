@@ -6,7 +6,7 @@ Notes:
 
 - Unlike all other `Observable`s of this lib, this one will not auto-complete, as the purpose is to watch indefinitely. So **be sure to unsubscribe**.
 
-- The lib can only detect changes in storage done *with this lib* (ie. via `set()` / `.delete()` or `.clear()`). It *cannot* detect external changes (for examples via the native `indexedDB` API or via another lib like `localForage`).
+- The library can only detect changes in storage done *with this lib* (ie. via `set()` / `.delete()` or `.clear()`). It *cannot* detect external changes (for examples via the native `indexedDB` API or via another library like `localForage`).
 
 ## Via manual subscription
 
