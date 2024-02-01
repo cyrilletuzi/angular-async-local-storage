@@ -171,7 +171,7 @@ export class StorageMap {
    *     lastName: { type: 'string' },
    *   },
    *   required: ['firstName'],
-   * };
+   * } satisfies JSONSchema;
    *
    * this.storageMap.get<User>('user', schema).subscribe((user) => {
    *   if (user) {

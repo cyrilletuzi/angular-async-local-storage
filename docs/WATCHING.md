@@ -85,14 +85,14 @@ export class SomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const schema: JSONSchema = {
+    const schema = {
       type: 'object',
       properties: {
         hello: { type: 'string' },
         world: { type: 'string' },
       },
       required: ['hello', 'world'],
-    };
+    } satisfies JSONSchema;
 
     this.data$ = this.storageMap.watch<Data>('somekey', schema);
 

@@ -30,14 +30,14 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
 
     const key = "test";
-    const schema: JSONSchema = {
+    const schema = {
       type: "object",
       properties: {
         title: {
           type: "string"
         }
       }
-    };
+    } satisfies JSONSchema;
 
     this.data$ = this.storageMap.set(key, { title: this.title }).pipe(
       switchMap(() => this.storageMap.get<Data>(key, schema))

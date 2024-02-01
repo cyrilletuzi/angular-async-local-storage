@@ -292,31 +292,31 @@ export interface JSONSchemaObject {
  * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
  *
  * @example
- * const schema: JSONSchema = { type: 'string' };
+ * const schema = { type: 'string' } satisfies JSONSchema;
  *
  * @example
- * const schema: JSONSchema = { type: 'number' };
+ * const schema = { type: 'number' } satisfies JSONSchema;
  *
  * @example
- * const schema: JSONSchema = { type: 'integer' };
+ * const schema = { type: 'integer' } satisfies JSONSchema;
  *
  * @example
- * const schema: JSONSchema = { type: 'boolean' };
+ * const schema = { type: 'boolean' } satisfies JSONSchema;
  *
  * @example
- * const schema: JSONSchema = {
+ * const schema = {
  *   type: 'array',
  *   items: { type: 'string' },
- * };
+ * } satisfies JSONSchema;
  *
  * @example
- * const schema: JSONSchema = {
+ * const schema = {
  *   type: 'object',
  *   properties: {
  *     firstName: { type: 'string' },
  *     lastName: { type: 'string' },
  *   },
  *   required: ['firstName'],
- * };
+ * } satisfies JSONSchema;
  */
 export type JSONSchema = JSONSchemaString | JSONSchemaNumber | JSONSchemaInteger | JSONSchemaBoolean | JSONSchemaArray | JSONSchemaTuple | JSONSchemaObject;

@@ -123,7 +123,7 @@ interface User {
   favoriteColors: string[];
 }
 
-const schema: JSONSchema = {
+const schema = {
   type: 'object',
   properties: {
     name: { type: 'string' },
@@ -137,7 +137,7 @@ const schema: JSONSchema = {
     },
   },
   required: ['name', 'isAuthenticated', 'favoriteColors']
-};
+} satisfies JSONSchema;
 
 this.storage.get<User>('test', schema)
 

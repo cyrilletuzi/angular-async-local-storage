@@ -109,6 +109,19 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       });
 
+      it("prepared schema with satisfies", (done) => {
+
+        const schema = { type: "number" } satisfies JSONSchema;
+
+        storage.get("test", schema).subscribe((_: number | undefined) => {
+
+          expect().nothing();
+          done();
+
+        });
+
+      });
+
     });
 
     describe(`get()`, () => {
@@ -118,7 +131,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("with value", (done) => {
 
           const value = "blue";
-          const schema: JSONSchema = { type: "string" };
+          const schema = { type: "string" } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -135,7 +148,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("empty", (done) => {
 
           const value = "";
-          const schema: JSONSchema = { type: "string" };
+          const schema = { type: "string" } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -152,10 +165,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("const", (done) => {
 
           const value = "hello";
-          const schema: JSONSchema = {
+          const schema = {
             type: "string",
             const: "hello",
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<"hello">(key, schema))
@@ -172,10 +185,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("enum", (done) => {
 
           const value = "world";
-          const schema: JSONSchema = {
+          const schema = {
             type: "string",
             enum: ["hello", "world"],
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<"hello" | "world">(key, schema))
@@ -196,7 +209,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("with value", (done) => {
 
           const value = 1.5;
-          const schema: JSONSchema = { type: "number" };
+          const schema = { type: "number" } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -213,7 +226,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("zero", (done) => {
 
           const value = 0;
-          const schema: JSONSchema = { type: "number" };
+          const schema = { type: "number" } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -230,10 +243,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("const", (done) => {
 
           const value = 1.5;
-          const schema: JSONSchema = {
+          const schema = {
             type: "number",
             const: 1.5,
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<1.5>(key, schema))
@@ -250,10 +263,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("enum", (done) => {
 
           const value = 2.4;
-          const schema: JSONSchema = {
+          const schema = {
             type: "number",
             enum: [1.5, 2.4],
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<1.5 | 2.4>(key, schema))
@@ -274,7 +287,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("with value", (done) => {
 
           const value = 1;
-          const schema: JSONSchema = { type: "integer" };
+          const schema = { type: "integer" } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -291,7 +304,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("zero", (done) => {
 
           const value = 0;
-          const schema: JSONSchema = { type: "integer" };
+          const schema = { type: "integer" } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -308,10 +321,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("const", (done) => {
 
           const value = 1;
-          const schema: JSONSchema = {
+          const schema = {
             type: "integer",
             const: 1,
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<1>(key, schema))
@@ -328,10 +341,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("enum", (done) => {
 
           const value = 2;
-          const schema: JSONSchema = {
+          const schema = {
             type: "integer",
             enum: [1, 2],
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<1 | 2>(key, schema))
@@ -352,7 +365,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("true", (done) => {
 
           const value = true;
-          const schema: JSONSchema = { type: "boolean" };
+          const schema = { type: "boolean" } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -369,7 +382,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("false", (done) => {
 
           const value = false;
-          const schema: JSONSchema = { type: "boolean" };
+          const schema = { type: "boolean" } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -386,10 +399,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("const", (done) => {
 
           const value = true;
-          const schema: JSONSchema = {
+          const schema = {
             type: "boolean",
             const: true,
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<true>(key, schema))
@@ -413,7 +426,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           const schema = {
             type: "array",
             items: { type: "string" },
-          } as const;
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -433,7 +446,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           const schema = {
             type: "array",
             items: { type: "integer" },
-          } as const;
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -453,7 +466,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           const schema = {
             type: "array",
             items: { type: "number" },
-          } as const;
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -473,7 +486,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           const schema = {
             type: "array",
             items: { type: "boolean" },
-          } as const;
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
@@ -490,13 +503,13 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("of arrays", (done) => {
 
           const value = [["hello", "world"], ["my", "name"], ["is", "Elmo"]];
-          const schema: JSONSchema = {
+          const schema = {
             type: "array",
             items: {
               type: "array",
               items: { type: "string" },
             },
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<string[][]>(key, schema))
@@ -520,7 +533,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           }, {
             name: "Chester",
           }];
-          const schema: JSONSchema = {
+          const schema = {
             type: "array",
             items: {
               type: "object",
@@ -530,7 +543,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
               },
               required: ["name"],
             },
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<Monster[]>(key, schema))
@@ -552,7 +565,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             type: "array",
             items: { type: "string" },
             uniqueItems: true,
-          } as const;
+          } satisfies JSONSchema;
 
           storage.set(key, Array.from(value), schema).pipe(
             mergeMap(() => storage.get(key, schema)),
@@ -572,7 +585,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             name: "Elmo",
             address: "Sesame street",
           }];
-          const schema: JSONSchema = {
+          const schema = {
             type: "array",
             items: [{
               type: "string"
@@ -584,7 +597,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
               },
               required: ["name"],
             }],
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<[string, Monster]>(key, schema))
@@ -610,7 +623,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             }],
           ];
           const value = new Map<string, Monster>(array);
-          const schema: JSONSchema = {
+          const schema = {
             type: "array",
             items: {
               type: "array",
@@ -625,7 +638,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
                 required: ["name"],
               }],
             },
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, Array.from(value), schema).pipe(
             mergeMap(() => storage.get<[string, Monster][]>(key, schema)),
@@ -667,7 +680,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
               sisters: 3,
             },
           };
-          const schema: JSONSchema = {
+          const schema = {
             type: "object",
             properties: {
               name: { type: "string" },
@@ -688,7 +701,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
               creditCard: { type: "number" },
             },
             required: ["name", "age", "philosopher", "books", "family"],
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<User>(key, schema))
@@ -712,13 +725,13 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           const value: User = {
             name: "Henri Bergson",
           };
-          const schema: JSONSchema = {
+          const schema = {
             type: "object",
             properties: {
               name: { type: "string" },
               age: { type: "number" },
             },
-          };
+          } satisfies JSONSchema;
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<User>(key, schema))
@@ -775,7 +788,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         it("unexisting key", (done) => {
 
-          const schema: JSONSchema = { type: "string" };
+          const schema = { type: "string" } satisfies JSONSchema;
 
           storage.get(`unknown${Date.now()}`, schema).subscribe((data: string | undefined) => {
 
@@ -789,7 +802,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         it("null", (done) => {
 
-          const schema: JSONSchema = { type: "string" };
+          const schema = { type: "string" } satisfies JSONSchema;
 
           storage.set(key, "test", schema).pipe(
             mergeMap(() => storage.set(key, null, schema)),
@@ -806,7 +819,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         it("undefined", (done) => {
 
-          const schema: JSONSchema = { type: "string" };
+          const schema = { type: "string" } satisfies JSONSchema;
 
           storage.set(key, "test", schema).pipe(
             mergeMap(() => storage.set(key, undefined, schema)),
@@ -885,7 +898,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             }],
           ];
 
-          const schema: JSONSchema = {
+          const schema = {
             type: "array",
             items: {
               type: "array",
@@ -918,7 +931,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
                 required: ["country", "population", "coordinates"],
               }]
             },
-          };
+          } satisfies JSONSchema;
 
 
           storage.set(key, value, schema).pipe(
@@ -941,7 +954,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it("update", (done) => {
 
-        const schema: JSONSchema = { type: "string" };
+        const schema = { type: "string" } satisfies JSONSchema;
 
         storage.set(key, "value", schema).pipe(
           mergeMap(() => storage.set(key, "updated", schema))
@@ -959,7 +972,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         const value1 = "test1";
         const value2 = "test2";
-        const schema: JSONSchema = { type: "string" };
+        const schema = { type: "string" } satisfies JSONSchema;
 
         expect(() => {
 
@@ -1147,7 +1160,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         const watchedKey = "watched1";
         const values = [undefined, "test1", undefined, "test2", undefined];
-        const schema: JSONSchema = { type: "string" };
+        const schema = { type: "string" } satisfies JSONSchema;
         let i = 0;
 
         storage.watch(watchedKey, schema).subscribe((result: string | undefined) => {
@@ -1178,7 +1191,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         expected: string;
       }
 
-      const schema: JSONSchema = {
+      const schema = {
         type: "object",
         properties: {
           expected: {
@@ -1186,12 +1199,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           }
         },
         required: ["expected"]
-      };
+      } satisfies JSONSchema;
 
       it("valid schema with options", (done) => {
 
         const value = 5;
-        const schemaWithOptions: JSONSchema = { type: "number", maximum: 10 };
+        const schemaWithOptions = { type: "number", maximum: 10 } satisfies JSONSchema;
 
         storage.set(key, value, schemaWithOptions).pipe(
           mergeMap(() => storage.get(key, schemaWithOptions)),
@@ -1208,7 +1221,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it("invalid schema with options", (done) => {
 
         const value = 15;
-        const schemaWithOptions: JSONSchema = { type: "number", maximum: 10 };
+        const schemaWithOptions = { type: "number", maximum: 10 } satisfies JSONSchema;
 
         storage.set(key, value, { type: "number" }).pipe(
           mergeMap(() => storage.get(key, schemaWithOptions)),
@@ -1292,7 +1305,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
      * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/5 */
     describe("complete", () => {
 
-      const schema: JSONSchema = { type: "string" };
+      const schema = { type: "string" } satisfies JSONSchema;
 
       it("get()", (done) => {
 
@@ -1594,7 +1607,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
     describe("compatibility with Promise", () => {
 
-      const schema: JSONSchema = { type: "string" };
+      const schema = { type: "string" } satisfies JSONSchema;
 
       it("Promise", (done) => {
 

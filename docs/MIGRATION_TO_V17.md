@@ -91,7 +91,7 @@ Example:
 const schema: JSONSchemaString = { type: "string" };
 
 // After
-const schema: JSONSchema = { type: "string" };
+const schema = { type: "string" } satisfies JSONSchema;
 ```
 
 ### JSONValidator
