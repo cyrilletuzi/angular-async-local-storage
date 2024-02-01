@@ -66,6 +66,11 @@ export const IDB_NO_WRAP = new InjectionToken<boolean>("localStorageIDBWrap", {
   factory: () => DEFAULT_IDB_NO_WRAP
 });
 
+/**
+ * This interface is only here for backward compatibility, **do not add it by yourself**
+ * 
+ * @ignore
+ */
 export interface StorageConfig {
 
   /**
@@ -91,7 +96,9 @@ export interface StorageConfig {
   /**
    * Allows interoperability with native `indexedDB` and other storage libs,
    * by changing how values are stored in `indexedDB` database.
+   * 
    * Defaults to `true`. Change to `false` for backward compatiblity in existing applications.
+   * 
    * **DO NOT CHANGE THIS BEHAVIOR ONCE IN PRODUCTION**, as it would break with existing data.
    */
   IDBNoWrap?: boolean;

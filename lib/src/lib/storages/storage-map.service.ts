@@ -36,7 +36,9 @@ export class StorageMap {
   }
 
   /**
-   * **Number of items** in storage, wrapped in an `Observable`.
+   * **Number of items** in storage, wrapped in an Observable.
+   * 
+   * Note you do *not* need to unsubscribe (it is a self-completing Observable).
    *
    * @example
    * this.storageMap.size.subscribe((size) => {
@@ -52,7 +54,10 @@ export class StorageMap {
   }
 
   /**
-   * Tells you which storage engine is used. *Only useful for interoperability.*
+   * Tells you which storage engine is used.
+   * 
+   * *Only useful for interoperability.*
+   * 
    * Note that due to some browsers issues in some special contexts
    * (like Safari cross-origin iframes),
    * **this information may be wrong at initialization,**
@@ -88,10 +93,12 @@ export class StorageMap {
   }
 
   /**
-   * Info about `indexedDB` database. *Only useful for interoperability.*
+   * Information about `indexedDB` database.
+   * 
+   * *Only useful for interoperability.*
+   * 
    * @returns `indexedDB` database name, store name and database version.
-   * **Values will be empty if the storage is not `indexedDB`,**
-   * **so it should be used after an engine check**.
+   * **Values will be empty if the storage is not `indexedDB`, so it should be used after an engine check**.
    *
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/INTEROPERABILITY.md}
    *
@@ -109,10 +116,12 @@ export class StorageMap {
   }
 
   /**
-   * Info about `localStorage` fallback storage. *Only useful for interoperability.*
+   * Information about `localStorage` fallback storage.
+   * 
+   * *Only useful for interoperability.*
+   * 
    * @returns `localStorage` prefix.
-   * **Values will be empty if the storage is not `localStorage`,**
-   * **so it should be used after an engine check**.
+   * **Values will be empty if the storage is not `localStorage`, so it should be used after an engine check**.
    *
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/INTEROPERABILITY.md}
    *
@@ -131,11 +140,15 @@ export class StorageMap {
 
   /**
    * Get an item value in storage.
+   * 
+   * Note you do *not* need to unsubscribe (it is a self-completing Observable) and you will only get *one* value: the Observable is here for asynchrony but is *not* meant to emit again when the stored data is changed. If you need to watch the value, see the `watch` method.
+   * 
    * The signature has many overloads due to validation, **please refer to the documentation.**
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
+   * 
    * @param key The item's key
-   * @param schema Optional JSON schema to validate the data
-   * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS `Observable`
+   * @param schema Optional but recommended JSON schema to validate the data
+   * @returns The item's value if the key exists, `undefined` otherwise, wrapped in a RxJS Observable
    *
    * @example
    * this.storageMap.get('key', { type: 'string' }).subscribe((result) => {
@@ -154,7 +167,7 @@ export class StorageMap {
    *     firstName: { type: 'string' },
    *     lastName: { type: 'string' },
    *   },
-   *   required: ['firstName']
+   *   required: ['firstName'],
    * };
    *
    * this.storageMap.get<User>('user', schema).subscribe((user) => {
@@ -207,12 +220,17 @@ export class StorageMap {
   }
 
   /**
-   * Set an item in storage.
+   * Store an item in storage.
+   * 
+   * Note you *do* need to subscribe, even if you do not have something specific to do after writing in storage, otherwise nothing happens (because it is how RxJS Observables work).
+   * But you do *not* need to unsubscribe (it is a self-completing Observable).
+   * 
    * Note that setting `null` or `undefined` will remove the item to avoid some browsers issues.
+   * 
    * @param key The item's key
    * @param data The item's value
    * @param schema Optional JSON schema to validate the data
-   * @returns A RxJS `Observable` to wait the end of the operation
+   * @returns A RxJS Observable to wait the end of the operation
    *
    * @example
    * this.storageMap.set('key', 'value').subscribe(() => {});
@@ -239,9 +257,13 @@ export class StorageMap {
   }
 
   /**
-   * Delete an item in storage
+   * Delete an item in storage.
+   * 
+   * Note you *do* need to subscribe, even if you do not have something specific to do after deleting, otherwise nothing happens (because it is how RxJS Observables work).
+   * But you do *not* need to unsubscribe (it is a self-completing Observable).
+   * 
    * @param key The item's key
-   * @returns A RxJS `Observable` to wait the end of the operation
+   * @returns A RxJS Observable to wait the end of the operation
    *
    * @example
    * this.storageMap.delete('key').subscribe(() => {});
@@ -258,8 +280,12 @@ export class StorageMap {
   }
 
   /**
-   * Delete all items in storage
-   * @returns A RxJS `Observable` to wait the end of the operation
+   * Delete all items in storage.
+   * 
+   * Note you *do* need to subscribe, even if you do not have something specific to do after clearing, otherwise nothing happens (because it is how RxJS Observables work).
+   * But you do *not* need to unsubscribe (it is a self-completing Observable).
+   * 
+   * @returns A RxJS Observable to wait the end of the operation
    *
    * @example
    * this.storageMap.clear().subscribe(() => {});
@@ -280,11 +306,15 @@ export class StorageMap {
   }
 
   /**
-   * Get all keys stored in storage. Note **this is an *iterating* `Observable`**:
+   * Get all keys stored in storage.
+   * 
+   * Note **this is an *iterating* Observable**:
    * * if there is no key, the `next` callback will not be invoked,
    * * if you need to wait the whole operation to end, be sure to act in the `complete` callback,
-   * as this `Observable` can emit several values and so will invoke the `next` callback several times.
-   * @returns A list of the keys wrapped in a RxJS `Observable`
+   * as this Observable can emit several values and so will invoke the `next` callback several times,
+   * * you do *not* need to unsubscribe (it is a self-completing Observable).
+   * 
+   * @returns A list of the keys wrapped in a RxJS Observable
    *
    * @example
    * this.storageMap.keys().subscribe({
@@ -301,8 +331,11 @@ export class StorageMap {
   }
 
   /**
-   * Tells if a key exists in storage
-   * @returns A RxJS `Observable` telling if the key exists
+   * Tells if a key exists in storage.
+   * 
+   * Note you do *not* need to unsubscribe (it is a self-completing Observable).
+   * 
+   * @returns A RxJS Observable telling if the key exists
    *
    * @example
    * this.storageMap.has('key').subscribe((hasKey) => {
@@ -319,12 +352,35 @@ export class StorageMap {
 
   /**
    * Watch an item value in storage.
-   * **Note only changes done via this lib will be watched**, external changes in storage can't be detected.
+   * 
+   * Note that:
+   * * it is an infinite Observable, do not forget to unsubscribe,
+   * * only changes done via this library will be watched, external changes in storage cannot be detected.
+   * 
    * The signature has many overloads due to validation, **please refer to the documentation.**
    * @see https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md
+   * 
    * @param key The item's key to watch
    * @param schema Optional JSON schema to validate the initial value
-   * @returns An infinite `Observable` giving the current value
+   * @returns An infinite Observable giving the current value
+   * 
+   * @example
+   * Component()
+   * export class MyComponent implements OnInit, OnDestroy {
+   * 
+   *   private storageSubscription?: Subscription;
+   * 
+   *   ngOnInit(): void {
+   *     this.storageSubscription = this.storageMap.watch('key', { type: 'string' }).subscribe((result) => {
+   *       result; // string or undefined
+   *     });
+   *   }
+   * 
+   *   ngOnDestroy(): void {
+   *     this.storageSubscription?.unsubscribe();
+   *   }
+   * 
+   * }
    */
   watch(key: string): Observable<unknown>;
   watch<T extends string = string>(key: string, schema: JSONSchemaString): Observable<T | undefined>;
@@ -357,7 +413,7 @@ export class StorageMap {
       },
     });
 
-    /* Only the public API of the `Observable` should be returned */
+    /* Only the public API of the Observable should be returned */
     return (schema ?
       notifier.asObservable() as Observable<T | undefined> :
       notifier.asObservable()

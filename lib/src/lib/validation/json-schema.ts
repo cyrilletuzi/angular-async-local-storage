@@ -286,7 +286,9 @@ export interface JSONSchemaObject {
 
 /**
  * Subset of the JSON Schema standard.
+ * 
  * Types are enforced to validate everything: each value **must** have a `type`.
+ * 
  * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
  *
  * @example
