@@ -222,10 +222,10 @@ export class StorageMap {
   /**
    * Store an item in storage.
    * 
-   * Note you *do* need to subscribe, even if you do not have something specific to do after writing in storage, otherwise nothing happens (because it is how RxJS Observables work).
-   * But you do *not* need to unsubscribe (it is a self-completing Observable).
-   * 
-   * Note that setting `null` or `undefined` will remove the item to avoid some browsers issues.
+   * Note that:
+   * * you *do* need to subscribe, even if you do not have something specific to do after writing in storage, otherwise nothing happens (because it is how RxJS Observables work),
+   * * but you do *not* need to unsubscribe (it is a self-completing Observable),
+   * * setting `null` or `undefined` will remove the item to avoid some browsers issues.
    * 
    * @param key The item's key
    * @param data The item's value
@@ -259,8 +259,9 @@ export class StorageMap {
   /**
    * Delete an item in storage.
    * 
-   * Note you *do* need to subscribe, even if you do not have something specific to do after deleting, otherwise nothing happens (because it is how RxJS Observables work).
-   * But you do *not* need to unsubscribe (it is a self-completing Observable).
+   * Note that:
+   * * you *do* need to subscribe, even if you do not have something specific to do after deleting, otherwise nothing happens (because it is how RxJS Observables work),
+   * * but you do *not* need to unsubscribe (it is a self-completing Observable).
    * 
    * @param key The item's key
    * @returns A RxJS Observable to wait the end of the operation
@@ -282,8 +283,9 @@ export class StorageMap {
   /**
    * Delete all items in storage.
    * 
-   * Note you *do* need to subscribe, even if you do not have something specific to do after clearing, otherwise nothing happens (because it is how RxJS Observables work).
-   * But you do *not* need to unsubscribe (it is a self-completing Observable).
+   * Note that:
+   * * you *do* need to subscribe, even if you do not have something specific to do after clearing, otherwise nothing happens (because it is how RxJS Observables work),
+   * * but you do *not* need to unsubscribe (it is a self-completing Observable).
    * 
    * @returns A RxJS Observable to wait the end of the operation
    *
