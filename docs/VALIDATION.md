@@ -123,7 +123,7 @@ interface User {
   favoriteColors: string[];
 }
 
-const schema: JSONSchema = {
+const schema = {
   type: 'object',
   properties: {
     name: { type: 'string' },
@@ -137,11 +137,16 @@ const schema: JSONSchema = {
     },
   },
   required: ['name', 'isAuthenticated', 'favoriteColors']
-};
+} satisfies JSONSchema;
 
 this.storage.get<User>('test', schema)
+```
 
-// typebox
+> [!TIP]
+> If you wonder why `satisfies JSONSchema` instead of `schema: JSONSchema`, check [this Pull Request](https://github.com/cyrilletuzi/angular-async-local-storage/pull/1002).
+
+```ts
+// With typebox library
 import { Type, type Static } from '@sinclair/typebox';
 
 const schema = Type.Object({

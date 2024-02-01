@@ -62,13 +62,13 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const schema: JSONSchema = {
+    const schema = {
       type: "object",
       properties: {
         title: { type: "string" },
       },
       required: ["title"],
-    };
+    } satisfies JSONSchema;
 
     this.storageMap.set("clear", "test").pipe(
       mergeMap(() => this.storageMap.clear()),

@@ -84,8 +84,11 @@ Example:
 const schema: JSONSchemaString = { type: 'string' };
 
 // After
-const schema: JSONSchema = { type: 'string' };
+const schema = { type: 'string' } satisfies JSONSchema;
 ```
+
+> [!TIP]
+> If you wonder why `satisfies JSONSchema` instead of `schema: JSONSchema`, check [this Pull Request](https://github.com/cyrilletuzi/angular-async-local-storage/pull/1002).
 
 ### JSONValidator
 

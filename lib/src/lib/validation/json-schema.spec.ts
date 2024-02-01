@@ -12,14 +12,14 @@ describe("JSONSchema", () => {
 
     it("string", () => {
 
-      const schema: JSONSchema = {
+      const schema = {
         type: "string",
         const: "hello",
         enum: ["hello", "world"],
         maxLength: 10,
         minLength: 1,
         pattern: "[a-Z]+",
-      };
+      } satisfies JSONSchema;
 
       test(schema);
 
@@ -27,7 +27,7 @@ describe("JSONSchema", () => {
 
     it("number", () => {
 
-      const schema: JSONSchema = {
+      const schema = {
         type: "number",
         const: 1.5,
         enum: [1.5, 2.4],
@@ -36,7 +36,7 @@ describe("JSONSchema", () => {
         exclusiveMinimum: 2.3,
         minimum: 3.1,
         multipleOf: 2.1,
-      };
+      } satisfies JSONSchema;
 
       test(schema);
 
@@ -44,7 +44,7 @@ describe("JSONSchema", () => {
 
     it("integer", () => {
 
-      const schema: JSONSchema = {
+      const schema = {
         type: "integer",
         const: 1,
         enum: [1, 2],
@@ -53,7 +53,7 @@ describe("JSONSchema", () => {
         exclusiveMinimum: 2,
         minimum: 3,
         multipleOf: 2,
-      };
+      } satisfies JSONSchema;
 
       test(schema);
 
@@ -61,10 +61,10 @@ describe("JSONSchema", () => {
 
     it("boolean", () => {
 
-      const schema: JSONSchema = {
+      const schema = {
         type: "boolean",
         const: true,
-      };
+      } satisfies JSONSchema;
 
       test(schema);
 
@@ -72,13 +72,13 @@ describe("JSONSchema", () => {
 
     it("array", () => {
 
-      const schema: JSONSchema = {
+      const schema = {
         type: "array",
         items: { type: "string" },
         maxItems: 10,
         minItems: 1,
         uniqueItems: true,
-      };
+      } satisfies JSONSchema;
 
       test(schema);
 
@@ -86,7 +86,7 @@ describe("JSONSchema", () => {
 
     it("tuple", () => {
 
-      const schema: JSONSchema = {
+      const schema = {
         type: "array",
         items: [
           { type: "string" },
@@ -95,7 +95,7 @@ describe("JSONSchema", () => {
         maxItems: 2,
         minItems: 2,
         uniqueItems: true,
-      };
+      } satisfies JSONSchema;
 
       test(schema);
 
@@ -103,14 +103,14 @@ describe("JSONSchema", () => {
 
     it("object", () => {
 
-      const schema: JSONSchema = {
+      const schema = {
         type: "object",
         properties: {
           hello: { type: "string" },
           world: { type: "number" },
         },
         required: ["hello"],
-      };
+      } satisfies JSONSchema;
 
       test(schema);
 
@@ -125,7 +125,7 @@ describe("JSONSchema", () => {
       const schema = {
         type: "string",
         enum: ["hello", "world"],
-      } as const;
+      } as const satisfies JSONSchema;
 
       test(schema);
 
@@ -136,7 +136,7 @@ describe("JSONSchema", () => {
       const schema = {
         type: "number",
         enum: [1.4, 2.6],
-      } as const;
+      } as const satisfies JSONSchema;
 
       test(schema);
 
@@ -147,7 +147,7 @@ describe("JSONSchema", () => {
       const schema = {
         type: "integer",
         enum: [1, 2],
-      } as const;
+      } as const satisfies JSONSchema;
 
       test(schema);
 
@@ -161,7 +161,7 @@ describe("JSONSchema", () => {
           { type: "string" },
           { type: "number" },
         ],
-      } as const;
+      } as const satisfies JSONSchema;
 
       test(schema);
 
@@ -176,7 +176,7 @@ describe("JSONSchema", () => {
           world: { type: "number" },
         },
         required: ["hello"],
-      } as const;
+      } as const satisfies JSONSchema;
 
       test(schema);
 
@@ -188,11 +188,11 @@ describe("JSONSchema", () => {
 
     it("unexisting option", () => {
 
-      const schema: JSONSchema = {
+      const schema = {
         type: "string",
         // @ts-expect-error Failure test
         required: ["hello"],
-      };
+      } satisfies JSONSchema;
 
       test(schema);
 
@@ -200,24 +200,13 @@ describe("JSONSchema", () => {
 
     it("option with wrong type", () => {
 
-      const schema: JSONSchema = {
+      const schema = {
         type: "string",
         // @ts-expect-error Failure test
         maxLength: "1",
-      };
+      } satisfies JSONSchema;
 
-      test(schema);
-
-    });
-
-    it("option with wrong type", () => {
-
-      const schema: JSONSchema = {
-        type: "string",
-        // @ts-expect-error Failure test
-        maxLength: "1",
-      };
-
+      // @ts-expect-error Failure test
       test(schema);
 
     });

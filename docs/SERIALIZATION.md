@@ -42,7 +42,7 @@ const someMap = new Map<string, number>([['hello', 1], ['world', 2]]);
 this.storage.set('test', Array.from(someMap)).subscribe();
 
 /* Reading */
-const schema: JSONSchema = {
+const schema = {
   type: 'array',
   items: {
     type: 'array',
@@ -51,7 +51,7 @@ const schema: JSONSchema = {
       { type: 'number' },
     ],
   },
-};
+} satisfies JSONSchema;
 
 this.storage.get<[string, number][]>('test', schema).pipe(
   map((dataArray) => new Map(dataArray)),
@@ -69,10 +69,10 @@ const someSet = new Set<string>(['hello', 'world']);
 this.storage.set('test', Array.from(someSet)).subscribe();
 
 /* Reading */
-const schema: JSONSchema = {
+const schema = {
   type: 'array',
   items: { type: 'string' },
-};
+} satisfies JSONSchema;
 
 this.storage.get('test', schema).pipe(
   map((dataArray) => new Set(dataArray)),

@@ -1,3 +1,4 @@
+import type { JSONSchema } from "./json-schema";
 import { JSONValidator } from "./json-validator";
 
 describe(`JSONValidator`, () => {
@@ -101,7 +102,7 @@ describe(`JSONValidator`, () => {
 
       it("special case: readonly", () => {
 
-        const schema = { type: "string", enum: ["", "hello"] } as const;
+        const schema = { type: "string", enum: ["", "hello"] }  satisfies JSONSchema;
 
         const test = jsonValidator.validate("", schema);
 
