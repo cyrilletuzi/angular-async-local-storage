@@ -94,6 +94,9 @@ const schema: JSONSchemaString = { type: "string" };
 const schema = { type: "string" } satisfies JSONSchema;
 ```
 
+> [!TIP]
+> If you wonder why `satisfies JSONSchema` instead of `schema: JSONSchema`, check [this Pull Request](https://github.com/cyrilletuzi/angular-async-local-storage/pull/1002).
+
 ### JSONValidator
 
 `JSONValidator` is removed. It was an internal utility class which is limited,
