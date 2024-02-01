@@ -141,9 +141,12 @@ export class StorageMap {
   /**
    * Get an item value in storage.
    * 
-   * Note you do *not* need to unsubscribe (it is a self-completing Observable) and you will only get *one* value: the Observable is here for asynchrony but is *not* meant to emit again when the stored data is changed. If you need to watch the value, see the `watch` method.
+   * Note that:
+   * * not finding an item is not an error, it succeeds but returns `undefined`,
+   * * you do *not* need to unsubscribe (it is a self-completing Observable),
+   * * you will only get *one* value: the Observable is here for asynchrony but is *not* meant to emit again when the stored data is changed. If you need to watch the value, see the `watch` method.
    * 
-   * The signature has many overloads due to validation, **please refer to the documentation.**
+   * Do not forget it is client-side storage: **always check the data**, as it could have been forged.
    * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/VALIDATION.md}
    * 
    * @param key The item's key
@@ -225,7 +228,9 @@ export class StorageMap {
    * Note that:
    * * you *do* need to subscribe, even if you do not have something specific to do after writing in storage, otherwise nothing happens (because it is how RxJS Observables work),
    * * but you do *not* need to unsubscribe (it is a self-completing Observable),
-   * * setting `null` or `undefined` will remove the item to avoid some browsers issues.
+   * * setting `null` or `undefined` will remove the item to avoid some browsers issues,
+   * * you should stick to serializable JSON data, meaning primitive types, arrays and literal objects. Date, Map, Set, Blob and other special structures can cause issues in some scenarios.
+   * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/SERIALIZATION.md}
    * 
    * @param key The item's key
    * @param data The item's value

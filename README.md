@@ -90,7 +90,7 @@ this.storage.set('user', user).subscribe(() => {});
 > [!NOTE]
 > You can store any value, without worrying about serializing. But note that:
 > - storing `null` or `undefined` makes no sense and can cause issues in some browsers, so the item will be removed instead,
-> - you should stick to JSON data, ie. primitive types, arrays and *literal* objects. `Date`, `Map`, `Set`, `Blob` and other special structures can cause issues in some scenarios. Read the [serialization guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/SERIALIZATION.md) for more details.
+> - you should stick to serializable JSON data, meaning primitive types, arrays and *literal* objects. `Date`, `Map`, `Set`, `Blob` and other special structures can cause issues in some scenarios. Read the [serialization guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/SERIALIZATION.md) for more details.
 
 ### Deleting data
 
