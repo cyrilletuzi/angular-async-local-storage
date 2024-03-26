@@ -51,6 +51,12 @@
             "allowWithDecorator": true
           }
         ],
+        "@typescript-eslint/restrict-template-expressions": [
+          "error",
+          {
+            "allowNumber": true
+          }
+        ],
         "@angular-eslint/contextual-decorator": "error",
         "@angular-eslint/no-attribute-decorator": "error",
         "@angular-eslint/no-forward-ref": "error",
