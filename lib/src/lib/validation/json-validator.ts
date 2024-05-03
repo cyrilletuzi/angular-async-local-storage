@@ -72,16 +72,11 @@ export class JSONValidator {
 
     if (schema.pattern) {
 
-      let regularExpression: RegExp | null = null;
-
       try {
-        regularExpression = new RegExp(schema.pattern);
+        const regularExpression = new RegExp(schema.pattern);
+        return regularExpression.test(data);
       } catch {
         // Nothing to do
-      }
-
-      if (regularExpression && !regularExpression.test(data)) {
-        return false;
       }
 
     }
@@ -234,10 +229,9 @@ export class JSONValidator {
 
     if (schemas) {
 
-      for (let i = 0; i < schemas.length; i += 1) {
+      for (const [index, schema] of schemas.entries()) {
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Ensured by the logic
-        if (!this.validate(data[i], schemas[i]!)) {
+        if (!this.validate(data[index], schema)) {
           return false;
         }
 

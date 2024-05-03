@@ -81,7 +81,7 @@ class StorageMap {
 ### Writing data
 
 ```typescript
-let user: User = { firstName: 'Henri', lastName: 'Bergson' };
+const user: User = { firstName: 'Henri', lastName: 'Bergson' };
 
 this.storage.set('user', user).subscribe(() => {});
 ```
