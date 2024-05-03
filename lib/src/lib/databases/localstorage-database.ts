@@ -42,22 +42,24 @@ export class LocalStorageDatabase implements LocalDatabase {
     /* Get raw data */
     const unparsedData = localStorage.getItem(this.prefixKey(key));
 
-    let parsedData: unknown;
-
     /* No need to parse if data is `null` or `undefined` */
     if (unparsedData !== null) {
 
       /* Try to parse */
       try {
-        parsedData = JSON.parse(unparsedData);
+
+        const parsedData: unknown = JSON.parse(unparsedData);
+
+        /* Wrap in a RxJS `Observable` to be consistent with other storages */
+        return of(parsedData);
+
       } catch (error) {
         return throwError(() => error as SyntaxError);
       }
 
     }
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(parsedData);
+    return of(undefined);
 
   }
 
