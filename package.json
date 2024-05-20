@@ -38,19 +38,19 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.0.0-rc.2",
-    "@angular-eslint/builder": "^17.3.0",
+    "@angular-eslint/builder": "^17.4.1",
     "@angular-eslint/eslint-plugin": "^17.0.0",
     "@angular-eslint/eslint-plugin-template": "^17.0.0",
-    "@angular-eslint/schematics": "^17.3.0",
-    "@angular-eslint/template-parser": "^17.3.0",
+    "@angular-eslint/schematics": "^17.4.1",
+    "@angular-eslint/template-parser": "^17.4.1",
     "@angular/cli": "^18.0.0-rc.2",
     "@angular/compiler-cli": "^18.0.0-rc.2",
     "@angular/platform-browser-dynamic": "^18.0.0-rc.2",
-    "@playwright/test": "^1.42.1",
-    "@sinclair/typebox": "^0.32.20",
+    "@playwright/test": "^1.44.0",
+    "@sinclair/typebox": "^0.32.30",
     "@types/jasmine": "~5.1.1",
-    "@typescript-eslint/eslint-plugin": "^7.4.0",
-    "@typescript-eslint/parser": "^7.4.0",
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/parser": "^7.9.0",
     "copyfiles": "^2.4.1",
     "eslint": "^8.57.0",
     "eslint-plugin-rxjs": "^5.0.3",
@@ -67,6 +67,6 @@
     "localforage": "^1.10.0",
     "ng-packagr": "^18.0.0-rc.0",
     "typescript": "~5.4.5",
-    "zone.js": "^0.14.4"
+    "zone.js": "^0.14.6"
   }
 }
