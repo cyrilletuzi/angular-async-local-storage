@@ -9,7 +9,6 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "ES2022",
