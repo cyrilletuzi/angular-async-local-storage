@@ -24,7 +24,7 @@
     "release:major": "VERSION=major npm run release",
     "release:premajor": "VERSION=premajor TAG=next npm run release",
     "release:prerelease": "VERSION=prerelease TAG=next npm run release",
-    "release": "if test $VERSION; then npm run build && cd lib && npm version $VERSION --no-git-tag-version && git add package.json && cd ../../.. && git commit -m \"release\" && npm version $VERSION && npm run build && npm publish ./dist/lib --access public --tag ${TAG:-latest} && git push; fi"
+    "release": "if test $VERSION; then npm run build && cd lib && npm version $VERSION --no-git-tag-version && git add package.json && cd ../.. && git commit -m \"release\" && npm version $VERSION && npm run build && npm publish ./dist/lib --access public --tag ${TAG:-latest} && git push; fi"
   },
   "private": true,
   "dependencies": {
