@@ -28,7 +28,7 @@ This library has a simple API similar to native `localStorage`, but internally s
 Install the package:
 
 ```bash
-# For Angular LTS (Angular >= 15):
+# For Angular LTS (Angular >= 16):
 ng add @ngx-pwa/local-storage
 ```
 
@@ -37,7 +37,7 @@ ng add @ngx-pwa/local-storage
 If for any reason `ng add` does not work, follow the [manual installation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MANUAL_INSTALLATION.md).
 
 > [!NOTE]
-> Angular versions <= 14 are [officially outdated](https://angular.dev/reference/versions).
+> Angular versions <= 15 are [officially outdated](https://angular.dev/reference/versions).
 
 ### Upgrading
 

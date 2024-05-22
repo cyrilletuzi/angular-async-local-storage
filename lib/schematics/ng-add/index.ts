@@ -12,8 +12,8 @@ export default function (): Rule {
       context.logger.warn(`Not able to detect @angular/core version. Be aware that Angular versions <= 14 are no longer supported.`);
     }
 
-    if (angularMajorVersion && (angularMajorVersion <= 14)) {
-      throw new SchematicsException("Angular versions <= 14 are no longer supported.");
+    if (angularMajorVersion && (angularMajorVersion <= 15)) {
+      throw new SchematicsException("Angular versions <= 15 are no longer supported.");
     }
 
     const rxjsMajorVersion = getDependencyMajorVersion("rxjs", host);

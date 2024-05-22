@@ -19,7 +19,6 @@
     "target": "es6",
     "strict": true,
     "noImplicitReturns": true,
-    "forceConsistentCasingInFileNames": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitOverride": true,
     "exactOptionalPropertyTypes": true,

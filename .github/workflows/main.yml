@@ -37,7 +37,7 @@ jobs:
 
   test-minimum:
 
-    name: Test with Angular@17.0.0 and minimum dependencies requirements
+    name: Test with Angular@18.0.0 and minimum dependencies requirements
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -55,7 +55,7 @@ jobs:
     - name: Build the lib (with the current version, as it is what is published on npm)
       run: npm run build
     - name: Downgrade dependencies to minimal required version
-      run: npm install typescript@5.2.2 tslib@2.5.0 rxjs@7.4.0 zone.js@0.14.0 @angular/common@17.0.0 @angular/compiler@17.0.0 @angular/core@17.0.0 @angular/platform-browser@17.0.0 @angular/router@17.0.0 @angular/cli@17.0.0 @angular/compiler-cli@17.0.0 @angular-devkit/build-angular@17.0.0 --legacy-peer-deps
+      run: npm install typescript@5.4.2 tslib@2.5.0 rxjs@7.6.0 zone.js@0.14.0 @angular/common@18.0.0 @angular/compiler@18.0.0 @angular/core@18.0.0 @angular/platform-browser@18.0.0 @angular/router@18.0.0 @angular/cli@18.0.0 @angular/compiler-cli@18.0.0 @angular-devkit/build-angular@18.0.0 --legacy-peer-deps
       env:
         CI: true
     - name: Run unit tests
