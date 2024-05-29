@@ -43,6 +43,20 @@
             "allowExpressions": true
           }
         ],
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/prefer-nullish-coalescing": "error",
+        "@typescript-eslint/use-unknown-in-catch-callback-variable": "error",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/restrict-plus-operands": [
+          "error",
+          {
+            "allowAny": false,
+            "allowBoolean": false,
+            "allowNullish": false,
+            "allowNumberAndString": false,
+            "allowRegExp": false
+          }
+        ],
         "@typescript-eslint/strict-boolean-expressions": [
           "error",
           {
