@@ -4,7 +4,7 @@ describe("JSONSchema", () => {
 
   function test(schema: JSONSchema): void {
     // eslint-disable-next-line no-empty, @typescript-eslint/no-unnecessary-condition
-    if (schema) {}
+    if (schema !== undefined) {}
     expect().nothing();
   }
 

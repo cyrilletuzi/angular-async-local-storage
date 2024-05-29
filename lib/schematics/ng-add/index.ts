@@ -8,21 +8,21 @@ export default function (): Rule {
     /* Get config */
     const angularMajorVersion = getDependencyMajorVersion("@angular/core", host);
 
-    if (!angularMajorVersion) {
+    if (angularMajorVersion === undefined) {
       context.logger.warn(`Not able to detect @angular/core version. Be aware that Angular versions <= 14 are no longer supported.`);
     }
 
-    if (angularMajorVersion && (angularMajorVersion <= 15)) {
+    if (angularMajorVersion !== undefined && (angularMajorVersion <= 15)) {
       throw new SchematicsException("Angular versions <= 15 are no longer supported.");
     }
 
     const rxjsMajorVersion = getDependencyMajorVersion("rxjs", host);
 
-    if (!rxjsMajorVersion) {
+    if (rxjsMajorVersion === undefined) {
       context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.4 is recommended for Angular 14 and required for Angular >= 15.`);
     }
 
-    if (rxjsMajorVersion && (rxjsMajorVersion < 7)) {
+    if (rxjsMajorVersion !== undefined && (rxjsMajorVersion < 7)) {
       throw new SchematicsException("rxjs >= 7.4 is required for this lib, rxjs 6 is not supported.");
     }
 

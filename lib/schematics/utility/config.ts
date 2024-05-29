@@ -36,7 +36,7 @@ export async function getAllMainPaths(host: Tree): Promise<string[]> {
 
       if (buildTarget) {
 
-        if (!buildTarget.options?.["main"]) {
+        if (buildTarget.options?.["main"] === undefined) {
           throw new SchematicsException(`angular.json config is broken, can't find 'architect.build.options.main' in one or more projects`);
         }
         mainPaths.push(buildTarget.options["main"] as string);
