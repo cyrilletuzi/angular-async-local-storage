@@ -43,7 +43,13 @@
             "allowExpressions": true
           }
         ],
-        "@typescript-eslint/strict-boolean-expressions": "error",
+        "@typescript-eslint/strict-boolean-expressions": [
+          "error",
+          {
+            "allowNumber": false,
+            "allowString": false
+          }
+        ],
         "@typescript-eslint/prefer-readonly": "error",
         "@typescript-eslint/no-useless-empty-export": "error",
         "@typescript-eslint/no-extraneous-class": [
