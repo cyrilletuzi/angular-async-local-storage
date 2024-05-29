@@ -18,7 +18,7 @@ export class LocalStorageDatabase implements LocalDatabase {
   constructor() {
 
     /* Prefix if asked, or no prefix otherwise */
-    this.prefix = inject(LS_PREFIX) || "";
+    this.prefix = inject(LS_PREFIX);
 
   }
 
@@ -191,7 +191,7 @@ export class LocalStorageDatabase implements LocalDatabase {
     if (prefixedKey !== null) {
 
       /* If no prefix, the key is already good, otherwrite strip the prefix */
-      return !this.prefix ? prefixedKey : prefixedKey.substring(this.prefix.length);
+      return this.prefix === "" ? prefixedKey : prefixedKey.substring(this.prefix.length);
 
     }
 

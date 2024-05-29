@@ -20,7 +20,7 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
         const storeName = storageService.backingStore.store;
 
         /* May be `null` if no requests were made */
-        if (storeName) {
+        if (storeName !== "") {
 
           const store = dbOpen.result.transaction([storeName], "readwrite").objectStore(storeName);
 
