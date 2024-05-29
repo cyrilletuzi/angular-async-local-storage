@@ -70,7 +70,7 @@ export class JSONValidator {
       return false;
     }
 
-    if (schema.pattern) {
+    if (schema.pattern !== undefined) {
 
       try {
         const regularExpression = new RegExp(schema.pattern);
@@ -113,7 +113,7 @@ export class JSONValidator {
     }
 
     /* Test is done this way to not divide by 0 */
-    if (schema.multipleOf && !Number.isInteger(data / schema.multipleOf)) {
+    if (schema.multipleOf !== undefined && schema.multipleOf !== 0 && Number.isFinite(schema.multipleOf) && !Number.isInteger(data / schema.multipleOf)) {
       return false;
     }
 
@@ -179,7 +179,7 @@ export class JSONValidator {
       return false;
     }
 
-    if (schema.uniqueItems) {
+    if (schema.uniqueItems === true) {
 
       /* Create a set to eliminate values with multiple occurences */
       const dataSet = new Set(data);
@@ -306,7 +306,7 @@ export class JSONValidator {
    */
   private validateConst(data: unknown, schema: JSONSchemaBoolean | JSONSchemaInteger | JSONSchemaNumber | JSONSchemaString): boolean {
 
-    if (!schema.const) {
+    if (schema.const === undefined) {
       return true;
     }
 

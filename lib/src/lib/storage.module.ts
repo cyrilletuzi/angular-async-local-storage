@@ -18,10 +18,10 @@ export class StorageModule {
     return {
       ngModule: StorageModule,
       providers: [
-        config.LSPrefix ? { provide: LS_PREFIX, useValue: config.LSPrefix } : [],
-        config.IDBDBName ? { provide: IDB_DB_NAME, useValue: config.IDBDBName } : [],
-        config.IDBStoreName ? { provide: IDB_STORE_NAME, useValue: config.IDBStoreName } : [],
-        config.IDBDBVersion ? { provide: IDB_DB_VERSION, useValue: config.IDBDBVersion } : [],
+        config.LSPrefix !== undefined ? { provide: LS_PREFIX, useValue: config.LSPrefix } : [],
+        config.IDBDBName !== undefined ? { provide: IDB_DB_NAME, useValue: config.IDBDBName } : [],
+        config.IDBStoreName !== undefined ? { provide: IDB_STORE_NAME, useValue: config.IDBStoreName } : [],
+        config.IDBDBVersion !== undefined ? { provide: IDB_DB_VERSION, useValue: config.IDBDBVersion } : [],
         (config.IDBNoWrap === false) ? { provide: IDB_NO_WRAP, useValue: config.IDBNoWrap } : [],
       ],
     };

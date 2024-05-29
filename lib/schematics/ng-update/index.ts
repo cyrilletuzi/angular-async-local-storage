@@ -31,11 +31,11 @@ export function updateToV13(): Rule {
 
     const rxjsMajorVersion = getDependencyMajorVersion("rxjs", host);
 
-    if (!rxjsMajorVersion) {
+    if (rxjsMajorVersion === undefined) {
       context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.4 is recommended for version 13 of this library.`);
     }
 
-    if (rxjsMajorVersion && (rxjsMajorVersion < 7)) {
+    if (rxjsMajorVersion !== undefined && (rxjsMajorVersion < 7)) {
       context.logger.warn(`rxjs should be updated to version >= 7.4. Support for rxjs version 6 is not guaranteed.`);
     }
 
@@ -49,11 +49,11 @@ export function updateToV15(): Rule {
 
     const rxjsMajorVersion = getDependencyMajorVersion("rxjs", host);
 
-    if (!rxjsMajorVersion) {
+    if (rxjsMajorVersion === undefined) {
       context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.4 is required for version 15 of this lib, rxjs 6 is not supported.`);
     }
 
-    if (rxjsMajorVersion && (rxjsMajorVersion < 7)) {
+    if (rxjsMajorVersion !== undefined && (rxjsMajorVersion < 7)) {
       throw new SchematicsException("rxjs >= 7.4 is required for this lib, rxjs 6 is not supported.");
     }
 
