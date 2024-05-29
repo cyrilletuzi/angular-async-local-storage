@@ -64,6 +64,8 @@
             "allowString": false
           }
         ],
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error",
         "@typescript-eslint/prefer-readonly": "error",
         "@typescript-eslint/no-useless-empty-export": "error",
         "@typescript-eslint/no-extraneous-class": [
