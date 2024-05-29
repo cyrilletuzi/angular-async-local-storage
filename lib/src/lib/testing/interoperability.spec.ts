@@ -7,7 +7,7 @@ import type { JSONSchema } from "../validation/json-schema";
 import { clearStorage, closeAndDeleteDatabase } from "./cleaning.spec";
 
 
-const dbName = `interopStore${Date.now()}`;
+const dbName = `interopStore${Date.now().toFixed()}`;
 const index = "test";
 
 /**

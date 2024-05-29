@@ -64,6 +64,9 @@
             "allowString": false
           }
         ],
+        "@typescript-eslint/restrict-template-expressions": "error",
+        "@typescript-eslint/prefer-for-of": "error",
+        "@typescript-eslint/prefer-optional-chain": "error",
         "no-shadow": "off",
         "@typescript-eslint/no-shadow": "error",
         "@typescript-eslint/prefer-readonly": "error",
@@ -72,12 +75,6 @@
           "error",
           {
             "allowWithDecorator": true
-          }
-        ],
-        "@typescript-eslint/restrict-template-expressions": [
-          "error",
-          {
-            "allowNumber": true
           }
         ],
         "@angular-eslint/contextual-decorator": "error",

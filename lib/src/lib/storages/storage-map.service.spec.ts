@@ -790,7 +790,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           const schema = { type: "string" } satisfies JSONSchema;
 
-          storage.get(`unknown${Date.now()}`, schema).subscribe((data: string | undefined) => {
+          storage.get(`unknown${Date.now().toFixed()}`, schema).subscribe((data: string | undefined) => {
 
             expect(data).toBeUndefined();
 
@@ -1013,7 +1013,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it("delete() with unexisting key", (done) => {
 
-        storage.delete(`unexisting${Date.now()}`).subscribe(() => {
+        storage.delete(`unexisting${Date.now().toFixed()}`).subscribe(() => {
 
           expect().nothing();
 
@@ -1115,7 +1115,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it("has() on unexisting", (done) => {
 
-        storage.has(`nokey${Date.now()}`).subscribe((result) => {
+        storage.has(`nokey${Date.now().toFixed()}`).subscribe((result) => {
 
           expect(result).toBe(false);
 
@@ -1289,7 +1289,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       it("null: no validation", (done) => {
 
-        storage.get<string>(`noassociateddata${Date.now()}`, schema).subscribe(() => {
+        storage.get<string>(`noassociateddata${Date.now().toFixed()}`, schema).subscribe(() => {
 
           expect().nothing();
 
@@ -1682,7 +1682,7 @@ describe("StorageMap", () => {
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
     it("IndexedDb is used", (done) => {
 
-      const index = `test${Date.now()}`;
+      const index = `test${Date.now().toFixed()}`;
       const value = "test";
 
       TestBed.resetTestingModule();
@@ -1754,7 +1754,7 @@ describe("StorageMap", () => {
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
     it("indexedDb with noWrap to false", (done) => {
 
-      const index = `wrap${Date.now()}`;
+      const index = `wrap${Date.now().toFixed()}`;
       const value = "test";
 
       TestBed.configureTestingModule({
@@ -1811,8 +1811,8 @@ describe("StorageMap", () => {
     it("indexedDb with custom options", (done) => {
 
       /* Unique names to be sure `indexedDB` `upgradeneeded` event is triggered */
-      const dbName = `dbCustom${Date.now()}`;
-      const storeName = `storeCustom${Date.now()}`;
+      const dbName = `dbCustom${Date.now().toFixed()}`;
+      const storeName = `storeCustom${Date.now().toFixed()}`;
       const dbVersion = 2;
 
       TestBed.resetTestingModule();
