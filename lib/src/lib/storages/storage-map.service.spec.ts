@@ -841,19 +841,20 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           storage.set(key, value).pipe(
             mergeMap(() => storage.get(key))
           ).subscribe((storage.backingEngine === "localStorage") ? {
-            next: () => {
+            next: (): void => {
               // Nothing to do
             },
-            error: () => {
+            error: (): void => {
               expect().nothing();
               done();
+              return;
             }
           } : {
-            next: (result: unknown) => {
+            next: (result: unknown): void => {
               expect(result).toEqual(value);
               done();
             },
-            error: () => {
+            error: (): void => {
               /* Safari in private mode doesn't allow to store `Blob` in `indexedDB` */
               pending();
               done();

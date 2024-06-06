@@ -5,7 +5,7 @@ import { InjectionToken } from "@angular/core";
  */
 export const LS_PREFIX = new InjectionToken<string>("localStoragePrefix", {
   providedIn: "root",
-  factory: () => ""
+  factory: (): string => ""
 });
 
 /**
@@ -18,7 +18,7 @@ export const DEFAULT_IDB_DB_NAME = "ngStorage";
  */
 export const IDB_DB_NAME = new InjectionToken<string>("localStorageIDBDBName", {
   providedIn: "root",
-  factory: () => DEFAULT_IDB_DB_NAME
+  factory: (): string => DEFAULT_IDB_DB_NAME
 });
 
 /**
@@ -32,7 +32,7 @@ export const DEFAULT_IDB_DB_VERSION = 1;
  */
 export const IDB_DB_VERSION = new InjectionToken<number>("localStorageIDBDBVersion", {
   providedIn: "root",
-  factory: () => DEFAULT_IDB_DB_VERSION
+  factory: (): number => DEFAULT_IDB_DB_VERSION
 });
 
 /**
@@ -46,7 +46,7 @@ export const DEFAULT_IDB_STORE_NAME = "localStorage";
  */
 export const IDB_STORE_NAME = new InjectionToken<string>("localStorageIDBStoreName", {
   providedIn: "root",
-  factory: () => DEFAULT_IDB_STORE_NAME
+  factory: (): string => DEFAULT_IDB_STORE_NAME
 });
 
 /**
@@ -63,7 +63,7 @@ export const DEFAULT_IDB_NO_WRAP = true;
  */
 export const IDB_NO_WRAP = new InjectionToken<boolean>("localStorageIDBWrap", {
   providedIn: "root",
-  factory: () => DEFAULT_IDB_NO_WRAP
+  factory: (): boolean => DEFAULT_IDB_NO_WRAP
 });
 
 /**
