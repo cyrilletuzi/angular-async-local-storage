@@ -503,7 +503,7 @@ export class StorageMap {
    * @private
    * @ignore
    */
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error -- Silence the not used error, it is used in tests
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Silence the not used error, it is used in tests
   // @ts-ignore
   private ɵinternalGetDatabase(): LocalDatabase {
 

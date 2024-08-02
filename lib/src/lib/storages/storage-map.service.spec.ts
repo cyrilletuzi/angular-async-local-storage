@@ -1139,7 +1139,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           /* So we need to wait for completion of all actions to check */
           complete: () => {
 
-            // eslint-disable-next-line rxjs/no-nested-subscribe
+            // // eslint-disable-next-line rxjs/no-nested-subscribe
             storage.size.subscribe((size) => {
 
               expect(size).toBe(2);
@@ -1276,7 +1276,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         storage.set(watchedKey, "test", { type: "string" }).subscribe(() => {
 
-          // eslint-disable-next-line rxjs/no-nested-subscribe
+          // // eslint-disable-next-line rxjs/no-nested-subscribe
           storage.watch(watchedKey, { type: "number" }).subscribe({
             error: () => {
               expect().nothing();

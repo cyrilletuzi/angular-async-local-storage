@@ -95,7 +95,6 @@ export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap)
   /* Only `indexedDB` is concerned */
   if (storageService.backingEngine === "indexedDB") {
 
-    // eslint-disable-next-line @typescript-eslint/dot-notation
     const indexedDBService = storageService["ɵinternalGetDatabase"]() as IndexedDBDatabase;
 
     // eslint-disable-next-line @typescript-eslint/dot-notation

@@ -280,7 +280,7 @@ describe("Interoperability", () => {
 
       });
 
-    } catch (error) {
+    } catch {
 
       pending();
 

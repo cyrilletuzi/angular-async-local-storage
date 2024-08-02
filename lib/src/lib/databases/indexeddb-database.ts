@@ -250,7 +250,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         /* Listen to success event */
         const success$ = fromEvent(request, "success").pipe(
           /* Stop the `Observable` when the cursor is `null` */
-          // eslint-disable-next-line rxjs/no-ignored-takewhile-value -- Required by indexedDb behavior, getting the result from the event does not always work
+          // // eslint-disable-next-line rxjs/no-ignored-takewhile-value -- Required by indexedDb behavior, getting the result from the event does not always work
           takeWhile(() => (request.result !== null)),
           /* This lib only allows string keys, but user could have added other types of keys from outside
            * It's OK to cast as the cursor as been tested in the previous operator */
