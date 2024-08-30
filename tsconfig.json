@@ -38,6 +38,17 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "extendedDiagnostics": {
+      "checks": {
+        "invalidBananaInBox": "error",
+        "nullishCoalescingNotNullable": "error",
+        "textAttributeNotBinding": "error",
+        "suffixNotSupported": "error",
+        "optionalChainNotNullable": "error",
+        "interpolatedSignalNotInvoked": "error",
+        "uninvokedFunctionInEventBinding": "error"
+      }
+    }
   }
 }
