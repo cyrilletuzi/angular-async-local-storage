@@ -40,15 +40,7 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
     "extendedDiagnostics": {
-      "checks": {
-        "invalidBananaInBox": "error",
-        "nullishCoalescingNotNullable": "error",
-        "textAttributeNotBinding": "error",
-        "suffixNotSupported": "error",
-        "optionalChainNotNullable": "error",
-        "interpolatedSignalNotInvoked": "error",
-        "uninvokedFunctionInEventBinding": "error"
-      }
+      "defaultCategory": "error"
     }
   }
 }
