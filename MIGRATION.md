@@ -12,6 +12,7 @@
 - [Migration to version 16](./docs/MIGRATION_TO_V16.md)
 - [Migration to version 17](./docs/MIGRATION_TO_V17.md)
 - [Migration to version 18](./docs/MIGRATION_TO_V18.md)
+- [Migration to version 19](./docs/MIGRATION_TO_V19.md)
 
 [Full changelog available here.](./CHANGELOG.md)
 
