@@ -13,7 +13,8 @@ But **do not worry: the previous package is still here** and will be as long as 
 - v15 for Angular 15,
 - v16 for Angular 16,
 - v17 for Angular 17,
-- v18 for Angular 18.
+- v18 for Angular 18,
+- v19 for Angular 19.
 
 [Angular <= 15 are officially outdated](https://angular.dev/reference/versions#actively-supported-versions).
 
