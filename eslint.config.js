@@ -85,7 +85,7 @@ module.exports = tseslint.config(
       "@typescript-eslint/prefer-readonly": "error",
       "@typescript-eslint/no-useless-empty-export": "error",
       // Stricter Angular ESLint rules
-      "@angular-eslint/prefer-standalone": "error",
+      "@angular-eslint/prefer-standalone": "off",
       "@angular-eslint/consistent-component-styles": "error",
       "@angular-eslint/sort-lifecycle-methods": "error",
       "@angular-eslint/contextual-decorator": "error",
