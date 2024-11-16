@@ -16,7 +16,7 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "es6",
+    "target": "es2018",
     "strict": true,
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
