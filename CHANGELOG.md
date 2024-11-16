@@ -2,6 +2,13 @@
 
 This library is fully documented and so you will find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 19.0.0 (2024-11-19)
+
+### Breaking changes
+
+- Angular 19 is required.
+- RxJS >= 7.6 is required. RxJS 6 is not supported.
+
 ## 18.0.0 (2024-05-22)
 
 ### Breaking changes

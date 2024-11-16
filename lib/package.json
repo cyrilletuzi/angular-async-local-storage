@@ -20,8 +20,8 @@
     "tslib": "^2.5.0"
   },
   "peerDependencies": {
-    "@angular/common": "^18.0.0",
-    "@angular/core": "^18.0.0",
+    "@angular/common": "^19.0.0",
+    "@angular/core": "^19.0.0",
     "rxjs": "^7.6.0"
   },
   "schematics": "./schematics/collection.json",
