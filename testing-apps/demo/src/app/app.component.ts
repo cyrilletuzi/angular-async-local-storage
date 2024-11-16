@@ -9,13 +9,12 @@ interface Data {
 }
 
 @Component({
-  selector: "app-root",
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    JsonPipe,
-  ],
-  template: `
+    selector: "app-root",
+    imports: [
+        AsyncPipe,
+        JsonPipe,
+    ],
+    template: `
     @if (getItem$ | async; as getItem) {
       <p id="get-item">{{ getItem.title }}</p>
     }

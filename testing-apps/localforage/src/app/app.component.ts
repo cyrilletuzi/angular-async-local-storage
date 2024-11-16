@@ -4,12 +4,11 @@ import { StorageMap } from "@ngx-pwa/local-storage";
 import * as localForage from "localforage";
 
 @Component({
-  selector: "app-root",
-  standalone: true,
-  imports: [
-    RouterOutlet,
-  ],
-  template: `
+    selector: "app-root",
+    imports: [
+        RouterOutlet,
+    ],
+    template: `
     @if (title) {
       <h1>{{ title }}</h1>
     }
