@@ -68,7 +68,7 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
 
   } else if (storageService.backingEngine === "memory") {
 
-    // eslint-disable-next-line @typescript-eslint/dot-notation
+    // eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/no-unsafe-type-assertion
     (storageService["ɵinternalGetDatabase"]() as MemoryDatabase)["memoryStorage"].clear();
 
     done();
@@ -95,6 +95,7 @@ export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap)
   /* Only `indexedDB` is concerned */
   if (storageService.backingEngine === "indexedDB") {
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const indexedDBService = storageService["ɵinternalGetDatabase"]() as IndexedDBDatabase;
 
     // eslint-disable-next-line @typescript-eslint/dot-notation

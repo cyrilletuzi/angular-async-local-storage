@@ -39,6 +39,7 @@ export async function getAllMainPaths(host: Tree): Promise<string[]> {
         if (buildTarget.options?.["main"] === undefined) {
           throw new SchematicsException(`angular.json config is broken, can't find 'architect.build.options.main' in one or more projects`);
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         mainPaths.push(buildTarget.options["main"] as string);
 
       } else if (!e2eTarget) {

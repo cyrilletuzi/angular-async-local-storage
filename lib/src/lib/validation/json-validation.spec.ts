@@ -23,7 +23,7 @@ describe(`JSONValidator`, () => {
           additionalProperties: true,
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-type-assertion
         jsonValidator.validate({ test: "test" }, schema as any);
 
       }).not.toThrow();
@@ -102,7 +102,7 @@ describe(`JSONValidator`, () => {
 
       it("special case: readonly", () => {
 
-        const schema = { type: "string", enum: ["", "hello"] }  satisfies JSONSchema;
+        const schema = { type: "string", enum: ["", "hello"] } satisfies JSONSchema;
 
         const test = jsonValidator.validate("", schema);
 

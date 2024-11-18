@@ -397,6 +397,7 @@ export class IndexedDBDatabase implements LocalDatabase {
         } catch (error) {
 
           /* The store could have been deleted from outside */
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           return throwError(() => error as DOMException);
 
         }
@@ -424,6 +425,7 @@ export class IndexedDBDatabase implements LocalDatabase {
       /* Throw on error to be able to catch errors in RxJS way.
        * Here `event.target` must be used, as `transactionOrRequest.error` will be `null`
        * if we are on the request and the error is only triggered later by the transaction */
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       mergeMap((event) => throwError(() => (event.target as IDBTransaction | IDBRequest | null)?.error)),
     );
 

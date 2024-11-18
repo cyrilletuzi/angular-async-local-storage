@@ -203,6 +203,7 @@ export class JSONValidator {
 
       // TODO: remove when TypeScript 4.1 is available
       // (currently the narrowed type from `Array.isArray()` is lost on readonly arrays)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       if (!this.validate(value, schema.items as JSONSchema)) {
         return false;
       }
@@ -285,7 +286,7 @@ export class JSONValidator {
       /* Filter to keep only real properties (no internal JS stuff) and check if the data has the property too */
       if (Object.hasOwn(schema.properties, property) && Object.hasOwn(data, property)) {
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Ensured by the logic
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unsafe-type-assertion -- Ensured by the logic
         if (!this.validate((data as Record<string, unknown>)[property], schema.properties[property]!)) {
           return false;
         }
@@ -327,6 +328,7 @@ export class JSONValidator {
     }
 
     /* Cast as the data can be of multiple types, and so TypeScript is lost */
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     return ((schema.enum as unknown[]).includes(data));
 
   }
