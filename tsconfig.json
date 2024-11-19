@@ -6,8 +6,6 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "sourceMap": true,
-    "declaration": false,
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",

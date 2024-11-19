@@ -21,6 +21,6 @@ ng update @ngx-pwa/local-storage
 
 ## More documentation
 
-- [Full changelog for v17](../CHANGELOG.md)
+- [Full changelog for v18](../CHANGELOG.md)
 - [Other migration guides](../MIGRATION.md)
 - [Main documentation](../README.md)

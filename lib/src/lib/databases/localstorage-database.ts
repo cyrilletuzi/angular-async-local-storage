@@ -54,6 +54,7 @@ export class LocalStorageDatabase implements LocalDatabase {
         return of(parsedData);
 
       } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         return throwError(() => error as SyntaxError);
       }
 
@@ -84,6 +85,7 @@ export class LocalStorageDatabase implements LocalDatabase {
     try {
       serializedData = JSON.stringify(data);
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       return throwError(() => error as TypeError);
     }
 
@@ -91,6 +93,7 @@ export class LocalStorageDatabase implements LocalDatabase {
     try {
       localStorage.setItem(this.prefixKey(key), serializedData);
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       return throwError(() => error as DOMException);
     }
 

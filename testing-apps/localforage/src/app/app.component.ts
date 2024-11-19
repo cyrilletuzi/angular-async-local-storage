@@ -5,7 +5,6 @@ import * as localForage from "localforage";
 
 @Component({
   selector: "app-root",
-  standalone: true,
   imports: [
     RouterOutlet,
   ],
@@ -32,7 +31,7 @@ export class AppComponent implements OnInit {
     localForage.setItem(key, value).then(() => {
 
       this.storageMap.get(key, { type: "string" }).subscribe((result) => {
-        if (result) {
+        if (result !== undefined) {
           this.title = result;
         }
       });

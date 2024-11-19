@@ -12,14 +12,14 @@ export default function (): Rule {
       context.logger.warn(`Not able to detect @angular/core version. Be aware that Angular versions <= 14 are no longer supported.`);
     }
 
-    if (angularMajorVersion !== undefined && (angularMajorVersion <= 15)) {
-      throw new SchematicsException("Angular versions <= 15 are no longer supported.");
+    if (angularMajorVersion !== undefined && (angularMajorVersion <= 16)) {
+      throw new SchematicsException("Angular versions <= 16 are no longer supported.");
     }
 
     const rxjsMajorVersion = getDependencyMajorVersion("rxjs", host);
 
     if (rxjsMajorVersion === undefined) {
-      context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.4 is recommended for Angular 14 and required for Angular >= 15.`);
+      context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.4 is required, rxjs 6 is not supported.`);
     }
 
     if (rxjsMajorVersion !== undefined && (rxjsMajorVersion < 7)) {

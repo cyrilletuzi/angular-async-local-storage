@@ -210,6 +210,7 @@ export class StorageMap {
           }
 
           /* Data have been checked, so it's OK to cast */
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           return of(data as T | undefined);
 
         }
@@ -422,6 +423,7 @@ export class StorageMap {
 
     /* Only the public API of the Observable should be returned */
     return (schema ?
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       notifier.asObservable() as Observable<T | undefined> :
       notifier.asObservable()
     );
