@@ -45,6 +45,7 @@
     "@sinclair/typebox": "^0.34.4",
     "@types/jasmine": "~5.1.1",
     "angular-eslint": "^18.4.1",
+    "better-typescript-lib": "~2.9.0",
     "copyfiles": "^2.4.1",
     "eslint": "^9.15.0",
     "jasmine-core": "~5.4.0",

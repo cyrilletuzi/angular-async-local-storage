@@ -194,6 +194,7 @@ export class JSONValidator {
     if (Array.isArray(schema.items) || schema.items === undefined) {
 
       // TODO: cast should not be needed here
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       return this.validateTuple(data, schema.items as JSONSchema[] | undefined);
 
     }
