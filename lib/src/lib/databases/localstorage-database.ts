@@ -70,13 +70,13 @@ export class LocalStorageDatabase implements LocalDatabase {
    * @param data The item's value
    * @returns A RxJS `Observable` to wait the end of the operation
    */
-  set(key: string, data: unknown): Observable<undefined> {
+  set(key: string, data: object): Observable<undefined> {
 
-    let serializedData: string | null = null;
+    let serializedData: StringifyResult<object> | null = null;
 
     /* Check if data can be serialized */
-    const dataPrototype: unknown = Object.getPrototypeOf(data);
-    if ((typeof data === "object") && (data !== null) && !Array.isArray(data) &&
+    const dataPrototype = Object.getPrototypeOf(data);
+    if ((typeof data === "object") && !Array.isArray(data) &&
       !((dataPrototype === Object.prototype) || (dataPrototype === null))) {
       return throwError(() => new SerializationError());
     }
@@ -84,6 +84,9 @@ export class LocalStorageDatabase implements LocalDatabase {
     /* Try to stringify (can fail on circular references) */
     try {
       serializedData = JSON.stringify(data);
+      if (serializedData === undefined) {
+        throw new Error();
+      }
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       return throwError(() => error as TypeError);
