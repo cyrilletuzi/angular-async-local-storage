@@ -7,6 +7,7 @@ import { HomeComponent } from "./app/home/home.component";
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter([
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       { path: "lazy", loadChildren: () => import("./app/lazy/routes").then(m => m.routes) },
       { path: "", component: HomeComponent, pathMatch: "full" },
     ]),
@@ -15,6 +16,8 @@ bootstrapApplication(AppComponent, {
     provideIndexedDBStoreName("keyvaluepairs"),
   ],
 })
-  .catch((err) => {
+  .then(() => {
+    // Nothing to do
+  }, (err) => {
     console.error(err);
   });
