@@ -48,6 +48,7 @@
     "better-typescript-lib": "~2.10.1",
     "copyfiles": "^2.4.1",
     "eslint": "^9.20.0",
+    "jasmine": "^5.6.0",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
