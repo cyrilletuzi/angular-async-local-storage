@@ -5,6 +5,7 @@
       "dom"
     ],
     "declaration": true,
+    "isolatedDeclarations": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
