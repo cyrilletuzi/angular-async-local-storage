@@ -55,7 +55,7 @@ jobs:
     - name: Build the lib (with the current version, as it is what is published on npm)
       run: npm run build
     - name: Downgrade dependencies to minimal required version
-      run: npm install typescript@5.6.3 tslib@2.5.0 rxjs@7.6.0 zone.js@0.15.0 @angular/common@19.0.0 @angular/compiler@19.0.0 @angular/core@19.0.0 @angular/platform-browser@19.0.0 @angular/router@19.0.0 @angular/cli@19.0.0 @angular/compiler-cli@19.0.0 @angular-devkit/build-angular@19.0.0 --legacy-peer-deps
+      run: npm install typescript@5.6.3 tslib@2.5.0 better-typescript-lib@2.9.0 rxjs@7.6.0 zone.js@0.15.0 @angular/common@19.0.0 @angular/compiler@19.0.0 @angular/core@19.0.0 @angular/platform-browser@19.0.0 @angular/router@19.0.0 @angular/cli@19.0.0 @angular/compiler-cli@19.0.0 @angular-devkit/build-angular@19.0.0 --legacy-peer-deps
       env:
         CI: true
     - name: Run unit tests
