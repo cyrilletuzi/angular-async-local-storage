@@ -27,6 +27,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
+            "aot": true,
             "polyfills": [
               "zone.js",
               "zone.js/testing"
