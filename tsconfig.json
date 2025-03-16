@@ -25,7 +25,8 @@
     "noImplicitOverride": true,
     "exactOptionalPropertyTypes": true,
     "isolatedModules": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "libReplacement": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
