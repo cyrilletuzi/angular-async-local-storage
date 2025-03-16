@@ -26,7 +26,7 @@
     "exactOptionalPropertyTypes": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    // TODO: enable when TS 5.8 in the minimum version in Angular 20
+    // TODO: enable when TS 5.8 is the minimum version in Angular 20
     // "erasableSyntaxOnly": true,
     // "libReplacement": true
   },
