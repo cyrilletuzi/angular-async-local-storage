@@ -26,6 +26,7 @@
     "exactOptionalPropertyTypes": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
     "libReplacement": true
   },
   "angularCompilerOptions": {
