@@ -26,8 +26,9 @@
     "exactOptionalPropertyTypes": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    "erasableSyntaxOnly": true,
-    "libReplacement": true
+    // TODO: enable when TS 5.8 in the minimum version in Angular 20
+    // "erasableSyntaxOnly": true,
+    // "libReplacement": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
