@@ -159,7 +159,8 @@ module.exports = tseslint.config(
       "@angular-eslint/template/cyclomatic-complexity": "error",
       "@angular-eslint/template/no-duplicate-attributes": "error",
       "@angular-eslint/template/no-interpolation-in-attributes": "error",
-      "@angular-eslint/template/prefer-static-string-properties": 'error',
+      "@angular-eslint/template/prefer-static-string-properties": "error",
+      "@angular-eslint/template/prefer-contextual-for-variables": "error",
       "@angular-eslint/template/no-inline-styles": [
         "error",
         {
