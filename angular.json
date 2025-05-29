@@ -11,9 +11,6 @@
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
-          "options": {
-            "project": "lib/ng-package.json"
-          },
           "configurations": {
             "production": {
               "tsConfig": "lib/tsconfig.lib.prod.json"
@@ -56,16 +53,13 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/demo",
-            "index": "testing-apps/demo/src/index.html",
             "browser": "testing-apps/demo/src/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "testing-apps/demo/tsconfig.app.json",
             "assets": [],
-            "styles": [],
-            "scripts": []
+            "styles": []
           },
           "configurations": {
             "production": {
@@ -117,16 +111,13 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/iframe",
-            "index": "testing-apps/iframe/src/index.html",
             "browser": "testing-apps/iframe/src/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "testing-apps/iframe/tsconfig.app.json",
             "assets": [],
-            "styles": [],
-            "scripts": []
+            "styles": []
           },
           "configurations": {
             "production": {
@@ -178,16 +169,13 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/localforage",
-            "index": "testing-apps/localforage/src/index.html",
             "browser": "testing-apps/localforage/src/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "testing-apps/localforage/tsconfig.app.json",
             "assets": [],
-            "styles": [],
-            "scripts": []
+            "styles": []
           },
           "configurations": {
             "production": {
