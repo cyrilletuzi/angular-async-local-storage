@@ -9,15 +9,15 @@ interface Data {
 }
 
 @Component({
-    selector: "app-root",
-    imports: [
-        AsyncPipe,
-    ],
-    template: `
+  selector: "app-root",
+  imports: [
+    AsyncPipe,
+  ],
+  template: `
     <h1>{{ (data$ | async)?.title }}</h1>
   `
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
 
   title = "LocalStorage";
   data$?: Observable<Data | undefined>;

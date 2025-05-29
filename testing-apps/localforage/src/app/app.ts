@@ -15,7 +15,7 @@ import * as localForage from "localforage";
     <router-outlet />
   `
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
 
   title?: string;
 

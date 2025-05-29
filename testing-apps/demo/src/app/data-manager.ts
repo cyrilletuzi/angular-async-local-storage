@@ -5,7 +5,7 @@ import { Observable, mergeMap } from "rxjs";
 @Injectable({
   providedIn: "root",
 })
-export class DataService {
+export class DataManager {
 
   data$: Observable<string | undefined>;
 
