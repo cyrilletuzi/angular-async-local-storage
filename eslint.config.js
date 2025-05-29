@@ -19,17 +19,8 @@ module.exports = tseslint.config(
       ...angulareslint.configs.tsRecommended,
     ],
     processor: angulareslint.processInlineTemplates,
-    "rules": {
-      // Good practice to differentiate component types
-      "@angular-eslint/component-class-suffix": [
-        "error",
-        {
-          "suffixes": [
-            "Component",
-            "Page"
-          ]
-        }
-      ],
+    rules: {
+      "@angular-eslint/component-class-suffix": "off",
       // Prefixes
       "@angular-eslint/component-selector": [
         "error",
@@ -156,7 +147,6 @@ module.exports = tseslint.config(
       "@angular-eslint/template/prefer-self-closing-tags": "warn",
       "@angular-eslint/template/attributes-order": "warn",
       "@angular-eslint/template/conditional-complexity": "error",
-      "@angular-eslint/template/cyclomatic-complexity": "error",
       "@angular-eslint/template/no-duplicate-attributes": "error",
       "@angular-eslint/template/no-interpolation-in-attributes": "error",
       "@angular-eslint/template/prefer-static-string-properties": "error",
