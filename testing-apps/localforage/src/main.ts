@@ -1,3 +1,4 @@
+import { provideBrowserGlobalErrorListeners } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { provideRouter } from "@angular/router";
 import { provideIndexedDBDataBaseName, provideIndexedDBStoreName, provideLocalStoragePrefix } from "@ngx-pwa/local-storage";
@@ -6,6 +7,7 @@ import { HomeComponent } from "./app/home/home.component";
 
 bootstrapApplication(AppComponent, {
   providers: [
+    provideBrowserGlobalErrorListeners(),
     provideRouter([
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       { path: "lazy", loadChildren: () => import("./app/lazy/routes").then(m => m.routes) },
