@@ -2,19 +2,19 @@ import { AsyncPipe, JsonPipe } from "@angular/common";
 import { Component, type OnInit } from "@angular/core";
 import { StorageMap, type JSONSchema } from "@ngx-pwa/local-storage";
 import { Observable, catchError, mergeMap, of, toArray } from "rxjs";
-import { DataService } from "./data.service";
+import { DataManager } from "./data-manager";
 
 interface Data {
   title: string;
 }
 
 @Component({
-    selector: "app-root",
-    imports: [
-        AsyncPipe,
-        JsonPipe,
-    ],
-    template: `
+  selector: "app-root",
+  imports: [
+    AsyncPipe,
+    JsonPipe,
+  ],
+  template: `
     @if (getItem$ | async; as getItem) {
       <p id="get-item">{{ getItem.title }}</p>
     }
@@ -42,7 +42,7 @@ interface Data {
     <iframe src="http://localhost:4202"></iframe>
   `
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
 
   getItem$?: Observable<Data | undefined>;
   schemaError$?: Observable<string | undefined>;
@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private readonly storageMap: StorageMap,
-    private readonly dataService: DataService,
+    private readonly dataService: DataManager,
   ) {}
 
   ngOnInit(): void {
@@ -86,7 +86,7 @@ export class AppComponent implements OnInit {
       );
 
       this.schemaError$ = this.storageMap.set("schemaError", { wrong: "test" }).pipe(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-type-assertion
         mergeMap(() => this.storageMap.get("schemaError", schema as any)),
         catchError(() => of("schema error")),
       );
@@ -94,7 +94,6 @@ export class AppComponent implements OnInit {
       this.storageMap.set("removeItem", "test").pipe(
         mergeMap(() => this.storageMap.delete("removeItem")),
         mergeMap(() => this.storageMap.get("removeItem", { type: "string" })),
-      // eslint-disable-next-line rxjs/no-nested-subscribe
       ).subscribe((removeResult) => {
 
         if (removeResult === undefined) {

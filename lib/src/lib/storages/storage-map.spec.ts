@@ -14,7 +14,7 @@ import { clearStorage, closeAndDeleteDatabase } from "../testing/cleaning.spec";
 import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_DB_VERSION, DEFAULT_IDB_STORE_NAME } from "../tokens";
 import type { JSONSchema } from "../validation/json-schema";
 import { VALIDATION_ERROR } from "./exceptions";
-import { StorageMap } from "./storage-map.service";
+import { StorageMap } from "./storage-map";
 
 function tests(description: string, localStorageServiceFactory: () => StorageMap): void {
 

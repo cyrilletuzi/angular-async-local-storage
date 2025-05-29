@@ -2,6 +2,7 @@ import { Component, type OnInit } from "@angular/core";
 import { StorageMap } from "@ngx-pwa/local-storage";
 
 @Component({
+  selector: 'app-page',
   standalone: true,
   template: `
     @if (lazy) {
@@ -9,7 +10,7 @@ import { StorageMap } from "@ngx-pwa/local-storage";
     }
   `,
 })
-export class PageComponent implements OnInit {
+export class Page implements OnInit {
 
   lazy?: string;
 
@@ -20,7 +21,7 @@ export class PageComponent implements OnInit {
   ngOnInit(): void {
 
     this.storageMap.get("key", { type: "string" }).subscribe((result) => {
-      if (result) {
+      if (result !== undefined) {
         this.lazy = result;
       }
     });

@@ -4,10 +4,10 @@
     "outDir": "../../out-tsc/iframe",
     "types": []
   },
-  "files": [
-    "src/main.ts"
-  ],
   "include": [
-    "src/**/*.d.ts"
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts"
   ]
 }

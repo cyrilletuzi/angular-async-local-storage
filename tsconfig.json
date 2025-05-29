@@ -1,15 +1,12 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "esModuleInterop": true,
-    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "ES2022",
+    "module": "preserve",
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "noUncheckedIndexedAccess": true,
@@ -35,9 +32,28 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
+    "typeCheckHostBindings": true,
     "strictStandalone": true,
     "extendedDiagnostics": {
       "defaultCategory": "error"
     }
-  }
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./lib/tsconfig.lib.json"
+    },
+    {
+      "path": "./lib/tsconfig.spec.json"
+    },
+    {
+      "path": "./testing-apps/demo/tsconfig.app.json"
+    },
+    {
+      "path": "./testing-apps/iframe/tsconfig.app.json"
+    },
+    {
+      "path": "./testing-apps/localforage/tsconfig.app.json"
+    }
+  ]
 }
