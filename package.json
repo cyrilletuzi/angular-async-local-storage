@@ -40,7 +40,6 @@
     "@angular/build": "^20.0.0",
     "@angular/cli": "^20.0.0",
     "@angular/compiler-cli": "^20.0.0",
-    "@angular/platform-browser-dynamic": "^20.0.0",
     "@playwright/test": "^1.52.0",
     "@sinclair/typebox": "^0.34.33",
     "@types/jasmine": "~5.1.1",
