@@ -17,6 +17,8 @@ ng update @ngx-pwa/local-storage
 > [!IMPORTANT]
 > RxJS 6 is *not* supported.
 
+Done, no code changes.
+
 ## More documentation
 
 - [Full changelog for v19](../CHANGELOG.md)
