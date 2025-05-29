@@ -9,21 +9,21 @@ export default function (): Rule {
     const angularMajorVersion = getDependencyMajorVersion("@angular/core", host);
 
     if (angularMajorVersion === undefined) {
-      context.logger.warn(`Not able to detect @angular/core version. Be aware that Angular versions <= 14 are no longer supported.`);
+      context.logger.warn(`Not able to detect @angular/core version. Be aware that Angular versions <= 17 are no longer supported.`);
     }
 
-    if (angularMajorVersion !== undefined && (angularMajorVersion <= 16)) {
-      throw new SchematicsException("Angular versions <= 16 are no longer supported.");
+    if (angularMajorVersion !== undefined && (angularMajorVersion <= 17)) {
+      throw new SchematicsException("Angular versions <= 17 are no longer supported.");
     }
 
     const rxjsMajorVersion = getDependencyMajorVersion("rxjs", host);
 
     if (rxjsMajorVersion === undefined) {
-      context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.4 is required, rxjs 6 is not supported.`);
+      context.logger.warn(`Not able to detect rxjs version. Be aware that rxjs version >= 7.6 is required, rxjs 6 is not supported.`);
     }
 
     if (rxjsMajorVersion !== undefined && (rxjsMajorVersion < 7)) {
-      throw new SchematicsException("rxjs >= 7.4 is required for this lib, rxjs 6 is not supported.");
+      throw new SchematicsException("rxjs >= 7.6 is required for this lib, rxjs 6 is not supported.");
     }
 
     /* Task to run `npm install` (or user package manager) */
