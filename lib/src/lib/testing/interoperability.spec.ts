@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
 import { provideIndexedDBDataBaseName } from "../providers";
-import { StorageMap } from "../storages/storage-map.service";
+import { StorageMap } from "../storages/storage-map";
 import { DEFAULT_IDB_STORE_NAME } from "../tokens";
 import type { JSONSchema } from "../validation/json-schema";
 import { clearStorage, closeAndDeleteDatabase } from "./cleaning.spec";

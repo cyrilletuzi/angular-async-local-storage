@@ -1,6 +1,6 @@
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
 import { MemoryDatabase } from "../databases/memory-database";
-import { StorageMap } from "../storages/storage-map.service";
+import { StorageMap } from "../storages/storage-map";
 
 /**
  * Helper to clear all data in storage to avoid tests overlap
