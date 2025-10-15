@@ -29,6 +29,7 @@ export class StorageMap {
    * @param database Storage to use
    */
   constructor(
+    // eslint-disable-next-line @angular-eslint/prefer-inject -- Used in tests
     database: LocalDatabase,
   ) {
     this.#database = database;
