@@ -22,7 +22,8 @@
     "release:patch": "VERSION=patch npm run release",
     "release:minor": "VERSION=minor npm run release",
     "release:major": "VERSION=major npm run release",
-    "release": "if test $VERSION; then npm run build && cd lib && npm version $VERSION --no-git-tag-version && git add package.json && cd .. && git commit -m \"release\" && npm version $VERSION && git push && git push origin v$npm_package_version; fi"
+    "release": "if test $VERSION; then npm run build && cd lib && npm version $VERSION --no-git-tag-version && git add package.json && cd .. && git commit -m \"release\" && npm version $VERSION && git push; fi",
+    "publish-release": "git push origin v$npm_package_version"
   },
   "private": true,
   "dependencies": {
