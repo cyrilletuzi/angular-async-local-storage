@@ -15,17 +15,17 @@ If it causes an error, please file an issue. In the meantime, you can proceed to
 Install the right version according to your Angular one via [`npm`](http://npmjs.com):
 
 ```bash
+# For Angular 21:
+npm install @ngx-pwa/local-storage@^21.0.0
+
 # For Angular 20:
 npm install @ngx-pwa/local-storage@^20.0.0
 
 # For Angular 19:
 npm install @ngx-pwa/local-storage@^19.0.0
-
-# For Angular 18:
-npm install @ngx-pwa/local-storage@^18.0.0
 ```
 
 > [!NOTE]
-> Angular versions <= 17 are [officially outdated](https://angular.dev/reference/versions).
+> Angular versions <= 18 are [officially outdated](https://angular.dev/reference/versions).
 
 [Back to general documentation](../README.md)

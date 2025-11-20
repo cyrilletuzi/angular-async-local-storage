@@ -9,11 +9,11 @@ export default function (): Rule {
     const angularMajorVersion = getDependencyMajorVersion("@angular/core", host);
 
     if (angularMajorVersion === undefined) {
-      context.logger.warn(`Not able to detect @angular/core version. Be aware that Angular versions <= 17 are no longer supported.`);
+      context.logger.warn(`Not able to detect @angular/core version. Be aware that Angular versions <= 18 are no longer supported.`);
     }
 
-    if (angularMajorVersion !== undefined && (angularMajorVersion <= 17)) {
-      throw new SchematicsException("Angular versions <= 17 are no longer supported.");
+    if (angularMajorVersion !== undefined && (angularMajorVersion <= 18)) {
+      throw new SchematicsException("Angular versions <= 18 are no longer supported.");
     }
 
     const rxjsMajorVersion = getDependencyMajorVersion("rxjs", host);

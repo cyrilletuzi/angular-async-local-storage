@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
+  "cli": {
+    "packageManager": "npm"
+  },
   "newProjectRoot": "testing-apps",
   "projects": {
     "lib": {
@@ -25,10 +28,6 @@
           "builder": "@angular/build:karma",
           "options": {
             "aot": true,
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
             "tsConfig": "lib/tsconfig.spec.json",
             "karmaConfig": "lib/karma.conf.js"
           }
@@ -54,9 +53,6 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "testing-apps/demo/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
             "tsConfig": "testing-apps/demo/tsconfig.app.json",
             "assets": [],
             "styles": []
@@ -71,8 +67,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
               "outputHashing": "all"
@@ -112,9 +108,6 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "testing-apps/iframe/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
             "tsConfig": "testing-apps/iframe/tsconfig.app.json",
             "assets": [],
             "styles": []
@@ -129,8 +122,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
               "outputHashing": "all"
@@ -170,9 +163,6 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "testing-apps/localforage/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
             "tsConfig": "testing-apps/localforage/tsconfig.app.json",
             "assets": [],
             "styles": []
@@ -187,8 +177,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
               "outputHashing": "all"

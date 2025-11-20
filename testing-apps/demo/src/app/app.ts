@@ -1,5 +1,5 @@
-import { AsyncPipe, JsonPipe } from "@angular/common";
-import { Component, type OnInit } from "@angular/core";
+import { JsonPipe } from "@angular/common";
+import { Component, inject, signal, type OnInit } from "@angular/core";
 import { StorageMap, type JSONSchema } from "@ngx-pwa/local-storage";
 import { Observable, catchError, mergeMap, of, toArray } from "rxjs";
 import { DataManager } from "./data-manager";
@@ -11,32 +11,31 @@ interface Data {
 @Component({
   selector: "app-root",
   imports: [
-    AsyncPipe,
     JsonPipe,
   ],
   template: `
-    @if (getItem$ | async; as getItem) {
+    @if (getItem(); as getItem) {
       <p id="get-item">{{ getItem.title }}</p>
     }
-    @if (schemaError$ | async; as schemaError) {
+    @if (schemaError(); as schemaError) {
       <p id="schema-error">{{ schemaError }}</p>
     }
-    @if (removeItem) {
+    @if (removeItem()) {
       <p id="remove-item">removeItem</p>
     }
-    @if (clear) {
+    @if (clear()) {
       <p id="clear">clear</p>
     }
-    @if (length$ | async; as length) {
+    @if (length(); as length) {
       <p id="length">{{ length }}</p>
     }
-    @if (keys$ | async; as keys) {
+    @if (keys(); as keys) {
       <p id="keys">{{keys | json}}</p>
     }
-    @if (has$ | async) {
+    @if (has()) {
       <p id="has">has</p>
     }
-    @if (service$ | async; as service) {
+    @if (service(); as service) {
       <p id="service">{{ service }}</p>
     }
     <iframe src="http://localhost:4202"></iframe>
@@ -44,20 +43,18 @@ interface Data {
 })
 export class App implements OnInit {
 
-  getItem$?: Observable<Data | undefined>;
-  schemaError$?: Observable<string | undefined>;
-  removeItem = false;
-  clear = false;
-  size$?: Observable<number>;
-  length$?: Observable<number>;
-  keys$?: Observable<string[]>;
-  has$?: Observable<boolean>;
-  service$?: Observable<string | undefined>;
+  private readonly storageMap = inject(StorageMap);
+  private readonly dataService = inject(DataManager);
 
-  constructor(
-    private readonly storageMap: StorageMap,
-    private readonly dataService: DataManager,
-  ) {}
+  getItem = signal<Data | undefined>(undefined);
+  schemaError = signal<string | undefined>(undefined);
+  removeItem = signal(false);
+  clear = signal(false);
+  size$?: Observable<number>;
+  length = signal<number | undefined>(undefined);
+  keys = signal<string[] | undefined>(undefined);
+  has = signal<boolean | undefined>(undefined);
+  service = signal<string | undefined>(undefined);
 
   ngOnInit(): void {
 
@@ -78,18 +75,22 @@ export class App implements OnInit {
        * as all operations are asynchronous, `.clear()` could interfer with the other tests */
 
       if (result === undefined) {
-        this.clear = true;
+        this.clear.set(true);
       }
 
-      this.getItem$ = this.storageMap.set("getItemTest", { title: "hello world" }).pipe(
+      this.storageMap.set("getItemTest", { title: "hello world" }).pipe(
         mergeMap(() => this.storageMap.get<Data>("getItemTest", schema)),
-      );
+      ).subscribe((getItemResult) => {
+        this.getItem.set(getItemResult);
+      });
 
-      this.schemaError$ = this.storageMap.set("schemaError", { wrong: "test" }).pipe(
+      this.storageMap.set("schemaError", { wrong: "test" }).pipe(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-type-assertion
         mergeMap(() => this.storageMap.get("schemaError", schema as any)),
         catchError(() => of("schema error")),
-      );
+      ).subscribe((schemaErrorResult) => {
+        this.schemaError.set(schemaErrorResult);
+      });
 
       this.storageMap.set("removeItem", "test").pipe(
         mergeMap(() => this.storageMap.delete("removeItem")),
@@ -97,26 +98,34 @@ export class App implements OnInit {
       ).subscribe((removeResult) => {
 
         if (removeResult === undefined) {
-          this.removeItem = true;
+          this.removeItem.set(true);
         }
 
       });
 
-      this.length$ = this.storageMap.set("size1", "test").pipe(
+      this.storageMap.set("size1", "test").pipe(
         mergeMap(() => this.storageMap.set("size2", "test")),
         mergeMap(() => this.storageMap.size),
-      );
+      ).subscribe((lengthResult) => {
+        this.length.set(lengthResult);
+      });
 
-      this.keys$ = this.storageMap.set("keys", "test").pipe(
+      this.storageMap.set("keys", "test").pipe(
         mergeMap(() => this.storageMap.keys()),
         toArray(),
-      );
+      ).subscribe((keysResult) => {
+        this.keys.set(keysResult);
+      });
 
-      this.has$ = this.storageMap.set("has", "test").pipe(
+      this.storageMap.set("has", "test").pipe(
         mergeMap(() => this.storageMap.has("has")),
-      );
+      ).subscribe((hasResult) => {
+        this.has.set(hasResult);
+      });
 
-      this.service$ = this.dataService.data$;
+      this.dataService.data$.subscribe((serviceResult) => {
+        this.service.set(serviceResult);
+      });
 
     });
 

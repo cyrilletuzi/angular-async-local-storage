@@ -20,7 +20,7 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@v6
       with:
-        node-version: '22'
+        node-version: '24'
     - name: Install dependencies
       run: npm ci
       env:
@@ -37,7 +37,7 @@ jobs:
 
   test-minimum:
 
-    name: Test with Angular@20.0.0 and minimum dependencies requirements
+    name: Test with Angular@21.0.0 and minimum dependencies requirements
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -54,7 +54,7 @@ jobs:
     - name: Build the lib (with the current version, as it is what is published on npm)
       run: npm run build
     - name: Downgrade dependencies to minimal required version
-      run: npm install typescript@5.8.2 tslib@2.5.0 better-typescript-lib@2.11.0 rxjs@7.6.0 zone.js@0.15.0 @angular/common@20.0.0 @angular/compiler@20.0.0 @angular/core@20.0.0 @angular/platform-browser@20.0.0 @angular/router@20.0.0 @angular/cli@20.0.0 @angular/compiler-cli@20.0.0 @angular/build@20.0.0 --legacy-peer-deps
+      run: npm install typescript@5.9.2 tslib@2.5.0 better-typescript-lib@2.12.0 rxjs@7.6.0 @angular/common@21.0.0 @angular/compiler@21.0.0 @angular/core@21.0.0 @angular/platform-browser@21.0.0 @angular/router@21.0.0 @angular/cli@21.0.0 @angular/compiler-cli@21.0.0 @angular/build@21.0.0 --legacy-peer-deps
       env:
         CI: true
     - name: Run unit tests
