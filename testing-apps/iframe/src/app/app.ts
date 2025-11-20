@@ -1,7 +1,5 @@
-import { AsyncPipe } from "@angular/common";
-import { Component, type OnInit } from "@angular/core";
+import { Component, inject, signal, type OnInit } from "@angular/core";
 import { StorageMap, type JSONSchema } from "@ngx-pwa/local-storage";
-import { Observable } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
 interface Data {
@@ -10,21 +8,16 @@ interface Data {
 
 @Component({
   selector: "app-root",
-  imports: [
-    AsyncPipe,
-  ],
   template: `
-    <h1>{{ (data$ | async)?.title }}</h1>
+    <h1>{{ data()?.title }}</h1>
   `
 })
 export class App implements OnInit {
 
   title = "LocalStorage";
-  data$?: Observable<Data | undefined>;
+  data = signal<Data | undefined>(undefined);
 
-  constructor(
-    private readonly storageMap: StorageMap,
-  ) {}
+  private readonly storageMap = inject(StorageMap);
 
   ngOnInit(): void {
 
@@ -38,9 +31,11 @@ export class App implements OnInit {
       }
     } satisfies JSONSchema;
 
-    this.data$ = this.storageMap.set(key, { title: this.title }).pipe(
+    this.storageMap.set(key, { title: this.title }).pipe(
       switchMap(() => this.storageMap.get<Data>(key, schema))
-    );
+    ).subscribe((result) => {
+      this.data.set(result);
+    });
 
   }
 

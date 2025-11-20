@@ -1,4 +1,4 @@
-import { Component, type OnInit } from "@angular/core";
+import { Component, inject, signal, type OnInit } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { StorageMap } from "@ngx-pwa/local-storage";
 import * as localForage from "localforage";
@@ -9,19 +9,16 @@ import * as localForage from "localforage";
     RouterOutlet,
   ],
   template: `
-    @if (title) {
-      <h1>{{ title }}</h1>
+    @if (title()) {
+      <h1>{{ title() }}</h1>
     }
     <router-outlet />
   `
 })
 export class App implements OnInit {
 
-  title?: string;
-
-  constructor(
-    private readonly storageMap: StorageMap,
-  ) {}
+  private readonly storageMap = inject(StorageMap);
+  title = signal<string | undefined>(undefined);
 
   ngOnInit(): void {
 
@@ -32,7 +29,7 @@ export class App implements OnInit {
 
       this.storageMap.get(key, { type: "string" }).subscribe((result) => {
         if (result !== undefined) {
-          this.title = result;
+          this.title.set(result);
         }
       });
 
