@@ -2,6 +2,12 @@
 
 This library is fully documented and so you will find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 21.0.0 (2025-11-20)
+
+### Breaking changes
+
+- Angular 21 is required.
+
 ## 20.0.0 (2025-05-29)
 
 ### Breaking changes
