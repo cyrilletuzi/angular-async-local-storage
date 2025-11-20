@@ -25,11 +25,9 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "aot": true,
-            "tsConfig": "lib/tsconfig.spec.json",
-            "karmaConfig": "lib/karma.conf.js"
+            "tsConfig": "lib/tsconfig.spec.json"
           }
         },
         "lint": {

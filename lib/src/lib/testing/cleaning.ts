@@ -4,10 +4,10 @@ import { StorageMap } from "../storages/storage-map";
 
 /**
  * Helper to clear all data in storage to avoid tests overlap
- * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
+ * @param done Promise resolver
  * @param storageService Service
  */
-export function clearStorage(done: DoneFn, storageService: StorageMap): void {
+export function clearStorage(done: (value?: unknown) => void, storageService: StorageMap): void {
 
   if (storageService.backingEngine === "indexedDB") {
 
@@ -42,7 +42,8 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
 
           });
 
-        } else {
+        }
+        else {
 
           dbOpen.result.close();
 
@@ -52,7 +53,8 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
 
       });
 
-    } catch {
+    }
+    catch {
 
       localStorage.clear();
 
@@ -60,20 +62,23 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
 
     }
 
-  } else if (storageService.backingEngine === "localStorage") {
+  }
+  else if (storageService.backingEngine === "localStorage") {
 
     localStorage.clear();
 
     done();
 
-  } else if (storageService.backingEngine === "memory") {
+  }
+  else if (storageService.backingEngine === "memory") {
 
     // eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/no-unsafe-type-assertion
     (storageService["ɵinternalGetDatabase"]() as MemoryDatabase)["memoryStorage"].clear();
 
     done();
 
-  } else {
+  }
+  else {
 
     done();
 
@@ -87,10 +92,10 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
  * so the next tests group to will trigger the `indexedDB` `upgradeneeded` event,
  * as it's where the store is created
  * - to be able to delete the database, all connections to it must be closed
- * @param doneJasmine helper to explicit when the operation has ended to avoid tests overlap
+ * @param done Promise resolver
  * @param storageService Service
  */
-export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap): void {
+export function closeAndDeleteDatabase(done: (value?: unknown) => void, storageService: StorageMap): void {
 
   /* Only `indexedDB` is concerned */
   if (storageService.backingEngine === "indexedDB") {
@@ -114,7 +119,8 @@ export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap)
       },
     });
 
-  } else {
+  }
+  else {
 
     done();
 

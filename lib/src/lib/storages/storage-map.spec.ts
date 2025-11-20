@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { TestBed } from "@angular/core/testing";
 import { String as StringType, Type, type Static } from "@sinclair/typebox";
@@ -6,11 +7,9 @@ import { filter, mergeMap, tap } from "rxjs/operators";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
 import { LocalStorageDatabase } from "../databases/localstorage-database";
 import { MemoryDatabase } from "../databases/memory-database";
-import {
-  provideIndexedDBDataBaseName, provideIndexedDBDataBaseVersion, provideIndexedDBStoreName, provideLocalStoragePrefix
-} from "../providers";
+import { provideIndexedDBDataBaseName, provideIndexedDBDataBaseVersion, provideIndexedDBStoreName, provideLocalStoragePrefix } from "../providers";
 import { StorageModule } from "../storage.module";
-import { clearStorage, closeAndDeleteDatabase } from "../testing/cleaning.spec";
+import { clearStorage, closeAndDeleteDatabase } from "../testing/cleaning";
 import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_DB_VERSION, DEFAULT_IDB_STORE_NAME } from "../tokens";
 import type { JSONSchema } from "../validation/json-schema";
 import { VALIDATION_ERROR } from "./exceptions";
@@ -33,93 +32,69 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       storage = localStorageServiceFactory();
     });
 
-    beforeEach((done) => {
+    beforeEach(() => new Promise(done => {
       /* Clear data to avoid tests overlap */
       clearStorage(done, storage);
-    });
+    }));
 
-    afterAll((done) => {
+    afterAll(() => new Promise(done => {
       /* Now that `indexedDB` store name can be customized, it's important:
        * - to delete the database after each tests group,
        * so the next tests group to will trigger the `indexedDB` `upgradeneeded` event,
        * as it's where the store is created
        * - to be able to delete the database, all connections to it must be closed */
       closeAndDeleteDatabase(done, storage);
-    });
+    }));
 
     describe("overloads", () => {
 
-      it("no schema / no cast", (done) => {
+      it("no schema / no cast", () => {
 
         // @ts-expect-error Failure test
         storage.get("test").subscribe((_: number | undefined) => {
-
-          expect().nothing();
-          done();
-
+          // Nothing to test
         });
-
       });
 
-      it("no schema / cast", (done) => {
+      it("no schema / cast", () => {
 
         // @ts-expect-error Failure test
         storage.get<number>("test").subscribe((_: number | undefined) => {
-
-          expect().nothing();
-          done();
-
+          // Nothing to test
         });
-
       });
 
-      it("schema / cast", (done) => {
+      it("schema / cast", () => {
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
         storage.get<string>("test", { type: "string" }).subscribe((_: string | undefined) => {
-
-          expect().nothing();
-          done();
-
+          // Nothing to test
         });
-
       });
 
-      it("schema with options", (done) => {
+      it("schema with options", () => {
 
         storage.get("test", { type: "number", maximum: 10 }).subscribe((_: number | undefined) => {
-
-          expect().nothing();
-          done();
-
+          // Nothing to test
         });
-
       });
 
-      it("prepared schema with generic interface", (done) => {
+      it("prepared schema with generic interface", () => {
 
         const schema: JSONSchema = { type: "number" };
 
         storage.get("test", schema).subscribe((_: number | undefined) => {
-
-          expect().nothing();
-          done();
-
+          // Nothing to test
         });
-
       });
 
-      it("prepared schema with satisfies", (done) => {
+      it("prepared schema with satisfies", () => {
 
         const schema = { type: "number" } satisfies JSONSchema;
 
         storage.get("test", schema).subscribe((_: number | undefined) => {
-
-          expect().nothing();
-          done();
-
+          // Nothing to test
         });
-
       });
 
     });
@@ -128,41 +103,31 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       describe(`string`, () => {
 
-        it("with value", (done) => {
+        it("with value", () => {
 
           const value = "blue";
           const schema = { type: "string" } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: string | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: string | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
-        it("empty", (done) => {
+        it("empty", () => {
 
           const value = "";
           const schema = { type: "string" } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: string | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: string | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
-        it("const", (done) => {
+        it("const", () => {
 
           const value = "hello";
           const schema = {
@@ -170,19 +135,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             const: "hello",
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<"hello">(key, schema))
-          ).subscribe((result: "hello" | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<"hello">(key, schema))).subscribe((result: "hello" | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
-        it("enum", (done) => {
+        it("enum", () => {
 
           const value = "world";
           const schema = {
@@ -190,57 +150,42 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             enum: ["hello", "world"],
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<"hello" | "world">(key, schema))
-          ).subscribe((result: "hello" | "world" | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<"hello" | "world">(key, schema))).subscribe((result: "hello" | "world" | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
       });
 
       describe(`number`, () => {
 
-        it("with value", (done) => {
+        it("with value", () => {
 
           const value = 1.5;
           const schema = { type: "number" } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: number | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: number | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
-        it("zero", (done) => {
+        it("zero", () => {
 
           const value = 0;
           const schema = { type: "number" } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: number | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: number | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
-        it("const", (done) => {
+        it("const", () => {
 
           const value = 1.5;
           const schema = {
@@ -248,19 +193,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             const: 1.5,
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<1.5>(key, schema))
-          ).subscribe((result: 1.5 | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<1.5>(key, schema))).subscribe((result: 1.5 | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
-        it("enum", (done) => {
+        it("enum", () => {
 
           const value = 2.4;
           const schema = {
@@ -268,57 +208,42 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             enum: [1.5, 2.4],
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<1.5 | 2.4>(key, schema))
-          ).subscribe((result: 1.5 | 2.4 | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<1.5 | 2.4>(key, schema))).subscribe((result: 1.5 | 2.4 | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
       });
 
       describe(`integer`, () => {
 
-        it("with value", (done) => {
+        it("with value", () => {
 
           const value = 1;
           const schema = { type: "integer" } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: number | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: number | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
-        it("zero", (done) => {
+        it("zero", () => {
 
           const value = 0;
           const schema = { type: "integer" } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: number | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: number | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
-        it("const", (done) => {
+        it("const", () => {
 
           const value = 1;
           const schema = {
@@ -326,19 +251,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             const: 1,
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<1>(key, schema))
-          ).subscribe((result: 1 | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<1>(key, schema))).subscribe((result: 1 | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
-        it("enum", (done) => {
+        it("enum", () => {
 
           const value = 2;
           const schema = {
@@ -346,57 +266,42 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             enum: [1, 2],
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<1 | 2>(key, schema))
-          ).subscribe((result: 1 | 2 | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<1 | 2>(key, schema))).subscribe((result: 1 | 2 | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
       });
 
       describe(`boolean`, () => {
 
-        it("true", (done) => {
+        it("true", () => {
 
           const value = true;
           const schema = { type: "boolean" } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: boolean | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: boolean | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
-        it("false", (done) => {
+        it("false", () => {
 
           const value = false;
           const schema = { type: "boolean" } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: boolean | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: boolean | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
-        it("const", (done) => {
+        it("const", () => {
 
           const value = true;
           const schema = {
@@ -404,23 +309,18 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             const: true,
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<true>(key, schema))
-          ).subscribe((result: true | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<true>(key, schema))).subscribe((result: true | undefined) => {
 
             expect(result).toBe(value);
 
-            done();
-
           });
-
         });
 
       });
 
       describe("array", () => {
 
-        it("of strings", (done) => {
+        it("of strings", () => {
 
           const value = ["hello", "world", "!"];
           const schema = {
@@ -428,19 +328,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             items: { type: "string" },
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: string[] | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: string[] | undefined) => {
 
             expect(result).toEqual(value);
 
-            done();
-
           });
-
         });
 
-        it("of integers", (done) => {
+        it("of integers", () => {
 
           const value = [1, 2, 3];
           const schema = {
@@ -448,19 +343,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             items: { type: "integer" },
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: number[] | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: number[] | undefined) => {
 
             expect(result).toEqual(value);
 
-            done();
-
           });
-
         });
 
-        it("of numbers", (done) => {
+        it("of numbers", () => {
 
           const value = [1.5, 2.4, 3.67];
           const schema = {
@@ -468,19 +358,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             items: { type: "number" },
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: number[] | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: number[] | undefined) => {
 
             expect(result).toEqual(value);
 
-            done();
-
           });
-
         });
 
-        it("of booleans", (done) => {
+        it("of booleans", () => {
 
           const value = [true, false, true];
           const schema = {
@@ -488,19 +373,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             items: { type: "boolean" },
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: boolean[] | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: boolean[] | undefined) => {
 
             expect(result).toEqual(value);
 
-            done();
-
           });
-
         });
 
-        it("of arrays", (done) => {
+        it("of arrays", () => {
 
           const value = [["hello", "world"], ["my", "name"], ["is", "Elmo"]];
           const schema = {
@@ -511,19 +391,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             },
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<string[][]>(key, schema))
-          ).subscribe((result: string[][] | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<string[][]>(key, schema))).subscribe((result: string[][] | undefined) => {
 
             expect(result).toEqual(value);
 
-            done();
-
           });
-
         });
 
-        it("of objects", (done) => {
+        it("of objects", () => {
 
           const value = [{
             name: "Elmo",
@@ -545,19 +420,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             },
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<Monster[]>(key, schema))
-          ).subscribe((result: Monster[] | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<Monster[]>(key, schema))).subscribe((result: Monster[] | undefined) => {
 
             expect(result).toEqual(value);
 
-            done();
-
           });
-
         });
 
-        it("Set", (done) => {
+        it("Set", () => {
 
           const array = ["hello", "world"];
           const value = new Set<string>(["hello", "world"]);
@@ -567,21 +437,19 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             uniqueItems: true,
           } satisfies JSONSchema;
 
-          storage.set(key, Array.from(value), schema).pipe(
-            mergeMap(() => storage.get(key, schema)),
-          ).subscribe((result: string[] | undefined) => {
+          storage.set(key, Array.from(value), schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: string[] | undefined) => {
 
             expect(result).toEqual(array);
 
-            done();
-
           });
-
         });
 
-        it("tuple", (done) => {
+        it("tuple", () => {
 
-          const value: [string, Monster] = ["hello", {
+          const value: [
+            string,
+            Monster
+          ] = ["hello", {
             name: "Elmo",
             address: "Sesame street",
           }];
@@ -599,29 +467,33 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             }],
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<[string, Monster]>(key, schema))
-          ).subscribe((result: [string, Monster] | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<[
+            string,
+            Monster
+          ]>(key, schema))).subscribe((result: [
+            string,
+            Monster
+          ] | undefined) => {
 
             expect(result).toEqual(value);
 
-            done();
-
           });
-
         });
 
-        it("Map", (done) => {
+        it("Map", () => {
 
-          const array: [string, Monster][] = [
-            ["Elmo", {
-              name: "Elmo",
-              address: "Sesame street",
-            }],
-            ["Cookie", {
-              name: "Cookie",
-            }],
-          ];
+          const array: [
+            string,
+            Monster
+          ][] = [
+              ["Elmo", {
+                name: "Elmo",
+                address: "Sesame street",
+              }],
+              ["Cookie", {
+                name: "Cookie",
+              }],
+            ];
           const value = new Map<string, Monster>(array);
           const schema = {
             type: "array",
@@ -640,23 +512,24 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             },
           } satisfies JSONSchema;
 
-          storage.set(key, Array.from(value), schema).pipe(
-            mergeMap(() => storage.get<[string, Monster][]>(key, schema)),
-          ).subscribe((result: [string, Monster][] | undefined) => {
+          storage.set(key, Array.from(value), schema).pipe(mergeMap(() => storage.get<[
+            string,
+            Monster
+          ][]>(key, schema))).subscribe((result: [
+            string,
+            Monster
+          ][] | undefined) => {
 
             expect(result).toEqual(array);
 
-            done();
-
           });
-
         });
 
       });
 
       describe("object", () => {
 
-        it("with all subtypes", (done) => {
+        it("with all subtypes", () => {
 
           interface User {
             name: string;
@@ -703,19 +576,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             required: ["name", "age", "philosopher", "books", "family"],
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<User>(key, schema))
-          ).subscribe((result: User | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<User>(key, schema))).subscribe((result: User | undefined) => {
 
             expect(result).toEqual(value);
 
-            done();
-
           });
-
         });
 
-        it("without required properties", (done) => {
+        it("without required properties", () => {
 
           interface User {
             name?: string;
@@ -733,19 +601,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             },
           } satisfies JSONSchema;
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<User>(key, schema))
-          ).subscribe((result: User | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<User>(key, schema))).subscribe((result: User | undefined) => {
 
             expect(result).toEqual(value);
 
-            done();
-
           });
-
         });
 
-        it("objects / cast / no schema", (done) => {
+        it("objects / cast / no schema", () => {
 
           interface Test {
             test: string;
@@ -753,15 +616,11 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           // @ts-expect-error Failure test
           storage.get<Test>("test").subscribe((_: Test | undefined) => {
-
-            expect().nothing();
-            done();
-
+            // Nothing to test
           });
-
         });
 
-        it("objects / no cast / schema", (done) => {
+        it("objects / no cast / schema", () => {
 
           interface Test {
             test: string;
@@ -774,19 +633,15 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             }
             // @ts-expect-error Failure test
           }).subscribe((_: Test) => {
-
-            expect().nothing();
-            done();
-
+            // Nothing to test
           });
-
         });
 
       });
 
       describe("specials", () => {
 
-        it("unexisting key", (done) => {
+        it("unexisting key", () => {
 
           const schema = { type: "string" } satisfies JSONSchema;
 
@@ -794,58 +649,40 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(data).toBeUndefined();
 
-            done();
-
           });
-
         });
 
-        it("null", (done) => {
+        it("null", () => {
 
           const schema = { type: "string" } satisfies JSONSchema;
 
-          storage.set(key, "test", schema).pipe(
-            mergeMap(() => storage.set(key, null, schema)),
-            mergeMap(() => storage.get(key, schema)),
-          ).subscribe((result: string | undefined) => {
+          storage.set(key, "test", schema).pipe(mergeMap(() => storage.set(key, null, schema)), mergeMap(() => storage.get(key, schema))).subscribe((result: string | undefined) => {
 
             expect(result).toBeUndefined();
 
-            done();
-
           });
-
         });
 
-        it("undefined", (done) => {
+        it("undefined", () => {
 
           const schema = { type: "string" } satisfies JSONSchema;
 
-          storage.set(key, "test", schema).pipe(
-            mergeMap(() => storage.set(key, undefined, schema)),
-            mergeMap(() => storage.get(key, schema)),
-          ).subscribe((result: string | undefined) => {
+          storage.set(key, "test", schema).pipe(mergeMap(() => storage.set(key, undefined, schema)), mergeMap(() => storage.get(key, schema))).subscribe((result: string | undefined) => {
 
             expect(result).toBeUndefined();
 
-            done();
-
           });
-
         });
 
-        it("blob (will be pending in Safari private)", (done) => {
+        it("blob (will be pending in Safari private)", (context) => new Promise(done => {
 
           const value = new Blob();
 
-          storage.set(key, value).pipe(
-            mergeMap(() => storage.get(key))
-          ).subscribe((storage.backingEngine === "localStorage") ? {
+          storage.set(key, value).pipe(mergeMap(() => storage.get(key))).subscribe((storage.backingEngine === "localStorage") ? {
             next: (): void => {
               // Nothing to do
             },
             error: (): void => {
-              expect().nothing();
               done();
               return;
             }
@@ -855,49 +692,53 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
               done();
             },
             error: (): void => {
-              /* Safari in private mode doesn't allow to store `Blob` in `indexedDB` */
-              pending();
-              done();
+              context.skip();
             }
           });
 
-        });
+        }));
 
-        it("heavy schema", (done) => {
+        it("heavy schema", () => {
 
           interface City {
             country: string;
             population: number;
-            coordinates: [number, number];
+            coordinates: [
+              number,
+              number
+            ];
             monuments?: {
               name: string;
               constructionYear?: number;
             }[];
           }
 
-          const value: [string, City][] = [
-            ["Paris", {
-              country: "France",
-              population: 2187526,
-              coordinates: [48.866667, 2.333333],
-              monuments: [{
-                name: `Tour Eiffel`,
-                constructionYear: 1889,
-              }, {
-                name: `Notre-Dame de Paris`,
-                constructionYear: 1345,
+          const value: [
+            string,
+            City
+          ][] = [
+              ["Paris", {
+                country: "France",
+                population: 2187526,
+                coordinates: [48.866667, 2.333333],
+                monuments: [{
+                  name: `Tour Eiffel`,
+                  constructionYear: 1889,
+                }, {
+                  name: `Notre-Dame de Paris`,
+                  constructionYear: 1345,
+                }],
               }],
-            }],
-            ["Kyōto", {
-              country: "Japan",
-              population: 1467702,
-              coordinates: [35.011665, 135.768326],
-              monuments: [{
-                name: `Sanjūsangen-dō`,
-                constructionYear: 1164,
+              ["Kyōto", {
+                country: "Japan",
+                population: 1467702,
+                coordinates: [35.011665, 135.768326],
+                monuments: [{
+                  name: `Sanjūsangen-dō`,
+                  constructionYear: 1164,
+                }],
               }],
-            }],
-          ];
+            ];
 
           const schema = {
             type: "array",
@@ -935,16 +776,17 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           } satisfies JSONSchema;
 
 
-          storage.set(key, value, schema).pipe(
-            mergeMap(() => storage.get<[string, City][]>(key, schema)),
-          ).subscribe((result: [string, City][] | undefined) => {
+          storage.set(key, value, schema).pipe(mergeMap(() => storage.get<[
+            string,
+            City
+          ][]>(key, schema))).subscribe((result: [
+            string,
+            City
+          ][] | undefined) => {
 
             expect(result).toEqual(value);
 
-            done();
-
           });
-
         });
 
       });
@@ -953,23 +795,16 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
     describe("set()", () => {
 
-      it("update", (done) => {
+      it("update", () => {
 
         const schema = { type: "string" } satisfies JSONSchema;
 
-        storage.set(key, "value", schema).pipe(
-          mergeMap(() => storage.set(key, "updated", schema))
-        ).subscribe(() => {
-
-          expect().nothing();
-
-          done();
-
+        storage.set(key, "value", schema).pipe(mergeMap(() => storage.set(key, "updated", schema))).subscribe(() => {
+          // Nothing to test
         });
-
       });
 
-      it("concurrency", (done) => {
+      it("concurrency", () => {
 
         const value1 = "test1";
         const value2 = "test2";
@@ -979,163 +814,113 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           storage.set(key, value1, schema).subscribe();
 
-          storage.set(key, value2, schema).pipe(
-            mergeMap(() => storage.get(key, schema))
-          ).subscribe((result) => {
+          storage.set(key, value2, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result) => {
 
             expect(result).toBe(value2);
-
-            done();
 
           });
 
         }).not.toThrow();
-
       });
 
     });
 
     describe("deletion", () => {
 
-      it("delete() with existing key", (done) => {
+      it("delete() with existing key", () => {
 
-        storage.set(key, "test").pipe(
-          mergeMap(() => storage.delete(key)),
-          mergeMap(() => storage.get(key))
-        ).subscribe((result) => {
+        storage.set(key, "test").pipe(mergeMap(() => storage.delete(key)), mergeMap(() => storage.get(key))).subscribe((result) => {
 
           expect(result).toBeUndefined();
 
-          done();
+          ;
 
         });
-
       });
 
-      it("delete() with unexisting key", (done) => {
+      it("delete() with unexisting key", () => {
 
         storage.delete(`unexisting${Date.now().toFixed()}`).subscribe(() => {
-
-          expect().nothing();
-
-          done();
-
+          // Nothing to test
         });
-
       });
 
-      it("clear()", (done) => {
+      it("clear()", () => {
 
-        storage.set(key, "test").pipe(
-          mergeMap(() => storage.clear()),
-          mergeMap(() => storage.get(key))
-        ).subscribe((result) => {
+        storage.set(key, "test").pipe(mergeMap(() => storage.clear()), mergeMap(() => storage.get(key))).subscribe((result) => {
 
           expect(result).toBeUndefined();
 
-          done();
+          ;
 
         });
-
       });
 
     });
 
     describe("Map-like API", () => {
 
-      it("size", (done) => {
+      it("size", () => {
 
-        storage.size.pipe(
-          tap((length) => { expect(length).toBe(0); }),
-          mergeMap(() => storage.set(key, "test")),
-          mergeMap(() => storage.size),
-          tap((length) => { expect(length).toBe(1); }),
-          mergeMap(() => storage.set("", "test")),
-          mergeMap(() => storage.size),
-          tap((length) => { expect(length).toBe(2); }),
-          mergeMap(() => storage.delete(key)),
-          mergeMap(() => storage.size),
-          tap((length) => { expect(length).toBe(1); }),
-          mergeMap(() => storage.clear()),
-          mergeMap(() => storage.size),
-          tap((length) => { expect(length).toBe(0); }),
-        ).subscribe(() => {
-          done();
+        storage.size.pipe(tap((length) => { expect(length).toBe(0); }), mergeMap(() => storage.set(key, "test")), mergeMap(() => storage.size), tap((length) => { expect(length).toBe(1); }), mergeMap(() => storage.set("", "test")), mergeMap(() => storage.size), tap((length) => { expect(length).toBe(2); }), mergeMap(() => storage.delete(key)), mergeMap(() => storage.size), tap((length) => { expect(length).toBe(1); }), mergeMap(() => storage.clear()), mergeMap(() => storage.size), tap((length) => { expect(length).toBe(0); })).subscribe(() => {
+          ;
         });
-
       });
 
-      it("keys()", (done) => {
+      it("keys()", () => {
 
         const key1 = "index1";
         const key2 = "index2";
         const keys = [key1, key2];
 
-        storage.set(key1, "test").pipe(
-          mergeMap(() => storage.set(key2, "test")),
-          mergeMap(() => storage.keys()),
-        ).subscribe({
+        storage.set(key1, "test").pipe(mergeMap(() => storage.set(key2, "test")), mergeMap(() => storage.keys())).subscribe({
           next: (value) => {
             expect(keys).toContain(value);
             keys.splice(keys.indexOf(value), 1);
           },
           complete: () => {
-            done();
+            ;
           },
         });
-
       });
 
-      it("keys() when no items", (done) => {
+      it("keys() when no items", () => {
 
         storage.keys().subscribe({
           next: () => {
-            fail();
+            throw new Error();
           },
           complete: () => {
-            expect().nothing();
-            done();
+            // Nothing to test
           },
         });
-
       });
 
-      it("has() on existing", (done) => {
+      it("has() on existing", () => {
 
-        storage.set(key, "test").pipe(
-          mergeMap(() => storage.has(key))
-        ).subscribe((result) => {
+        storage.set(key, "test").pipe(mergeMap(() => storage.has(key))).subscribe((result) => {
 
           expect(result).toBe(true);
 
-          done();
+          ;
 
         });
-
       });
 
-      it("has() on unexisting", (done) => {
+      it("has() on unexisting", () => {
 
         storage.has(`nokey${Date.now().toFixed()}`).subscribe((result) => {
 
           expect(result).toBe(false);
 
-          done();
+          ;
 
         });
-
       });
 
-      it("advanced case: remove only some items", (done) => {
+      it("advanced case: remove only some items", () => {
 
-        storage.set("user_firstname", "test").pipe(
-          mergeMap(() => storage.set("user_lastname", "test")),
-          mergeMap(() => storage.set("app_data1", "test")),
-          mergeMap(() => storage.set("app_data2", "test")),
-          mergeMap(() => storage.keys()),
-          filter((currentKey) => currentKey.startsWith("app_")),
-          mergeMap((currentKey) => storage.delete(currentKey)),
-        ).subscribe({
+        storage.set("user_firstname", "test").pipe(mergeMap(() => storage.set("user_lastname", "test")), mergeMap(() => storage.set("app_data1", "test")), mergeMap(() => storage.set("app_data2", "test")), mergeMap(() => storage.keys()), filter((currentKey) => currentKey.startsWith("app_")), mergeMap((currentKey) => storage.delete(currentKey))).subscribe({
           /* So we need to wait for completion of all actions to check */
           complete: () => {
 
@@ -1144,20 +929,19 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
               expect(size).toBe(2);
 
-              done();
+              ;
 
             });
 
           }
         });
-
       });
 
     });
 
     describe("watch()", () => {
 
-      it("valid", (done) => {
+      it("valid", () => {
 
         const watchedKey = "watched1";
         const values = [undefined, "test1", undefined, "test2", undefined];
@@ -1171,17 +955,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           i += 1;
 
           if (i === values.length) {
-            done();
+            ;
           }
 
         });
 
-        storage.set(watchedKey, values[1], schema).pipe(
-          mergeMap(() => storage.delete(watchedKey)),
-          mergeMap(() => storage.set(watchedKey, values[3], schema)),
-          mergeMap(() => storage.clear()),
-        ).subscribe();
-
+        storage.set(watchedKey, values[1], schema).pipe(mergeMap(() => storage.delete(watchedKey)), mergeMap(() => storage.set(watchedKey, values[3], schema)), mergeMap(() => storage.clear())).subscribe();
       });
 
     });
@@ -1202,75 +981,61 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         required: ["expected"]
       } satisfies JSONSchema;
 
-      it("valid schema with options", (done) => {
+      it("valid schema with options", () => {
 
         const value = 5;
         const schemaWithOptions = { type: "number", maximum: 10 } satisfies JSONSchema;
 
-        storage.set(key, value, schemaWithOptions).pipe(
-          mergeMap(() => storage.get(key, schemaWithOptions)),
-        ).subscribe((result: number | undefined) => {
+        storage.set(key, value, schemaWithOptions).pipe(mergeMap(() => storage.get(key, schemaWithOptions))).subscribe((result: number | undefined) => {
 
           expect(result).toBe(value);
 
-          done();
+          ;
 
         });
-
       });
 
-      it("invalid schema with options", (done) => {
+      it("invalid schema with options", () => {
 
         const value = 15;
         const schemaWithOptions = { type: "number", maximum: 10 } satisfies JSONSchema;
 
-        storage.set(key, value, { type: "number" }).pipe(
-          mergeMap(() => storage.get(key, schemaWithOptions)),
-        ).subscribe({
+        storage.set(key, value, { type: "number" }).pipe(mergeMap(() => storage.get(key, schemaWithOptions))).subscribe({
           error: (error) => {
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
 
-            done();
-
           }
         });
-
       });
 
-      it("invalid in get()", (done) => {
+      it("invalid in get()", () => {
 
-        storage.set(key, "test", { type: "string" }).pipe(
-          mergeMap(() => storage.get<Test>(key, schema))
-        ).subscribe({
+        storage.set(key, "test", { type: "string" }).pipe(mergeMap(() => storage.get<Test>(key, schema))).subscribe({
           error: (error) => {
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
 
-            done();
-
           }
         });
-
       });
 
-      it("invalid in set()", (done) => {
+      it("invalid in set()", () => {
 
         storage.set(key, "test", schema).subscribe({
           error: (error) => {
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
-            done();
+            ;
 
           },
         });
-
       });
 
-      it("invalid in watch()", (done) => {
+      it("invalid in watch()", () => {
 
         const watchedKey = "watched2";
 
@@ -1279,25 +1044,18 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           // // eslint-disable-next-line rxjs/no-nested-subscribe
           storage.watch(watchedKey, { type: "number" }).subscribe({
             error: () => {
-              expect().nothing();
-              done();
+              // Nothing to test
             }
           });
 
         });
-
       });
 
-      it("null: no validation", (done) => {
+      it("null: no validation", () => {
 
         storage.get<string>(`noassociateddata${Date.now().toFixed()}`, schema).subscribe(() => {
-
-          expect().nothing();
-
-          done();
-
+          // Nothing to test
         });
-
       });
 
     });
@@ -1308,211 +1066,175 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       const schema = { type: "string" } satisfies JSONSchema;
 
-      it("get()", (done) => {
+      it("get()", () => {
 
         storage.get(key, schema).subscribe({
           complete: () => {
-            expect().nothing();
-            done();
+            // Nothing to test
           }
         });
-
       });
 
-      it("set()", (done) => {
+      it("set()", () => {
 
         storage.set("index", "value", schema).subscribe({
           complete: () => {
-            expect().nothing();
-            done();
+            // Nothing to test
           }
         });
-
       });
 
-      it("delete()", (done) => {
+      it("delete()", () => {
 
         storage.delete(key).subscribe({
           complete: () => {
-            expect().nothing();
-            done();
+            // Nothing to test
           }
         });
-
       });
 
-      it("clear()", (done) => {
+      it("clear()", () => {
 
         storage.clear().subscribe({
           complete: () => {
-            expect().nothing();
-            done();
+            // Nothing to test
           }
         });
-
       });
 
-      it("size", (done) => {
+      it("size", () => {
 
         storage.size.subscribe({
           complete: () => {
-            expect().nothing();
-            done();
+            // Nothing to test
           }
         });
-
       });
 
-      it("keys()", (done) => {
+      it("keys()", () => {
 
         storage.keys().subscribe({
           complete: () => {
-            expect().nothing();
-            done();
+            // Nothing to test
           }
         });
-
       });
 
-      it("has()", (done) => {
+      it("has()", () => {
 
         storage.has(key).subscribe({
           complete: () => {
-            expect().nothing();
-            done();
+            // Nothing to test
           }
         });
-
       });
 
     });
 
     describe("compatibility with @sinclair/typebox", () => {
 
-      it("invalid", (done) => {
+      it("invalid", () => {
 
-        storage.set(key, "test", Type.String()).pipe(
-          mergeMap(() => storage.get(key, Type.Number())),
-        ).subscribe({
+        storage.set(key, "test", Type.String()).pipe(mergeMap(() => storage.get(key, Type.Number()))).subscribe({
           error: (error) => {
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
 
-            done();
-
           }
         });
-
       });
 
-      it("invalid with options", (done) => {
+      it("invalid with options", () => {
 
-        storage.set(key, "test", Type.String()).pipe(
-          mergeMap(() => storage.get(key, Type.String({
-            maxLength: 1,
-          }))),
-        ).subscribe({
+        storage.set(key, "test", Type.String()).pipe(mergeMap(() => storage.get(key, Type.String({
+          maxLength: 1,
+        })))).subscribe({
           error: (error) => {
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
 
-            done();
-
           }
         });
-
       });
 
-      it("string", (done) => {
+      it("string", () => {
 
         const value = "blue";
         const schema = Type.String();
 
-        storage.set(key, value, schema).pipe(
-          mergeMap(() => storage.get(key, schema))
-        ).subscribe((result: string | undefined) => {
+        storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: string | undefined) => {
 
           expect(result).toBe(value);
 
-          done();
+          ;
 
         });
-
       });
 
-      it("string (standalone import)", (done) => {
+      it("string (standalone import)", () => {
 
         const value = "blue";
         const schema = StringType();
 
-        storage.set(key, value, schema).pipe(
-          mergeMap(() => storage.get(key, schema))
-        ).subscribe((result: string | undefined) => {
+        storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: string | undefined) => {
 
           expect(result).toBe(value);
 
-          done();
+          ;
 
         });
-
       });
 
-      it("number", (done) => {
+      it("number", () => {
 
         const value = 1.5;
         const schema = Type.Number();
 
-        storage.set(key, value, schema).pipe(
-          mergeMap(() => storage.get(key, schema))
-        ).subscribe((result: number | undefined) => {
+        storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: number | undefined) => {
 
           expect(result).toBe(value);
 
-          done();
+          ;
 
         });
-
       });
 
-      it("boolean", (done) => {
+      it("boolean", () => {
 
         const value = true;
         const schema = Type.Boolean();
 
-        storage.set(key, value, schema).pipe(
-          mergeMap(() => storage.get(key, schema))
-        ).subscribe((result: boolean | undefined) => {
+        storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: boolean | undefined) => {
 
           expect(result).toBe(value);
 
-          done();
+          ;
 
         });
-
       });
 
-      it("array", (done) => {
+      it("array", () => {
 
         const value = ["hello 1", "hello 2"];
         const schema = Type.Array(Type.String());
 
-        storage.set(key, value, schema).pipe(
-          mergeMap(() => storage.get(key, schema))
-        ).subscribe((result: string[] | undefined) => {
+        storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: string[] | undefined) => {
 
           expect(result).toEqual(value);
 
-          done();
+          ;
 
         });
-
       });
 
-      it("tuple", (done) => {
+      it("tuple", () => {
 
-        const value: [string, Monster] = ["hello", {
+        const value: [
+          string,
+          Monster
+        ] = ["hello", {
           name: "Elmo",
           address: "Sesame street",
         }];
@@ -1524,19 +1246,22 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           })
         ]);
 
-        storage.set(key, value, schema).pipe(
-          mergeMap(() => storage.get<[string, Monster]>(key, schema))
-        ).subscribe((result: [string, Monster] | undefined) => {
+        storage.set(key, value, schema).pipe(mergeMap(() => storage.get<[
+          string,
+          Monster
+        ]>(key, schema))).subscribe((result: [
+          string,
+          Monster
+        ] | undefined) => {
 
           expect(result).toEqual(value);
 
-          done();
+          ;
 
         });
-
       });
 
-      it("object", (done) => {
+      it("object", () => {
 
         interface User {
           name: string;
@@ -1573,35 +1298,29 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           creditCard: Type.Optional(Type.Number()),
         });
 
-        storage.set(key, value, schema).pipe(
-          mergeMap(() => storage.get<Static<typeof schema>>(key, schema))
-        ).subscribe((result: User | undefined) => {
+        storage.set(key, value, schema).pipe(mergeMap(() => storage.get<Static<typeof schema>>(key, schema))).subscribe((result: User | undefined) => {
 
           expect(result).toEqual(value);
 
-          done();
+          ;
 
         });
-
       });
 
-      it("with options", (done) => {
+      it("with options", () => {
 
         const value = "blue";
         const schema = Type.String({
           maxLength: 10,
         });
 
-        storage.set(key, value, schema).pipe(
-          mergeMap(() => storage.get(key, schema))
-        ).subscribe((result: string | undefined) => {
+        storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: string | undefined) => {
 
           expect(result).toBe(value);
 
-          done();
+          ;
 
         });
-
       });
 
     });
@@ -1610,7 +1329,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
       const schema = { type: "string" } satisfies JSONSchema;
 
-      it("Promise", (done) => {
+      it("Promise", () => {
 
         const value = "test";
 
@@ -1618,12 +1337,11 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           .then(() => firstValueFrom(storage.get(key, schema)))
           .then((result: string | undefined) => {
             expect(result).toBe(value);
-            done();
+            ;
           })
           .catch(() => {
-            fail();
+            throw new Error();
           });
-
       });
 
       it("async / await", async () => {
@@ -1681,7 +1399,7 @@ describe("StorageMap", () => {
   describe("browser APIs", () => {
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
-    it("IndexedDb is used", (done) => {
+    it("IndexedDb is used", (context) => new Promise(done => {
 
       const index = `test${Date.now().toFixed()}`;
       const value = "test";
@@ -1716,23 +1434,22 @@ describe("StorageMap", () => {
               dbOpen.result.close();
 
               /* This case is not supposed to happen */
-              fail();
+              throw new Error();
 
             });
 
           });
 
-        } catch {
-
-          pending();
-
+        }
+        catch {
+          context.skip();
         }
 
       });
 
-    });
+    }));
 
-    it("indexedDb with default options", (done) => {
+    it("indexedDb with default options", () => new Promise(done => {
 
       TestBed.resetTestingModule();
       const localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
@@ -1750,10 +1467,10 @@ describe("StorageMap", () => {
 
       });
 
-    });
+    }));
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
-    it("indexedDb with noWrap to false", (done) => {
+    it("indexedDb with noWrap to false", (context) => new Promise(done => {
 
       const index = `wrap${Date.now().toFixed()}`;
       const value = "test";
@@ -1793,23 +1510,22 @@ describe("StorageMap", () => {
               dbOpen.result.close();
 
               /* This case is not supposed to happen */
-              fail();
+              throw new Error();
 
             });
 
           });
 
-        } catch {
-
-          pending();
-
+        }
+        catch {
+          context.skip();
         }
 
       });
 
-    });
+    }));
 
-    it("indexedDb with custom options", (done) => {
+    it("indexedDb with custom options", () => new Promise(done => {
 
       /* Unique names to be sure `indexedDB` `upgradeneeded` event is triggered */
       const dbName = `dbCustom${Date.now().toFixed()}`;
@@ -1840,7 +1556,7 @@ describe("StorageMap", () => {
 
       });
 
-    });
+    }));
 
     it("localStorage with prefix", () => {
 

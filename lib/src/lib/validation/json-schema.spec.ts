@@ -1,3 +1,4 @@
+import { describe, it } from "vitest";
 import type { JSONSchema } from "./json-schema";
 
 describe("JSONSchema", () => {
@@ -5,7 +6,6 @@ describe("JSONSchema", () => {
   function test(schema: JSONSchema): void {
     // eslint-disable-next-line no-empty, @typescript-eslint/no-unnecessary-condition
     if (schema !== undefined) {}
-    expect().nothing();
   }
 
   describe("classic", () => {

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from "vitest";
 import type { JSONSchema } from "./json-schema";
 import { JSONValidator } from "./json-validator";
 
