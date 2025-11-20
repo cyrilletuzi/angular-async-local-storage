@@ -1,4 +1,4 @@
-import { provideBrowserGlobalErrorListeners } from "@angular/core";
+import { provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { provideRouter } from "@angular/router";
 import { provideIndexedDBDataBaseName, provideIndexedDBStoreName, provideLocalStoragePrefix } from "@ngx-pwa/local-storage";
@@ -8,6 +8,7 @@ import { Home } from "./app/home/home";
 bootstrapApplication(App, {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideZoneChangeDetection(),
     provideRouter([
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       { path: "lazy", loadChildren: () => import("./app/lazy/routes").then(m => m.routes) },
