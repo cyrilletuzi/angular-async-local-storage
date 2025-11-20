@@ -26,6 +26,7 @@
     "publish-release": "git push origin v$npm_package_version"
   },
   "private": true,
+  "packageManager": "npm@11.6.3",
   "dependencies": {
     "@angular/common": "^21.0.0",
     "@angular/compiler": "^21.0.0",
