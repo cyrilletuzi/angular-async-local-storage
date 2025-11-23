@@ -43,7 +43,7 @@
     "@playwright/test": "^1.56.1",
     "@sinclair/typebox": "^0.34.41",
     "@vitest/browser-playwright": "^4.0.11",
-    "angular-eslint": "^20.6.0",
+    "angular-eslint": "^21.0.0",
     "better-typescript-lib": "~2.12.0",
     "copyfiles": "^2.4.1",
     "eslint": "^9.39.1",
