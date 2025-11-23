@@ -1,9 +1,10 @@
 // @ts-check
 const eslint = require("@eslint/js");
+const { defineConfig } = require("eslint/config");
 const tseslint = require("typescript-eslint");
 const angulareslint = require("angular-eslint");
 
-module.exports = tseslint.config(
+module.exports = defineConfig(
   {
     files: ["**/*.ts"],
     languageOptions: {
@@ -14,9 +15,9 @@ module.exports = tseslint.config(
     },
     extends: [
       eslint.configs.recommended,
-      ...tseslint.configs.strictTypeChecked,
-      ...tseslint.configs.stylisticTypeChecked,
-      ...angulareslint.configs.tsRecommended,
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
+      angulareslint.configs.tsRecommended,
     ],
     processor: angulareslint.processInlineTemplates,
     rules: {
