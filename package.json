@@ -47,8 +47,8 @@
     "better-typescript-lib": "~2.12.0",
     "copyfiles": "^2.4.1",
     "eslint": "^9.39.1",
-    "jasmine": "^5.12.0",
-    "jasmine-core": "^5.12.1",
+    "jasmine": "^5.13.0",
+    "jasmine-core": "^5.13.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-firefox-launcher": "^2.1.3",
@@ -59,6 +59,6 @@
     "localforage": "^1.10.0",
     "ng-packagr": "^21.0.0",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.48.0"
+    "typescript-eslint": "^8.48.1"
   }
 }
