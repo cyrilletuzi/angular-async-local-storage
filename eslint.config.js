@@ -77,6 +77,7 @@ module.exports = defineConfig(
       "@typescript-eslint/prefer-readonly": "error",
       "@typescript-eslint/no-useless-empty-export": "error",
       "@typescript-eslint/no-unsafe-type-assertion": "error",
+      "@typescript-eslint/no-useless-default-assignment": "error",
       // Stricter Angular ESLint rules
       "@angular-eslint/prefer-standalone": "off",
       "@angular-eslint/consistent-component-styles": "error",
