@@ -48,9 +48,7 @@ export function localDatabaseFactory(): LocalDatabase {
 
     }
 
-  } catch {
-    // Nothing to do
-  }
+  } catch {}
 
   /* Will be the case for:
    * - In browsers if storage has been fully disabled (via the "Block all cookies" option)

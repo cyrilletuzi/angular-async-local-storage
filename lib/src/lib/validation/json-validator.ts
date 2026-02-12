@@ -78,9 +78,7 @@ export class JSONValidator {
         if (!regularExpression.test(data)) {
           return false;
         }
-      } catch {
-        // Nothing to do
-      }
+      } catch {}
 
     }
 

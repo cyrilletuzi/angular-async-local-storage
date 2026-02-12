@@ -841,9 +841,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           storage.set(key, value).pipe(
             mergeMap(() => storage.get(key))
           ).subscribe((storage.backingEngine === "localStorage") ? {
-            next: (): void => {
-              // Nothing to do
-            },
+            next: (): void => {},
             error: (): void => {
               expect().nothing();
               done();

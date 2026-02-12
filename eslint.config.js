@@ -101,12 +101,24 @@ module.exports = defineConfig(
       // "rxjs/no-unsafe-first": "error",
       // "rxjs/no-unsafe-switchmap": "error",
       // "rxjs/throw-error": "error",
-      // Annoying as Angular CLI generates empty classes and constructors
-      "@typescript-eslint/no-extraneous-class": [
-        "warn",
+      // Loosen some annoying and inadequate empty rules
+      "no-empty": [
+        "error",
         {
-          "allowWithDecorator": true
-        }
+          allowEmptyCatch: true, // `catch` is required after a `try`, but there is not always something to do inside
+        },
+      ],
+      "@typescript-eslint/no-empty-function": [
+        "error",
+        {
+          allow: ["arrowFunctions"], // some callbacks are required (like in promises `.catch()`), but there is not always something to do inside
+        },
+      ],
+      "@typescript-eslint/no-extraneous-class": [
+        "error",
+        {
+          allowWithDecorator: true, // some Angular classes can be empty
+        },
       ],
       // Allow Angular forms validators like `Validator.required`
       "@typescript-eslint/unbound-method": [
