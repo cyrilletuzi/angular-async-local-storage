@@ -114,6 +114,12 @@ module.exports = defineConfig(
           allow: ["arrowFunctions"], // some callbacks are required (like in promises `.catch()`), but there is not always something to do inside
         },
       ],
+      "@typescript-eslint/no-empty-object-type": [
+        "error",
+        {
+          allowInterfaces: "with-single-extends",
+        },
+      ],
       "@typescript-eslint/no-extraneous-class": [
         "error",
         {
