@@ -92,7 +92,6 @@ module.exports = defineConfig(
           { "from": "package", "name": "Observable", "package": "rxjs" },
           { "from": "package", "name": "Subscriber", "package": "rxjs" },
         ],
-        // ignoreInferredTypes: true,
       }],
       // Stricter Angular ESLint rules
       "@angular-eslint/prefer-standalone": "off",
