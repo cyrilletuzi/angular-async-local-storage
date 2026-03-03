@@ -74,11 +74,26 @@ module.exports = defineConfig(
       "@typescript-eslint/restrict-template-expressions": "error",
       "no-shadow": "off",
       "@typescript-eslint/no-shadow": "error",
-      "@typescript-eslint/prefer-readonly": "error",
       "@typescript-eslint/no-useless-empty-export": "error",
       "@typescript-eslint/no-unsafe-type-assertion": "error",
       "@typescript-eslint/no-useless-default-assignment": "error",
       "@typescript-eslint/strict-void-return": "error",
+      // Immutability
+      "@typescript-eslint/prefer-readonly": "error",
+      "@typescript-eslint/prefer-readonly-parameter-types": ["error", {
+        "allow": [
+          { "from": "lib", "name": "Event" },
+          { "from": "lib", "name": "IDBDatabase" },
+          { "from": "lib", "name": "IDBObjectStore" },
+          { "from": "lib", "name": "IDBOpenDBRequest" },
+          { "from": "lib", "name": "IDBRequest" },
+          { "from": "lib", "name": "IDBTransaction" },
+          { "from": "package", "name": "DoneFn", "package": "@types/jasmine" },
+          { "from": "package", "name": "Observable", "package": "rxjs" },
+          { "from": "package", "name": "Subscriber", "package": "rxjs" },
+        ],
+        // ignoreInferredTypes: true,
+      }],
       // Stricter Angular ESLint rules
       "@angular-eslint/prefer-standalone": "off",
       "@angular-eslint/consistent-component-styles": "error",

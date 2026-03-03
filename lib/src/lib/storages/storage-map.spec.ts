@@ -19,8 +19,8 @@ import { StorageMap } from "./storage-map";
 function tests(description: string, localStorageServiceFactory: () => StorageMap): void {
 
   interface Monster {
-    name: string;
-    address?: string;
+    readonly name: string;
+    readonly address?: string;
   }
 
   const key = "test";
@@ -430,7 +430,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: string[] | undefined) => {
+          ).subscribe((result: readonly string[] | undefined) => {
 
             expect(result).toEqual(value);
 
@@ -450,7 +450,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: number[] | undefined) => {
+          ).subscribe((result: readonly number[] | undefined) => {
 
             expect(result).toEqual(value);
 
@@ -470,7 +470,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: number[] | undefined) => {
+          ).subscribe((result: readonly number[] | undefined) => {
 
             expect(result).toEqual(value);
 
@@ -490,7 +490,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get(key, schema))
-          ).subscribe((result: boolean[] | undefined) => {
+          ).subscribe((result: readonly boolean[] | undefined) => {
 
             expect(result).toEqual(value);
 
@@ -513,7 +513,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<string[][]>(key, schema))
-          ).subscribe((result: string[][] | undefined) => {
+          ).subscribe((result: readonly (readonly string[])[] | undefined) => {
 
             expect(result).toEqual(value);
 
@@ -547,7 +547,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<Monster[]>(key, schema))
-          ).subscribe((result: Monster[] | undefined) => {
+          ).subscribe((result: readonly Monster[] | undefined) => {
 
             expect(result).toEqual(value);
 
@@ -569,7 +569,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           storage.set(key, Array.from(value), schema).pipe(
             mergeMap(() => storage.get(key, schema)),
-          ).subscribe((result: string[] | undefined) => {
+          ).subscribe((result: readonly string[] | undefined) => {
 
             expect(result).toEqual(array);
 
@@ -601,7 +601,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<[string, Monster]>(key, schema))
-          ).subscribe((result: [string, Monster] | undefined) => {
+          ).subscribe((result: readonly [string, Monster] | undefined) => {
 
             expect(result).toEqual(value);
 
@@ -642,7 +642,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           storage.set(key, Array.from(value), schema).pipe(
             mergeMap(() => storage.get<[string, Monster][]>(key, schema)),
-          ).subscribe((result: [string, Monster][] | undefined) => {
+          ).subscribe((result: readonly (readonly [string, Monster])[] | undefined) => {
 
             expect(result).toEqual(array);
 
@@ -659,15 +659,15 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("with all subtypes", (done) => {
 
           interface User {
-            name: string;
-            age: number;
-            philosopher: boolean;
-            books: string[];
-            family: {
-              brothers: number;
-              sisters: number;
+            readonly name: string;
+            readonly age: number;
+            readonly philosopher: boolean;
+            readonly books: readonly string[];
+            readonly family: {
+              readonly brothers: number;
+              readonly sisters: number;
             };
-            creditCard?: number;
+            readonly creditCard?: number;
           }
 
           const value: User = {
@@ -718,8 +718,8 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("without required properties", (done) => {
 
           interface User {
-            name?: string;
-            age?: number;
+            readonly name?: string;
+            readonly age?: number;
           }
 
           const value: User = {
@@ -748,7 +748,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("objects / cast / no schema", (done) => {
 
           interface Test {
-            test: string;
+            readonly test: string;
           }
 
           // @ts-expect-error Failure test
@@ -764,7 +764,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("objects / no cast / schema", (done) => {
 
           interface Test {
-            test: string;
+            readonly test: string;
           }
 
           storage.get("test", {
@@ -864,12 +864,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         it("heavy schema", (done) => {
 
           interface City {
-            country: string;
-            population: number;
-            coordinates: [number, number];
-            monuments?: {
-              name: string;
-              constructionYear?: number;
+            readonly country: string;
+            readonly population: number;
+            readonly coordinates: readonly [number, number];
+            readonly monuments?: readonly {
+              readonly name: string;
+              readonly constructionYear?: number;
             }[];
           }
 
@@ -935,7 +935,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           storage.set(key, value, schema).pipe(
             mergeMap(() => storage.get<[string, City][]>(key, schema)),
-          ).subscribe((result: [string, City][] | undefined) => {
+          ).subscribe((result: readonly (readonly [string, City])[] | undefined) => {
 
             expect(result).toEqual(value);
 
@@ -1498,7 +1498,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         storage.set(key, value, schema).pipe(
           mergeMap(() => storage.get(key, schema))
-        ).subscribe((result: string[] | undefined) => {
+        ).subscribe((result: readonly string[] | undefined) => {
 
           expect(result).toEqual(value);
 
@@ -1524,7 +1524,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         storage.set(key, value, schema).pipe(
           mergeMap(() => storage.get<[string, Monster]>(key, schema))
-        ).subscribe((result: [string, Monster] | undefined) => {
+        ).subscribe((result: readonly [string, Monster] | undefined) => {
 
           expect(result).toEqual(value);
 
@@ -1537,15 +1537,15 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it("object", (done) => {
 
         interface User {
-          name: string;
-          age: number;
-          philosopher: boolean;
-          books: string[];
-          family: {
-            brothers: number;
-            sisters: number;
+          readonly name: string;
+          readonly age: number;
+          readonly philosopher: boolean;
+          readonly books: readonly string[];
+          readonly family: {
+            readonly brothers: number;
+            readonly sisters: number;
           };
-          creditCard?: number;
+          readonly creditCard?: number;
         }
 
         const value: User = {

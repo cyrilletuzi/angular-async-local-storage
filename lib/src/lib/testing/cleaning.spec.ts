@@ -7,6 +7,7 @@ import { StorageMap } from "../storages/storage-map";
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param storageService Service
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export function clearStorage(done: DoneFn, storageService: StorageMap): void {
 
   if (storageService.backingEngine === "indexedDB") {
@@ -90,6 +91,7 @@ export function clearStorage(done: DoneFn, storageService: StorageMap): void {
  * @param doneJasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param storageService Service
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export function closeAndDeleteDatabase(done: DoneFn, storageService: StorageMap): void {
 
   /* Only `indexedDB` is concerned */
