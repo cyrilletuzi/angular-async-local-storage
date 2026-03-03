@@ -219,7 +219,7 @@ export class JSONValidator {
    * @param schemas Schemas describing the tuple
    * @returns If data is valid: `true`, if it is invalid: `false`
    */
-  private validateTuple(data: unknown[], schemas: JSONSchema[] | undefined): boolean {
+  private validateTuple(data: readonly unknown[], schemas: readonly JSONSchema[] | undefined): boolean {
 
     const lengthToCheck = schemas ? schemas.length : 0;
 

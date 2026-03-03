@@ -16,6 +16,7 @@ const index = "test";
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param value Value to store
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: DoneFn, value: unknown): void {
 
   try {
@@ -98,6 +99,7 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
  * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
  * @param value Value to set and get
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: DoneFn, value: unknown, schema?: JSONSchema): void {
 
   try {

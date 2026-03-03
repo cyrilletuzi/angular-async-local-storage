@@ -380,8 +380,8 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @returns An `indexedDB` transaction store and events, wrapped in an RxJS `Observable`
    */
   private transaction(mode: IDBTransactionMode): Observable<{
-    store: IDBObjectStore;
-    events: Observable<Event>;
+    readonly store: IDBObjectStore;
+    readonly events: Observable<Event>;
   }> {
 
     /* From the `indexedDB` connection, open a transaction and get the store */
