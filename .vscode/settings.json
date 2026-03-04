@@ -1,28 +1,25 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
   "explorer.compactFolders": false,
   "editor.wordBasedSuggestions": "off",
-  "javascript.preferences.quoteStyle": "double",
-  "typescript.preferences.quoteStyle": "double",
+  "js/ts.preferences.quoteStyle": "double",
   "editor.detectIndentation": false,
   "editor.tabSize": 2,
-  "javascript.format.semicolons": "insert",
-  "typescript.format.semicolons": "insert",
-  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
-  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "js/ts.format.semicolons": "insert",
+  "js/ts.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
   "[typescript]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
     }
   },
-  "typescript.inlayHints.variableTypes.enabled": true,
-  "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
-  "typescript.inlayHints.parameterTypes.enabled": true,
-  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
-  "typescript.inlayHints.enumMemberValues.enabled": true,
-  "typescript.inlayHints.parameterNames.enabled": "literals",
-  "typescript.inlayHints.variableTypes.suppressWhenTypeMatchesName": false,
+  "js/ts.inlayHints.variableTypes.enabled": true,
+  "js/ts.inlayHints.propertyDeclarationTypes.enabled": true,
+  "js/ts.inlayHints.parameterTypes.enabled": true,
+  "js/ts.inlayHints.functionLikeReturnTypes.enabled": true,
+  "js/ts.inlayHints.enumMemberValues.enabled": true,
+  "js/ts.inlayHints.parameterNames.enabled": "literals",
+  "js/ts.inlayHints.variableTypes.suppressWhenTypeMatchesName": false,
   "angular-schematics.schematicsDefaultOptions": {
     "angular-*": {
       "skipStyle": true
