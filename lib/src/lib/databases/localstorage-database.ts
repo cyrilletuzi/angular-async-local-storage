@@ -72,6 +72,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   set(key: string, data: object): Observable<undefined> {
 
+    // eslint-disable-next-line no-useless-assignment
     let serializedData: StringifyResult<object> | null = null;
 
     /* Check if data can be serialized */
