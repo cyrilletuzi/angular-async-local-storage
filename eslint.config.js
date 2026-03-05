@@ -106,6 +106,7 @@ module.exports = defineConfig(
       "@angular-eslint/use-component-view-encapsulation": "error",
       "@angular-eslint/use-injectable-provided-in": "error",
       "@angular-eslint/no-async-lifecycle-method": "error",
+      "@angular-eslint/computed-must-return": "error",
       // Stricter RxJS (disabled until package is updated)
       // "rxjs/no-exposed-subjects": "warn", // should be error in a real project
       // "rxjs/no-subclass": "error",
@@ -177,6 +178,7 @@ module.exports = defineConfig(
     rules: {
       // Strict types
       "@angular-eslint/template/no-any": "error",
+      "@angular-eslint/template/no-non-null-assertion": "error",
       // Stricter Anguler ESLint rules
       "@angular-eslint/template/prefer-control-flow": "error",
       "@angular-eslint/template/prefer-self-closing-tags": "warn",
