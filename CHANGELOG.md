@@ -6,7 +6,7 @@ This library is fully documented and so you will find detailed [migration guides
 
 ### Breaking changes
 
-- `StorageConfig` and `JSONSchema` properties have been marked as `readonly`. This is mainly to enforce immutability inside of the library to avoid bugs, it should not have major impacts at usage, except if you were mutating the configuration objects, which is not a common case and is not recommended.
+- `StorageConfig` and `JSONSchema` properties have been marked as `readonly`. This is mainly to enforce immutability inside of the library to avoid bugs, it should not have impacts at usage.
 
 ## 21.0.0 (2025-11-20)
 
