@@ -169,6 +169,8 @@ module.exports = defineConfig(
           "ignoreStatic": true
         }
       ],
+      // Avoid empty imports which could cause empty files during build
+      "@typescript-eslint/no-import-type-side-effects": "error",
       // Disallow some imports
       "no-restricted-imports": [
         "error",
