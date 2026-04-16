@@ -130,6 +130,13 @@ module.exports = defineConfig(
       "@angular-eslint/use-injectable-provided-in": "error",
       "@angular-eslint/no-async-lifecycle-method": "error",
       "@angular-eslint/computed-must-return": "error",
+      /* Injection context */
+      "angular-eslint-injection-context/custom-function-in-injection-context": ["error", {
+        "functions": [{
+          "name": "localDatabaseFactory",
+          "allowedSpecialInjectionContexts": ["factory"],
+        }],
+      }],
       // Stricter RxJS (disabled until package is updated)
       // "rxjs/no-exposed-subjects": "warn", // should be error in a real project
       // "rxjs/no-subclass": "error",
