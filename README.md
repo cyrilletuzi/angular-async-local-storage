@@ -8,8 +8,9 @@ Efficient client-side storage for Angular:
 - **compatibility**: works around some browsers issues and heavily tested via GitHub Actions,
 - **documentation**: API fully explained, and a changelog!
 
-> [!TIP]
-> I am also the author of the [Angular Schematics extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics), installed 1 million times. Feel free to give it a try.
+> [!NOTE]
+> Find this library useful? I’m open to freelance & full-time opportunities.
+> Feel free to reach out on [LinkedIn](https://www.linkedin.com/in/cyrilletuzi/) or [Bluesky](https://bsky.app/profile/cyrilletuzi.com).
 
 ## Why this library?
 
