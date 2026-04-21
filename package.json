@@ -48,7 +48,7 @@
     "angular-eslint-injection-context": "^1.1.2",
     "better-typescript-lib": "~2.12.0",
     "copyfiles": "^2.4.1",
-    "eslint": "^10.2.0",
+    "eslint": "^10.2.1",
     "jasmine": "^6.2.0",
     "jasmine-core": "^6.2.0",
     "karma": "~6.4.0",
@@ -59,8 +59,8 @@
     "karma-safari-private-launcher": "^1.0.0",
     "karma-safarinative-launcher": "^1.1.0",
     "localforage": "^1.10.0",
-    "ng-packagr": "^21.2.2",
+    "ng-packagr": "^21.2.3",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.58.2"
+    "typescript-eslint": "^8.59.0"
   }
 }
