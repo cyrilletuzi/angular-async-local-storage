@@ -423,11 +423,7 @@ export class StorageMap {
     });
 
     /* Only the public API of the Observable should be returned */
-    return (schema ?
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      notifier.asObservable() as Observable<T | undefined> :
-      notifier.asObservable()
-    );
+    return notifier.asObservable();
 
   }
 
