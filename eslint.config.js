@@ -4,6 +4,7 @@ const { defineConfig } = require("eslint/config");
 const tseslint = require("typescript-eslint");
 const angulareslint = require("angular-eslint");
 const angularEslintInjectionContext = require("angular-eslint-injection-context");
+const angularEslintZoneless = require("angular-eslint-zoneless");
 
 module.exports = defineConfig(
   {
@@ -20,6 +21,7 @@ module.exports = defineConfig(
       tseslint.configs.stylisticTypeChecked,
       angulareslint.configs.tsRecommended,
       angularEslintInjectionContext.configs.recommended,
+      angularEslintZoneless.configs.strict,
     ],
     processor: angulareslint.processInlineTemplates,
     rules: {
