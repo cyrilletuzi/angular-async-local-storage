@@ -352,6 +352,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * Create store on first use of `indexedDB`
    * @param request `indexedDB` database opening request
    */
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   private createStore(request: IDBOpenDBRequest): void {
 
     /* Listen to the event fired on first connection */
@@ -419,6 +420,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param transactionOrRequest `indexedDb` transaction or request to listen
    * @returns An `Observable` listening to errors
    */
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   private listenError(transactionOrRequest: IDBTransaction | IDBRequest): Observable<never> {
 
     return fromEvent(transactionOrRequest, "error").pipe(
@@ -436,6 +438,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param transaction Transaction to listen
    * @returns An `Observable` listening to transaction `complete` and `error` events
    */
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   private listenTransactionEvents(transaction: IDBTransaction): Observable<Event> {
 
     /* Listen to the `complete` event */
