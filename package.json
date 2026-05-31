@@ -63,5 +63,11 @@
     "ng-packagr": "^21.2.3",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.60.0"
+  },
+  "allowScripts": {
+    "@parcel/watcher": false,
+    "esbuild": false,
+    "lmdb": false,
+    "msgpackr-extract": false
   }
 }
