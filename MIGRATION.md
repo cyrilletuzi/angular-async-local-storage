@@ -15,6 +15,7 @@
 - [Migration to version 19](./docs/MIGRATION_TO_V19.md)
 - [Migration to version 20](./docs/MIGRATION_TO_V20.md)
 - [Migration to version 21](./docs/MIGRATION_TO_V21.md)
+- [Migration to version 22](./docs/MIGRATION_TO_V22.md)
 
 [Full changelog available here.](./CHANGELOG.md)
 
