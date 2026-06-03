@@ -65,6 +65,11 @@
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.60.1"
   },
+  "overrides": {
+    "angular-eslint": {
+      "@angular/cli": "$@angular/cli"
+    }
+  },
   "allowScripts": {
     "@parcel/watcher": false,
     "esbuild": false,
