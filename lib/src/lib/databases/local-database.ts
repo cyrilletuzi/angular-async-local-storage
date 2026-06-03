@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from "@angular/common";
-import { assertInInjectionContext, inject, Injectable, PLATFORM_ID } from "@angular/core";
+import { assertInInjectionContext, inject, PLATFORM_ID, Service } from "@angular/core";
 import { Observable } from "rxjs";
 import { IndexedDBDatabase } from "./indexeddb-database";
 import { LocalStorageDatabase } from "./localstorage-database";
@@ -61,9 +61,8 @@ export function localDatabaseFactory(): LocalDatabase {
 
 }
 
-@Injectable({
-  providedIn: "root",
-  useFactory: localDatabaseFactory,
+@Service({
+  factory: localDatabaseFactory,
 })
 export abstract class LocalDatabase {
 

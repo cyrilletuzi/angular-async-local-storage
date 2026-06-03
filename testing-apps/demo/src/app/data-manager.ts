@@ -1,10 +1,8 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Service } from "@angular/core";
 import { StorageMap } from "@ngx-pwa/local-storage";
 import { mergeMap, Observable } from "rxjs";
 
-@Injectable({
-  providedIn: "root",
-})
+@Service()
 export class DataManager {
 
   data$: Observable<string | undefined>;

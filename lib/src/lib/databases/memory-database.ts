@@ -1,10 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import { Observable, from, of } from "rxjs";
 import { LocalDatabase } from "./local-database";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class MemoryDatabase implements LocalDatabase {
 
   /**
