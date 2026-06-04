@@ -7,7 +7,6 @@
     "declaration": true,
     "isolatedDeclarations": true,
     "module": "commonjs",
-    "moduleResolution": "node",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedParameters": true,
