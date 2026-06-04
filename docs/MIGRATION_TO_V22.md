@@ -17,7 +17,8 @@ ng update @ngx-pwa/local-storage
 > [!IMPORTANT]
 > RxJS 6 is *not* supported.
 
-Done, no code changes.
+- `StorageConfig` and `JSONSchema` properties have been marked as `readonly`. This is mainly to enforce immutability inside of the library to avoid bugs, it should not have impacts at usage.
+
 
 ## More documentation
 
