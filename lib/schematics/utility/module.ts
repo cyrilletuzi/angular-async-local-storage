@@ -1,8 +1,8 @@
 import { SchematicsException, Tree, type Rule } from "@angular-devkit/schematics";
-import { ScriptTarget, createSourceFile } from "@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript";
 import { addImportToModule } from "@schematics/angular/utility/ast-utils";
 import { InsertChange } from "@schematics/angular/utility/change";
 import { getAppModulePath } from "@schematics/angular/utility/ng-ast-utils";
+import { ScriptTarget, createSourceFile } from "typescript";
 import { packageName } from "./config";
 
 /**
