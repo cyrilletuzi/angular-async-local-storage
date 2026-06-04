@@ -25,7 +25,7 @@
     "verbatimModuleSyntax": true,
     // TODO: enable when TS 5.8 is the minimum version in Angular 20
     // "erasableSyntaxOnly": true,
-    // "libReplacement": true
+    "libReplacement": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import type {
   JSONSchema,
   JSONSchemaArray,
@@ -9,9 +9,7 @@ import type {
   JSONSchemaTuple
 } from "./json-schema";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class JSONValidator {
 
   /**

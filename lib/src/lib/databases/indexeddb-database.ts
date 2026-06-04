@@ -1,13 +1,11 @@
-import { Injectable, inject } from "@angular/core";
+import { Service, inject } from "@angular/core";
 import { Observable, ReplaySubject, fromEvent, of, race, throwError } from "rxjs";
 import { first, map, mergeMap, takeWhile, tap } from "rxjs/operators";
 import { IDB_DB_NAME, IDB_DB_VERSION, IDB_NO_WRAP, IDB_STORE_NAME } from "../tokens";
 import { IDBBrokenError } from "./exceptions";
 import { LocalDatabase } from "./local-database";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class IndexedDBDatabase implements LocalDatabase {
 
   /**
