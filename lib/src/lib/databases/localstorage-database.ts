@@ -1,13 +1,11 @@
-import { Injectable, inject } from "@angular/core";
+import { Service, inject } from "@angular/core";
 import { Observable, asyncScheduler, of, throwError } from "rxjs";
 import { observeOn } from "rxjs/operators";
 import { LS_PREFIX } from "../tokens";
 import { SerializationError } from "./exceptions";
 import { LocalDatabase } from "./local-database";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class LocalStorageDatabase implements LocalDatabase {
 
   /**
@@ -72,6 +70,7 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   set(key: string, data: object): Observable<undefined> {
 
+    // eslint-disable-next-line no-useless-assignment
     let serializedData: StringifyResult<object> | null = null;
 
     /* Check if data can be serialized */

@@ -29,7 +29,7 @@ export class StorageMap {
    * @param database Storage to use
    */
   constructor(
-    // eslint-disable-next-line @angular-eslint/prefer-inject -- Used in tests
+    // eslint-disable-next-line @angular-eslint/prefer-inject, @typescript-eslint/prefer-readonly-parameter-types -- Used in tests for inject, wanted as writeable for readonly
     database: LocalDatabase,
   ) {
     this.#database = database;
@@ -423,11 +423,7 @@ export class StorageMap {
     });
 
     /* Only the public API of the Observable should be returned */
-    return (schema ?
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      notifier.asObservable() as Observable<T | undefined> :
-      notifier.asObservable()
-    );
+    return notifier.asObservable();
 
   }
 

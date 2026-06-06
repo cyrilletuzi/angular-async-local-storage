@@ -1,13 +1,11 @@
-import { Injectable, inject } from "@angular/core";
+import { Service, inject } from "@angular/core";
 import { Observable, ReplaySubject, fromEvent, of, race, throwError } from "rxjs";
 import { first, map, mergeMap, takeWhile, tap } from "rxjs/operators";
 import { IDB_DB_NAME, IDB_DB_VERSION, IDB_NO_WRAP, IDB_STORE_NAME } from "../tokens";
 import { IDBBrokenError } from "./exceptions";
 import { LocalDatabase } from "./local-database";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class IndexedDBDatabase implements LocalDatabase {
 
   /**
@@ -352,6 +350,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * Create store on first use of `indexedDB`
    * @param request `indexedDB` database opening request
    */
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   private createStore(request: IDBOpenDBRequest): void {
 
     /* Listen to the event fired on first connection */
@@ -380,8 +379,8 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @returns An `indexedDB` transaction store and events, wrapped in an RxJS `Observable`
    */
   private transaction(mode: IDBTransactionMode): Observable<{
-    store: IDBObjectStore;
-    events: Observable<Event>;
+    readonly store: IDBObjectStore;
+    readonly events: Observable<Event>;
   }> {
 
     /* From the `indexedDB` connection, open a transaction and get the store */
@@ -419,6 +418,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param transactionOrRequest `indexedDb` transaction or request to listen
    * @returns An `Observable` listening to errors
    */
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   private listenError(transactionOrRequest: IDBTransaction | IDBRequest): Observable<never> {
 
     return fromEvent(transactionOrRequest, "error").pipe(
@@ -436,6 +436,7 @@ export class IndexedDBDatabase implements LocalDatabase {
    * @param transaction Transaction to listen
    * @returns An `Observable` listening to transaction `complete` and `error` events
    */
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   private listenTransactionEvents(transaction: IDBTransaction): Observable<Event> {
 
     /* Listen to the `complete` event */

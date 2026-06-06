@@ -76,22 +76,22 @@ export interface StorageConfig {
   /**
    * @deprecated Use `provideLocalStoragePrefix()` method instead
    */
-  LSPrefix?: string;
+  readonly LSPrefix?: string;
 
   /**
    * @deprecated Use `provideIndexedDBDataBaseName()` method instead
    */
-  IDBDBName?: string;
+  readonly IDBDBName?: string;
 
   /**
    * @deprecated Use `provideIndexedDBStoreName()` method instead
    */
-  IDBStoreName?: string;
+  readonly IDBStoreName?: string;
 
   /**
    * @deprecated Use `provideIndexedDBDataBaseVersion()` method instead
    */
-  IDBDBVersion?: number;
+  readonly IDBDBVersion?: number;
 
   /**
    * Allows interoperability with native `indexedDB` and other storage libs,
@@ -101,6 +101,6 @@ export interface StorageConfig {
    * 
    * **DO NOT CHANGE THIS BEHAVIOR ONCE IN PRODUCTION**, as it would break with existing data.
    */
-  IDBNoWrap?: boolean;
+  readonly IDBNoWrap?: boolean;
 
 }

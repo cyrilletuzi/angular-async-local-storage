@@ -1,9 +1,12 @@
 // @ts-check
 const eslint = require("@eslint/js");
+const { defineConfig } = require("eslint/config");
 const tseslint = require("typescript-eslint");
 const angulareslint = require("angular-eslint");
+const angularEslintInjectionContext = require("angular-eslint-injection-context");
+const angularEslintZoneless = require("angular-eslint-zoneless");
 
-module.exports = tseslint.config(
+module.exports = defineConfig(
   {
     files: ["**/*.ts"],
     languageOptions: {
@@ -14,9 +17,11 @@ module.exports = tseslint.config(
     },
     extends: [
       eslint.configs.recommended,
-      ...tseslint.configs.strictTypeChecked,
-      ...tseslint.configs.stylisticTypeChecked,
-      ...angulareslint.configs.tsRecommended,
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
+      angulareslint.configs.tsRecommended,
+      angularEslintInjectionContext.configs.recommended,
+      angularEslintZoneless.configs.strict,
     ],
     processor: angulareslint.processInlineTemplates,
     rules: {
@@ -39,14 +44,37 @@ module.exports = tseslint.config(
         }
       ],
       // Enforce modern JavaScript
-      "prefer-template": "error",
-      "prefer-arrow-callback": "error",
-      // Stricter JavaScript
+      "prefer-object-has-own": "error", // ES2022+
+      "prefer-object-spread": "error",
+      "object-shorthand": "error",
+      // Security
+      "no-eval": "error",
+      "no-script-url": "error",
+      "no-extend-native": "error",
+      // Performance
+      "no-await-in-loop": "error",
+      // Disallow confusing syntaxes
       "no-new-native-nonconstructor": "error",
       "no-constant-binary-expression": "error",
-      "prefer-object-has-own": "error", // ES2022+
+      "no-bitwise": "error",
+      "no-caller": "error",
+      "array-callback-return": "error",
+      "no-new-wrappers": "error",
+      "no-self-compare": "error",
+      "no-template-curly-in-string": "error",
+      "no-unmodified-loop-condition": "error",
+      "curly": "error",
+      "no-alert": "error",
+      "no-use-before-define": "off",
+      "@typescript-eslint/no-use-before-define": "error",
+      "no-shadow": "off",
+      "@typescript-eslint/no-shadow": "error",
+      "no-invalid-this": "off",
+      "@typescript-eslint/no-invalid-this": "error",
       // Strict types
       "eqeqeq": "error",
+      "prefer-template": "error",
+      "prefer-arrow-callback": "error",
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/prefer-nullish-coalescing": "error",
       "@typescript-eslint/use-unknown-in-catch-callback-variable": "error",
@@ -71,11 +99,16 @@ module.exports = tseslint.config(
       "@typescript-eslint/prefer-for-of": "error",
       "@typescript-eslint/prefer-optional-chain": "error",
       "@typescript-eslint/restrict-template-expressions": "error",
-      "no-shadow": "off",
-      "@typescript-eslint/no-shadow": "error",
-      "@typescript-eslint/prefer-readonly": "error",
       "@typescript-eslint/no-useless-empty-export": "error",
       "@typescript-eslint/no-unsafe-type-assertion": "error",
+      "@typescript-eslint/no-useless-default-assignment": "error",
+      "@typescript-eslint/strict-void-return": "error",
+      // Immutability
+      "@typescript-eslint/prefer-readonly": "error",
+      "@typescript-eslint/prefer-readonly-parameter-types": ["error", {
+        "ignoreInferredTypes": true,
+        "treatMethodsAsReadonly": true,
+      }],
       // Stricter Angular ESLint rules
       "@angular-eslint/prefer-standalone": "off",
       "@angular-eslint/consistent-component-styles": "error",
@@ -89,6 +122,14 @@ module.exports = tseslint.config(
       "@angular-eslint/use-component-view-encapsulation": "error",
       "@angular-eslint/use-injectable-provided-in": "error",
       "@angular-eslint/no-async-lifecycle-method": "error",
+      "@angular-eslint/computed-must-return": "error",
+      /* Injection context */
+      "angular-eslint-injection-context/custom-function-in-injection-context": ["error", {
+        "functions": [{
+          "name": "localDatabaseFactory",
+          "allowedSpecialInjectionContexts": ["factory"],
+        }],
+      }],
       // Stricter RxJS (disabled until package is updated)
       // "rxjs/no-exposed-subjects": "warn", // should be error in a real project
       // "rxjs/no-subclass": "error",
@@ -98,12 +139,30 @@ module.exports = tseslint.config(
       // "rxjs/no-unsafe-first": "error",
       // "rxjs/no-unsafe-switchmap": "error",
       // "rxjs/throw-error": "error",
-      // Annoying as Angular CLI generates empty classes and constructors
-      "@typescript-eslint/no-extraneous-class": [
-        "warn",
+      // Loosen some annoying and inadequate empty rules
+      "no-empty": [
+        "error",
         {
-          "allowWithDecorator": true
-        }
+          allowEmptyCatch: true, // `catch` is required after a `try`, but there is not always something to do inside
+        },
+      ],
+      "@typescript-eslint/no-empty-function": [
+        "error",
+        {
+          allow: ["arrowFunctions"], // some callbacks are required (like in promises `.catch()`), but there is not always something to do inside
+        },
+      ],
+      "@typescript-eslint/no-empty-object-type": [
+        "error",
+        {
+          allowInterfaces: "with-single-extends",
+        },
+      ],
+      "@typescript-eslint/no-extraneous-class": [
+        "error",
+        {
+          allowWithDecorator: true, // some Angular classes can be empty
+        },
       ],
       // Allow Angular forms validators like `Validator.required`
       "@typescript-eslint/unbound-method": [
@@ -112,6 +171,8 @@ module.exports = tseslint.config(
           "ignoreStatic": true
         }
       ],
+      // Avoid empty imports which could cause empty files during build
+      "@typescript-eslint/no-import-type-side-effects": "error",
       // Disallow some imports
       "no-restricted-imports": [
         "error",
@@ -142,6 +203,7 @@ module.exports = tseslint.config(
     rules: {
       // Strict types
       "@angular-eslint/template/no-any": "error",
+      "@angular-eslint/template/no-non-null-assertion": "error",
       // Stricter Anguler ESLint rules
       "@angular-eslint/template/prefer-control-flow": "error",
       "@angular-eslint/template/prefer-self-closing-tags": "warn",

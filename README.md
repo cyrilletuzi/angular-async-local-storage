@@ -8,8 +8,9 @@ Efficient client-side storage for Angular:
 - **compatibility**: works around some browsers issues and heavily tested via GitHub Actions,
 - **documentation**: API fully explained, and a changelog!
 
-> [!TIP]
-> I am also the author of the [Angular Schematics extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics), installed 1 million times. Feel free to give it a try.
+> [!NOTE]
+> Find this library useful? I’m open to freelance & full-time opportunities.
+> Feel free to reach out on [LinkedIn](https://www.linkedin.com/in/cyrilletuzi/) or [Bluesky](https://bsky.app/profile/cyrilletuzi.com).
 
 ## Why this library?
 
@@ -28,7 +29,7 @@ This library has a simple API similar to native `localStorage`, but internally s
 Install the package:
 
 ```bash
-# For Angular LTS (Angular >= 19):
+# For Angular LTS (Angular >= 20):
 ng add @ngx-pwa/local-storage
 ```
 
@@ -37,7 +38,7 @@ ng add @ngx-pwa/local-storage
 If for any reason `ng add` does not work, follow the [manual installation guide](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/MANUAL_INSTALLATION.md).
 
 > [!NOTE]
-> Angular versions <= 18 are [officially outdated](https://angular.dev/reference/versions).
+> Angular versions <= 19 are [officially outdated](https://angular.dev/reference/versions).
 
 ### Upgrading
 

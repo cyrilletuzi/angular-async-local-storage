@@ -18,8 +18,6 @@ bootstrapApplication(App, {
     provideIndexedDBStoreName("keyvaluepairs"),
   ],
 })
-  .then(() => {
-    // Nothing to do
-  }, (err) => {
+  .catch((err) => {
     console.error(err);
   });

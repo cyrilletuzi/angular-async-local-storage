@@ -7,6 +7,7 @@ import { StorageMap } from "../storages/storage-map";
  * @param done Promise resolver
  * @param storageService Service
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export function clearStorage(done: (value?: unknown) => void, storageService: StorageMap): void {
 
   if (storageService.backingEngine === "indexedDB") {
@@ -95,6 +96,7 @@ export function clearStorage(done: (value?: unknown) => void, storageService: St
  * @param done Promise resolver
  * @param storageService Service
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export function closeAndDeleteDatabase(done: (value?: unknown) => void, storageService: StorageMap): void {
 
   /* Only `indexedDB` is concerned */

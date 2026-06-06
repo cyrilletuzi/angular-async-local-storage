@@ -33,9 +33,7 @@ export class App implements OnInit {
         }
       });
 
-    }).catch(() => {
-      // Nothing do to
-    });
+    }).catch(() => {});
 
   }
 

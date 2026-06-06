@@ -10,12 +10,12 @@ export interface JSONSchemaBoolean {
   /**
    * Type for a boolean value.
    */
-  type: "boolean";
+  readonly type: "boolean";
 
   /**
    * Checks if a value is strictly equal to this.
    */
-  const?: boolean;
+  readonly const?: boolean;
 
 }
 
@@ -27,43 +27,43 @@ export interface JSONSchemaNumber {
   /**
    * Type for a numeric value.
    */
-  type: "number";
+  readonly type: "number";
 
   /**
    * Checks if a value is strictly equal to this.
    */
-  const?: number;
+  readonly const?: number;
 
   /**
    * Checks if a value is strictly equal to one of the value of enum.
    */
-  enum?: readonly number[];
+  readonly enum?: readonly number[];
 
   /**
    * Check if a number is a multiple of x.
    * Must be strictly greater than 0.
    */
-  multipleOf?: number;
+  readonly multipleOf?: number;
 
   /**
    * Check if a number is lower or equal than this maximum.
    */
-  maximum?: number;
+  readonly maximum?: number;
 
   /**
    * Check if a number is strictly lower than this maximum.
    */
-  exclusiveMaximum?: number;
+  readonly exclusiveMaximum?: number;
 
   /**
    * Check if a number is greater or equal than this minimum.
    */
-  minimum?: number;
+  readonly minimum?: number;
 
   /**
    * Check if a number is strictly greater than this minimum.
    */
-  exclusiveMinimum?: number;
+  readonly exclusiveMinimum?: number;
 
 }
 
@@ -75,43 +75,43 @@ export interface JSONSchemaInteger {
   /**
    * Type for an integer value.
    */
-  type: "integer";
+  readonly type: "integer";
 
   /**
    * Checks if a value is strictly equal to this.
    */
-  const?: number;
+  readonly const?: number;
 
   /**
    * Checks if a value is strictly equal to one of the value of enum.
    */
-  enum?: readonly number[];
+  readonly enum?: readonly number[];
 
   /**
    * Check if a number is a multiple of x.
    * Must be strictly greater than 0.
    */
-  multipleOf?: number;
+  readonly multipleOf?: number;
 
   /**
    * Check if a number is lower or equal than this maximum.
    */
-  maximum?: number;
+  readonly maximum?: number;
 
   /**
    * Check if a number is strictly lower than this maximum.
    */
-  exclusiveMaximum?: number;
+  readonly exclusiveMaximum?: number;
 
   /**
    * Check if a number is greater or equal than this minimum.
    */
-  minimum?: number;
+  readonly minimum?: number;
 
   /**
    * Check if a number is strictly greater than this minimum.
    */
-  exclusiveMinimum?: number;
+  readonly exclusiveMinimum?: number;
 
 }
 
@@ -123,35 +123,35 @@ export interface JSONSchemaString {
   /**
    * Type for a string value.
    */
-  type: "string";
+  readonly type: "string";
 
   /**
    * Checks if a value is strictly equal to this.
    */
-  const?: string;
+  readonly const?: string;
 
   /**
    * Checks if a value is strictly equal to one of the value of enum.
    */
-  enum?: readonly string[];
+  readonly enum?: readonly string[];
 
   /**
    * Maxium length for a string.
    * Must be a non-negative integer.
    */
-  maxLength?: number;
+  readonly maxLength?: number;
 
   /**
    * Minimum length for a string.
    * Must be a non-negative integer.
    */
-  minLength?: number;
+  readonly minLength?: number;
 
   /**
    * Pattern to match for a string.
    * Must be a valid regular expression, *without* the `/` delimiters.
    */
-  pattern?: string;
+  readonly pattern?: string;
 
 }
 
@@ -163,29 +163,29 @@ export interface JSONSchemaArray {
   /**
    * Type for an array of values.
    */
-  type: "array";
+  readonly type: "array";
 
   /**
    * Schema for the values of the array.
    */
-  items: JSONSchema;
+  readonly items: JSONSchema;
 
   /**
    * Check if an array length is lower or equal to this value.
    * Must be a non negative integer.
    */
-  maxItems?: number;
+  readonly maxItems?: number;
 
   /**
    * Check if an array length is greater or equal to this value.
    * Must be a non negative integer.
    */
-  minItems?: number;
+  readonly minItems?: number;
 
   /**
    * Check if an array only have unique values.
    */
-  uniqueItems?: boolean;
+  readonly uniqueItems?: boolean;
 
 }
 
@@ -201,29 +201,29 @@ export interface JSONSchemaArrayOf<T extends JSONSchemaBoolean | JSONSchemaNumbe
   /**
    * Type for an array of values.
    */
-  type: "array";
+  readonly type: "array";
 
   /**
    * Schema for the values of an array.
    */
-  items: T;
+  readonly items: T;
 
   /**
    * Check if an array length is lower or equal to this value.
    * Must be a non negative integer.
    */
-  maxItems?: number;
+  readonly maxItems?: number;
 
   /**
    * Check if an array length is greater or equal to this value.
    * Must be a non negative integer.
    */
-  minItems?: number;
+  readonly minItems?: number;
 
   /**
    * Check if an array only have unique values.
    */
-  uniqueItems?: boolean;
+  readonly uniqueItems?: boolean;
 
 }
 
@@ -235,29 +235,29 @@ export interface JSONSchemaTuple {
   /**
    * Type for an array of values.
    */
-  type: "array";
+  readonly type: "array";
 
   /**
    * Schema for the values of the tuple.
    */
-  items?: readonly JSONSchema[];
+  readonly items?: readonly JSONSchema[];
 
   /**
    * Check if an array length is lower or equal to this value.
    * Must be a non negative integer.
    */
-  maxItems?: number;
+  readonly maxItems?: number;
 
   /**
    * Check if an array length is greater or equal to this value.
    * Must be a non negative integer.
    */
-  minItems?: number;
+  readonly minItems?: number;
 
   /**
    * Check if an array only have unique values.
    */
-  uniqueItems?: boolean;
+  readonly uniqueItems?: boolean;
 
 }
 
@@ -269,18 +269,18 @@ export interface JSONSchemaObject {
   /**
    * Type for an object.
    */
-  type: "object";
+  readonly type: "object";
 
   /**
    * List of properties of the object and their associated JSON schemas.
    */
-  properties: Record<string, JSONSchema>;
+  readonly properties: Readonly<Record<string, JSONSchema>>;
 
   /**
    * Array of names of the required properties for an object.
    * Properties set as required should be present in `properties` too.
    */
-  required?: readonly string[];
+  readonly required?: readonly string[];
 
 }
 

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Service } from "@angular/core";
 import type {
   JSONSchema,
   JSONSchemaArray,
@@ -9,9 +9,7 @@ import type {
   JSONSchemaTuple
 } from "./json-schema";
 
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class JSONValidator {
 
   /**
@@ -78,9 +76,7 @@ export class JSONValidator {
         if (!regularExpression.test(data)) {
           return false;
         }
-      } catch {
-        // Nothing to do
-      }
+      } catch {}
 
     }
 
@@ -221,7 +217,7 @@ export class JSONValidator {
    * @param schemas Schemas describing the tuple
    * @returns If data is valid: `true`, if it is invalid: `false`
    */
-  private validateTuple(data: unknown[], schemas: JSONSchema[] | undefined): boolean {
+  private validateTuple(data: readonly unknown[], schemas: readonly JSONSchema[] | undefined): boolean {
 
     const lengthToCheck = schemas ? schemas.length : 0;
 

@@ -16,6 +16,7 @@ const index = "test";
  * @param done Promise resolver
  * @param value Value to store
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: (value?: unknown) => void, context: TestContext & object, value: unknown): void {
 
   try {
@@ -97,6 +98,7 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
  * @param done Promise resolver
  * @param value Value to set and get
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: (value?: unknown) => void, context: TestContext & object, value: unknown, schema?: JSONSchema): void {
 
   try {

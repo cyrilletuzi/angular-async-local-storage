@@ -16,9 +16,10 @@ But **do not worry: the previous package is still here** and will be as long as 
 - v18 for Angular 18,
 - v19 for Angular 19,
 - v20 for Angular 20,
-- v21 for Angular 21.
+- v21 for Angular 21,
+- v22 for Angular 22.
 
-[Angular <= 18 are officially outdated](https://angular.dev/reference/versions#actively-supported-versions).
+[Angular <= 19 are officially outdated](https://angular.dev/reference/versions#actively-supported-versions).
 
 ## Installing the new package
 

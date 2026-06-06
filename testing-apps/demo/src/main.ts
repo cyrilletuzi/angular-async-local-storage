@@ -7,8 +7,6 @@ bootstrapApplication(App, {
     provideBrowserGlobalErrorListeners(),
   ]
 })
-  .then(() => {
-    // Nothing to do
-  }, (err) => {
+  .catch((err) => {
     console.error(err);
   });

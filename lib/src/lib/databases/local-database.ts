@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from "@angular/common";
-import { inject, Injectable, PLATFORM_ID } from "@angular/core";
+import { assertInInjectionContext, inject, PLATFORM_ID, Service } from "@angular/core";
 import { Observable } from "rxjs";
 import { IndexedDBDatabase } from "./indexeddb-database";
 import { LocalStorageDatabase } from "./localstorage-database";
@@ -10,6 +10,8 @@ import { MemoryDatabase } from "./memory-database";
  * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/docs/BROWSERS_SUPPORT.md}
  */
 export function localDatabaseFactory(): LocalDatabase {
+
+  assertInInjectionContext(localDatabaseFactory);
 
   const platformId = inject(PLATFORM_ID);
 
@@ -48,9 +50,7 @@ export function localDatabaseFactory(): LocalDatabase {
 
     }
 
-  } catch {
-    // Nothing to do
-  }
+  } catch {}
 
   /* Will be the case for:
    * - In browsers if storage has been fully disabled (via the "Block all cookies" option)
@@ -61,9 +61,8 @@ export function localDatabaseFactory(): LocalDatabase {
 
 }
 
-@Injectable({
-  providedIn: "root",
-  useFactory: localDatabaseFactory,
+@Service({
+  factory: localDatabaseFactory,
 })
 export abstract class LocalDatabase {
 
