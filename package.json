@@ -43,7 +43,7 @@
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.60.0",
     "@sinclair/typebox": "^0.34.49",
-    "@vitest/browser-playwright": "^4.0.11",
+    "@vitest/browser-playwright": "^4.1.8",
     "angular-eslint": "^21.4.0",
     "angular-eslint-injection-context": "^1.6.0",
     "angular-eslint-zoneless": "^1.6.0",

@@ -27,7 +27,10 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "lib/tsconfig.spec.json"
+            "tsConfig": "lib/tsconfig.spec.json",
+            "browsers": [
+              "chromium"
+            ]
           }
         },
         "lint": {
