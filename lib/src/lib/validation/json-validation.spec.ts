@@ -194,7 +194,7 @@ describe(`JSONValidator`, () => {
           const test = jsonValidator.validate("test", { type: "string", pattern: "+++" });
           expect(test).toBe(true);
 
-        }).not.toThrowError();
+        }).not.toThrow();
 
       });
 
@@ -334,7 +334,7 @@ describe(`JSONValidator`, () => {
 
           expect(test).toBe(true);
 
-        }).not.toThrowError();
+        }).not.toThrow();
 
       });
 
