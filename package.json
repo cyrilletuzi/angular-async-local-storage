@@ -8,6 +8,7 @@
     "build": "ng build lib && npm run schematics",
     "test": "npm run unit && npm run e2e",
     "unit": "npx playwright install && ng test lib --watch false",
+    "unit:ci": "npx playwright install --with-deps && ng test lib --watch false",
     "e2e": "playwright install chromium && npm run e2e:demo && npm run e2e:interoperability",
     "e2e:demo": "playwright test --config playwright-demo.config.ts",
     "e2e:interoperability": "playwright test --config playwright-localforage.config.ts",

@@ -29,7 +29,7 @@ jobs:
     - name: Build the lib
       run: npm run build
     - name: Run unit tests
-      run: npm run unit
+      run: npm run unit:ci
     - name: Run e2e tests
       run: npm run e2e
       if: matrix.os == 'ubuntu-latest'
@@ -57,6 +57,6 @@ jobs:
       env:
         CI: true
     - name: Run unit tests
-      run: npm run unit
+      run: npm run unit:ci
     - name: Run e2e tests
       run: npm run e2e
