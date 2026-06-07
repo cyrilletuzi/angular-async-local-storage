@@ -182,19 +182,19 @@ describe("Interoperability", () => {
     localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
   });
 
-  beforeEach(() => new Promise((done) => {
+  beforeEach(async () => {
     /* Clear data to avoid tests overlap */
-    clearStorage(done, localStorageService);
-  }));
+    await clearStorage(localStorageService);
+  });
 
-  afterAll(() => new Promise((done) => {
+  afterAll(async () => {
     /* Now that `indexedDB` store name can be customized, it's important:
      * - to delete the database after each tests group,
      * so the next tests group to will trigger the `indexedDB` `upgradeneeded` event,
      * as it's where the store is created
      * - to be able to delete the database, all connections to it must be closed */
-    closeAndDeleteDatabase(done, localStorageService);
-  }));
+    await closeAndDeleteDatabase(localStorageService);
+  });
 
   const setTestValues = ["hello", "", 0, false, null, undefined];
 

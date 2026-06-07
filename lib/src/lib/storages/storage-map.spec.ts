@@ -32,78 +32,88 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       storage = localStorageServiceFactory();
     });
 
-    beforeEach(() => new Promise(done => {
-      /* Clear data to avoid tests overlap */
-      clearStorage(done, storage);
-    }));
-
-    afterAll(() => new Promise(done => {
+    afterAll(async () => {
       /* Now that `indexedDB` store name can be customized, it's important:
        * - to delete the database after each tests group,
        * so the next tests group to will trigger the `indexedDB` `upgradeneeded` event,
        * as it's where the store is created
        * - to be able to delete the database, all connections to it must be closed */
-      closeAndDeleteDatabase(done, storage);
-    }));
+      await closeAndDeleteDatabase(storage);
+    });
 
     describe("overloads", () => {
 
-      it("no schema / no cast", () => {
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
+      });
+
+      it("no schema / no cast", () => new Promise((done) => {
 
         // @ts-expect-error Failure test
         storage.get("test").subscribe((_: number | undefined) => {
           // Nothing to test
+          done();
         });
-      });
+      }));
 
-      it("no schema / cast", () => {
+      it("no schema / cast", () => new Promise((done) => {
 
         // @ts-expect-error Failure test
         storage.get<number>("test").subscribe((_: number | undefined) => {
           // Nothing to test
+          done();
         });
-      });
+      }));
 
-      it("schema / cast", () => {
+      it("schema / cast", () => new Promise((done) => {
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
         storage.get<string>("test", { type: "string" }).subscribe((_: string | undefined) => {
           // Nothing to test
+          done();
         });
-      });
+      }));
 
-      it("schema with options", () => {
+      it("schema with options", () => new Promise((done) => {
 
         storage.get("test", { type: "number", maximum: 10 }).subscribe((_: number | undefined) => {
           // Nothing to test
+          done();
         });
-      });
+      }));
 
-      it("prepared schema with generic interface", () => {
+      it("prepared schema with generic interface", () => new Promise((done) => {
 
         const schema: JSONSchema = { type: "number" };
 
         storage.get("test", schema).subscribe((_: number | undefined) => {
           // Nothing to test
+          done();
         });
-      });
+      }));
 
-      it("prepared schema with satisfies", () => {
+      it("prepared schema with satisfies", () => new Promise((done) => {
 
         const schema = { type: "number" } satisfies JSONSchema;
 
         storage.get("test", schema).subscribe((_: number | undefined) => {
           // Nothing to test
+          done();
         });
-      });
+      }));
 
     });
 
     describe(`get()`, () => {
 
       describe(`string`, () => {
+        beforeEach(async () => {
+          /* Clear data to avoid tests overlap */
+          await clearStorage(storage);
+        });
 
-        it("with value", () => {
+        it("with value", () => new Promise((done) => {
 
           const value = "blue";
           const schema = { type: "string" } satisfies JSONSchema;
@@ -112,10 +122,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
-          });
-        });
+            done();
 
-        it("empty", () => {
+          });
+        }));
+
+        it("empty", () => new Promise((done) => {
 
           const value = "";
           const schema = { type: "string" } satisfies JSONSchema;
@@ -124,10 +136,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
-          });
-        });
+            done();
 
-        it("const", () => {
+          });
+        }));
+
+        it("const", () => new Promise((done) => {
 
           const value = "hello";
           const schema = {
@@ -139,10 +153,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
-          });
-        });
+            done();
 
-        it("enum", () => {
+          });
+        }));
+
+        it("enum", () => new Promise((done) => {
 
           const value = "world";
           const schema = {
@@ -154,14 +170,20 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
+            done();
+
           });
-        });
+        }));
 
       });
 
       describe(`number`, () => {
+        beforeEach(async () => {
+          /* Clear data to avoid tests overlap */
+          await clearStorage(storage);
+        });
 
-        it("with value", () => {
+        it("with value", () => new Promise((done) => {
 
           const value = 1.5;
           const schema = { type: "number" } satisfies JSONSchema;
@@ -170,10 +192,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
-          });
-        });
+            done();
 
-        it("zero", () => {
+          });
+        }));
+
+        it("zero", () => new Promise((done) => {
 
           const value = 0;
           const schema = { type: "number" } satisfies JSONSchema;
@@ -182,10 +206,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
-          });
-        });
+            done();
 
-        it("const", () => {
+          });
+        }));
+
+        it("const", () => new Promise((done) => {
 
           const value = 1.5;
           const schema = {
@@ -197,10 +223,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
-          });
-        });
+            done();
 
-        it("enum", () => {
+          });
+        }));
+
+        it("enum", () => new Promise((done) => {
 
           const value = 2.4;
           const schema = {
@@ -212,14 +240,20 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
+            done();
+
           });
-        });
+        }));
 
       });
 
       describe(`integer`, () => {
+        beforeEach(async () => {
+          /* Clear data to avoid tests overlap */
+          await clearStorage(storage);
+        });
 
-        it("with value", () => {
+        it("with value", () => new Promise((done) => {
 
           const value = 1;
           const schema = { type: "integer" } satisfies JSONSchema;
@@ -228,10 +262,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
-          });
-        });
+            done();
 
-        it("zero", () => {
+          });
+        }));
+
+        it("zero", () => new Promise((done) => {
 
           const value = 0;
           const schema = { type: "integer" } satisfies JSONSchema;
@@ -240,10 +276,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
-          });
-        });
+            done();
 
-        it("const", () => {
+          });
+        }));
+
+        it("const", () => new Promise((done) => {
 
           const value = 1;
           const schema = {
@@ -255,10 +293,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
-          });
-        });
+            done();
 
-        it("enum", () => {
+          });
+        }));
+
+        it("enum", () => new Promise((done) => {
 
           const value = 2;
           const schema = {
@@ -270,14 +310,20 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
+            done();
+
           });
-        });
+        }));
 
       });
 
       describe(`boolean`, () => {
+        beforeEach(async () => {
+          /* Clear data to avoid tests overlap */
+          await clearStorage(storage);
+        });
 
-        it("true", () => {
+        it("true", () => new Promise((done) => {
 
           const value = true;
           const schema = { type: "boolean" } satisfies JSONSchema;
@@ -286,10 +332,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
-          });
-        });
+            done();
 
-        it("false", () => {
+          });
+        }));
+
+        it("false", () => new Promise((done) => {
 
           const value = false;
           const schema = { type: "boolean" } satisfies JSONSchema;
@@ -298,10 +346,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
-          });
-        });
+            done();
 
-        it("const", () => {
+          });
+        }));
+
+        it("const", () => new Promise((done) => {
 
           const value = true;
           const schema = {
@@ -313,14 +363,20 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value);
 
+            done();
+
           });
-        });
+        }));
 
       });
 
       describe("array", () => {
+        beforeEach(async () => {
+          /* Clear data to avoid tests overlap */
+          await clearStorage(storage);
+        });
 
-        it("of strings", () => {
+        it("of strings", () => new Promise((done) => {
 
           const value = ["hello", "world", "!"];
           const schema = {
@@ -334,10 +390,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(value);
 
-          });
-        });
+            done();
 
-        it("of integers", () => {
+          });
+        }));
+
+        it("of integers", () => new Promise((done) => {
 
           const value = [1, 2, 3];
           const schema = {
@@ -351,10 +409,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(value);
 
-          });
-        });
+            done();
 
-        it("of numbers", () => {
+          });
+        }));
+
+        it("of numbers", () => new Promise((done) => {
 
           const value = [1.5, 2.4, 3.67];
           const schema = {
@@ -368,10 +428,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(value);
 
-          });
-        });
+            done();
 
-        it("of booleans", () => {
+          });
+        }));
+
+        it("of booleans", () => new Promise((done) => {
 
           const value = [true, false, true];
           const schema = {
@@ -385,10 +447,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(value);
 
-          });
-        });
+            done();
 
-        it("of arrays", () => {
+          });
+        }));
+
+        it("of arrays", () => new Promise((done) => {
 
           const value = [["hello", "world"], ["my", "name"], ["is", "Elmo"]];
           const schema = {
@@ -405,10 +469,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(value);
 
-          });
-        });
+            done();
 
-        it("of objects", () => {
+          });
+        }));
+
+        it("of objects", () => new Promise((done) => {
 
           const value = [{
             name: "Elmo",
@@ -436,10 +502,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(value);
 
-          });
-        });
+            done();
 
-        it("Set", () => {
+          });
+        }));
+
+        it("Set", () => new Promise((done) => {
 
           const array = ["hello", "world"];
           const value = new Set<string>(["hello", "world"]);
@@ -455,10 +523,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(array);
 
-          });
-        });
+            done();
 
-        it("tuple", () => {
+          });
+        }));
+
+        it("tuple", () => new Promise((done) => {
 
           const value: [
             string,
@@ -487,10 +557,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(value);
 
-          });
-        });
+            done();
 
-        it("Map", () => {
+          });
+        }));
+
+        it("Map", () => new Promise((done) => {
 
           const array: [
             string,
@@ -528,14 +600,20 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(array);
 
+            done();
+
           });
-        });
+        }));
 
       });
 
       describe("object", () => {
+        beforeEach(async () => {
+          /* Clear data to avoid tests overlap */
+          await clearStorage(storage);
+        });
 
-        it("with all subtypes", () => {
+        it("with all subtypes", () => new Promise((done) => {
 
           interface User {
             readonly name: string;
@@ -586,10 +664,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(value);
 
-          });
-        });
+            done();
 
-        it("without required properties", () => {
+          });
+        }));
+
+        it("without required properties", () => new Promise((done) => {
 
           interface User {
             readonly name?: string;
@@ -611,10 +691,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(value);
 
-          });
-        });
+            done();
 
-        it("objects / cast / no schema", () => {
+          });
+        }));
+
+        it("objects / cast / no schema", () => new Promise((done) => {
 
           interface Test {
             readonly test: string;
@@ -623,10 +705,11 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           // @ts-expect-error Failure test
           storage.get<Test>("test").subscribe((_: Test | undefined) => {
             // Nothing to test
+            done();
           });
-        });
+        }));
 
-        it("objects / no cast / schema", () => {
+        it("objects / no cast / schema", () => new Promise((done) => {
 
           interface Test {
             readonly test: string;
@@ -640,14 +723,19 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             // @ts-expect-error Failure test
           }).subscribe((_: Test) => {
             // Nothing to test
+            done();
           });
-        });
+        }));
 
       });
 
       describe("specials", () => {
+        beforeEach(async () => {
+          /* Clear data to avoid tests overlap */
+          await clearStorage(storage);
+        });
 
-        it("unexisting key", () => {
+        it("unexisting key", () => new Promise((done) => {
 
           const schema = { type: "string" } satisfies JSONSchema;
 
@@ -655,10 +743,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(data).toBeUndefined();
 
-          });
-        });
+            done();
 
-        it("null", () => {
+          });
+        }));
+
+        it("null", () => new Promise((done) => {
 
           const schema = { type: "string" } satisfies JSONSchema;
 
@@ -666,10 +756,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBeUndefined();
 
-          });
-        });
+            done();
 
-        it("undefined", () => {
+          });
+        }));
+
+        it("undefined", () => new Promise((done) => {
 
           const schema = { type: "string" } satisfies JSONSchema;
 
@@ -677,10 +769,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBeUndefined();
 
-          });
-        });
+            done();
 
-        it("blob (will be pending in Safari private)", (context) => new Promise(done => {
+          });
+        }));
+
+        it("blob (will be pending in Safari private)", (context) => new Promise((done) => {
 
           const value = new Blob();
 
@@ -704,7 +798,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         }));
 
-        it("heavy schema", () => {
+        it("heavy schema", () => new Promise((done) => {
 
           interface City {
             readonly country: string;
@@ -785,25 +879,32 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toEqual(value);
 
+            done();
+
           });
-        });
+        }));
 
       });
 
     });
 
     describe("set()", () => {
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
+      });
 
-      it("update", () => {
+      it("update", () => new Promise((done) => {
 
         const schema = { type: "string" } satisfies JSONSchema;
 
         storage.set(key, "value", schema).pipe(mergeMap(() => storage.set(key, "updated", schema))).subscribe(() => {
           // Nothing to test
+          done();
         });
-      });
+      }));
 
-      it("concurrency", () => {
+      it("concurrency", () => new Promise((done) => {
 
         const value1 = "test1";
         const value2 = "test2";
@@ -817,56 +918,80 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
             expect(result).toBe(value2);
 
+            done();
+
           });
 
         }).not.toThrow();
-      });
+      }));
 
     });
 
     describe("deletion", () => {
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
+      });
 
-      it("delete() with existing key", () => {
+      it("delete() with existing key", async () => new Promise((done) => {
 
         storage.set(key, "test").pipe(mergeMap(() => storage.delete(key)), mergeMap(() => storage.get(key))).subscribe((result) => {
 
           expect(result).toBeUndefined();
 
-          ;
+          done();
 
         });
-      });
+      }));
 
-      it("delete() with unexisting key", () => {
+      it("delete() with unexisting key", () => new Promise((done) => {
 
         storage.delete(`unexisting${Date.now().toFixed()}`).subscribe(() => {
           // Nothing to test
+          done();
         });
-      });
+      }));
 
-      it("clear()", () => {
+      it("clear()", () => new Promise((done) => {
 
         storage.set(key, "test").pipe(mergeMap(() => storage.clear()), mergeMap(() => storage.get(key))).subscribe((result) => {
 
           expect(result).toBeUndefined();
 
-          ;
+          done();
 
         });
-      });
+      }));
 
     });
 
     describe("Map-like API", () => {
-
-      it("size", () => {
-
-        storage.size.pipe(tap((length) => { expect(length).toBe(0); }), mergeMap(() => storage.set(key, "test")), mergeMap(() => storage.size), tap((length) => { expect(length).toBe(1); }), mergeMap(() => storage.set("", "test")), mergeMap(() => storage.size), tap((length) => { expect(length).toBe(2); }), mergeMap(() => storage.delete(key)), mergeMap(() => storage.size), tap((length) => { expect(length).toBe(1); }), mergeMap(() => storage.clear()), mergeMap(() => storage.size), tap((length) => { expect(length).toBe(0); })).subscribe(() => {
-          ;
-        });
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
       });
 
-      it("keys()", () => {
+      it("size", () => new Promise((done) => {
+        storage.size.pipe(
+          tap((length) => { expect(length).toBe(0); }),
+          mergeMap(() => storage.set(key, "test")),
+          mergeMap(() => storage.size),
+          tap((length) => { expect(length).toBe(1); }),
+          mergeMap(() => storage.set("", "test")),
+          mergeMap(() => storage.size),
+          tap((length) => { expect(length).toBe(2); }),
+          mergeMap(() => storage.delete(key)),
+          mergeMap(() => storage.size),
+          tap((length) => { expect(length).toBe(1); }),
+          mergeMap(() => storage.clear()),
+          mergeMap(() => storage.size),
+          tap((length) => { expect(length).toBe(0); })
+        ).subscribe(() => {
+          done();
+        });
+      }));
+
+      it("keys()", () => new Promise((done) => {
 
         const key1 = "index1";
         const key2 = "index2";
@@ -878,12 +1003,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             keys.splice(keys.indexOf(value), 1);
           },
           complete: () => {
-            ;
+            done();
           },
         });
-      });
+      }));
 
-      it("keys() when no items", () => {
+      it("keys() when no items", () => new Promise((done) => {
 
         storage.keys().subscribe({
           next: () => {
@@ -891,33 +1016,34 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           },
           complete: () => {
             // Nothing to test
+            done();
           },
         });
-      });
+      }));
 
-      it("has() on existing", () => {
+      it("has() on existing", () => new Promise((done) => {
 
         storage.set(key, "test").pipe(mergeMap(() => storage.has(key))).subscribe((result) => {
 
           expect(result).toBe(true);
 
-          ;
+          done();
 
         });
-      });
+      }));
 
-      it("has() on unexisting", () => {
+      it("has() on unexisting", () => new Promise((done) => {
 
         storage.has(`nokey${Date.now().toFixed()}`).subscribe((result) => {
 
           expect(result).toBe(false);
 
-          ;
+          done();
 
         });
-      });
+      }));
 
-      it("advanced case: remove only some items", () => {
+      it("advanced case: remove only some items", () => new Promise((done) => {
 
         storage.set("user_firstname", "test").pipe(mergeMap(() => storage.set("user_lastname", "test")), mergeMap(() => storage.set("app_data1", "test")), mergeMap(() => storage.set("app_data2", "test")), mergeMap(() => storage.keys()), filter((currentKey) => currentKey.startsWith("app_")), mergeMap((currentKey) => storage.delete(currentKey))).subscribe({
           /* So we need to wait for completion of all actions to check */
@@ -928,19 +1054,23 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
               expect(size).toBe(2);
 
-              ;
+              done();
 
             });
 
           }
         });
-      });
+      }));
 
     });
 
     describe("watch()", () => {
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
+      });
 
-      it("valid", () => {
+      it("valid", () => new Promise((done) => {
 
         const watchedKey = "watched1";
         const values = [undefined, "test1", undefined, "test2", undefined];
@@ -954,17 +1084,25 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           i += 1;
 
           if (i === values.length) {
-            ;
+            done();
           }
 
         });
 
-        storage.set(watchedKey, values[1], schema).pipe(mergeMap(() => storage.delete(watchedKey)), mergeMap(() => storage.set(watchedKey, values[3], schema)), mergeMap(() => storage.clear())).subscribe();
-      });
+        storage.set(watchedKey, values[1], schema).pipe(
+          mergeMap(() => storage.delete(watchedKey)),
+          mergeMap(() => storage.set(watchedKey, values[3], schema)),
+          mergeMap(() => storage.clear())
+        ).subscribe();
+      }));
 
     });
 
     describe("validation", () => {
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
+      });
 
       interface Test {
         expected: string;
@@ -980,7 +1118,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         required: ["expected"]
       } satisfies JSONSchema;
 
-      it("valid schema with options", () => {
+      it("valid schema with options", () => new Promise((done) => {
 
         const value = 5;
         const schemaWithOptions = { type: "number", maximum: 10 } satisfies JSONSchema;
@@ -989,12 +1127,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           expect(result).toBe(value);
 
-          ;
+          done();
 
         });
-      });
+      }));
 
-      it("invalid schema with options", () => {
+      it("invalid schema with options", () => new Promise((done) => {
 
         const value = 15;
         const schemaWithOptions = { type: "number", maximum: 10 } satisfies JSONSchema;
@@ -1005,11 +1143,13 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
 
+            done();
+
           }
         });
-      });
+      }));
 
-      it("invalid in get()", () => {
+      it("invalid in get()", () => new Promise((done) => {
 
         storage.set(key, "test", { type: "string" }).pipe(mergeMap(() => storage.get<Test>(key, schema))).subscribe({
           error: (error) => {
@@ -1017,24 +1157,27 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
 
+            done();
+
           }
         });
-      });
+      }));
 
-      it("invalid in set()", () => {
+      it("invalid in set()", () => new Promise((done) => {
 
         storage.set(key, "test", schema).subscribe({
           error: (error) => {
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
-            ;
+
+            done();
 
           },
         });
-      });
+      }));
 
-      it("invalid in watch()", () => {
+      it("invalid in watch()", () => new Promise((done) => {
 
         const watchedKey = "watched2";
 
@@ -1044,95 +1187,112 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           storage.watch(watchedKey, { type: "number" }).subscribe({
             error: () => {
               // Nothing to test
+              done();
             }
           });
 
         });
-      });
+      }));
 
-      it("null: no validation", () => {
+      it("null: no validation", () => new Promise((done) => {
 
         storage.get<string>(`noassociateddata${Date.now().toFixed()}`, schema).subscribe(() => {
           // Nothing to test
+          done();
         });
-      });
+      }));
 
     });
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/25
      * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/5 */
     describe("complete", () => {
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
+      });
 
       const schema = { type: "string" } satisfies JSONSchema;
 
-      it("get()", () => {
+      it("get()", () => new Promise((done) => {
 
         storage.get(key, schema).subscribe({
           complete: () => {
             // Nothing to test
+            done();
           }
         });
-      });
+      }));
 
-      it("set()", () => {
+      it("set()", () => new Promise((done) => {
 
         storage.set("index", "value", schema).subscribe({
           complete: () => {
             // Nothing to test
+            done();
           }
         });
-      });
+      }));
 
-      it("delete()", () => {
+      it("delete()", () => new Promise((done) => {
 
         storage.delete(key).subscribe({
           complete: () => {
             // Nothing to test
+            done();
           }
         });
-      });
+      }));
 
-      it("clear()", () => {
+      it("clear()", () => new Promise((done) => {
 
         storage.clear().subscribe({
           complete: () => {
             // Nothing to test
+            done();
           }
         });
-      });
+      }));
 
-      it("size", () => {
+      it("size", () => new Promise((done) => {
 
         storage.size.subscribe({
           complete: () => {
             // Nothing to test
+            done();
           }
         });
-      });
+      }));
 
-      it("keys()", () => {
+      it("keys()", () => new Promise((done) => {
 
         storage.keys().subscribe({
           complete: () => {
             // Nothing to test
+            done();
           }
         });
-      });
+      }));
 
-      it("has()", () => {
+      it("has()", () => new Promise((done) => {
 
         storage.has(key).subscribe({
           complete: () => {
             // Nothing to test
+            done();
           }
         });
-      });
+      }));
 
     });
 
     describe("compatibility with @sinclair/typebox", () => {
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
+      });
 
-      it("invalid", () => {
+      it("invalid", () => new Promise((done) => {
 
         storage.set(key, "test", Type.String()).pipe(mergeMap(() => storage.get(key, Type.Number()))).subscribe({
           error: (error) => {
@@ -1140,11 +1300,13 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
 
+            done();
+
           }
         });
-      });
+      }));
 
-      it("invalid with options", () => {
+      it("invalid with options", () => new Promise((done) => {
 
         storage.set(key, "test", Type.String()).pipe(mergeMap(() => storage.get(key, Type.String({
           maxLength: 1,
@@ -1154,11 +1316,13 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(error.message).toBe(VALIDATION_ERROR);
 
+            done();
+
           }
         });
-      });
+      }));
 
-      it("string", () => {
+      it("string", () => new Promise((done) => {
 
         const value = "blue";
         const schema = Type.String();
@@ -1167,12 +1331,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           expect(result).toBe(value);
 
-          ;
+          done();
 
         });
-      });
+      }));
 
-      it("string (standalone import)", () => {
+      it("string (standalone import)", () => new Promise((done) => {
 
         const value = "blue";
         const schema = StringType();
@@ -1181,12 +1345,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           expect(result).toBe(value);
 
-          ;
+          done();
 
         });
-      });
+      }));
 
-      it("number", () => {
+      it("number", () => new Promise((done) => {
 
         const value = 1.5;
         const schema = Type.Number();
@@ -1195,12 +1359,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           expect(result).toBe(value);
 
-          ;
+          done();
 
         });
-      });
+      }));
 
-      it("boolean", () => {
+      it("boolean", () => new Promise((done) => {
 
         const value = true;
         const schema = Type.Boolean();
@@ -1209,12 +1373,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           expect(result).toBe(value);
 
-          ;
+          done();
 
         });
-      });
+      }));
 
-      it("array", () => {
+      it("array", () => new Promise((done) => {
 
         const value = ["hello 1", "hello 2"];
         const schema = Type.Array(Type.String());
@@ -1225,12 +1389,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           expect(result).toEqual(value);
 
-          ;
+          done();
 
         });
-      });
+      }));
 
-      it("tuple", () => {
+      it("tuple", () => new Promise((done) => {
 
         const value: [
           string,
@@ -1253,12 +1417,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           expect(result).toEqual(value);
 
-          ;
+          done();
 
         });
-      });
+      }));
 
-      it("object", () => {
+      it("object", () => new Promise((done) => {
 
         interface User {
           readonly name: string;
@@ -1299,12 +1463,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           expect(result).toEqual(value);
 
-          ;
+          done();
 
         });
-      });
+      }));
 
-      it("with options", () => {
+      it("with options", () => new Promise((done) => {
 
         const value = "blue";
         const schema = Type.String({
@@ -1315,18 +1479,22 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
           expect(result).toBe(value);
 
-          ;
+          done();
 
         });
-      });
+      }));
 
     });
 
     describe("compatibility with Promise", () => {
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
+      });
 
       const schema = { type: "string" } satisfies JSONSchema;
 
-      it("Promise", () => {
+      it("Promise", () => new Promise((done, reject) => {
 
         const value = "test";
 
@@ -1334,12 +1502,12 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           .then(() => firstValueFrom(storage.get(key, schema)))
           .then((result: string | undefined) => {
             expect(result).toBe(value);
-            ;
+            done();
           })
           .catch(() => {
-            throw new Error();
+            reject(new Error());
           });
-      });
+      }));
 
       it("async / await", async () => {
 
@@ -1396,7 +1564,7 @@ describe("StorageMap", () => {
   describe("browser APIs", () => {
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
-    it("IndexedDb is used", (context) => new Promise(done => {
+    it("IndexedDb is used", (context) => new Promise((done, reject) => {
 
       const index = `test${Date.now().toFixed()}`;
       const value = "test";
@@ -1422,7 +1590,11 @@ describe("StorageMap", () => {
 
               dbOpen.result.close();
 
-              closeAndDeleteDatabase(done, localStorageService);
+              closeAndDeleteDatabase(localStorageService).then(() => {
+                done();
+              }).catch(() => {
+                reject(new Error());
+              });
 
             });
 
@@ -1431,7 +1603,7 @@ describe("StorageMap", () => {
               dbOpen.result.close();
 
               /* This case is not supposed to happen */
-              throw new Error();
+              reject(new Error());
 
             });
 
@@ -1446,7 +1618,7 @@ describe("StorageMap", () => {
 
     }));
 
-    it("indexedDb with default options", () => new Promise(done => {
+    it("indexedDb with default options", () => new Promise((done, reject) => {
 
       TestBed.resetTestingModule();
       const localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
@@ -1460,14 +1632,18 @@ describe("StorageMap", () => {
         expect(store).toBe(DEFAULT_IDB_STORE_NAME);
         expect(version).toBe(DEFAULT_IDB_DB_VERSION);
 
-        closeAndDeleteDatabase(done, localStorageService);
+        closeAndDeleteDatabase(localStorageService).then(() => {
+          done();
+        }).catch(() => {
+          reject(new Error());
+        });
 
       });
 
     }));
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/57 */
-    it("indexedDb with noWrap to false", (context) => new Promise(done => {
+    it("indexedDb with noWrap to false", (context) => new Promise((done, reject) => {
 
       const index = `wrap${Date.now().toFixed()}`;
       const value = "test";
@@ -1498,7 +1674,11 @@ describe("StorageMap", () => {
 
               dbOpen.result.close();
 
-              closeAndDeleteDatabase(done, localStorageService);
+              closeAndDeleteDatabase(localStorageService).then(() => {
+                done();
+              }).catch(() => {
+                reject(new Error());
+              });
 
             });
 
@@ -1507,7 +1687,7 @@ describe("StorageMap", () => {
               dbOpen.result.close();
 
               /* This case is not supposed to happen */
-              throw new Error();
+              reject(new Error());
 
             });
 
@@ -1522,7 +1702,7 @@ describe("StorageMap", () => {
 
     }));
 
-    it("indexedDb with custom options", () => new Promise(done => {
+    it("indexedDb with custom options", () => new Promise((done, reject) => {
 
       /* Unique names to be sure `indexedDB` `upgradeneeded` event is triggered */
       const dbName = `dbCustom${Date.now().toFixed()}`;
@@ -1549,7 +1729,11 @@ describe("StorageMap", () => {
         expect(store).toBe(storeName);
         expect(version).toBe(dbVersion);
 
-        closeAndDeleteDatabase(done, localStorageService);
+        closeAndDeleteDatabase(localStorageService).then(() => {
+          done();
+        }).catch(() => {
+          reject(new Error());
+        });
 
       });
 

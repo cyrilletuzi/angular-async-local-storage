@@ -30,7 +30,8 @@
             "tsConfig": "lib/tsconfig.spec.json",
             "browsers": [
               "chromium"
-            ]
+            ],
+            "headless": true
           }
         },
         "lint": {

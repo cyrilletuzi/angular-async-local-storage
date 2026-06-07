@@ -8,82 +8,86 @@ import { StorageMap } from "../storages/storage-map";
  * @param storageService Service
  */
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-export function clearStorage(done: (value?: unknown) => void, storageService: StorageMap): void {
+export async function clearStorage(storageService: StorageMap): Promise<void> {
 
-  if (storageService.backingEngine === "indexedDB") {
+  return new Promise((done) => {
 
-    try {
+    if (storageService.backingEngine === "indexedDB") {
 
-      const dbOpen = indexedDB.open(storageService.backingStore.database);
+      try {
 
-      dbOpen.addEventListener("success", () => {
+        const dbOpen = indexedDB.open(storageService.backingStore.database);
 
-        const storeName = storageService.backingStore.store;
+        dbOpen.addEventListener("success", () => {
 
-        /* May be `null` if no requests were made */
-        if (storeName !== "") {
+          const storeName = storageService.backingStore.store;
 
-          const store = dbOpen.result.transaction([storeName], "readwrite").objectStore(storeName);
+          /* May be `null` if no requests were made */
+          if (storeName !== "") {
 
-          const request = store.clear();
+            const store = dbOpen.result.transaction([storeName], "readwrite").objectStore(storeName);
 
-          request.addEventListener("success", () => {
+            const request = store.clear();
+
+            request.addEventListener("success", () => {
+
+              dbOpen.result.close();
+
+              done();
+
+            });
+
+            request.addEventListener("error", () => {
+
+              dbOpen.result.close();
+
+              done();
+
+            });
+
+          }
+          else {
 
             dbOpen.result.close();
 
             done();
 
-          });
+          }
 
-          request.addEventListener("error", () => {
+        });
 
-            dbOpen.result.close();
+      }
+      catch {
 
-            done();
+        localStorage.clear();
 
-          });
+        done();
 
-        }
-        else {
-
-          dbOpen.result.close();
-
-          done();
-
-        }
-
-      });
+      }
 
     }
-    catch {
+    else if (storageService.backingEngine === "localStorage") {
 
       localStorage.clear();
 
       done();
 
     }
+    else if (storageService.backingEngine === "memory") {
 
-  }
-  else if (storageService.backingEngine === "localStorage") {
+      // eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/no-unsafe-type-assertion
+      (storageService["ɵinternalGetDatabase"]() as MemoryDatabase)["memoryStorage"].clear();
 
-    localStorage.clear();
+      done();
 
-    done();
+    }
+    else {
 
-  }
-  else if (storageService.backingEngine === "memory") {
+      done();
 
-    // eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/no-unsafe-type-assertion
-    (storageService["ɵinternalGetDatabase"]() as MemoryDatabase)["memoryStorage"].clear();
+    }
 
-    done();
-
-  }
-  else {
-
-    done();
-
-  }
+  });
 
 }
 
@@ -97,35 +101,39 @@ export function clearStorage(done: (value?: unknown) => void, storageService: St
  * @param storageService Service
  */
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-export function closeAndDeleteDatabase(done: (value?: unknown) => void, storageService: StorageMap): void {
+export function closeAndDeleteDatabase(storageService: StorageMap): Promise<void> {
 
-  /* Only `indexedDB` is concerned */
-  if (storageService.backingEngine === "indexedDB") {
+  return new Promise((done) => {
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    const indexedDBService = storageService["ɵinternalGetDatabase"]() as IndexedDBDatabase;
+    /* Only `indexedDB` is concerned */
+    if (storageService.backingEngine === "indexedDB") {
 
-    // eslint-disable-next-line @typescript-eslint/dot-notation
-    indexedDBService["database"].subscribe({
-      next: (database) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      const indexedDBService = storageService["ɵinternalGetDatabase"]() as IndexedDBDatabase;
 
-        /* Close the database connection */
-        database.close();
+      // eslint-disable-next-line @typescript-eslint/dot-notation
+      indexedDBService["database"].subscribe({
+        next: (database) => {
 
-        /* Delete database */
-        const deletingDb = indexedDB.deleteDatabase(indexedDBService.backingStore.database);
+          /* Close the database connection */
+          database.close();
 
-        deletingDb.addEventListener("success", () => { done(); });
-        deletingDb.addEventListener("error", () => { done(); });
+          /* Delete database */
+          const deletingDb = indexedDB.deleteDatabase(indexedDBService.backingStore.database);
 
-      },
-    });
+          deletingDb.addEventListener("success", () => { done(); });
+          deletingDb.addEventListener("error", () => { done(); });
 
-  }
-  else {
+        },
+      });
 
-    done();
+    }
+    else {
 
-  }
+      done();
+
+    }
+
+  });
 
 }
