@@ -4,6 +4,7 @@ import { TestBed } from "@angular/core/testing";
 import { String as StringType, Type, type Static } from "@sinclair/typebox";
 import { firstValueFrom } from "rxjs";
 import { filter, mergeMap, tap } from "rxjs/operators";
+import { server } from 'vitest/browser';
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
 import { LocalStorageDatabase } from "../databases/localstorage-database";
 import { MemoryDatabase } from "../databases/memory-database";
@@ -774,7 +775,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           });
         }));
 
-        it("blob (will be pending in Safari private)", (context) => new Promise((done) => {
+        it.skipIf(server.browser === 'webkit')("blob (will be pending in Safari private)", (context) => new Promise((done) => {
 
           const value = new Blob();
 

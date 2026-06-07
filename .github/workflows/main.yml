@@ -10,8 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        # os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     name: Test with Angular@latest on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -30,9 +29,7 @@ jobs:
     - name: Build the lib
       run: npm run build
     - name: Run unit tests
-      run: npm run unit:${{ matrix.os }}
-    - name: Run unit tests in private mode
-      run: npm run unit:${{ matrix.os }}:private
+      run: npm run unit
     - name: Run e2e tests
       run: npm run e2e
       if: matrix.os == 'ubuntu-latest'
@@ -60,8 +57,6 @@ jobs:
       env:
         CI: true
     - name: Run unit tests
-      run: npm run unit:ubuntu-latest
-    - name: Run unit tests in private mode
-      run: npm run unit:ubuntu-latest:private
+      run: npm run unit
     - name: Run e2e tests
       run: npm run e2e

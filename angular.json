@@ -29,7 +29,9 @@
           "options": {
             "tsConfig": "lib/tsconfig.spec.json",
             "browsers": [
-              "chromium"
+              "chromium",
+              "firefox",
+              "webkit"
             ],
             "headless": true
           }
