@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from "vitest";
 import type { JSONSchema } from "./json-schema";
 import { JSONValidator } from "./json-validator";
 
@@ -193,7 +194,7 @@ describe(`JSONValidator`, () => {
           const test = jsonValidator.validate("test", { type: "string", pattern: "+++" });
           expect(test).toBe(true);
 
-        }).not.toThrowError();
+        }).not.toThrow();
 
       });
 
@@ -333,7 +334,7 @@ describe(`JSONValidator`, () => {
 
           expect(test).toBe(true);
 
-        }).not.toThrowError();
+        }).not.toThrow();
 
       });
 

@@ -1,11 +1,11 @@
 import { TestBed } from "@angular/core/testing";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, type TestContext } from "vitest";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
 import { provideIndexedDBDataBaseName } from "../providers";
 import { StorageMap } from "../storages/storage-map";
 import { DEFAULT_IDB_STORE_NAME } from "../tokens";
 import type { JSONSchema } from "../validation/json-schema";
-import { clearStorage, closeAndDeleteDatabase } from "./cleaning.spec";
-
+import { clearStorage, closeAndDeleteDatabase } from "./cleaning";
 
 const dbName = `interopStore${Date.now().toFixed()}`;
 const index = "test";
@@ -13,11 +13,11 @@ const index = "test";
 /**
  * Set a value with native `indexedDB` API and try to override it with the lib
  * @param localStorageService Service
- * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
+ * @param done Promise resolver
  * @param value Value to store
  */
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: DoneFn, value: unknown): void {
+function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: (value?: unknown) => void, context: TestContext & object, value: unknown): void {
 
   try {
 
@@ -46,9 +46,6 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
           localStorageService.set(index, "world").subscribe({
             next: () => {
-
-              expect().nothing();
-
               dbOpen.result.close();
 
               done();
@@ -58,7 +55,7 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
               dbOpen.result.close();
 
-              pending();
+              context.skip();
 
             },
 
@@ -71,23 +68,25 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
           dbOpen.result.close();
 
           /* This case is not supposed to happen */
-          fail();
+          throw new Error();
 
         });
 
-      } catch {
+      }
+      catch {
 
         dbOpen.result.close();
 
-        pending();
+        context.skip();
 
       }
 
     });
 
-  } catch {
+  }
+  catch {
 
-    pending();
+    context.skip();
 
   }
 
@@ -96,11 +95,11 @@ function testSetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 /**
  * Set a value with native `indexedDB` API and try to get it with the lib
  * @param localStorageService Service
- * @param done Jasmine helper to explicit when the operation has ended to avoid tests overlap
+ * @param done Promise resolver
  * @param value Value to set and get
  */
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: DoneFn, value: unknown, schema?: JSONSchema): void {
+function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done: (value?: unknown) => void, context: TestContext & object, value: unknown, schema?: JSONSchema): void {
 
   try {
 
@@ -147,7 +146,7 @@ function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
           dbOpen.result.close();
 
           /* This case is not supposed to happen */
-          fail();
+          throw new Error();
 
         });
 
@@ -155,7 +154,7 @@ function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
         dbOpen.result.close();
 
-        pending();
+        context.skip();
 
       }
 
@@ -163,7 +162,7 @@ function testGetCompatibilityWithNativeAPI(localStorageService: StorageMap, done
 
   } catch {
 
-    pending();
+    context.skip();
 
   }
 
@@ -183,56 +182,59 @@ describe("Interoperability", () => {
     localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
   });
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     /* Clear data to avoid tests overlap */
-    clearStorage(done, localStorageService);
+    await clearStorage(localStorageService);
   });
 
-  afterAll((done) => {
+  afterAll(async () => {
     /* Now that `indexedDB` store name can be customized, it's important:
      * - to delete the database after each tests group,
      * so the next tests group to will trigger the `indexedDB` `upgradeneeded` event,
      * as it's where the store is created
      * - to be able to delete the database, all connections to it must be closed */
-    closeAndDeleteDatabase(done, localStorageService);
+    await closeAndDeleteDatabase(localStorageService);
   });
 
   const setTestValues = ["hello", "", 0, false, null, undefined];
 
   for (const setTestValue of setTestValues) {
 
-    it(`setItem() after external API`, (done) => {
+    it(`setItem() after external API`, (context,) => new Promise((done) => {
 
-      testSetCompatibilityWithNativeAPI(localStorageService, done, setTestValue);
+      testSetCompatibilityWithNativeAPI(localStorageService, done, context, setTestValue);
 
-    });
+    }));
 
   }
 
-  const getTestValues: [unknown, JSONSchema | undefined][] = [
-    ["hello", { type: "string" }],
-    ["", { type: "string" }],
-    [0, { type: "number" }],
-    [1, { type: "number" }],
-    [true, { type: "boolean" }],
-    [false, { type: "boolean" }],
-    [[1, 2, 3], { type: "array", items: { type: "number" } }],
-    [{ test: "value" }, { type: "object", properties: { test: { type: "string" } } }],
-    [null, undefined],
-    [undefined, undefined],
-  ];
+  const getTestValues: [
+    unknown,
+    JSONSchema | undefined
+  ][] = [
+      ["hello", { type: "string" }],
+      ["", { type: "string" }],
+      [0, { type: "number" }],
+      [1, { type: "number" }],
+      [true, { type: "boolean" }],
+      [false, { type: "boolean" }],
+      [[1, 2, 3], { type: "array", items: { type: "number" } }],
+      [{ test: "value" }, { type: "object", properties: { test: { type: "string" } } }],
+      [null, undefined],
+      [undefined, undefined],
+    ];
 
   for (const [getTestValue, getTestSchema] of getTestValues) {
 
-    it(`getItem() after external API`, (done) => {
+    it(`getItem() after external API`, (context) => new Promise((done) => {
 
-      testGetCompatibilityWithNativeAPI(localStorageService, done, getTestValue, getTestSchema);
+      testGetCompatibilityWithNativeAPI(localStorageService, done, context, getTestValue, getTestSchema);
 
-    });
+    }));
 
   }
 
-  it("keys() should return strings only", (done) => {
+  it("keys() should return strings only", (context) => new Promise((done) => {
 
     const key = 1;
 
@@ -276,18 +278,16 @@ describe("Interoperability", () => {
           dbOpen.result.close();
 
           /* This case is not supposed to happen */
-          fail();
+          throw new Error();
 
         });
 
       });
 
     } catch {
-
-      pending();
-
+      context.skip();
     }
 
-  });
+  }));
 
 });
