@@ -45,7 +45,6 @@
     "better-typescript-lib": "~2.12.0",
     "copyfiles": "^2.4.1",
     "eslint": "^10.4.1",
-    "jsdom": "^29.1.1",
     "localforage": "^1.10.0",
     "ng-packagr": "^22.0.0",
     "typescript": "~6.0.3",
