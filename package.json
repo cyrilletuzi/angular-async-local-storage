@@ -32,8 +32,8 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "^22.0.4",
-    "@angular/cli": "^22.0.4",
+    "@angular/build": "^22.0.5",
+    "@angular/cli": "^22.0.5",
     "@angular/compiler-cli": "^22.0.4",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
@@ -46,9 +46,9 @@
     "copyfiles": "^2.4.1",
     "eslint": "^10.6.0",
     "localforage": "^1.10.0",
-    "ng-packagr": "^22.0.0",
+    "ng-packagr": "^22.0.1",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.62.0",
+    "typescript-eslint": "^8.62.1",
     "vitest": "^4.0.11"
   },
   "allowScripts": {
