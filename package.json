@@ -27,14 +27,14 @@
     "@angular/compiler": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/platform-browser": "^22.0.0",
-    "@angular/router": "^22.0.4",
+    "@angular/router": "^22.0.5",
     "rxjs": "^7.8.2",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@angular/build": "^22.0.5",
     "@angular/cli": "^22.0.5",
-    "@angular/compiler-cli": "^22.0.4",
+    "@angular/compiler-cli": "^22.0.5",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
     "@sinclair/typebox": "^0.34.49",
@@ -48,7 +48,7 @@
     "localforage": "^1.10.0",
     "ng-packagr": "^22.0.1",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.62.1",
+    "typescript-eslint": "^8.63.0",
     "vitest": "^4.0.11"
   },
   "allowScripts": {
