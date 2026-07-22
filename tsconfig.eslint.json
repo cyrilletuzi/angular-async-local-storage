@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "include": [
-    "lib/src/**/*.ts",
-    "testing-apps/**/*.ts",
-    "playwright-demo.config.ts",
-    "playwright-localforage.config.ts"
-  ]
-}
