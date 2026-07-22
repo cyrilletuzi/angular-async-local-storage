@@ -127,6 +127,8 @@ module.exports = defineConfig(
       "@angular-eslint/no-uncalled-signals": "error",
       "@angular-eslint/prefer-signal-model": "error",
       "@angular-eslint/computed-must-return": "error",
+      "@angular-eslint/no-developer-preview": "error",
+      "@angular-eslint/no-experimental": "error",
       /* Injection context */
       "angular-eslint-injection-context/custom-function-in-injection-context": ["error", {
         "functions": [{
