@@ -15,6 +15,7 @@ import type {
 import { JSONValidator } from "../validation/json-validator";
 import { ValidationError } from "./exceptions";
 
+// eslint-disable-next-line @angular-eslint/prefer-service-decorator -- Not possible here because a constructor injection is done
 @Injectable({
   providedIn: "root"
 })

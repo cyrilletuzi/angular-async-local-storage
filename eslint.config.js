@@ -25,7 +25,6 @@ module.exports = defineConfig(
     ],
     processor: angulareslint.processInlineTemplates,
     rules: {
-      "@angular-eslint/component-class-suffix": "off",
       // Prefixes
       "@angular-eslint/component-selector": [
         "error",
@@ -109,19 +108,24 @@ module.exports = defineConfig(
         "ignoreInferredTypes": true,
         "treatMethodsAsReadonly": true,
       }],
+      // Disable recommended Angular ESLint rules already managed by other rules
+      "@angular-eslint/contextual-lifecycle": "off",
+      "@angular-eslint/no-empty-lifecycle-method": "off",
+      "@angular-eslint/prefer-on-push-component-change-detection": "off",
+      "@angular-eslint/use-lifecycle-interface": "off",
       // Stricter Angular ESLint rules
-      "@angular-eslint/prefer-standalone": "off",
+      "@angular-eslint/prefer-output-readonly": "error",
       "@angular-eslint/consistent-component-styles": "error",
-      "@angular-eslint/sort-lifecycle-methods": "error",
-      "@angular-eslint/contextual-decorator": "error",
       "@angular-eslint/no-attribute-decorator": "error",
       "@angular-eslint/no-input-prefix": "error",
-      "@angular-eslint/no-lifecycle-call": "error",
       "@angular-eslint/no-pipe-impure": "error",
       "@angular-eslint/no-queries-metadata-property": "error",
       "@angular-eslint/use-component-view-encapsulation": "error",
-      "@angular-eslint/use-injectable-provided-in": "error",
-      "@angular-eslint/no-async-lifecycle-method": "error",
+      "@angular-eslint/prefer-service-decorator": "error",
+      "@angular-eslint/runtime-localize": "error",
+      "@angular-eslint/prefer-host-metadata-property": "error",
+      "@angular-eslint/no-uncalled-signals": "error",
+      "@angular-eslint/prefer-signal-model": "error",
       "@angular-eslint/computed-must-return": "error",
       /* Injection context */
       "angular-eslint-injection-context/custom-function-in-injection-context": ["error", {
@@ -221,6 +225,8 @@ module.exports = defineConfig(
         }
       ],
       "@angular-eslint/template/button-has-type": "error",
+      "@angular-eslint/template/require-switch-default": "error",
+      "@angular-eslint/template/no-outerhtml": "error",
       // More accessibility
       "@angular-eslint/template/no-positive-tabindex": "error"
     }
