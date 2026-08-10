@@ -3,8 +3,7 @@ const eslint = require("@eslint/js");
 const { defineConfig } = require("eslint/config");
 const tseslint = require("typescript-eslint");
 const angulareslint = require("angular-eslint");
-const angularEslintInjectionContext = require("angular-eslint-injection-context");
-const angularEslintZoneless = require("angular-eslint-zoneless");
+const angularModern = require("eslint-plugin-angular-modern");
 
 module.exports = defineConfig(
   {
@@ -20,8 +19,7 @@ module.exports = defineConfig(
       tseslint.configs.strictTypeChecked,
       tseslint.configs.stylisticTypeChecked,
       angulareslint.configs.tsRecommended,
-      angularEslintInjectionContext.configs.recommended,
-      angularEslintZoneless.configs.strict,
+      angularModern.configs.recommended,
     ],
     processor: angulareslint.processInlineTemplates,
     rules: {
@@ -130,7 +128,7 @@ module.exports = defineConfig(
       "@angular-eslint/no-developer-preview": "error",
       "@angular-eslint/no-experimental": "error",
       /* Injection context */
-      "angular-eslint-injection-context/custom-function-in-injection-context": ["error", {
+      "eslint-plugin-angular-modern/custom-function-in-injection-context": ["error", {
         "functions": [{
           "name": "localDatabaseFactory",
           "allowedSpecialInjectionContexts": ["factory"],
