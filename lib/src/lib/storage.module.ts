@@ -6,7 +6,7 @@ import { IDB_DB_NAME, IDB_DB_VERSION, IDB_NO_WRAP, IDB_STORE_NAME, LS_PREFIX, ty
  * 
  * @ignore
  */
-@NgModule()
+@NgModule() // eslint-disable-line eslint-plugin-angular-modern/no-ngmodule
 export class StorageModule {
 
   /**

@@ -15,7 +15,7 @@ import type {
 import { JSONValidator } from "../validation/json-validator";
 import { ValidationError } from "./exceptions";
 
-// eslint-disable-next-line @angular-eslint/prefer-service-decorator -- Not possible here because a constructor injection is done
+// eslint-disable-next-line eslint-plugin-angular-modern/no-injectable-decorator -- Not possible here because a constructor injection is done
 @Injectable({
   providedIn: "root"
 })
@@ -29,8 +29,8 @@ export class StorageMap {
    * Constructor params are provided by Angular (but can also be passed manually in tests)
    * @param database Storage to use
    */
-  constructor(
-    // eslint-disable-next-line @angular-eslint/prefer-inject, @typescript-eslint/prefer-readonly-parameter-types -- Used in tests for inject, wanted as writeable for readonly
+  constructor( // eslint-disable-line eslint-plugin-angular-modern/no-constructor-injection -- Used in tests for inject
+    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Used in tests for inject, wanted as writeable for readonly
     database: LocalDatabase,
   ) {
     this.#database = database;
