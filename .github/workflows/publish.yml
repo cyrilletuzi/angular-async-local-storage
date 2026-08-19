@@ -22,4 +22,4 @@ jobs:
 
       - run: npm ci
       - run: npm run build
-      - run: npm publish ./dist/lib --access public
+      - run: npm stage publish ./dist/lib --access public
