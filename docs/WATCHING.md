@@ -16,10 +16,10 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 })
 export class SomeComponent implements OnInit, OnDestroy {
 
+  private readonly storageMap = inject(StorageMap);
+
   data: string;
   dataSubscription: Subscription;
-
-  constructor(private storageMap: StorageMap) {}
 
   ngOnInit(): void {
     this.dataSubscription = this.storageMap.watch('somekey', { type: 'string' })
