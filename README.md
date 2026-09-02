@@ -51,7 +51,7 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 
 @Injectable()
 export class YourService {
-  private readonly storageMap = inject(StorageMap);
+  readonly #storageMap = inject(StorageMap);
 }
 ```
 
@@ -84,7 +84,7 @@ class StorageMap {
 ```typescript
 const user: User = { firstName: 'Henri', lastName: 'Bergson' };
 
-this.storageMap.set('user', user).subscribe(() => {});
+this.#storageMap.set('user', user).subscribe(() => {});
 ```
 
 > [!NOTE]
@@ -96,26 +96,26 @@ this.storageMap.set('user', user).subscribe(() => {});
 
 To delete one item:
 ```typescript
-this.storageMap.delete('user').subscribe(() => {});
+this.#storageMap.delete('user').subscribe(() => {});
 ```
 
 To delete all items:
 ```typescript
-this.storageMap.clear().subscribe(() => {});
+this.#storageMap.clear().subscribe(() => {});
 ```
 
 ### Reading data
 
 To get the *current* value:
 ```typescript
-this.storageMap.get('user').subscribe((user) => {
+this.#storageMap.get('user').subscribe((user) => {
   console.log(user);
 });
 ```
 
 Not finding an item is not an error, it succeeds but returns `undefined`:
 ```typescript
-this.storageMap.get('notexisting').subscribe((data) => {
+this.#storageMap.get('notexisting').subscribe((data) => {
   data; // undefined
 });
 ```
@@ -130,7 +130,7 @@ Do not forget it is client-side storage: **always check the data**, as it could 
 You **should** use a [JSON Schema](http://json-schema.org/) to validate the data.
 
 ```typescript
-this.storageMap.get('test', { type: 'string' }).subscribe({
+this.#storageMap.get('test', { type: 'string' }).subscribe({
   next: (user) => { /* Called if data is valid or `undefined` */ },
   error: (error) => { /* Called if data is invalid */ },
 });
@@ -146,14 +146,14 @@ You do *NOT* need to unsubscribe: the `Observable` autocompletes (like in the An
 But **you *DO* need to subscribe**, even if you do not have something specific to do after writing in storage (because it is how RxJS `Observable`s work).
 
 ```typescript
-this.storageMap.set('user', user); // Does nothing
+this.#storageMap.set('user', user); // Does nothing
 ```
 
 ### Errors
 
 As usual, it is better to catch any potential error:
 ```typescript
-this.storageMap.set('color', 'red').subscribe({
+this.#storageMap.set('color', 'red').subscribe({
   next: () => {},
   error: (error) => {},
 });
@@ -163,7 +163,7 @@ For read operations, you can also manage errors by providing a default value:
 ```typescript
 import { catchError, of } from 'rxjs';
 
-this.storageMap.get('color').pipe(
+this.#storageMap.get('color').pipe(
   catchError(() => of('red')),
 ).subscribe((result) => {});
 ```

@@ -7,7 +7,7 @@ In addition to the classic `localStorage`-like API, this library also provides a
 An `Observable` iterating over keys in storage:
 
 ```typescript
-this.storageMap.keys().subscribe({
+this.#storageMap.keys().subscribe({
   next: (key) => {
     console.log(key);
   },
@@ -27,7 +27,7 @@ this.storageMap.keys().subscribe({
 Gives you an `Observable` telling you if a key exists in storage:
 
 ```typescript
-this.storageMap.has('someindex').subscribe((result) => {
+this.#storageMap.has('someindex').subscribe((result) => {
 
   if (result) {
     console.log('The key exists :)');
@@ -43,7 +43,7 @@ this.storageMap.has('someindex').subscribe((result) => {
 Number of items stored in storage.
 
 ```typescript
-this.storageMap.size.subscribe((size) => {
+this.#storageMap.size.subscribe((size) => {
 
   console.log(size);
 
@@ -69,13 +69,13 @@ You can then delete only app data:
 ```typescript
 import { filter, mergeMap } from 'rxjs';
 
-this.storageMap.keys().pipe(
+this.#storageMap.keys().pipe(
 
   /* Keep only keys starting with 'app_' */
   filter((key) => key.startsWith('app_')),
 
   /* Remove the item for each key */
-  mergeMap((key) => this.storageMap.delete(key))
+  mergeMap((key) => this.#storageMap.delete(key))
 
 ).subscribe({
   complete: () => {

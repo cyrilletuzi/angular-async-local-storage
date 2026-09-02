@@ -141,15 +141,15 @@ class StorageMap {
 It does the same thing as the `localStorage` API, but also allows more advanced operations.
 
 It is now the recommended service, and the following example will use it to make you familiar with it:
-- `this.storageMap.get()` is the same as `this.localStorage.getItem()`
-- `this.storageMap.set()` is the same as `this.localStorage.setItem()`
-- `this.storageMap.delete()` is the same as `this.localStorage.removeItem()`
-- `this.storageMap.clear()` is the same as `this.localStorage.clear()`
+- `this.#storageMap.get()` is the same as `this.localStorage.getItem()`
+- `this.#storageMap.set()` is the same as `this.localStorage.setItem()`
+- `this.#storageMap.delete()` is the same as `this.localStorage.removeItem()`
+- `this.#storageMap.clear()` is the same as `this.localStorage.clear()`
 
 Just one difference on the return value when the requested key does not exist:
 - `undefined` with `StorageMap`
 ```typescript
-this.storageMap.get('notexisting').subscribe((data) => {
+this.#storageMap.get('notexisting').subscribe((data) => {
   data; // undefined
 });
 ```
@@ -173,7 +173,7 @@ this.localStorage.getItem<string>('test', { schema: { type: 'string' } })
 
 Since v8:
 ```typescript
-this.storageMap.get('test', { type: 'string' })
+this.#storageMap.get('test', { type: 'string' })
 ```
 
 Passing the schema via an object is deprecated and will be removed in v9. So this change is strongly recommended.
@@ -195,7 +195,7 @@ this.localStorage.getItem<string>('test', { schema: { type: 'string' } }).subscr
 
 Since v8:
 ```typescript
-this.storageMap.get('test', { type: 'string' }).subscribe((data) => {
+this.#storageMap.get('test', { type: 'string' }).subscribe((data) => {
   data; // string :D
 });
 ```
@@ -220,7 +220,7 @@ this.localStorage.has('somekey').subscribe((result) => {});
 
 Since v8:
 ```typescript
-this.storageMap.has('somekey').subscribe((result) => {});
+this.#storageMap.has('somekey').subscribe((result) => {});
 ```
 
 They are still in the `LocalStorage` service but deprecated. They will be removed from this service in v9.

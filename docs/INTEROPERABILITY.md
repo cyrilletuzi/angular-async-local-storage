@@ -54,8 +54,8 @@ bootstrapApplication(AppComponent, {
 - Option 2: keep the config of this library and change the options in the other APIs, by using the values exported by the lib:
 
 ```ts
-if (this.storageMap.backingEngine === 'indexedDB') {
-  const { database, store, version } = this.storageMap.backingStore;
+if (this.#storageMap.backingEngine === 'indexedDB') {
+  const { database, store, version } = this.#storageMap.backingStore;
 }
 ```
 
@@ -80,8 +80,8 @@ bootstrapApplication(AppComponent, {
 - Option 2:
 
 ```ts
-if (this.storageMap.backingEngine === 'localStorage') {
-  const { prefix } = this.storageMap.fallbackBackingStore;
+if (this.#storageMap.backingEngine === 'localStorage') {
+  const { prefix } = this.#storageMap.fallbackBackingStore;
 }
 ```
 
@@ -106,7 +106,7 @@ bootstrapApplication(AppComponent, {
 Interoperability with native `indexedDB` can be achieved that way:
 
 ```ts
-if (this.storageMap.backingEngine === 'indexedDB') {
+if (this.#storageMap.backingEngine === 'indexedDB') {
 
   const { database, store, version } = this.storage.backingStore;
 

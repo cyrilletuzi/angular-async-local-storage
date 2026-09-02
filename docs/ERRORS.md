@@ -2,7 +2,7 @@
 
 As usual, it is better to catch any potential error:
 ```typescript
-this.storageMap.set('color', 'red').subscribe({
+this.#storageMap.set('color', 'red').subscribe({
   next: () => {},
   error: (error) => {},
 });
@@ -12,7 +12,7 @@ For read operations, you can also manage errors by providing a default value:
 ```typescript
 import { catchError, of } from 'rxjs';
 
-this.storageMap.get('color').pipe(
+this.#storageMap.get('color').pipe(
   catchError(() => of('red')),
 ).subscribe((result) => {});
 ```

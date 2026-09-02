@@ -22,45 +22,45 @@ It can have many uses (it is why you have autocompletion in some JSON files in V
 ### Boolean
 
 ```typescript
-this.storageMap.get('test', { type: 'boolean' })
+this.#storageMap.get('test', { type: 'boolean' })
 ```
 
 ### Integer
 
 ```typescript
-this.storageMap.get('test', { type: 'integer' })
+this.#storageMap.get('test', { type: 'integer' })
 ```
 
 ### Number
 
 ```typescript
-this.storageMap.get('test', { type: 'number' })
+this.#storageMap.get('test', { type: 'number' })
 ```
 
 ### String
 
 ```typescript
-this.storageMap.get('test', { type: 'string' })
+this.#storageMap.get('test', { type: 'string' })
 ```
 
 ### Arrays of primitives
 
 ```typescript
-this.storageMap.get('test', {
+this.#storageMap.get('test', {
   type: 'array',
   items: { type: 'integer' },
 })
 ```
 
 ```typescript
-this.storageMap.get('test', {
+this.#storageMap.get('test', {
   type: 'array',
   items: { type: 'number' },
 })
 ```
 
 ```typescript
-this.storageMap.get('test', {
+this.#storageMap.get('test', {
   type: 'array',
   items: { type: 'string' },
 })
@@ -87,7 +87,7 @@ In most cases, an array is for a list with values of the *same type*. In special
 
 ```typescript
 // JSON schema
-this.storageMap.get<[string, number]>('test', {
+this.#storageMap.get<[string, number]>('test', {
   type: 'array',
   items: [
     { type: 'string' },
@@ -103,7 +103,7 @@ const schema = Type.Tuple([
   Type.Number(),
 ]);
 
-this.storageMap.get<Static<typeof schema>>('test', schema)
+this.#storageMap.get<Static<typeof schema>>('test', schema)
 ```
 
 > [!NOTE]
@@ -139,7 +139,7 @@ const schema = {
   required: ['name', 'isAuthenticated', 'favoriteColors']
 } satisfies JSONSchema;
 
-this.storageMap.get<User>('test', schema)
+this.#storageMap.get<User>('test', schema)
 ```
 
 > [!TIP]
@@ -156,7 +156,7 @@ const schema = Type.Object({
   favoriteColors: Type.Array(Type.String()),
 });
 
-this.storageMap.get<Static<typeof schema>>('test', schema)
+this.#storageMap.get<Static<typeof schema>>('test', schema)
 ```
 
 > [!NOTE]
@@ -187,7 +187,7 @@ While validation is only required when *reading* storage, when the data is compl
 So when storing complex objects, it is better to check the structure when writing too:
 
 ```typescript
-this.storageMap.set('test', user, schema)
+this.#storageMap.set('test', user, schema)
 ```
 
 > [!TIP]
@@ -196,7 +196,7 @@ this.storageMap.set('test', user, schema)
 ```typescript
 import { isDevMode } from '@angular/core';
 
-this.storageMap.set('test', user, isDevMode() ? schema : undefined)
+this.#storageMap.set('test', user, isDevMode() ? schema : undefined)
 ```
 
 ## Additional validation
@@ -217,7 +217,7 @@ this.storageMap.set('test', user, isDevMode() ? schema : undefined)
 
 For example:
 ```typescript
-this.storageMap.get('test', {
+this.#storageMap.get('test', {
   type: 'number',
   maximum: 5
 })
@@ -233,7 +233,7 @@ this.storageMap.get('test', {
 
 For example:
 ```typescript
-this.storageMap.get('test', {
+this.#storageMap.get('test', {
   type: 'string',
   maxLength: 10
 })
@@ -247,7 +247,7 @@ this.storageMap.get('test', {
 
 For example:
 ```typescript
-this.storageMap.get('test', {
+this.#storageMap.get('test', {
   type: 'array',
   items: { type: 'string' },
   maxItems: 5
@@ -259,7 +259,7 @@ this.storageMap.get('test', {
 If validation fails, it will go in the error callback:
 
 ```typescript
-this.storageMap.get('existing', { type: 'string' })
+this.#storageMap.get('existing', { type: 'string' })
 .subscribe({
   next: (result) => { /* Called if data is valid or null or undefined */ },
   error: (error) => { /* Called if data is invalid */ },
@@ -268,7 +268,7 @@ this.storageMap.get('existing', { type: 'string' })
 
 But as usual (like when you do a database request), not finding an item is not an error. It succeeds but returns `undefined`:
 ```typescript
-this.storageMap.get('notExisting', { type: 'string' })
+this.#storageMap.get('notExisting', { type: 'string' })
 .subscribe({
   next: (result) => { result; /* undefined */ },
   error: (error) => { /* Not called */ },
@@ -304,7 +304,7 @@ The following features available in the JSON schema standard are *not* available
 Validating via this library is recommended but not required. You can use all the native JavaScript operators and functions to validate by yourself. For example:
 
 ```typescript
-this.storageMap.get('test').subscribe((result) => {
+this.#storageMap.get('test').subscribe((result) => {
 
   result; // type: unknown
 
