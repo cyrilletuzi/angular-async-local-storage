@@ -375,19 +375,19 @@ export class StorageMap {
    * @returns An infinite Observable giving the current value
    * 
    * @example
-   * Component()
-   * export class MyComponent implements OnInit, OnDestroy {
+   * Service()
+   * export class MyService {
    * 
-   *   private storageSubscription?: Subscription;
+   *   #storageSubscription?: Subscription;
    * 
-   *   ngOnInit(): void {
-   *     this.storageSubscription = this.storageMap.watch('key', { type: 'string' }).subscribe((result) => {
+   *   start(): void {
+   *     this.#storageSubscription = this.storageMap.watch('key', { type: 'string' }).subscribe((result) => {
    *       result; // string or undefined
    *     });
    *   }
    * 
-   *   ngOnDestroy(): void {
-   *     this.storageSubscription?.unsubscribe();
+   *   stop(): void {
+   *     this.#storageSubscription?.unsubscribe();
    *   }
    * 
    * }
