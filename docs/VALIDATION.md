@@ -301,7 +301,11 @@ The following features available in the JSON schema standard are *not* available
 
 ## Custom validation
 
-Validating via this library is recommended but not required. You can use all the native JavaScript operators and functions to validate by yourself. For example:
+Validating via this library is recommended but not required.
+
+### Manual native validation
+
+You can use all the native JavaScript operators and functions to validate by yourself. For example:
 
 ```typescript
 this.#storageMap.get('test').subscribe((result) => {
@@ -317,5 +321,25 @@ this.#storageMap.get('test').subscribe((result) => {
 ```
 
 **TypeScript will narrow the data type as you validate**.
+
+### Validation with a dedicated library
+
+You can use a validation library. For example with `zod`:
+
+```typescript
+this.#storageMap.get('test').pipe(
+  // `z.optional()` is important because the value can be `undefined`
+  map((raw) => z.optional(z.string().parse(raw))),
+).subscribe({
+  next: (result) => {
+    result; // type: string
+  },
+  error: (error: unknown) => {
+    if (error instanceof z.ZodError) {
+      // `parse()` throws if the data is not valid, so do not forget to handle the error
+    }
+  },
+});
+```
 
 [Back to general documentation](../README.md)

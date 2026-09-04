@@ -1498,7 +1498,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         storage.set(key, "test").pipe(
           mergeMap(() => storage.get(key)),
-          map((result) => z.number().parse(result)),
+          map((result) => z.optional(z.number()).parse(result)),
         ).subscribe({
           error: (error: unknown) => {
 
@@ -1516,7 +1516,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         storage.set(key, value).pipe(
           mergeMap(() => storage.get(key)),
-          map((result) => z.string().parse(result)),
+          map((result) => z.optional(z.string()).parse(result)),
         ).subscribe((result) => {
 
           expect(result).toBe(value);
@@ -1532,7 +1532,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
  
         storage.set(key, value).pipe(
           mergeMap(() => storage.get(key)),
-          map((result) => z.number().parse(result)),
+          map((result) => z.optional(z.number()).parse(result)),
         ).subscribe((result) => {
 
           expect(result).toBe(value);
@@ -1548,7 +1548,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         storage.set(key, value).pipe(
           mergeMap(() => storage.get(key)),
-          map((result) => z.boolean().parse(result)),
+          map((result) => z.optional(z.boolean()).parse(result)),
         ).subscribe((result) => {
 
           expect(result).toBe(value);
@@ -1564,7 +1564,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
         storage.set(key, value).pipe(
           mergeMap(() => storage.get(key)),
-          map((result) => z.array(z.string()).parse(result)),
+          map((result) => z.optional(z.array(z.string())).parse(result)),
         ).subscribe((result) => {
 
           expect(result).toEqual(value);
@@ -1583,10 +1583,10 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           name: "Elmo",
           address: "Sesame street",
         }];
-        const zSchema = z.tuple([z.string(), z.object({
+        const zSchema = z.optional(z.tuple([z.string(), z.object({
           name: z.string(),
           address: z.string().optional(),
-        })]);
+        })]));
 
         storage.set(key, value).pipe(
           mergeMap(() => storage.get(key)),
@@ -1625,7 +1625,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           },
         };
 
-        const zSchema = z.object({
+        const zSchema = z.optional(z.object({
           name: z.string(),
           age: z.number(),
           philosopher: z.boolean(),
@@ -1635,7 +1635,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
             sisters: z.int(),
           }),
           creditCard: z.number().optional(),
-        });
+        }));
 
         storage.set(key, value).pipe(
           mergeMap(() => storage.get(key)),
@@ -1652,7 +1652,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
       it("with options", () => new Promise((done) => {
 
         const value = "blue";
-        const zSchema = z.string().max(10);
+        const zSchema = z.optional(z.string().max(10));
 
         storage.set(key, value).pipe(
           mergeMap(() => storage.get(key)),
