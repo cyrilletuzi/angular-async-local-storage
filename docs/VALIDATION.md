@@ -332,7 +332,7 @@ this.#storageMap.get('test').pipe(
   map((raw) => z.optional(z.string().parse(raw))),
 ).subscribe({
   next: (result) => {
-    result; // type: string
+    result; // type: string | undefined
   },
   error: (error: unknown) => {
     if (error instanceof z.ZodError) {
