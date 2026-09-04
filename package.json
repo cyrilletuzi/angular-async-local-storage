@@ -48,7 +48,8 @@
     "ng-packagr": "^22.1.1",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.69.0",
-    "vitest": "^4.0.11"
+    "vitest": "^4.0.11",
+    "zod": "^4.5.4"
   },
   "allowScripts": {
     "@parcel/watcher": false,

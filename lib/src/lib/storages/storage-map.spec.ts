@@ -3,8 +3,9 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { TestBed } from "@angular/core/testing";
 import { String as StringType, Type, type Static } from "@sinclair/typebox";
 import { firstValueFrom } from "rxjs";
-import { filter, mergeMap, tap } from "rxjs/operators";
+import { filter, map, mergeMap, tap } from "rxjs/operators";
 import { server } from 'vitest/browser';
+import * as z from "zod";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
 import { LocalStorageDatabase } from "../databases/localstorage-database";
 import { MemoryDatabase } from "../databases/memory-database";
@@ -1477,6 +1478,186 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         });
 
         storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: string | undefined) => {
+
+          expect(result).toBe(value);
+
+          done();
+
+        });
+      }));
+
+    });
+
+    describe("compatibility with zod", () => {
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
+      });
+
+      it("invalid", () => new Promise((done) => {
+
+        storage.set(key, "test").pipe(
+          mergeMap(() => storage.get(key)),
+          map((result) => z.number().parse(result)),
+        ).subscribe({
+          error: (error: unknown) => {
+
+            expect(error).toBeInstanceOf(z.ZodError);
+
+            done();
+
+          }
+        });
+      }));
+
+      it("string", () => new Promise((done) => {
+
+        const value = "blue";
+
+        storage.set(key, value).pipe(
+          mergeMap(() => storage.get(key)),
+          map((result) => z.string().parse(result)),
+        ).subscribe((result) => {
+
+          expect(result).toBe(value);
+
+          done();
+
+        });
+      }));
+
+      it("number", () => new Promise((done) => {
+
+        const value = 1.5;
+ 
+        storage.set(key, value).pipe(
+          mergeMap(() => storage.get(key)),
+          map((result) => z.number().parse(result)),
+        ).subscribe((result) => {
+
+          expect(result).toBe(value);
+
+          done();
+
+        });
+      }));
+
+      it("boolean", () => new Promise((done) => {
+
+        const value = true;
+
+        storage.set(key, value).pipe(
+          mergeMap(() => storage.get(key)),
+          map((result) => z.boolean().parse(result)),
+        ).subscribe((result) => {
+
+          expect(result).toBe(value);
+
+          done();
+
+        });
+      }));
+
+      it("array", () => new Promise((done) => {
+
+        const value = ["hello 1", "hello 2"];
+
+        storage.set(key, value).pipe(
+          mergeMap(() => storage.get(key)),
+          map((result) => z.array(z.string()).parse(result)),
+        ).subscribe((result) => {
+
+          expect(result).toEqual(value);
+
+          done();
+
+        });
+      }));
+
+      it("tuple", () => new Promise((done) => {
+
+        const value: [
+          string,
+          Monster
+        ] = ["hello", {
+          name: "Elmo",
+          address: "Sesame street",
+        }];
+        const zSchema = z.tuple([z.string(), z.object({
+          name: z.string(),
+          address: z.string().optional(),
+        })]);
+
+        storage.set(key, value).pipe(
+          mergeMap(() => storage.get(key)),
+          map((result) => zSchema.parse(result)),
+        ).subscribe((result) => {
+
+          expect(result).toEqual(value);
+
+          done();
+
+        });
+      }));
+
+      it("object", () => new Promise((done) => {
+
+        interface User {
+          readonly name: string;
+          readonly age: number;
+          readonly philosopher: boolean;
+          readonly books: readonly string[];
+          readonly family: {
+            readonly brothers: number;
+            readonly sisters: number;
+          };
+          readonly creditCard?: number;
+        }
+
+        const value: User = {
+          name: "Henri Bergson",
+          age: 81,
+          philosopher: true,
+          books: [`Essai sur les données immédiates de la conscience`, `Matière et mémoire`],
+          family: {
+            brothers: 5,
+            sisters: 3,
+          },
+        };
+
+        const zSchema = z.object({
+          name: z.string(),
+          age: z.number(),
+          philosopher: z.boolean(),
+          books: z.array(z.string()),
+          family: z.object({
+            brothers: z.int(),
+            sisters: z.int(),
+          }),
+          creditCard: z.number().optional(),
+        });
+
+        storage.set(key, value).pipe(
+          mergeMap(() => storage.get(key)),
+          map((result) => zSchema.parse(result)),
+        ).subscribe((result) => {
+
+          expect(result).toEqual(value);
+
+          done();
+
+        });
+      }));
+
+      it("with options", () => new Promise((done) => {
+
+        const value = "blue";
+        const zSchema = z.string().max(10);
+
+        storage.set(key, value).pipe(
+          mergeMap(() => storage.get(key)),
+          map((result) => zSchema.parse(result)),
+        ).subscribe((result) => {
 
           expect(result).toBe(value);
 
