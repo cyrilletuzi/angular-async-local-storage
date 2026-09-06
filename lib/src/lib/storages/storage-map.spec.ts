@@ -1470,6 +1470,20 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         });
       }));
 
+      it("const", () => new Promise((done) => {
+
+        const value = "blue";
+        const schema = Type.Literal('blue');
+
+        storage.set(key, value, schema).pipe(mergeMap(() => storage.get(key, schema))).subscribe((result: string | undefined) => {
+
+          expect(result).toBe(value);
+
+          done();
+
+        });
+      }));
+
       it("with options", () => new Promise((done) => {
 
         const value = "blue";

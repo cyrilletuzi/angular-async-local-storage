@@ -203,12 +203,12 @@ this.#storageMap.set('test', user, isDevMode() ? schema : undefined)
 
 ### Options for booleans
 
-- `const` (not available with `typebox`)
+- `const` (`Literal` in `typebox`)
 
 ### Options for integers and numbers
 
-- `const` (not available with `typebox`)
-- `enum` (not available with `typebox`)
+- `const` (`Literal` in `typebox`)
+- `enum` (not possible via `typebox`)
 - `multipleOf`
 - `maximum`
 - `exclusiveMaximum`
@@ -225,8 +225,8 @@ this.#storageMap.get('test', {
 
 ### Options for strings
 
-- `const` (not available with `typebox`)
-- `enum` (not available with `typebox`)
+- `const` (`Literal` in `typebox`)
+- `enum` (not possible via `typebox`)
 - `maxLength`
 - `minLength`
 - `pattern`
