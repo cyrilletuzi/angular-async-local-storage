@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { TestBed } from "@angular/core/testing";
-import { String as StringType, Type, type Static } from "@sinclair/typebox";
 import { firstValueFrom } from "rxjs";
 import { filter, map, mergeMap, tap } from "rxjs/operators";
+import { String as StringType, Type, type Static } from "typebox";
 import { server } from 'vitest/browser';
 import * as z from "zod";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
@@ -1288,7 +1288,7 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
     });
 
-    describe("compatibility with @sinclair/typebox", () => {
+    describe("compatibility with typebox", () => {
       beforeEach(async () => {
         /* Clear data to avoid tests overlap */
         await clearStorage(storage);

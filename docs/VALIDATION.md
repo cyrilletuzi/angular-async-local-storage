@@ -72,13 +72,13 @@ this.#storageMap.get('test', {
 
 There is 2 ways to define the JSON schemas:
 - directly as in the previous examples
-- with the [`@sinclair/typebox` library](https://github.com/sinclairzx81/typebox)
+- with the [`typebox` library](https://github.com/sinclairzx81/typebox)
 
 > [!TIP]
 > `typebox` is recommended for advanced cases, but it requires the installation of an additional library:
 
 ```bash
-npm install @sinclair/typebox
+npm install typebox
 ```
 
 ### Tuple
@@ -96,7 +96,7 @@ this.#storageMap.get<[string, number]>('test', {
 })
 
 // typebox
-import { Type, type Static } from '@sinclair/typebox';
+import { Type, type Static } from 'typebox';
 
 const schema = Type.Tuple([
   Type.String(),
@@ -147,7 +147,7 @@ this.#storageMap.get<User>('test', schema)
 
 ```ts
 // With typebox library
-import { Type, type Static } from '@sinclair/typebox';
+import { Type, type Static } from 'typebox';
 
 const schema = Type.Object({
   name: Type.String(),
