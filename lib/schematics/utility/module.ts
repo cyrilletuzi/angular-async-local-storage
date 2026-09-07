@@ -17,7 +17,6 @@ function getAppModule(host: Tree, mainPath: string): { appModulePath: string; ap
     throw new SchematicsException(`Can't find AppModule`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Existence checked above
   const appModuleFile = host.read(appModulePath)!.toString("utf-8");
 
   return { appModulePath, appModuleFile };
@@ -29,7 +28,6 @@ function updateAppModule(host: Tree, appModulePath: string, appModuleFile: strin
   /* Third param is to disable transpilation, 4rd note sure I just followed other official schematics */
   const appModuleSource = createSourceFile(appModulePath, appModuleFile, ScriptTarget.Latest, true);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const appModuleChanges = addImportToModule(appModuleSource, appModulePath, storageModuleName, packageName) as InsertChange[];
 
   /* The changes must be applied, otherwise the previous line does nothing */

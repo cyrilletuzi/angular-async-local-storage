@@ -6,7 +6,7 @@ import { IDB_DB_NAME, IDB_DB_VERSION, IDB_NO_WRAP, IDB_STORE_NAME, LS_PREFIX, ty
  * 
  * @ignore
  */
-@NgModule() // eslint-disable-line eslint-plugin-angular-modern/no-ngmodule
+@NgModule() // eslint-disable-line eslint-plugin-angular-modern/no-ngmodule -- Deliberate for backward compatibility
 export class StorageModule {
 
   /**
@@ -18,13 +18,13 @@ export class StorageModule {
     return {
       ngModule: StorageModule,
       providers: [
-        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Deliberate for backward compatibility
         config.LSPrefix !== undefined ? { provide: LS_PREFIX, useValue: config.LSPrefix } : [],
-        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Deliberate for backward compatibility
         config.IDBDBName !== undefined ? { provide: IDB_DB_NAME, useValue: config.IDBDBName } : [],
-        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Deliberate for backward compatibility
         config.IDBStoreName !== undefined ? { provide: IDB_STORE_NAME, useValue: config.IDBStoreName } : [],
-        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Deliberate for backward compatibility
         config.IDBDBVersion !== undefined ? { provide: IDB_DB_VERSION, useValue: config.IDBDBVersion } : [],
         (config.IDBNoWrap === false) ? { provide: IDB_NO_WRAP, useValue: config.IDBNoWrap } : [],
       ],

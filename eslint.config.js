@@ -7,6 +7,12 @@ const angularModern = require("eslint-plugin-angular-modern");
 
 module.exports = defineConfig(
   {
+    linterOptions: {
+      reportUnusedDisableDirectives: "error",
+      reportUnusedInlineConfigs: "error",
+    },
+  },
+  {
     files: ["**/*.ts"],
     languageOptions: {
       parserOptions: {
@@ -105,6 +111,9 @@ module.exports = defineConfig(
       "@typescript-eslint/prefer-readonly-parameter-types": ["error", {
         "ignoreInferredTypes": true,
         "treatMethodsAsReadonly": true,
+        allow: [
+          { from: 'lib', name: ['IDBOpenDBRequest'] },
+        ],
       }],
       // Disable recommended Angular ESLint rules already managed by other rules
       "@angular-eslint/contextual-lifecycle": "off",

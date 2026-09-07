@@ -186,9 +186,7 @@ export class StorageMap {
   get<T extends number = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<T | undefined>;
   get<T extends boolean = boolean>(key: string, schema: JSONSchemaBoolean): Observable<T | undefined>;
   get<T extends readonly string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<T | undefined>;
-  // eslint-disable-next-line @typescript-eslint/unified-signatures -- Better for documentation
   get<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>;
-  // eslint-disable-next-line @typescript-eslint/unified-signatures -- Better for documentation
   get<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
   get<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
   get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
@@ -212,7 +210,7 @@ export class StorageMap {
           }
 
           /* Data have been checked, so it's OK to cast */
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- TypeScript limitation
           return of(data as T | undefined);
 
         }
@@ -397,9 +395,7 @@ export class StorageMap {
   watch<T extends number = number>(key: string, schema: JSONSchemaInteger | JSONSchemaNumber): Observable<T | undefined>;
   watch<T extends boolean = boolean>(key: string, schema: JSONSchemaBoolean): Observable<T | undefined>;
   watch<T extends readonly string[] = string[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaString>): Observable<T | undefined>;
-  // eslint-disable-next-line @typescript-eslint/unified-signatures -- Better for documentation
   watch<T extends readonly number[] = number[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaInteger | JSONSchemaNumber>): Observable<T | undefined>;
-  // eslint-disable-next-line @typescript-eslint/unified-signatures -- Better for documentation
   watch<T extends readonly boolean[] = boolean[]>(key: string, schema: JSONSchemaArrayOf<JSONSchemaBoolean>): Observable<T | undefined>;
   watch<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
   watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
@@ -488,8 +484,7 @@ export class StorageMap {
       } else {
 
         /* Otherwise, rethrow the error */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return throwError(() => error);
+        return throwError((): unknown => error);
 
       }
 

@@ -85,7 +85,6 @@ export class App implements OnInit {
       });
 
       this.storageMap.set("schemaError", { wrong: "test" }).pipe(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-type-assertion
         mergeMap(() => this.storageMap.get("schemaError", schema as any)),
         catchError(() => of("schema error")),
       ).subscribe((schemaErrorResult) => {

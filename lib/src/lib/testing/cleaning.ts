@@ -7,7 +7,7 @@ import { StorageMap } from "../storages/storage-map";
  * @param done Promise resolver
  * @param storageService Service
  */
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Exception for testing
 export async function clearStorage(storageService: StorageMap): Promise<void> {
 
   return new Promise((done) => {
@@ -75,7 +75,7 @@ export async function clearStorage(storageService: StorageMap): Promise<void> {
     }
     else if (storageService.backingEngine === "memory") {
 
-      // eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/no-unsafe-type-assertion -- Exception for testing
       (storageService["ɵinternalGetDatabase"]() as MemoryDatabase)["memoryStorage"].clear();
 
       done();
@@ -100,7 +100,7 @@ export async function clearStorage(storageService: StorageMap): Promise<void> {
  * @param done Promise resolver
  * @param storageService Service
  */
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Exception for testing
 export function closeAndDeleteDatabase(storageService: StorageMap): Promise<void> {
 
   return new Promise((done) => {
@@ -108,10 +108,10 @@ export function closeAndDeleteDatabase(storageService: StorageMap): Promise<void
     /* Only `indexedDB` is concerned */
     if (storageService.backingEngine === "indexedDB") {
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Exception for testing
       const indexedDBService = storageService["ɵinternalGetDatabase"]() as IndexedDBDatabase;
 
-      // eslint-disable-next-line @typescript-eslint/dot-notation
+      // eslint-disable-next-line @typescript-eslint/dot-notation -- Exception for testing
       indexedDBService["database"].subscribe({
         next: (database) => {
 

@@ -4,7 +4,7 @@ import type { JSONSchema } from "./json-schema";
 describe("JSONSchema", () => {
 
   function test(schema: JSONSchema): void {
-    // eslint-disable-next-line no-empty, @typescript-eslint/no-unnecessary-condition
+    // eslint-disable-next-line no-empty, @typescript-eslint/no-unnecessary-condition -- Deliberate for testing
     if (schema !== undefined) {}
   }
 

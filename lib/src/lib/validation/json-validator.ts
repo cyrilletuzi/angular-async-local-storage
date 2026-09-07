@@ -189,8 +189,7 @@ export class JSONValidator {
     /* Specific test for tuples */
     if (Array.isArray(schema.items) || schema.items === undefined) {
 
-      // TODO: cast should not be needed here
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- TypeScript limitation of `isArray()`
       return this.validateTuple(data, schema.items as JSONSchema[] | undefined);
 
     }
@@ -198,9 +197,7 @@ export class JSONValidator {
     /* Validate all the values in array */
     for (const value of data) {
 
-      // TODO: remove when TypeScript 4.1 is available
-      // (currently the narrowed type from `Array.isArray()` is lost on readonly arrays)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- TypeScript limitation of `isArray()`
       if (!this.validate(value, schema.items as JSONSchema)) {
         return false;
       }
@@ -325,7 +322,7 @@ export class JSONValidator {
     }
 
     /* Cast as the data can be of multiple types, and so TypeScript is lost */
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- TypeScript limitation of `includes()`
     return ((schema.enum as unknown[]).includes(data));
 
   }

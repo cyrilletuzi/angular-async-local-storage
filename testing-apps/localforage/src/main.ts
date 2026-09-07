@@ -9,7 +9,6 @@ bootstrapApplication(App, {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter([
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       { path: "lazy", loadChildren: () => import("./app/lazy/routes").then(m => m.routes) },
       { path: "", component: Home, pathMatch: "full" },
     ]),
