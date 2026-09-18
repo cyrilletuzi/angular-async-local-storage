@@ -9,7 +9,7 @@ Efficient client-side storage for Angular:
 - **documentation**: API fully explained, and a changelog!
 
 > [!NOTE]
-> Find this library useful? I’m open to freelance & full-time opportunities.
+> I’m open to freelance & full-time opportunities.
 > Feel free to reach out on [LinkedIn](https://www.linkedin.com/in/cyrilletuzi/) or [Bluesky](https://bsky.app/profile/cyrilletuzi.com).
 
 ## Why this library?
