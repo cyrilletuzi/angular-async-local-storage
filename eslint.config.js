@@ -105,6 +105,7 @@ module.exports = defineConfig(
       "@typescript-eslint/no-unsafe-type-assertion": "error",
       "@typescript-eslint/no-useless-default-assignment": "error",
       "@typescript-eslint/strict-void-return": "error",
+      "@typescript-eslint/method-signature-style": "error",
       // Immutability
       "@typescript-eslint/prefer-readonly": "error",
       "@typescript-eslint/prefer-readonly-parameter-types": ["error", {
