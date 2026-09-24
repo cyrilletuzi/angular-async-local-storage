@@ -34,6 +34,7 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
     "strictStandalone": true,
+    "strictUnclaimedEventNames": true,
     "extendedDiagnostics": {
       "defaultCategory": "error"
     }
