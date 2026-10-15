@@ -29,7 +29,7 @@ this.#storageMap.set('date', someDate.toJSON()).subscribe();
 
 /* Reading */
 this.#storageMap.get('date', { type: 'string' }).pipe(
-  map((dateJSON) => new Date(dateJSON)),
+  map((dateJSON) => dateJSON === undefined ? undefined : new Date(dateJSON)),
 ).subscribe((date) => {});
 ```
 

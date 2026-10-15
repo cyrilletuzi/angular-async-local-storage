@@ -63,7 +63,7 @@ This second option can be difficult to manage due to some browsers issues in som
 
 ### `localStorage` prefix
 
-In some cases (see the [browser support guide](./BROWSERS_SUPPORT)), `indexedDB` is not available, and libraries fallback to `localStorage`. Some libraries prefixes `localStorage` keys. This library does not by default, but you can add a prefix.
+In some cases (see the [browser support guide](./BROWSERS_SUPPORT.md)), `indexedDB` is not available, and libraries fallback to `localStorage`. Some libraries prefixes `localStorage` keys. This library does not by default, but you can add a prefix.
 
 - Option 1 (recommended):
 
@@ -108,13 +108,13 @@ Interoperability with native `indexedDB` can be achieved that way:
 ```ts
 if (this.#storageMap.backingEngine === 'indexedDB') {
 
-  const { database, store, version } = this.storage.backingStore;
+  const { database, store: storeName, version } = this.#storageMap.backingStore;
 
   const dbRequest = indexedDB.open(database, version);
 
   dbRequest.addEventListener('success', () => {
 
-    const store = dbRequest.result.transaction([store], 'readonly').objectStore(store);
+    const store = dbRequest.result.transaction([storeName], 'readonly').objectStore(storeName);
 
     const readRequest = store.get('someindex');
 

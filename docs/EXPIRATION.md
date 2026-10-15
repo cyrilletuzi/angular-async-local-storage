@@ -24,11 +24,9 @@ To summarize:
 
 ## Tabs
 
-The only case where `sessionStorage` can be legitimate in an application is if you need to share data between multiple tabs.
+`sessionStorage` is scoped to each browser tab, so it does **not** share updates between multiple tabs. It can be useful when data should survive a reload in the same tab, but should not persist after the tab is closed.
 
-But it is an uncommon scenario, which can only happen if your app is distributed as a website (it has no sense on mobile or in a desktop app).
-
-If you really are in this case, you will have to stick to the native `sessionStorage` API. No library can help you on this, as it is not possible to manage temporary data in `indexedDb`, and manually detecting when the user leaves is unreliable (as the browser will not always fire the `unload` event, for privacy reasons).
+If you need this lifetime, use the native `sessionStorage` API instead of this library. `indexedDb` does not provide this lifetime, and manually detecting when the user leaves is unreliable (as the browser will not always fire the `unload` event, for privacy reasons).
 
 ## Theoretical persistency
 
