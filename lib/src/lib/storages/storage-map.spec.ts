@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { TestBed } from "@angular/core/testing";
-import { firstValueFrom } from "rxjs";
+import { firstValueFrom, toArray } from "rxjs";
 import { filter, map, mergeMap, tap } from "rxjs/operators";
 import { String as StringType, Type, type Static } from "typebox";
 import { server } from 'vitest/browser';
@@ -41,6 +41,63 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
        * as it's where the store is created
        * - to be able to delete the database, all connections to it must be closed */
       await closeAndDeleteDatabase(storage);
+    });
+
+    describe("subscription", () => {
+      beforeEach(async () => {
+        await clearStorage(storage);
+      });
+
+      it("does not write until subscribed, and writes on each subscription", async () => {
+        const write$ = storage.set(key, "blue");
+        expect(await firstValueFrom(storage.get(key))).toBeUndefined();
+        await firstValueFrom(write$);
+        expect(await firstValueFrom(storage.get(key))).toBe("blue");
+        await firstValueFrom(storage.delete(key));
+        await firstValueFrom(write$);
+        expect(await firstValueFrom(storage.get(key))).toBe("blue");
+      });
+
+      it("does not delete until subscribed", async () => {
+        await firstValueFrom(storage.set(key, "blue"));
+        const delete$ = storage.delete(key);
+        expect(await firstValueFrom(storage.get(key))).toBe("blue");
+        await firstValueFrom(delete$);
+        expect(await firstValueFrom(storage.get(key))).toBeUndefined();
+      });
+
+      it("does not clear until subscribed", async () => {
+        await firstValueFrom(storage.set(key, "blue"));
+        const clear$ = storage.clear();
+        expect(await firstValueFrom(storage.get(key))).toBe("blue");
+        await firstValueFrom(clear$);
+        expect(await firstValueFrom(storage.get(key))).toBeUndefined();
+      });
+
+      it("reads the value at subscription", async () => {
+        const read$ = storage.get(key);
+        await firstValueFrom(storage.set(key, "blue"));
+        expect(await firstValueFrom(read$)).toBe("blue");
+      });
+
+      it("reads the size at subscription", async () => {
+        const size$ = storage.size;
+        await firstValueFrom(storage.set(key, "blue"));
+        expect(await firstValueFrom(size$)).toBe(1);
+      });
+
+      it("checks existence at subscription", async () => {
+        const has$ = storage.has(key);
+        await firstValueFrom(storage.set(key, "blue"));
+        expect(await firstValueFrom(has$)).toBe(true);
+      });
+
+      it("iterates keys on each subscription", async () => {
+        await firstValueFrom(storage.set(key, "blue"));
+        const keys$ = storage.keys().pipe(toArray());
+        expect(await firstValueFrom(keys$)).toEqual([key]);
+        expect(await firstValueFrom(keys$)).toEqual([key]);
+      });
     });
 
     describe("overloads", () => {
