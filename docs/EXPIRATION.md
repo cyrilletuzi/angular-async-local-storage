@@ -24,7 +24,7 @@ To summarize:
 
 ## Tabs
 
-The only case where `sessionStorage` can be legitimate in an application is if you need to share data between multiple tabs.
+The only case where `sessionStorage` can be legitimate in an application is if you need to have different data between multiple tabs.
 
 But it is an uncommon scenario, which can only happen if your app is distributed as a website (it has no sense on mobile or in a desktop app).
 

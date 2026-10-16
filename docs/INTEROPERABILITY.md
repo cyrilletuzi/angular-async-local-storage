@@ -63,7 +63,7 @@ This second option can be difficult to manage due to some browsers issues in som
 
 ### `localStorage` prefix
 
-In some cases (see the [browser support guide](./BROWSERS_SUPPORT)), `indexedDB` is not available, and libraries fallback to `localStorage`. Some libraries prefixes `localStorage` keys. This library does not by default, but you can add a prefix.
+In some cases (see the [browser support guide](./BROWSERS_SUPPORT.md)), `indexedDB` is not available, and libraries fallback to `localStorage`. Some libraries prefixes `localStorage` keys. This library does not by default, but you can add a prefix.
 
 - Option 1 (recommended):
 
@@ -114,9 +114,9 @@ if (this.#storageMap.backingEngine === 'indexedDB') {
 
   dbRequest.addEventListener('success', () => {
 
-    const store = dbRequest.result.transaction([store], 'readonly').objectStore(store);
+    const objectStore = dbRequest.result.transaction([store], 'readonly').objectStore(store);
 
-    const readRequest = store.get('someindex');
+    const readRequest = objectStore.get('someindex');
 
   });
 

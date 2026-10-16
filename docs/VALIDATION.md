@@ -329,7 +329,7 @@ You can use a validation library. For example with `zod`:
 ```typescript
 this.#storageMap.get('test').pipe(
   // `z.optional()` is important because the value can be `undefined`
-  map((raw) => z.optional(z.string().parse(raw))),
+  map((raw) => z.optional(z.string()).parse(raw)),
 ).subscribe({
   next: (result) => {
     result; // type: string | undefined
