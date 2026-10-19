@@ -13,7 +13,7 @@
     "e2e:demo": "playwright test --config playwright-demo.config.ts",
     "e2e:interoperability": "playwright test --config playwright-localforage.config.ts",
     "lint": "ng lint",
-    "schematics": "tsc -p lib/tsconfig.schematics.json && copyfiles --up 1 lib/schematics/collection.json lib/schematics/migration.json lib/schematics/**/schema.json dist/lib",
+    "schematics": "tsc -p lib/tsconfig.schematics.json && copyfiles --up 1 lib/schematics/collection.json lib/schematics/migration.json lib/schematics/package.json lib/schematics/**/schema.json dist/lib",
     "release:patch": "VERSION=patch npm run release",
     "release:minor": "VERSION=minor npm run release",
     "release:major": "VERSION=major npm run release",
