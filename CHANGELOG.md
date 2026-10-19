@@ -2,7 +2,7 @@
 
 This library is fully documented and so you will find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
-## 22.0.1 (2026-10-16)
+## 22.0.1 (2026-10-19)
 
 - Ensure that schematics (`ng add` and `ng update`) are run in CommonJS (thanks to @dajiaohuang)
 
