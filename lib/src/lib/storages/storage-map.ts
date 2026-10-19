@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, ReplaySubject, of, throwError, type OperatorFunction } from "rxjs";
+import { Observable, ReplaySubject, defer, of, throwError, type OperatorFunction } from "rxjs";
 import { catchError, mergeMap, tap } from "rxjs/operators";
 import { IDB_BROKEN_ERROR } from "../databases/exceptions";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
@@ -49,7 +49,7 @@ export class StorageMap {
    */
   get size(): Observable<number> {
 
-    return this.#database.size
+    return defer(() => this.#database.size)
       /* Catch if `indexedDb` is broken */
       .pipe(this.#catchIDBBroken(() => this.#database.size));
 
@@ -192,7 +192,7 @@ export class StorageMap {
   get<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
     /* Get the data in storage */
-    return this.#database.get(key).pipe(
+    return defer(() => this.#database.get(key)).pipe(
       /* Check if `indexedDb` is broken */
       this.#catchIDBBroken(() => this.#database.get(key)),
       mergeMap((data) => {
@@ -254,7 +254,7 @@ export class StorageMap {
       return throwError(() => new ValidationError());
     }
 
-    return this.#database.set(key, data).pipe(
+    return defer(() => this.#database.set(key, data)).pipe(
       /* Catch if `indexedDb` is broken */
       this.#catchIDBBroken(() => this.#database.set(key, data)),
       /* Notify watchers (must be last because it should only happen if the operation succeeds) */
@@ -277,7 +277,7 @@ export class StorageMap {
    */
   delete(key: string): Observable<undefined> {
 
-    return this.#database.delete(key).pipe(
+    return defer(() => this.#database.delete(key)).pipe(
       /* Catch if `indexedDb` is broken */
       this.#catchIDBBroken(() => this.#database.delete(key)),
       /* Notify watchers (must be last because it should only happen if the operation succeeds) */
@@ -300,7 +300,7 @@ export class StorageMap {
    */
   clear(): Observable<undefined> {
 
-    return this.#database.clear().pipe(
+    return defer(() => this.#database.clear()).pipe(
       /* Catch if `indexedDb` is broken */
       this.#catchIDBBroken(() => this.#database.clear()),
       /* Notify watchers (must be last because it should only happen if the operation succeeds) */
@@ -332,7 +332,7 @@ export class StorageMap {
    */
   keys(): Observable<string> {
 
-    return this.#database.keys()
+    return defer(() => this.#database.keys())
       /* Catch if `indexedDb` is broken */
       .pipe(this.#catchIDBBroken(() => this.#database.keys()));
 
@@ -352,7 +352,7 @@ export class StorageMap {
    */
   has(key: string): Observable<boolean> {
 
-    return this.#database.has(key)
+    return defer(() => this.#database.has(key))
       /* Catch if `indexedDb` is broken */
       .pipe(this.#catchIDBBroken(() => this.#database.has(key)));
 
