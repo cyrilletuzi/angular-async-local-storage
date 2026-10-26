@@ -4,9 +4,10 @@ This library is fully documented and so you will find detailed [migration guides
 
 ## 22.1.0 (2026-10-26)
 
-- When falling back to `localStorage` or memory storage (if `indexedDB` is not available), operations now only run when you subscribe, as documented and as with `indexedDB`. Writing operations (`set()`, `delete()`, `clear()`) no longer happen if you do not subscribe, and reading operations (`get()`, `has()`, `size`, `keys()`) now return up-to-date values. If your unit tests run in an environment without `indexedDB` (like jsdom), check that they subscribe to writing operations.
+- When falling back to `localStorage` or memory storage (if `indexedDB` is not available), operations now only run when you subscribe, as documented and as with `indexedDB`. Writing operations (`set()`, `delete()`, `clear()`) no longer happen if you do not subscribe, and reading operations (`get()`, `has()`, `size`, `keys()`) now return up-to-date values. If your unit tests run in an environment without `indexedDB` (like jsdom), check that they subscribe to writing operations. (thanks to @dajiaohuang for reporting this)
 - When falling back to `localStorage` with a prefix (`provideLocalStoragePrefix()`), data from other apps on the same subdomain is now ignored: `clear()` no longer deletes it, and `size`, `keys()` and `has()` no longer take it into account.
 - With `indexedDB`, `keys()` now errors properly instead of never completing if an error happens while getting the keys.
+- When falling back to memory storage (if both `indexedDB` and `localStorage` are not available), data written by operations done at the same time as the fallback is no longer lost.
 
 ## 22.0.1 (2026-10-19)
 

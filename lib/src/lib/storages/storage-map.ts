@@ -453,28 +453,34 @@ export class StorageMap {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Required because TypeScript narrowing is not working here
         && (error.message === IDB_BROKEN_ERROR)) {
 
-        /* When storage is fully disabled in browser (via the "Block all cookies" option),
-         * just trying to check `localStorage` variable causes a security exception.
-         * Prevents https://github.com/cyrilletuzi/angular-async-local-storage/issues/118
-         */
-        try {
+        /* Only fallback once: concurrent operations can all fail at the same time,
+         * and replacing an already chosen fallback would lose data in memory storage */
+        if (this.#database instanceof IndexedDBDatabase) {
 
-          if ("getItem" in localStorage) {
+          /* When storage is fully disabled in browser (via the "Block all cookies" option),
+           * just trying to check `localStorage` variable causes a security exception.
+           * Prevents https://github.com/cyrilletuzi/angular-async-local-storage/issues/118
+           */
+          try {
 
-            /* Fallback to `localStorage` if available */
-            this.#database = new LocalStorageDatabase();
+            if ("getItem" in localStorage) {
 
-          } else {
+              /* Fallback to `localStorage` if available */
+              this.#database = new LocalStorageDatabase();
+
+            } else {
+
+              /* Fallback to memory storage otherwise */
+              this.#database = new MemoryDatabase();
+
+            }
+
+          } catch {
 
             /* Fallback to memory storage otherwise */
             this.#database = new MemoryDatabase();
 
           }
-
-        } catch {
-
-          /* Fallback to memory storage otherwise */
-          this.#database = new MemoryDatabase();
 
         }
 

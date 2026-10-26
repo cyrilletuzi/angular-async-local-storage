@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { TestBed } from "@angular/core/testing";
 import { firstValueFrom } from "rxjs";
@@ -2050,6 +2050,43 @@ describe("StorageMap", () => {
       const localStorageService = new StorageMap(TestBed.inject(LocalStorageDatabase));
 
       expect(localStorageService.fallbackBackingStore.prefix).toBe(prefix);
+
+    });
+
+  });
+
+  describe("fallback", () => {
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it("keeps data of concurrent operations when falling back to memory", async () => {
+
+      /* Simulate `indexedDB` failing asynchronously, like a real failed connection */
+      vi.stubGlobal("indexedDB", {
+        open: () => {
+          const request = new EventTarget();
+          setTimeout(() => { request.dispatchEvent(new Event("error")); });
+          return request;
+        },
+      });
+
+      /* Simulate `localStorage` being unavailable, so the fallback is memory */
+      vi.stubGlobal("localStorage", {});
+
+      TestBed.resetTestingModule();
+      const storage = new StorageMap(TestBed.inject(IndexedDBDatabase));
+
+      /* Concurrent operations, all waiting for the `indexedDB` connection */
+      await Promise.all([
+        firstValueFrom(storage.set("key1", "value1")),
+        firstValueFrom(storage.set("key2", "value2")),
+      ]);
+
+      expect(storage.backingEngine).toBe("memory");
+      expect(await firstValueFrom(storage.get("key1"))).toBe("value1");
+      expect(await firstValueFrom(storage.get("key2"))).toBe("value2");
 
     });
 
