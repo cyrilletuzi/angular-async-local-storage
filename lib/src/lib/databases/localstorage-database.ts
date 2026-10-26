@@ -1,5 +1,5 @@
 import { Service, inject } from "@angular/core";
-import { Observable, asyncScheduler, of, throwError } from "rxjs";
+import { Observable, asyncScheduler, defer, of, throwError } from "rxjs";
 import { observeOn } from "rxjs/operators";
 import { LS_PREFIX } from "../tokens";
 import { SerializationError } from "./exceptions";
@@ -25,8 +25,8 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   get size(): Observable<number> {
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(localStorage.length);
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => of(localStorage.length));
 
   }
 
@@ -37,28 +37,33 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   get(key: string): Observable<unknown> {
 
-    /* Get raw data */
-    const unparsedData = localStorage.getItem(this.prefixKey(key));
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => {
 
-    /* No need to parse if data is `null` or `undefined` */
-    if (unparsedData !== null) {
+      /* Get raw data */
+      const unparsedData = localStorage.getItem(this.prefixKey(key));
 
-      /* Try to parse */
-      try {
+      /* No need to parse if data is `null` or `undefined` */
+      if (unparsedData !== null) {
 
-        const parsedData: unknown = JSON.parse(unparsedData);
+        /* Try to parse */
+        try {
 
-        /* Wrap in a RxJS `Observable` to be consistent with other storages */
-        return of(parsedData);
+          const parsedData: unknown = JSON.parse(unparsedData);
 
-      } catch (error) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        return throwError(() => error as SyntaxError);
+          /* Wrap in a RxJS `Observable` to be consistent with other storages */
+          return of(parsedData);
+
+        } catch (error) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+          return throwError(() => error as SyntaxError);
+        }
+
       }
 
-    }
+      return of(undefined);
 
-    return of(undefined);
+    });
 
   }
 
@@ -70,37 +75,42 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   set(key: string, data: object): Observable<undefined> {
 
-    // eslint-disable-next-line no-useless-assignment
-    let serializedData: StringifyResult<object> | null = null;
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => {
 
-    /* Check if data can be serialized */
-    const dataPrototype = Object.getPrototypeOf(data);
-    if ((typeof data === "object") && !Array.isArray(data) &&
-      !((dataPrototype === Object.prototype) || (dataPrototype === null))) {
-      return throwError(() => new SerializationError());
-    }
+      // eslint-disable-next-line no-useless-assignment
+      let serializedData: StringifyResult<object> | null = null;
 
-    /* Try to stringify (can fail on circular references) */
-    try {
-      serializedData = JSON.stringify(data);
-      if (serializedData === undefined) {
-        throw new Error();
+      /* Check if data can be serialized */
+      const dataPrototype = Object.getPrototypeOf(data);
+      if ((typeof data === "object") && !Array.isArray(data) &&
+        !((dataPrototype === Object.prototype) || (dataPrototype === null))) {
+        return throwError(() => new SerializationError());
       }
-    } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      return throwError(() => error as TypeError);
-    }
 
-    /* Can fail if storage quota is exceeded */
-    try {
-      localStorage.setItem(this.prefixKey(key), serializedData);
-    } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      return throwError(() => error as DOMException);
-    }
+      /* Try to stringify (can fail on circular references) */
+      try {
+        serializedData = JSON.stringify(data);
+        if (serializedData === undefined) {
+          throw new Error();
+        }
+      } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        return throwError(() => error as TypeError);
+      }
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(undefined);
+      /* Can fail if storage quota is exceeded */
+      try {
+        localStorage.setItem(this.prefixKey(key), serializedData);
+      } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        return throwError(() => error as DOMException);
+      }
+
+      /* Wrap in a RxJS `Observable` to be consistent with other storages */
+      return of(undefined);
+
+    });
 
   }
 
@@ -111,10 +121,15 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   delete(key: string): Observable<undefined> {
 
-    localStorage.removeItem(this.prefixKey(key));
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => {
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(undefined);
+      localStorage.removeItem(this.prefixKey(key));
+
+      /* Wrap in a RxJS `Observable` to be consistent with other storages */
+      return of(undefined);
+
+    });
 
   }
 
@@ -124,10 +139,15 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   clear(): Observable<undefined> {
 
-    localStorage.clear();
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => {
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(undefined);
+      localStorage.clear();
+
+      /* Wrap in a RxJS `Observable` to be consistent with other storages */
+      return of(undefined);
+
+    });
 
   }
 
@@ -166,20 +186,25 @@ export class LocalStorageDatabase implements LocalDatabase {
    */
   has(key: string): Observable<boolean> {
 
-    /* Itérate over all indexes in storage */
-    for (let index = 0; index < localStorage.length; index += 1) {
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => {
 
-      if (key === this.getUnprefixedKey(index)) {
+      /* Itérate over all indexes in storage */
+      for (let index = 0; index < localStorage.length; index += 1) {
 
-        /* Wrap in a RxJS `Observable` to be consistent with other storages */
-        return of(true);
+        if (key === this.getUnprefixedKey(index)) {
+
+          /* Wrap in a RxJS `Observable` to be consistent with other storages */
+          return of(true);
+
+        }
 
       }
 
-    }
+      /* Wrap in a RxJS `Observable` to be consistent with other storages */
+      return of(false);
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(false);
+    });
 
   }
 

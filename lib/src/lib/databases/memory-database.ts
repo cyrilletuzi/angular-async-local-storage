@@ -1,5 +1,5 @@
 import { Service } from "@angular/core";
-import { Observable, from, of } from "rxjs";
+import { Observable, defer, from, of } from "rxjs";
 import { LocalDatabase } from "./local-database";
 
 @Service()
@@ -15,8 +15,8 @@ export class MemoryDatabase implements LocalDatabase {
    */
   get size(): Observable<number> {
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(this.memoryStorage.size);
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => of(this.memoryStorage.size));
 
   }
 
@@ -27,8 +27,8 @@ export class MemoryDatabase implements LocalDatabase {
    */
   get(key: string): Observable<unknown> {
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(this.memoryStorage.get(key));
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => of(this.memoryStorage.get(key)));
 
   }
 
@@ -40,10 +40,15 @@ export class MemoryDatabase implements LocalDatabase {
    */
   set(key: string, data: unknown): Observable<undefined> {
 
-    this.memoryStorage.set(key, data);
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => {
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(undefined);
+      this.memoryStorage.set(key, data);
+
+      /* Wrap in a RxJS `Observable` to be consistent with other storages */
+      return of(undefined);
+
+    });
 
   }
 
@@ -54,10 +59,15 @@ export class MemoryDatabase implements LocalDatabase {
    */
   delete(key: string): Observable<undefined> {
 
-    this.memoryStorage.delete(key);
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => {
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(undefined);
+      this.memoryStorage.delete(key);
+
+      /* Wrap in a RxJS `Observable` to be consistent with other storages */
+      return of(undefined);
+
+    });
 
   }
 
@@ -67,10 +77,15 @@ export class MemoryDatabase implements LocalDatabase {
    */
   clear(): Observable<undefined> {
 
-    this.memoryStorage.clear();
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => {
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(undefined);
+      this.memoryStorage.clear();
+
+      /* Wrap in a RxJS `Observable` to be consistent with other storages */
+      return of(undefined);
+
+    });
 
   }
 
@@ -80,8 +95,8 @@ export class MemoryDatabase implements LocalDatabase {
    */
   keys(): Observable<string> {
 
-    /* Create an `Observable` from keys */
-    return from(this.memoryStorage.keys());
+    /* Create an `Observable` from keys, deferred to get a new iterator on each subscription */
+    return defer(() => from(this.memoryStorage.keys()));
 
   }
 
@@ -92,8 +107,8 @@ export class MemoryDatabase implements LocalDatabase {
    */
   has(key: string): Observable<boolean> {
 
-    /* Wrap in a RxJS `Observable` to be consistent with other storages */
-    return of(this.memoryStorage.has(key));
+    /* Defer to only access storage on subscription, like other databases */
+    return defer(() => of(this.memoryStorage.has(key)));
 
   }
 

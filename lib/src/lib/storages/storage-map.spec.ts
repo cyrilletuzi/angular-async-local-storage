@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { TestBed } from "@angular/core/testing";
 import { firstValueFrom } from "rxjs";
-import { filter, map, mergeMap, tap } from "rxjs/operators";
+import { filter, map, mergeMap, tap, toArray } from "rxjs/operators";
 import { String as StringType, Type, type Static } from "typebox";
 import { server } from 'vitest/browser';
 import * as z from "zod";
@@ -1208,6 +1208,107 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/25
      * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/5 */
+    describe("laziness", () => {
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
+      });
+
+      const value = "test";
+
+      it("set() does nothing before subscription", async () => {
+
+        storage.set(key, value);
+
+        expect(await firstValueFrom(storage.get(key))).toBeUndefined();
+
+      });
+
+      it("set() runs on each subscription", async () => {
+
+        const set$ = storage.set(key, value);
+
+        await firstValueFrom(set$);
+        await firstValueFrom(storage.delete(key));
+        await firstValueFrom(set$);
+
+        expect(await firstValueFrom(storage.get(key))).toBe(value);
+
+      });
+
+      it("delete() does nothing before subscription", async () => {
+
+        await firstValueFrom(storage.set(key, value));
+
+        storage.delete(key);
+
+        expect(await firstValueFrom(storage.get(key))).toBe(value);
+
+      });
+
+      it("clear() does nothing before subscription", async () => {
+
+        await firstValueFrom(storage.set(key, value));
+
+        storage.clear();
+
+        expect(await firstValueFrom(storage.get(key))).toBe(value);
+
+      });
+
+      it("get() reads at subscription time", async () => {
+
+        const get$ = storage.get(key);
+
+        await firstValueFrom(storage.set(key, value));
+
+        expect(await firstValueFrom(get$)).toBe(value);
+
+      });
+
+      it("has() reads at subscription time", async () => {
+
+        const has$ = storage.has(key);
+
+        await firstValueFrom(storage.set(key, value));
+
+        expect(await firstValueFrom(has$)).toBe(true);
+
+      });
+
+      it("size reads at subscription time", async () => {
+
+        const size$ = storage.size;
+
+        await firstValueFrom(storage.set(key, value));
+
+        expect(await firstValueFrom(size$)).toBe(1);
+
+      });
+
+      it("keys() reads at subscription time", async () => {
+
+        const keys$ = storage.keys().pipe(toArray());
+
+        await firstValueFrom(storage.set(key, value));
+
+        expect(await firstValueFrom(keys$)).toEqual([key]);
+
+      });
+
+      it("keys() runs on each subscription", async () => {
+
+        const keys$ = storage.keys().pipe(toArray());
+
+        await firstValueFrom(storage.set(key, value));
+
+        expect(await firstValueFrom(keys$)).toEqual([key]);
+        expect(await firstValueFrom(keys$)).toEqual([key]);
+
+      });
+
+    });
+
     describe("complete", () => {
       beforeEach(async () => {
         /* Clear data to avoid tests overlap */
