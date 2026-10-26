@@ -28,7 +28,8 @@ export class MemoryDatabase implements LocalDatabase {
   get(key: string): Observable<unknown> {
 
     /* Defer to only access storage on subscription, like other databases */
-    return defer(() => of(this.memoryStorage.get(key)));
+    /* Return a copy, like other storages, so changing the result does not change the stored value */
+    return defer(() => of(structuredClone(this.memoryStorage.get(key))));
 
   }
 
@@ -43,7 +44,8 @@ export class MemoryDatabase implements LocalDatabase {
     /* Defer to only access storage on subscription, like other databases */
     return defer(() => {
 
-      this.memoryStorage.set(key, data);
+      /* Store a copy, like other storages, so changing the original object does not change the stored value */
+      this.memoryStorage.set(key, structuredClone(data));
 
       /* Wrap in a RxJS `Observable` to be consistent with other storages */
       return of(undefined);

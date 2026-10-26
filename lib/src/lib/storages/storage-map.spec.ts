@@ -927,6 +927,36 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         }).not.toThrow();
       }));
 
+      it("stores a copy of the value", async () => {
+
+        const value = { name: "test" };
+
+        await firstValueFrom(storage.set(key, value));
+
+        /* Changing the original object must not change the stored value */
+        value.name = "updated";
+
+        expect(await firstValueFrom(storage.get(key))).toEqual({ name: "test" });
+
+      });
+
+      it("gets a copy of the value", async () => {
+
+        const schema = { type: "object", properties: { name: { type: "string" } }, required: ["name"] } satisfies JSONSchema;
+
+        await firstValueFrom(storage.set(key, { name: "test" }));
+
+        const result = await firstValueFrom(storage.get<{ name: string }>(key, schema));
+
+        /* Changing the result must not change the stored value */
+        if (result) {
+          result.name = "updated";
+        }
+
+        expect(await firstValueFrom(storage.get(key))).toEqual({ name: "test" });
+
+      });
+
     });
 
     describe("deletion", () => {

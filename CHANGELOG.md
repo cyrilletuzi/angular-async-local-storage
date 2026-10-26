@@ -9,6 +9,7 @@ This library is fully documented and so you will find detailed [migration guides
 - With `indexedDB`, `keys()` now errors properly instead of never completing if an error happens while getting the keys.
 - When falling back to memory storage (if both `indexedDB` and `localStorage` are not available), data written by operations done at the same time as the fallback is no longer lost.
 - `watch()` now only reads the current value when you subscribe, and each watcher gets it once: a new watcher no longer sends the current value again to other watchers of the same key, and an error (like a validation error) no longer stops other and future watchers of the same key from working.
+- When falling back to memory storage (if both `indexedDB` and `localStorage` are not available), values are now stored and returned as copies, as with other storages: changing an object after `set()` or after `get()` no longer changes the stored value.
 - Fixed a small memory leak in `watch()`: internal resources for a key are now released when there are no more watchers of this key.
 
 ## 22.0.1 (2026-10-19)
