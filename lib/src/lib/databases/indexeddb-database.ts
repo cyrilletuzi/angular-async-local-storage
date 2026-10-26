@@ -1,6 +1,6 @@
 import { Service, inject } from "@angular/core";
-import { Observable, ReplaySubject, fromEvent, of, race, throwError } from "rxjs";
-import { first, map, mergeMap, takeWhile, tap } from "rxjs/operators";
+import { Observable, ReplaySubject, from, fromEvent, of, race, throwError } from "rxjs";
+import { first, map, mergeMap } from "rxjs/operators";
 import { IDB_DB_NAME, IDB_DB_VERSION, IDB_NO_WRAP, IDB_STORE_NAME } from "../tokens";
 import { IDBBrokenError } from "./exceptions";
 import { LocalDatabase } from "./local-database";
@@ -233,38 +233,25 @@ export class IndexedDBDatabase implements LocalDatabase {
 
     /* Open a transaction in read-only mode */
     return this.transaction("readonly").pipe(
-      /* `first()` is used as the final operator in other methods to complete the `Observable`
-       * (as it all starts from a `ReplaySubject` which never ends),
-       * but as this method is iterating over multiple values, `first()` **must** be used here */
-      first(),
       mergeMap((transactionData) => {
 
-        const { store } = transactionData;
+        const { store, events } = transactionData;
 
-        /* Open a cursor on the store
+        /* Get all the keys at once (without the values)
          * Avoid issues like https://github.com/cyrilletuzi/angular-async-local-storage/issues/69 */
-        const request = store.openKeyCursor();
+        const request = store.getAllKeys();
 
-        /* Listen to success event */
-        const success$ = fromEvent(request, "success").pipe(
-          /* Stop the `Observable` when the cursor is `null` */
-          takeWhile(() => (request.result !== null)),
-          /* This lib only allows string keys, but user could have added other types of keys from outside
-           * It's OK to cast as the cursor as been tested in the previous operator */
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-base-to-string -- Required by indexedDb behavior, and strings are enforced by the lib
-          map(() => request.result!.key.toString()),
-          /* Iterate on the cursor */
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Required by indexedDb behavior
-          tap(() => { request.result!.continue(); }),
-        );
-
-        /* Listen to error event and if so, throw an error */
-        const error$ = this.listenError(request);
-
-        /* Choose the first event to occur */
-        return race([success$, error$]);
+        /* Listen to events and return the keys */
+        return events.pipe(map(() => request.result));
 
       }),
+      /* `first()` **must** be used before iterating, as it all starts from a `ReplaySubject` which never ends */
+      first(),
+      /* Iterate on each key */
+      mergeMap((keys) => from(keys)),
+      /* This lib only allows string keys, but user could have added other types of keys from outside */
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string -- Strings are enforced by the lib
+      map((key) => key.toString()),
     );
 
   }

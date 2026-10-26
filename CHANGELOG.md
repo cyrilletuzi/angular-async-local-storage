@@ -2,6 +2,18 @@
 
 This library is fully documented and so you will find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 22.1.0 (2026-10-26)
+
+- When falling back to `localStorage` or memory storage (if `indexedDB` is not available), operations now only run when you subscribe, as documented and as with `indexedDB`. Writing operations (`set()`, `delete()`, `clear()`) no longer happen if you do not subscribe, and reading operations (`get()`, `has()`, `size`, `keys()`) now return up-to-date values. It could break unit tests running in an environment without `indexedDB` (like jsdom) and relying on the previous broken behavior: check that they subscribe to writing operations. (thanks to @dajiaohuang for reporting this)
+- When falling back to `localStorage` with a prefix (`provideLocalStoragePrefix()`), data from other apps on the same subdomain is now ignored: `clear()` no longer deletes it, and `size`, `keys()` and `has()` no longer take it into account.
+- With `indexedDB`, `keys()` now errors properly instead of never completing if an error happens while getting the keys.
+- When falling back to memory storage (if both `indexedDB` and `localStorage` are not available), data written by operations done at the same time as the fallback is no longer lost.
+- `watch()` now only reads the current value when you subscribe, and each watcher gets it once: a new watcher no longer sends the current value again to other watchers of the same key, and an error (like a validation error) no longer stops other and future watchers of the same key from working.
+- When falling back to memory storage (if both `indexedDB` and `localStorage` are not available), values are now stored and returned as copies, as with other storages: changing an object after `set()` or after `get()` no longer changes the stored value.
+- Fixed a small memory leak in `watch()`: internal resources for a key are now released when there are no more watchers of this key.
+- JSON schema validation of objects is now strict as documented: an object with properties not listed in the schema is now always invalid (previously, it could be valid if it did not have more properties than the schema), and arrays are no longer valid against an `object` schema. If some of your stored data was wrongly considered valid, `get()` with a schema will now error for it.
+- When `indexedDB` fails at runtime (like in Safari cross-origin iframes), the library now falls back to `localStorage` as expected. Previously, it always fell back to memory storage.
+
 ## 22.0.1 (2026-10-19)
 
 - Ensure that schematics (`ng add` and `ng update`) are run in CommonJS (thanks to @dajiaohuang)

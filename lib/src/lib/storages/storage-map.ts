@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { Observable, ReplaySubject, of, throwError, type OperatorFunction } from "rxjs";
-import { catchError, mergeMap, tap } from "rxjs/operators";
+import { Injector, Service, inject, runInInjectionContext } from "@angular/core";
+import { Observable, Subject, defer, merge, of, throwError, type OperatorFunction } from "rxjs";
+import { catchError, finalize, mergeMap, tap } from "rxjs/operators";
 import { IDB_BROKEN_ERROR } from "../databases/exceptions";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
 import { LocalDatabase } from "../databases/local-database";
@@ -15,27 +15,14 @@ import type {
 import { JSONValidator } from "../validation/json-validator";
 import { ValidationError } from "./exceptions";
 
-// eslint-disable-next-line eslint-plugin-angular-modern/no-injectable-decorator -- Not possible here because a constructor injection is done
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class StorageMap {
 
-  #database: LocalDatabase;
-  readonly #jsonValidator: JSONValidator;
-  readonly #notifiers = new Map<string, ReplaySubject<unknown>>();
-
-  /**
-   * Constructor params are provided by Angular (but can also be passed manually in tests)
-   * @param database Storage to use
-   */
-  constructor( // eslint-disable-line eslint-plugin-angular-modern/no-constructor-injection -- Used in tests for inject
-    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Used in tests for inject, wanted as writeable for readonly
-    database: LocalDatabase,
-  ) {
-    this.#database = database;
-    this.#jsonValidator = new JSONValidator();
-  }
+  #database = inject(LocalDatabase);
+  readonly #jsonValidator = new JSONValidator();
+  /* Needed to create the fallback storage with its configuration later, outside of the injection context */
+  readonly #injector = inject(Injector);
+  readonly #notifiers = new Map<string, Subject<unknown>>();
 
   /**
    * **Number of items** in storage, wrapped in an Observable.
@@ -400,27 +387,26 @@ export class StorageMap {
   watch<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
   watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
-    /* Check if there is already a notifier */
-    if (!this.#notifiers.has(key)) {
-      this.#notifiers.set(key, new ReplaySubject(1));
-    }
+    /* Defer to only do something on subscription, like other operations */
+    return defer(() => {
 
-    /* Non-null assertion is required because TypeScript doesn't narrow `.has()` yet */
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Ensured by the logic
-    const notifier = this.#notifiers.get(key)!;
+      /* Check if there is already a notifier */
+      const notifier = this.#notifiers.get(key) ?? new Subject<unknown>();
+      this.#notifiers.set(key, notifier);
 
-    /* Get the current item value */
-    (schema ? this.get<T>(key, schema) : this.get(key)).subscribe({
-      next: (result) => {
-        notifier.next(result);
-      },
-      error: (error) => {
-        notifier.error(error);
-      },
+      /* Get the current item value only for this subscriber, and then listen to changes.
+       * Changes are listened first, so none is missed while getting the current value.
+       * Errors only concern this subscriber, the shared notifier stays usable for other watchers. */
+      return merge(notifier.asObservable(), schema ? this.get<T>(key, schema) : this.get(key)).pipe(
+        /* Avoid a memory leak: remove the notifier when there are no more watchers */
+        finalize(() => {
+          if (!notifier.observed) {
+            this.#notifiers.delete(key);
+          }
+        }),
+      );
+
     });
-
-    /* Only the public API of the Observable should be returned */
-    return notifier.asObservable();
 
   }
 
@@ -453,28 +439,26 @@ export class StorageMap {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Required because TypeScript narrowing is not working here
         && (error.message === IDB_BROKEN_ERROR)) {
 
-        /* When storage is fully disabled in browser (via the "Block all cookies" option),
-         * just trying to check `localStorage` variable causes a security exception.
-         * Prevents https://github.com/cyrilletuzi/angular-async-local-storage/issues/118
-         */
-        try {
+        /* Only fallback once: concurrent operations can all fail at the same time,
+         * and replacing an already chosen fallback would lose data in memory storage */
+        if (this.#database instanceof IndexedDBDatabase) {
 
-          if ("getItem" in localStorage) {
+          let isLocalStorageAvailable = false;
 
-            /* Fallback to `localStorage` if available */
-            this.#database = new LocalStorageDatabase();
+          /* When storage is fully disabled in browser (via the "Block all cookies" option),
+           * just trying to check `localStorage` variable causes a security exception.
+           * Prevents https://github.com/cyrilletuzi/angular-async-local-storage/issues/118
+           * Only the check is guarded, so other errors are not hidden.
+           */
+          try {
+            isLocalStorageAvailable = ("getItem" in localStorage);
+          } catch {}
 
-          } else {
-
-            /* Fallback to memory storage otherwise */
-            this.#database = new MemoryDatabase();
-
-          }
-
-        } catch {
-
-          /* Fallback to memory storage otherwise */
-          this.#database = new MemoryDatabase();
+          /* Fallback to `localStorage` if available, to memory storage otherwise.
+           * `localStorage` storage must be created in the injection context, as it injects its configuration (like the prefix) */
+          this.#database = isLocalStorageAvailable ?
+            runInInjectionContext(this.#injector, () => new LocalStorageDatabase()) :
+            new MemoryDatabase();
 
         }
 

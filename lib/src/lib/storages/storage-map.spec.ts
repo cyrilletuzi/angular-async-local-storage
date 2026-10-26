@@ -1,12 +1,13 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { TestBed } from "@angular/core/testing";
-import { firstValueFrom } from "rxjs";
-import { filter, map, mergeMap, tap } from "rxjs/operators";
+import { firstValueFrom, type Subscription } from "rxjs";
+import { filter, map, mergeMap, tap, toArray } from "rxjs/operators";
 import { String as StringType, Type, type Static } from "typebox";
 import { server } from 'vitest/browser';
 import * as z from "zod";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
+import { LocalDatabase } from "../databases/local-database";
 import { LocalStorageDatabase } from "../databases/localstorage-database";
 import { MemoryDatabase } from "../databases/memory-database";
 import { provideIndexedDBDataBaseName, provideIndexedDBDataBaseVersion, provideIndexedDBStoreName, provideLocalStoragePrefix } from "../providers";
@@ -16,6 +17,21 @@ import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_DB_VERSION, DEFAULT_IDB_STORE_NAME } f
 import type { JSONSchema } from "../validation/json-schema";
 import { VALIDATION_ERROR } from "./exceptions";
 import { StorageMap } from "./storage-map";
+
+/**
+ * Create a `StorageMap` using a specific database, like Angular does in applications
+ * @param database Database class to use
+ * @returns The `StorageMap` service
+ */
+function createStorageMap(database: new () => LocalDatabase): StorageMap {
+
+  TestBed.configureTestingModule({
+    providers: [{ provide: LocalDatabase, useClass: database }],
+  });
+
+  return TestBed.inject(StorageMap);
+
+}
 
 function tests(description: string, localStorageServiceFactory: () => StorageMap): void {
 
@@ -927,6 +943,36 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         }).not.toThrow();
       }));
 
+      it("stores a copy of the value", async () => {
+
+        const value = { name: "test" };
+
+        await firstValueFrom(storage.set(key, value));
+
+        /* Changing the original object must not change the stored value */
+        value.name = "updated";
+
+        expect(await firstValueFrom(storage.get(key))).toEqual({ name: "test" });
+
+      });
+
+      it("gets a copy of the value", async () => {
+
+        const schema = { type: "object", properties: { name: { type: "string" } }, required: ["name"] } satisfies JSONSchema;
+
+        await firstValueFrom(storage.set(key, { name: "test" }));
+
+        const result = await firstValueFrom(storage.get<{ name: string }>(key, schema));
+
+        /* Changing the result must not change the stored value */
+        if (result) {
+          result.name = "updated";
+        }
+
+        expect(await firstValueFrom(storage.get(key))).toEqual({ name: "test" });
+
+      });
+
     });
 
     describe("deletion", () => {
@@ -1098,6 +1144,46 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
         ).subscribe();
       }));
 
+      it("an invalid initial value does not break later watchers", async () => {
+
+        /* Specific key, as the error would otherwise impact other tests */
+        const watchedKey = "watchedInvalid";
+
+        await firstValueFrom(storage.set(watchedKey, 123));
+
+        await expect(firstValueFrom(storage.watch(watchedKey, { type: "string" }))).rejects.toMatchObject({ message: VALIDATION_ERROR });
+
+        expect(await firstValueFrom(storage.watch(watchedKey))).toBe(123);
+
+      });
+
+      it("a new watcher does not resend the current value to other watchers", async () => {
+
+        const watchedKey = "watchedTwice";
+        const values: unknown[] = [];
+        let subscription: Subscription | undefined;
+
+        await firstValueFrom(storage.set(watchedKey, "test"));
+
+        /* Wait for the initial value of the first watcher */
+        await new Promise<void>((resolve) => {
+          subscription = storage.watch(watchedKey).subscribe((value) => {
+            values.push(value);
+            resolve();
+          });
+        });
+
+        await firstValueFrom(storage.watch(watchedKey));
+
+        /* In `indexedDB`, a write waits for previous reads, so the second watcher read is done after this */
+        await firstValueFrom(storage.set("watchedTwiceOther", "test"));
+
+        expect(values).toEqual(["test"]);
+
+        subscription?.unsubscribe();
+
+      });
+
     });
 
     describe("validation", () => {
@@ -1208,6 +1294,107 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
     /* Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/25
      * Avoid https://github.com/cyrilletuzi/angular-async-local-storage/issues/5 */
+    describe("laziness", () => {
+      beforeEach(async () => {
+        /* Clear data to avoid tests overlap */
+        await clearStorage(storage);
+      });
+
+      const value = "test";
+
+      it("set() does nothing before subscription", async () => {
+
+        storage.set(key, value);
+
+        expect(await firstValueFrom(storage.get(key))).toBeUndefined();
+
+      });
+
+      it("set() runs on each subscription", async () => {
+
+        const set$ = storage.set(key, value);
+
+        await firstValueFrom(set$);
+        await firstValueFrom(storage.delete(key));
+        await firstValueFrom(set$);
+
+        expect(await firstValueFrom(storage.get(key))).toBe(value);
+
+      });
+
+      it("delete() does nothing before subscription", async () => {
+
+        await firstValueFrom(storage.set(key, value));
+
+        storage.delete(key);
+
+        expect(await firstValueFrom(storage.get(key))).toBe(value);
+
+      });
+
+      it("clear() does nothing before subscription", async () => {
+
+        await firstValueFrom(storage.set(key, value));
+
+        storage.clear();
+
+        expect(await firstValueFrom(storage.get(key))).toBe(value);
+
+      });
+
+      it("get() reads at subscription time", async () => {
+
+        const get$ = storage.get(key);
+
+        await firstValueFrom(storage.set(key, value));
+
+        expect(await firstValueFrom(get$)).toBe(value);
+
+      });
+
+      it("has() reads at subscription time", async () => {
+
+        const has$ = storage.has(key);
+
+        await firstValueFrom(storage.set(key, value));
+
+        expect(await firstValueFrom(has$)).toBe(true);
+
+      });
+
+      it("size reads at subscription time", async () => {
+
+        const size$ = storage.size;
+
+        await firstValueFrom(storage.set(key, value));
+
+        expect(await firstValueFrom(size$)).toBe(1);
+
+      });
+
+      it("keys() reads at subscription time", async () => {
+
+        const keys$ = storage.keys().pipe(toArray());
+
+        await firstValueFrom(storage.set(key, value));
+
+        expect(await firstValueFrom(keys$)).toEqual([key]);
+
+      });
+
+      it("keys() runs on each subscription", async () => {
+
+        const keys$ = storage.keys().pipe(toArray());
+
+        await firstValueFrom(storage.set(key, value));
+
+        expect(await firstValueFrom(keys$)).toEqual([key]);
+        expect(await firstValueFrom(keys$)).toEqual([key]);
+
+      });
+
+    });
+
     describe("complete", () => {
       beforeEach(async () => {
         /* Clear data to avoid tests overlap */
@@ -1725,11 +1912,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
 describe("StorageMap", () => {
 
-  tests("memory", () => new StorageMap(new MemoryDatabase()));
+  tests("memory", () => {
+    TestBed.resetTestingModule();
+    return createStorageMap(MemoryDatabase);
+  });
 
   tests("localStorage", () => {
     TestBed.resetTestingModule();
-    return new StorageMap(TestBed.inject(LocalStorageDatabase));
+    return createStorageMap(LocalStorageDatabase);
   });
 
   tests("localStorage with prefix", () => {
@@ -1737,12 +1927,12 @@ describe("StorageMap", () => {
     TestBed.configureTestingModule({
       providers: [provideLocalStoragePrefix("ls")],
     });
-    return new StorageMap(TestBed.inject(LocalStorageDatabase));
+    return createStorageMap(LocalStorageDatabase);
   });
 
   tests("indexedDB", () => {
     TestBed.resetTestingModule();
-    return new StorageMap(TestBed.inject(IndexedDBDatabase));
+    return createStorageMap(IndexedDBDatabase);
   });
 
   tests("indexedDB with custom options", () => {
@@ -1754,7 +1944,7 @@ describe("StorageMap", () => {
         provideIndexedDBDataBaseVersion(2),
       ],
     });
-    return new StorageMap(TestBed.inject(LocalStorageDatabase));
+    return createStorageMap(IndexedDBDatabase);
   });
 
   describe("browser APIs", () => {
@@ -1766,7 +1956,7 @@ describe("StorageMap", () => {
       const value = "test";
 
       TestBed.resetTestingModule();
-      const localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
+      const localStorageService = createStorageMap(IndexedDBDatabase);
 
       localStorageService.set(index, value).subscribe(() => {
 
@@ -1817,7 +2007,7 @@ describe("StorageMap", () => {
     it("indexedDb with default options", () => new Promise((done, reject) => {
 
       TestBed.resetTestingModule();
-      const localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
+      const localStorageService = createStorageMap(IndexedDBDatabase);
 
       /* Do a request first as a first transaction is needed to set the store name */
       localStorageService.get("test").subscribe(() => {
@@ -1850,7 +2040,7 @@ describe("StorageMap", () => {
         ],
       });
 
-      const localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
+      const localStorageService = createStorageMap(IndexedDBDatabase);
 
       localStorageService.set(index, value).subscribe(() => {
 
@@ -1914,7 +2104,7 @@ describe("StorageMap", () => {
         ],
       });
 
-      const localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
+      const localStorageService = createStorageMap(IndexedDBDatabase);
 
       /* Do a request first as a first transaction is needed to set the store name */
       localStorageService.get("test").subscribe(() => {
@@ -1946,9 +2136,135 @@ describe("StorageMap", () => {
         ],
       });
 
-      const localStorageService = new StorageMap(TestBed.inject(LocalStorageDatabase));
+      const localStorageService = createStorageMap(LocalStorageDatabase);
 
       expect(localStorageService.fallbackBackingStore.prefix).toBe(prefix);
+
+    });
+
+  });
+
+  describe("fallback", () => {
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it("falls back to localStorage with its configuration when indexedDB fails", async () => {
+
+      localStorage.clear();
+
+      /* Simulate `indexedDB` failing asynchronously, like in Safari cross-origin iframes */
+      vi.stubGlobal("indexedDB", {
+        open: () => {
+          const request = new EventTarget();
+          setTimeout(() => { request.dispatchEvent(new Event("error")); });
+          return request;
+        },
+      });
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [provideLocalStoragePrefix("ls_")],
+      });
+      /* Created by Angular, like in applications */
+      const storage = TestBed.inject(StorageMap);
+
+      await firstValueFrom(storage.set("key", "value"));
+
+      expect(storage.backingEngine).toBe("localStorage");
+      expect(localStorage.getItem("ls_key")).toBe(JSON.stringify("value"));
+
+      localStorage.clear();
+
+    });
+
+    it("keeps data of concurrent operations when falling back to memory", async () => {
+
+      /* Simulate `indexedDB` failing asynchronously, like a real failed connection */
+      vi.stubGlobal("indexedDB", {
+        open: () => {
+          const request = new EventTarget();
+          setTimeout(() => { request.dispatchEvent(new Event("error")); });
+          return request;
+        },
+      });
+
+      /* Simulate `localStorage` being unavailable, so the fallback is memory */
+      vi.stubGlobal("localStorage", {});
+
+      TestBed.resetTestingModule();
+      const storage = createStorageMap(IndexedDBDatabase);
+
+      /* Concurrent operations, all waiting for the `indexedDB` connection */
+      await Promise.all([
+        firstValueFrom(storage.set("key1", "value1")),
+        firstValueFrom(storage.set("key2", "value2")),
+      ]);
+
+      expect(storage.backingEngine).toBe("memory");
+      expect(await firstValueFrom(storage.get("key1"))).toBe("value1");
+      expect(await firstValueFrom(storage.get("key2"))).toBe("value2");
+
+    });
+
+  });
+
+  describe("localStorage prefix isolation", () => {
+
+    /* Same length as the prefix, so a blind prefix removal would give `key` */
+    const foreignKey = "xx_token";
+    const key = "token";
+    let storage: StorageMap;
+
+    beforeEach(() => {
+
+      localStorage.clear();
+
+      /* Simulate data from another app on the same subdomain */
+      localStorage.setItem(foreignKey, JSON.stringify("foreign"));
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [provideLocalStoragePrefix("ls_")],
+      });
+      storage = createStorageMap(LocalStorageDatabase);
+
+    });
+
+    afterAll(() => {
+      localStorage.clear();
+    });
+
+    it("size ignores foreign keys", async () => {
+
+      await firstValueFrom(storage.set(key, "test"));
+
+      expect(await firstValueFrom(storage.size)).toBe(1);
+
+    });
+
+    it("keys() ignores foreign keys", async () => {
+
+      await firstValueFrom(storage.set(key, "test"));
+
+      expect(await firstValueFrom(storage.keys().pipe(toArray()))).toEqual([key]);
+
+    });
+
+    it("has() ignores foreign keys", async () => {
+
+      expect(await firstValueFrom(storage.has(key))).toBe(false);
+
+    });
+
+    it("clear() keeps foreign keys", async () => {
+
+      await firstValueFrom(storage.set(key, "test"));
+      await firstValueFrom(storage.clear());
+
+      expect(localStorage.getItem(foreignKey)).not.toBeNull();
+      expect(await firstValueFrom(storage.size)).toBe(0);
 
     });
 
