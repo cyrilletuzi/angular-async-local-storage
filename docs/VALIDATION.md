@@ -209,7 +209,7 @@ this.#storageMap.set('test', user, isDevMode() ? schema : undefined)
 
 - `const` (`Literal` in `typebox`)
 - `enum` (not possible via `typebox`)
-- `multipleOf`
+- `multipleOf` (note it is not recommanded for decimals due to JavaScript imprecision)
 - `maximum`
 - `exclusiveMaximum`
 - `minimum`
