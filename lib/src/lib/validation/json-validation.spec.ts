@@ -621,7 +621,7 @@ describe(`JSONValidator`, () => {
 
       it(`valid`, () => {
 
-        const test = jsonValidator.validate([{ test: "test" }, [{ test: "test" }]], {
+        const test = jsonValidator.validate([{ test: "test" }, { test: "test" }], {
           type: "array",
           items: {
             type: "object",
@@ -637,7 +637,7 @@ describe(`JSONValidator`, () => {
 
       it(`invalid`, () => {
 
-        const test = jsonValidator.validate([{ test: 5 }, [{ test: 5 }]], {
+        const test = jsonValidator.validate([{ test: 5 }, { test: 5 }], {
           type: "array",
           items: {
             type: "object",
@@ -751,6 +751,14 @@ describe(`JSONValidator`, () => {
 
       });
 
+      it(`invalid: array`, () => {
+
+        const test = jsonValidator.validate([], { type: "object", properties: {} });
+
+        expect(test).toBe(false);
+
+      });
+
     });
 
     describe(`required`, () => {
@@ -836,6 +844,34 @@ describe(`JSONValidator`, () => {
       it(`special case: extra properties`, () => {
 
         const test = jsonValidator.validate({ test1: 10, test2: 10, test3: "" }, {
+          type: "object",
+          properties: {
+            test1: { type: "number" },
+            test2: { type: "number" },
+          }
+        });
+
+        expect(test).toBe(false);
+
+      });
+
+      it(`special case: extra properties replacing optional properties`, () => {
+
+        const test = jsonValidator.validate({ test1: 10, test3: "" }, {
+          type: "object",
+          properties: {
+            test1: { type: "number" },
+            test2: { type: "number" },
+          }
+        });
+
+        expect(test).toBe(false);
+
+      });
+
+      it(`special case: only extra properties`, () => {
+
+        const test = jsonValidator.validate({ test3: "" }, {
           type: "object",
           properties: {
             test1: { type: "number" },

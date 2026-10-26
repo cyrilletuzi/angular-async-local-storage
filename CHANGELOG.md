@@ -11,6 +11,7 @@ This library is fully documented and so you will find detailed [migration guides
 - `watch()` now only reads the current value when you subscribe, and each watcher gets it once: a new watcher no longer sends the current value again to other watchers of the same key, and an error (like a validation error) no longer stops other and future watchers of the same key from working.
 - When falling back to memory storage (if both `indexedDB` and `localStorage` are not available), values are now stored and returned as copies, as with other storages: changing an object after `set()` or after `get()` no longer changes the stored value.
 - Fixed a small memory leak in `watch()`: internal resources for a key are now released when there are no more watchers of this key.
+- JSON schema validation of objects is now strict as documented: an object with properties not listed in the schema is now always invalid (previously, it could be valid if it did not have more properties than the schema), and arrays are no longer valid against an `object` schema. If some of your stored data was wrongly considered valid, `get()` with a schema will now error for it.
 
 ## 22.0.1 (2026-10-19)
 

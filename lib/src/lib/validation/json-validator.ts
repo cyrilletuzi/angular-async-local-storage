@@ -249,16 +249,23 @@ export class JSONValidator {
    */
   private validateObject(data: unknown, schema: JSONSchemaObject): boolean {
 
-    /* Check the type and if not `null` as `null` also have the type `object` in old browsers */
+    /* Check the type and if not `null` as `null` also have the type `object` */
     if ((typeof data !== "object") || (data === null)) {
       return false;
     }
 
-    /* Check if the object doesn't have more properties than expected
+    /* Arrays also have the type `object`, but are a different type in JSON */
+    if (Array.isArray(data)) {
+      return false;
+    }
+
+    /* Check if the object doesn't have other properties than expected
      * Equivalent of `additionalProperties: false`
      */
-    if (Object.keys(schema.properties).length < Object.keys(data).length) {
-      return false;
+    for (const property of Object.keys(data)) {
+      if (!Object.hasOwn(schema.properties, property)) {
+        return false;
+      }
     }
 
     /* Validate required properties */
