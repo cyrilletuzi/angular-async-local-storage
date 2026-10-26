@@ -2055,4 +2055,64 @@ describe("StorageMap", () => {
 
   });
 
+  describe("localStorage prefix isolation", () => {
+
+    /* Same length as the prefix, so a blind prefix removal would give `key` */
+    const foreignKey = "xx_token";
+    const key = "token";
+    let storage: StorageMap;
+
+    beforeEach(() => {
+
+      localStorage.clear();
+
+      /* Simulate data from another app on the same subdomain */
+      localStorage.setItem(foreignKey, JSON.stringify("foreign"));
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [provideLocalStoragePrefix("ls_")],
+      });
+      storage = new StorageMap(TestBed.inject(LocalStorageDatabase));
+
+    });
+
+    afterAll(() => {
+      localStorage.clear();
+    });
+
+    it("size ignores foreign keys", async () => {
+
+      await firstValueFrom(storage.set(key, "test"));
+
+      expect(await firstValueFrom(storage.size)).toBe(1);
+
+    });
+
+    it("keys() ignores foreign keys", async () => {
+
+      await firstValueFrom(storage.set(key, "test"));
+
+      expect(await firstValueFrom(storage.keys().pipe(toArray()))).toEqual([key]);
+
+    });
+
+    it("has() ignores foreign keys", async () => {
+
+      expect(await firstValueFrom(storage.has(key))).toBe(false);
+
+    });
+
+    it("clear() keeps foreign keys", async () => {
+
+      await firstValueFrom(storage.set(key, "test"));
+      await firstValueFrom(storage.clear());
+
+      expect(localStorage.getItem(foreignKey)).not.toBeNull();
+      expect(await firstValueFrom(storage.size)).toBe(0);
+
+    });
+
+  });
+
 });
