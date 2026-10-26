@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injector, Service, inject, runInInjectionContext } from "@angular/core";
 import { Observable, Subject, defer, merge, of, throwError, type OperatorFunction } from "rxjs";
 import { catchError, finalize, mergeMap, tap } from "rxjs/operators";
 import { IDB_BROKEN_ERROR } from "../databases/exceptions";
@@ -15,27 +15,14 @@ import type {
 import { JSONValidator } from "../validation/json-validator";
 import { ValidationError } from "./exceptions";
 
-// eslint-disable-next-line eslint-plugin-angular-modern/no-injectable-decorator -- Not possible here because a constructor injection is done
-@Injectable({
-  providedIn: "root"
-})
+@Service()
 export class StorageMap {
 
-  #database: LocalDatabase;
-  readonly #jsonValidator: JSONValidator;
+  #database = inject(LocalDatabase);
+  readonly #jsonValidator = new JSONValidator();
+  /* Needed to create the fallback storage with its configuration later, outside of the injection context */
+  readonly #injector = inject(Injector);
   readonly #notifiers = new Map<string, Subject<unknown>>();
-
-  /**
-   * Constructor params are provided by Angular (but can also be passed manually in tests)
-   * @param database Storage to use
-   */
-  constructor( // eslint-disable-line eslint-plugin-angular-modern/no-constructor-injection -- Used in tests for inject
-    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Used in tests for inject, wanted as writeable for readonly
-    database: LocalDatabase,
-  ) {
-    this.#database = database;
-    this.#jsonValidator = new JSONValidator();
-  }
 
   /**
    * **Number of items** in storage, wrapped in an Observable.
@@ -464,8 +451,9 @@ export class StorageMap {
 
             if ("getItem" in localStorage) {
 
-              /* Fallback to `localStorage` if available */
-              this.#database = new LocalStorageDatabase();
+              /* Fallback to `localStorage` if available.
+               * It must be created in the injection context, as it injects its configuration (like the prefix) */
+              this.#database = runInInjectionContext(this.#injector, () => new LocalStorageDatabase());
 
             } else {
 

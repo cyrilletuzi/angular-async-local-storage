@@ -7,6 +7,7 @@ import { String as StringType, Type, type Static } from "typebox";
 import { server } from 'vitest/browser';
 import * as z from "zod";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
+import { LocalDatabase } from "../databases/local-database";
 import { LocalStorageDatabase } from "../databases/localstorage-database";
 import { MemoryDatabase } from "../databases/memory-database";
 import { provideIndexedDBDataBaseName, provideIndexedDBDataBaseVersion, provideIndexedDBStoreName, provideLocalStoragePrefix } from "../providers";
@@ -16,6 +17,21 @@ import { DEFAULT_IDB_DB_NAME, DEFAULT_IDB_DB_VERSION, DEFAULT_IDB_STORE_NAME } f
 import type { JSONSchema } from "../validation/json-schema";
 import { VALIDATION_ERROR } from "./exceptions";
 import { StorageMap } from "./storage-map";
+
+/**
+ * Create a `StorageMap` using a specific database, like Angular does in applications
+ * @param database Database class to use
+ * @returns The `StorageMap` service
+ */
+function createStorageMap(database: new () => LocalDatabase): StorageMap {
+
+  TestBed.configureTestingModule({
+    providers: [{ provide: LocalDatabase, useClass: database }],
+  });
+
+  return TestBed.inject(StorageMap);
+
+}
 
 function tests(description: string, localStorageServiceFactory: () => StorageMap): void {
 
@@ -1896,11 +1912,14 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
 
 describe("StorageMap", () => {
 
-  tests("memory", () => new StorageMap(new MemoryDatabase()));
+  tests("memory", () => {
+    TestBed.resetTestingModule();
+    return createStorageMap(MemoryDatabase);
+  });
 
   tests("localStorage", () => {
     TestBed.resetTestingModule();
-    return new StorageMap(TestBed.inject(LocalStorageDatabase));
+    return createStorageMap(LocalStorageDatabase);
   });
 
   tests("localStorage with prefix", () => {
@@ -1908,12 +1927,12 @@ describe("StorageMap", () => {
     TestBed.configureTestingModule({
       providers: [provideLocalStoragePrefix("ls")],
     });
-    return new StorageMap(TestBed.inject(LocalStorageDatabase));
+    return createStorageMap(LocalStorageDatabase);
   });
 
   tests("indexedDB", () => {
     TestBed.resetTestingModule();
-    return new StorageMap(TestBed.inject(IndexedDBDatabase));
+    return createStorageMap(IndexedDBDatabase);
   });
 
   tests("indexedDB with custom options", () => {
@@ -1925,7 +1944,7 @@ describe("StorageMap", () => {
         provideIndexedDBDataBaseVersion(2),
       ],
     });
-    return new StorageMap(TestBed.inject(IndexedDBDatabase));
+    return createStorageMap(IndexedDBDatabase);
   });
 
   describe("browser APIs", () => {
@@ -1937,7 +1956,7 @@ describe("StorageMap", () => {
       const value = "test";
 
       TestBed.resetTestingModule();
-      const localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
+      const localStorageService = createStorageMap(IndexedDBDatabase);
 
       localStorageService.set(index, value).subscribe(() => {
 
@@ -1988,7 +2007,7 @@ describe("StorageMap", () => {
     it("indexedDb with default options", () => new Promise((done, reject) => {
 
       TestBed.resetTestingModule();
-      const localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
+      const localStorageService = createStorageMap(IndexedDBDatabase);
 
       /* Do a request first as a first transaction is needed to set the store name */
       localStorageService.get("test").subscribe(() => {
@@ -2021,7 +2040,7 @@ describe("StorageMap", () => {
         ],
       });
 
-      const localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
+      const localStorageService = createStorageMap(IndexedDBDatabase);
 
       localStorageService.set(index, value).subscribe(() => {
 
@@ -2085,7 +2104,7 @@ describe("StorageMap", () => {
         ],
       });
 
-      const localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
+      const localStorageService = createStorageMap(IndexedDBDatabase);
 
       /* Do a request first as a first transaction is needed to set the store name */
       localStorageService.get("test").subscribe(() => {
@@ -2117,7 +2136,7 @@ describe("StorageMap", () => {
         ],
       });
 
-      const localStorageService = new StorageMap(TestBed.inject(LocalStorageDatabase));
+      const localStorageService = createStorageMap(LocalStorageDatabase);
 
       expect(localStorageService.fallbackBackingStore.prefix).toBe(prefix);
 
@@ -2129,6 +2148,35 @@ describe("StorageMap", () => {
 
     afterEach(() => {
       vi.unstubAllGlobals();
+    });
+
+    it("falls back to localStorage with its configuration when indexedDB fails", async () => {
+
+      localStorage.clear();
+
+      /* Simulate `indexedDB` failing asynchronously, like in Safari cross-origin iframes */
+      vi.stubGlobal("indexedDB", {
+        open: () => {
+          const request = new EventTarget();
+          setTimeout(() => { request.dispatchEvent(new Event("error")); });
+          return request;
+        },
+      });
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [provideLocalStoragePrefix("ls_")],
+      });
+      /* Created by Angular, like in applications */
+      const storage = TestBed.inject(StorageMap);
+
+      await firstValueFrom(storage.set("key", "value"));
+
+      expect(storage.backingEngine).toBe("localStorage");
+      expect(localStorage.getItem("ls_key")).toBe(JSON.stringify("value"));
+
+      localStorage.clear();
+
     });
 
     it("keeps data of concurrent operations when falling back to memory", async () => {
@@ -2146,7 +2194,7 @@ describe("StorageMap", () => {
       vi.stubGlobal("localStorage", {});
 
       TestBed.resetTestingModule();
-      const storage = new StorageMap(TestBed.inject(IndexedDBDatabase));
+      const storage = createStorageMap(IndexedDBDatabase);
 
       /* Concurrent operations, all waiting for the `indexedDB` connection */
       await Promise.all([
@@ -2180,7 +2228,7 @@ describe("StorageMap", () => {
       TestBed.configureTestingModule({
         providers: [provideLocalStoragePrefix("ls_")],
       });
-      storage = new StorageMap(TestBed.inject(LocalStorageDatabase));
+      storage = createStorageMap(LocalStorageDatabase);
 
     });
 

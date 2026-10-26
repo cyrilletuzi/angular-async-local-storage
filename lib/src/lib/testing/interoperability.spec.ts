@@ -1,6 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, type TestContext } from "vitest";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
+import { LocalDatabase } from "../databases/local-database";
 import { provideIndexedDBDataBaseName } from "../providers";
 import { StorageMap } from "../storages/storage-map";
 import { DEFAULT_IDB_STORE_NAME } from "../tokens";
@@ -177,9 +178,10 @@ describe("Interoperability", () => {
     TestBed.configureTestingModule({
       providers: [
         provideIndexedDBDataBaseName(dbName),
+        { provide: LocalDatabase, useClass: IndexedDBDatabase },
       ],
     });
-    localStorageService = new StorageMap(TestBed.inject(IndexedDBDatabase));
+    localStorageService = TestBed.inject(StorageMap);
   });
 
   beforeEach(async () => {
