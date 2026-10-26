@@ -42,6 +42,7 @@ testem.log
 /typings
 __screenshots__/
 .vitest-attachments/
+.vitest/attachments/
 
 # System Files
 .DS_Store
