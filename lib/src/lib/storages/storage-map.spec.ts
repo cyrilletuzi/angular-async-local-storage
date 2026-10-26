@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { TestBed } from "@angular/core/testing";
-import { firstValueFrom } from "rxjs";
+import { firstValueFrom, type Subscription } from "rxjs";
 import { filter, map, mergeMap, tap, toArray } from "rxjs/operators";
 import { String as StringType, Type, type Static } from "typebox";
 import { server } from 'vitest/browser';
@@ -1097,6 +1097,46 @@ function tests(description: string, localStorageServiceFactory: () => StorageMap
           mergeMap(() => storage.clear())
         ).subscribe();
       }));
+
+      it("an invalid initial value does not break later watchers", async () => {
+
+        /* Specific key, as the error would otherwise impact other tests */
+        const watchedKey = "watchedInvalid";
+
+        await firstValueFrom(storage.set(watchedKey, 123));
+
+        await expect(firstValueFrom(storage.watch(watchedKey, { type: "string" }))).rejects.toMatchObject({ message: VALIDATION_ERROR });
+
+        expect(await firstValueFrom(storage.watch(watchedKey))).toBe(123);
+
+      });
+
+      it("a new watcher does not resend the current value to other watchers", async () => {
+
+        const watchedKey = "watchedTwice";
+        const values: unknown[] = [];
+        let subscription: Subscription | undefined;
+
+        await firstValueFrom(storage.set(watchedKey, "test"));
+
+        /* Wait for the initial value of the first watcher */
+        await new Promise<void>((resolve) => {
+          subscription = storage.watch(watchedKey).subscribe((value) => {
+            values.push(value);
+            resolve();
+          });
+        });
+
+        await firstValueFrom(storage.watch(watchedKey));
+
+        /* In `indexedDB`, a write waits for previous reads, so the second watcher read is done after this */
+        await firstValueFrom(storage.set("watchedTwiceOther", "test"));
+
+        expect(values).toEqual(["test"]);
+
+        subscription?.unsubscribe();
+
+      });
 
     });
 

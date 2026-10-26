@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, ReplaySubject, of, throwError, type OperatorFunction } from "rxjs";
+import { Observable, Subject, defer, merge, of, throwError, type OperatorFunction } from "rxjs";
 import { catchError, mergeMap, tap } from "rxjs/operators";
 import { IDB_BROKEN_ERROR } from "../databases/exceptions";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
@@ -23,7 +23,7 @@ export class StorageMap {
 
   #database: LocalDatabase;
   readonly #jsonValidator: JSONValidator;
-  readonly #notifiers = new Map<string, ReplaySubject<unknown>>();
+  readonly #notifiers = new Map<string, Subject<unknown>>();
 
   /**
    * Constructor params are provided by Angular (but can also be passed manually in tests)
@@ -400,27 +400,22 @@ export class StorageMap {
   watch<T>(key: string, schema: JSONSchema): Observable<T | undefined>;
   watch<T = unknown>(key: string, schema?: JSONSchema): Observable<unknown> {
 
-    /* Check if there is already a notifier */
-    if (!this.#notifiers.has(key)) {
-      this.#notifiers.set(key, new ReplaySubject(1));
-    }
+    /* Defer to only do something on subscription, like other operations */
+    return defer(() => {
 
-    /* Non-null assertion is required because TypeScript doesn't narrow `.has()` yet */
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Ensured by the logic
-    const notifier = this.#notifiers.get(key)!;
+      /* Check if there is already a notifier */
+      let notifier = this.#notifiers.get(key);
+      if (!notifier) {
+        notifier = new Subject();
+        this.#notifiers.set(key, notifier);
+      }
 
-    /* Get the current item value */
-    (schema ? this.get<T>(key, schema) : this.get(key)).subscribe({
-      next: (result) => {
-        notifier.next(result);
-      },
-      error: (error) => {
-        notifier.error(error);
-      },
+      /* Get the current item value only for this subscriber, and then listen to changes.
+       * Changes are listened first, so none is missed while getting the current value.
+       * Errors only concern this subscriber, the shared notifier stays usable for other watchers. */
+      return merge(notifier.asObservable(), schema ? this.get<T>(key, schema) : this.get(key));
+
     });
-
-    /* Only the public API of the Observable should be returned */
-    return notifier.asObservable();
 
   }
 
