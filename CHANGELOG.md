@@ -2,6 +2,12 @@
 
 This library is fully documented and so you will find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 22.1.0 (2026-10-26)
+
+- When falling back to `localStorage` or memory storage (if `indexedDB` is not available), operations now only run when you subscribe, as documented and as with `indexedDB`. Writing operations (`set()`, `delete()`, `clear()`) no longer happen if you do not subscribe, and reading operations (`get()`, `has()`, `size`, `keys()`) now return up-to-date values. If your unit tests run in an environment without `indexedDB` (like jsdom), check that they subscribe to writing operations.
+- When falling back to `localStorage` with a prefix (`provideLocalStoragePrefix()`), data from other apps on the same subdomain is now ignored: `clear()` no longer deletes it, and `size`, `keys()` and `has()` no longer take it into account.
+- With `indexedDB`, `keys()` now errors properly instead of never completing if an error happens while getting the keys.
+
 ## 22.0.1 (2026-10-19)
 
 - Ensure that schematics (`ng add` and `ng update`) are run in CommonJS (thanks to @dajiaohuang)
