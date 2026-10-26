@@ -443,31 +443,22 @@ export class StorageMap {
          * and replacing an already chosen fallback would lose data in memory storage */
         if (this.#database instanceof IndexedDBDatabase) {
 
+          let isLocalStorageAvailable = false;
+
           /* When storage is fully disabled in browser (via the "Block all cookies" option),
            * just trying to check `localStorage` variable causes a security exception.
            * Prevents https://github.com/cyrilletuzi/angular-async-local-storage/issues/118
+           * Only the check is guarded, so other errors are not hidden.
            */
           try {
+            isLocalStorageAvailable = ("getItem" in localStorage);
+          } catch {}
 
-            if ("getItem" in localStorage) {
-
-              /* Fallback to `localStorage` if available.
-               * It must be created in the injection context, as it injects its configuration (like the prefix) */
-              this.#database = runInInjectionContext(this.#injector, () => new LocalStorageDatabase());
-
-            } else {
-
-              /* Fallback to memory storage otherwise */
-              this.#database = new MemoryDatabase();
-
-            }
-
-          } catch {
-
-            /* Fallback to memory storage otherwise */
-            this.#database = new MemoryDatabase();
-
-          }
+          /* Fallback to `localStorage` if available, to memory storage otherwise.
+           * `localStorage` storage must be created in the injection context, as it injects its configuration (like the prefix) */
+          this.#database = isLocalStorageAvailable ?
+            runInInjectionContext(this.#injector, () => new LocalStorageDatabase()) :
+            new MemoryDatabase();
 
         }
 

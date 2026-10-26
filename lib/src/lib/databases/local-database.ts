@@ -15,42 +15,49 @@ export function localDatabaseFactory(): LocalDatabase {
 
   const platformId = inject(PLATFORM_ID);
 
+  const isBrowser = isPlatformBrowser(platformId);
+  let isIndexedDBAvailable = false;
+  let isLocalStorageAvailable = false;
+
   /* When storage is fully disabled in browser (via the "Block all cookies" option),
    * just trying to check `indexedDB` or `localStorage` variables causes a security exception.
    * Prevents https://github.com/cyrilletuzi/angular-async-local-storage/issues/118
+   * Only the checks are guarded, so other errors are not hidden.
    */
   try {
 
-    // Do not explicit `window` here, as the global object is not the same in web workers
+    /* Check:
+     * - if we are in a browser context (issue: server-side rendering)
+     * - it could exist but be `undefined` or `null`
+     * - it could exists but not having a working API
+     * Do not explicit `window` here, as the global object is not the same in web workers
+     */
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- They can be undefined in some browsers scenarios
-    if (isPlatformBrowser(platformId) && (indexedDB !== undefined) && (indexedDB !== null) && ("open" in indexedDB)) {
+    isIndexedDBAvailable = isBrowser && (indexedDB !== undefined) && (indexedDB !== null) && ("open" in indexedDB);
 
-      /* Check:
-      * - if we are in a browser context (issue: server-side rendering)
-      * - it could exist but be `undefined` or `null`
-      * - it could exists but not having a working API
-      * Will be the case for:
-      * - All other browsers in normal mode
-      * - Chromium / Safari / Firefox private mode, but in this case, data will be swiped when the user leaves the app */
-      return new IndexedDBDatabase();
-
-    } else if (isPlatformBrowser(platformId)
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- They can be undefined in some browsers scenarios
-      && (localStorage !== undefined) && (localStorage !== null) && ("getItem" in localStorage)) {
-
-      /* Check:
-      * - if we are in a browser context (issue: server-side rendering)
-      * - if `localStorage` exists (to be sure)
-      * - it could exists but not having a working API
-      * Will be the case for:
-      * - Safari cross-origin iframes, detected later in `IndexedDBDatabase.connect()`
-      * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/42}
-      */
-      return new LocalStorageDatabase();
-
-    }
+    /* Same checks for `localStorage`, only needed if `indexedDB` is not available */
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- They can be undefined in some browsers scenarios
+    isLocalStorageAvailable = !isIndexedDBAvailable && isBrowser && (localStorage !== undefined) && (localStorage !== null) && ("getItem" in localStorage);
 
   } catch {}
+
+  if (isIndexedDBAvailable) {
+
+    /* Will be the case for:
+     * - All other browsers in normal mode
+     * - Chromium / Safari / Firefox private mode, but in this case, data will be swiped when the user leaves the app
+     * - Safari cross-origin iframes, but it will be detected later in `IndexedDBDatabase.connect()` and fallback to `localStorage`
+     * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/42}
+     */
+    return new IndexedDBDatabase();
+
+  }
+
+  if (isLocalStorageAvailable) {
+
+    return new LocalStorageDatabase();
+
+  }
 
   /* Will be the case for:
    * - In browsers if storage has been fully disabled (via the "Block all cookies" option)
