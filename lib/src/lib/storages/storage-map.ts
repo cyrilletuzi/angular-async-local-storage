@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject, defer, merge, of, throwError, type OperatorFunction } from "rxjs";
-import { catchError, mergeMap, tap } from "rxjs/operators";
+import { catchError, finalize, mergeMap, tap } from "rxjs/operators";
 import { IDB_BROKEN_ERROR } from "../databases/exceptions";
 import { IndexedDBDatabase } from "../databases/indexeddb-database";
 import { LocalDatabase } from "../databases/local-database";
@@ -404,16 +404,20 @@ export class StorageMap {
     return defer(() => {
 
       /* Check if there is already a notifier */
-      let notifier = this.#notifiers.get(key);
-      if (!notifier) {
-        notifier = new Subject();
-        this.#notifiers.set(key, notifier);
-      }
+      const notifier = this.#notifiers.get(key) ?? new Subject<unknown>();
+      this.#notifiers.set(key, notifier);
 
       /* Get the current item value only for this subscriber, and then listen to changes.
        * Changes are listened first, so none is missed while getting the current value.
        * Errors only concern this subscriber, the shared notifier stays usable for other watchers. */
-      return merge(notifier.asObservable(), schema ? this.get<T>(key, schema) : this.get(key));
+      return merge(notifier.asObservable(), schema ? this.get<T>(key, schema) : this.get(key)).pipe(
+        /* Avoid a memory leak: remove the notifier when there are no more watchers */
+        finalize(() => {
+          if (!notifier.observed) {
+            this.#notifiers.delete(key);
+          }
+        }),
+      );
 
     });
 
