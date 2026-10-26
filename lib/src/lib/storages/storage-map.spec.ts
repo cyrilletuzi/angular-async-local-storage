@@ -1855,7 +1855,7 @@ describe("StorageMap", () => {
         provideIndexedDBDataBaseVersion(2),
       ],
     });
-    return new StorageMap(TestBed.inject(LocalStorageDatabase));
+    return new StorageMap(TestBed.inject(IndexedDBDatabase));
   });
 
   describe("browser APIs", () => {
