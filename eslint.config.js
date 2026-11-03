@@ -100,12 +100,35 @@ module.exports = defineConfig(
       "@typescript-eslint/no-unsafe-return": "error",
       "@typescript-eslint/prefer-for-of": "error",
       "@typescript-eslint/prefer-optional-chain": "error",
-      "@typescript-eslint/restrict-template-expressions": "error",
+      "@typescript-eslint/restrict-template-expressions": ["error", {
+        allow: [],
+        allowAny: false,
+        allowBoolean: false,
+        allowNullish: false,
+        allowNumber: false,
+        allowRegExp: false,
+      }],
       "@typescript-eslint/no-useless-empty-export": "error",
       "@typescript-eslint/no-unsafe-type-assertion": "error",
       "@typescript-eslint/no-useless-default-assignment": "error",
       "@typescript-eslint/strict-void-return": "error",
       "@typescript-eslint/method-signature-style": "error",
+      "no-var": "error",
+      "prefer-rest-params": "error",
+      "@typescript-eslint/ban-ts-comment": "error",
+      "@typescript-eslint/no-array-constructor": "error",
+      "@typescript-eslint/no-array-delete": "error",
+      "@typescript-eslint/no-base-to-string": "error",
+      "@typescript-eslint/no-generated-empty-object-type": "error",
+      "@typescript-eslint/no-implied-eval": "error",
+      "@typescript-eslint/no-invalid-void-type": "error",
+      "@typescript-eslint/no-unsafe-declaration-merging": "error",
+      "@typescript-eslint/no-unsafe-enum-assignment": "error",
+      "@typescript-eslint/no-unsafe-function-type": "error",
+      "@typescript-eslint/no-unsafe-unary-minus": "error",
+      "@typescript-eslint/no-wrapper-object-types": "error",
+      "@typescript-eslint/require-array-sort-compare": "error",
+      "@typescript-eslint/unbound-method": "error",
       // Immutability
       "@typescript-eslint/prefer-readonly": "error",
       "@typescript-eslint/prefer-readonly-parameter-types": ["error", {
@@ -171,24 +194,14 @@ module.exports = defineConfig(
           allow: ["arrowFunctions"], // some callbacks are required (like in promises `.catch()`), but there is not always something to do inside
         },
       ],
-      "@typescript-eslint/no-empty-object-type": [
-        "error",
-        {
-          allowInterfaces: "with-single-extends",
-        },
-      ],
+      "@typescript-eslint/no-empty-object-type": ["error", {
+        allowInterfaces: "with-single-extends",
+      }],
       "@typescript-eslint/no-extraneous-class": [
         "error",
         {
           allowWithDecorator: true, // some Angular classes can be empty
         },
-      ],
-      // Allow Angular forms validators like `Validator.required`
-      "@typescript-eslint/unbound-method": [
-        "error",
-        {
-          "ignoreStatic": true
-        }
       ],
       // Avoid empty imports which could cause empty files during build
       "@typescript-eslint/no-import-type-side-effects": "error",
@@ -208,9 +221,9 @@ module.exports = defineConfig(
             "dist/*",
             // Disallow imports from another application
             "testing-apps/*"
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     },
   },
   {
