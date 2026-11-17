@@ -123,6 +123,7 @@ module.exports = defineConfig(
       "@typescript-eslint/no-implied-eval": "error",
       "@typescript-eslint/no-invalid-void-type": "error",
       "@typescript-eslint/no-unsafe-declaration-merging": "error",
+      "@typescript-eslint/no-unsafe-class-instance-assignment": "error",
       "@typescript-eslint/no-unsafe-enum-assignment": "error",
       "@typescript-eslint/no-unsafe-function-type": "error",
       "@typescript-eslint/no-unsafe-unary-minus": "error",
