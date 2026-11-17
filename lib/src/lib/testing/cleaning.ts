@@ -75,7 +75,7 @@ export async function clearStorage(storageService: StorageMap): Promise<void> {
     }
     else if (storageService.backingEngine === "memory") {
 
-      // eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/no-unsafe-type-assertion -- Exception for testing
+      // eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/no-unsafe-class-instance-assignment -- Exception for testing
       (storageService["ɵinternalGetDatabase"]() as MemoryDatabase)["memoryStorage"].clear();
 
       done();
@@ -108,7 +108,7 @@ export function closeAndDeleteDatabase(storageService: StorageMap): Promise<void
     /* Only `indexedDB` is concerned */
     if (storageService.backingEngine === "indexedDB") {
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Exception for testing
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/no-unsafe-class-instance-assignment -- Exception for testing
       const indexedDBService = storageService["ɵinternalGetDatabase"]() as IndexedDBDatabase;
 
       // eslint-disable-next-line @typescript-eslint/dot-notation -- Exception for testing

@@ -457,7 +457,9 @@ export class StorageMap {
           /* Fallback to `localStorage` if available, to memory storage otherwise.
            * `localStorage` storage must be created in the injection context, as it injects its configuration (like the prefix) */
           this.#database = isLocalStorageAvailable ?
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-class-instance-assignment -- Acceptable to avoid a breaking change
             runInInjectionContext(this.#injector, () => new LocalStorageDatabase()) :
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-class-instance-assignment -- Acceptable to avoid a breaking change
             new MemoryDatabase();
 
         }

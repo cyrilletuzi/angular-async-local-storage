@@ -49,12 +49,14 @@ export function localDatabaseFactory(): LocalDatabase {
      * - Safari cross-origin iframes, but it will be detected later in `IndexedDBDatabase.connect()` and fallback to `localStorage`
      * @see {@link https://github.com/cyrilletuzi/angular-async-local-storage/issues/42}
      */
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-class-instance-assignment -- Acceptable to avoid a breaking change
     return new IndexedDBDatabase();
 
   }
 
   if (isLocalStorageAvailable) {
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-class-instance-assignment -- Acceptable to avoid a breaking change
     return new LocalStorageDatabase();
 
   }
@@ -64,6 +66,7 @@ export function localDatabaseFactory(): LocalDatabase {
    * - Server-side rendering
    * - All other non-browser context
    */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-class-instance-assignment -- Acceptable to avoid a breaking change
   return new MemoryDatabase();
 
 }
