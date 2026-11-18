@@ -152,6 +152,7 @@ module.exports = defineConfig(
       "@angular-eslint/no-developer-preview": "error",
       "@angular-eslint/no-duplicates-in-metadata-arrays": "error",
       "@angular-eslint/no-experimental": "error",
+      "@angular-eslint/no-global-document": "error",
       "@angular-eslint/no-input-prefix": "error",
       "@angular-eslint/no-output-native": "error",
       "@angular-eslint/no-output-on-prefix": "error",
