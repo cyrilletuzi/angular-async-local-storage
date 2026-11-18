@@ -18,16 +18,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
+      with:
+        persist-credentials: false
     - name: Setup Node
       uses: actions/setup-node@v7
       with:
         node-version: '26'
-    - name: Update npm
-      run: npm install -g npm@12
+        cache: npm
     - name: Install dependencies
-      run: npm ci
-      env:
-        CI: true
+      run: npm ci --no-audit --no-fund --prefer-offline --ignore-scripts --allow-git=none --allow-remote=none --allow-file=none --allow-directory=none
+    - name: Verify package signatures
+      run: npm audit signatures
     - name: Build the lib
       run: npm run build
     - name: Run unit tests
@@ -44,16 +45,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
+      with:
+        persist-credentials: false
     - name: Setup Node
       uses: actions/setup-node@v7
       with:
         node-version: '22'
-    - name: Update npm
-      run: npm install -g npm@12
+        cache: npm
     - name: Install dependencies
-      run: npm ci
-      env:
-        CI: true
+      run: npm ci --no-audit --no-fund --prefer-offline --ignore-scripts --allow-git=none --allow-remote=none --allow-file=none --allow-directory=none
+    - name: Verify package signatures
+      run: npm audit signatures
     - name: Build the lib (with the current version, as it is what is published on npm)
       run: npm run build
     - name: Downgrade dependencies to minimal required version

@@ -14,14 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-node@v7
         with:
-          node-version: 26
+          node-version: '26'
           registry-url: 'https://registry.npmjs.org'
 
-      - run: npm install -g npm@12
-
-      - run: npm ci
+      - run: npm ci --no-audit --no-fund --ignore-scripts --allow-git=none --allow-remote=none --allow-file=none --allow-directory=none
+      - run: npm audit signatures
       - run: npm run build
       - run: npm stage publish ./dist/lib --access public
