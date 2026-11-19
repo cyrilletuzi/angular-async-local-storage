@@ -2,6 +2,10 @@
 
 This library is fully documented and so you will find detailed [migration guides](https://github.com/cyrilletuzi/angular-async-local-storage/blob/main/MIGRATION.md).
 
+## 22.2.0 (2026-11-19)
+
+- Build with new Angular 22.3 library builder.
+
 ## 22.1.0 (2026-10-26)
 
 - JSON schema validation of objects is now strict as documented: an object with properties not listed in the schema is now always invalid (previously, it could be valid if it did not have more properties than the schema), and arrays are no longer valid against an `object` schema. If some of your stored data was wrongly considered valid, `get()` with a schema will now error for it.
