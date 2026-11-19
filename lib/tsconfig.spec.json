@@ -5,8 +5,8 @@
     "types": [],
   },
   "include": [
-    "src/**/*.d.ts",
-    "src/**/*.spec.ts",
+    "**/*.d.ts",
+    "**/*.spec.ts",
     "src/lib/testing/cleaning.ts"
   ]
 }

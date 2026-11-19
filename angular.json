@@ -9,17 +9,19 @@
     "lib": {
       "projectType": "library",
       "root": "lib",
-      "sourceRoot": "lib/src",
+      "sourceRoot": "lib",
       "prefix": "ngx-pwa",
       "architect": {
         "build": {
-          "builder": "@angular/build:ng-packagr",
+          "builder": "@angular/build:library",
+          "options": {
+            "tsConfig": "lib/tsconfig.lib.json"
+          },
           "configurations": {
-            "production": {
-              "tsConfig": "lib/tsconfig.lib.prod.json"
-            },
+            "production": {},
             "development": {
-              "tsConfig": "lib/tsconfig.lib.json"
+              "compilationMode": "full",
+              "declarationMap": true
             }
           },
           "defaultConfiguration": "production"

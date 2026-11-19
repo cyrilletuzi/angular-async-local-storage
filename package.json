@@ -32,8 +32,8 @@
     "tslib": "^2.9.1"
   },
   "devDependencies": {
-    "@angular/build": "^22.2.7",
-    "@angular/cli": "^22.2.7",
+    "@angular/build": "^22.3.0",
+    "@angular/cli": "^22.3.0",
     "@angular/compiler-cli": "^22.3.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.65.1",
@@ -44,7 +44,6 @@
     "eslint": "^10.15.0",
     "eslint-plugin-angular-modern": "^1.11.0",
     "localforage": "^1.10.0",
-    "ng-packagr": "^22.3.0",
     "typebox": "^1.4.7",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.73.0",
