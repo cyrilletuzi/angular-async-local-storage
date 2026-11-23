@@ -167,6 +167,23 @@ module.exports = defineConfig(
       "@angular-eslint/sort-keys-in-type-decorator": "error",
       "@angular-eslint/use-component-selector": "error",
       "@angular-eslint/use-component-view-encapsulation": "error",
+      // Disable recommended ESLint Angular modern rules already managed by other rules
+      'eslint-plugin-angular-modern/no-canload-class': 'off',
+      'eslint-plugin-angular-modern/no-httpclientmodule': 'off',
+      'eslint-plugin-angular-modern/no-httpclientxsrfmodule': 'off',
+      'eslint-plugin-angular-modern/no-httpclienttestingmodule': 'off',
+      'eslint-plugin-angular-modern/no-platformbrowserdynamic': 'off',
+      'eslint-plugin-angular-modern/no-routertestingmodule': 'off',
+      'eslint-plugin-angular-modern/no-animations-import': 'off',
+      'eslint-plugin-angular-modern/no-component-animations': 'off',
+      'eslint-plugin-angular-modern/no-platformbrowser-animations-import': 'off',
+      'eslint-plugin-angular-modern/no-browseranimationsmodule': 'off',
+      'eslint-plugin-angular-modern/no-noopanimationsmodule': 'off',
+      'eslint-plugin-angular-modern/no-withjsonpsupport': 'off',
+      'eslint-plugin-angular-modern/no-httpclientjsonpmodule': 'off',
+      'eslint-plugin-angular-modern/no-ngmodule-component': 'off',
+      'eslint-plugin-angular-modern/no-ngmodule-directive': 'off',
+      'eslint-plugin-angular-modern/no-ngmodule-pipe': 'off',
       /* Injection context */
       "eslint-plugin-angular-modern/custom-function-in-injection-context": ["error", {
         "functions": [{
